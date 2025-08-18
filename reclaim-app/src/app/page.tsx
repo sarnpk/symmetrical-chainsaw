@@ -122,58 +122,70 @@ export default async function HomePage() {
             Choose Your Recovery Plan
           </h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Foundation */}
             <Card className="relative">
               <CardHeader>
                 <CardTitle className="text-green-600">Foundation</CardTitle>
                 <div className="text-3xl font-bold">Free</div>
-                <CardDescription>Basic tools to get started</CardDescription>
+                <CardDescription>Basic access to get started</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ Basic incident logging</li>
-                  <li>✓ Photo evidence upload</li>
-                  <li>✓ Educational content</li>
-                  <li>✓ Safety planning tools</li>
+                  <li>✓ 10 standard calls / month</li>
+                  <li>✗ Audio transcription (0 minutes)</li>
+                  <li>✓ ~5,000 input + ~1,750 output tokens</li>
+                  <li>✓ Community support</li>
+                  <li>✓ In-app usage tracking</li>
                 </ul>
               </CardContent>
             </Card>
 
+            {/* Recovery (Popular) */}
             <Card className="relative border-indigo-200 shadow-lg">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-medium">
                 Popular
               </div>
               <CardHeader>
                 <CardTitle className="text-indigo-600">Recovery</CardTitle>
-                <div className="text-3xl font-bold">$19.99<span className="text-base font-normal">/mo</span></div>
+                <div className="text-3xl font-bold">$15.00<span className="text-base font-normal">/mo</span></div>
                 <CardDescription>AI-powered recovery tools</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ Everything in Foundation</li>
-                  <li>✓ AI coach conversations</li>
-                  <li>✓ Audio transcription</li>
-                  <li>✓ Basic pattern analysis</li>
-                  <li>✓ Mind reset exercises</li>
+                  <li>✓ 1,200 standard calls / month (≈ 40/day)</li>
+                  <li>✓ 60 transcription minutes / month</li>
+                  <li>✓ ~715,200 input + ~222,000 output tokens</li>
+                  <li>✓ Priority email support</li>
+                  <li>✓ Faster response times</li>
+                  <li>✓ Access to new AI features</li>
                 </ul>
               </CardContent>
             </Card>
 
+            {/* Empowered */}
             <Card className="relative">
               <CardHeader>
-                <CardTitle className="text-purple-600">Empowerment</CardTitle>
-                <div className="text-3xl font-bold">$39.99<span className="text-base font-normal">/mo</span></div>
+                <CardTitle className="text-purple-600">Empowered</CardTitle>
+                <div className="text-3xl font-bold">$24.99<span className="text-base font-normal">/mo</span></div>
                 <CardDescription>Complete recovery suite</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ Everything in Recovery</li>
-                  <li>✓ Advanced AI features</li>
-                  <li>✓ Pattern recognition</li>
-                  <li>✓ Professional reports</li>
-                  <li>✓ Priority support</li>
+                  <li>✓ 1,830 standard calls / month (≈ 61/day)</li>
+                  <li>✓ 300 transcription minutes / month</li>
+                  <li>✓ ~1,476,000 input + ~348,000 output tokens</li>
+                  <li>✓ Unlimited analysis runs (fair use)</li>
+                  <li>✓ Premium support (24/7 chat)</li>
+                  <li>✓ Priority queuing</li>
+                  <li>✓ Custom pattern templates</li>
+                  <li>✓ Early access to beta features</li>
                 </ul>
               </CardContent>
             </Card>
+          </div>
+
+          <div className="text-center mt-10">
+            <a href="/pricing" className="inline-block px-6 py-3 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700">View Full Comparison</a>
           </div>
         </div>
       </section>
