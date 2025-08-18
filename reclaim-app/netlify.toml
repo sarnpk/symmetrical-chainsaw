@@ -1,0 +1,11 @@
+[build]
+  command = "next build"
+  publish = ".next"
+
+# Use the official Next.js runtime/plugin on Netlify
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Basic caching for faster builds
+[build.environment]
+  NODE_VERSION = "18"
