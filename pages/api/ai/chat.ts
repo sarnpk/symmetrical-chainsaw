@@ -1,7 +1,8 @@
 // Next.js API route for AI chat with subscription tier limits
 import { NextApiRequest, NextApiResponse } from 'next'
 import { createClient } from '@supabase/supabase-js'
-import { geminiAI } from '../../../lib/gemini-ai'
+import { geminiAI, DEFAULT_FREE_TIER_MODEL, DEFAULT_PAID_TIER_MODEL } from '../../../lib/gemini-ai'
+import { AI_LIMITS } from '../../../lib/usage-limits'
 import { checkFeatureLimit, recordFeatureUsage } from '../../../lib/supabase'
 
 const supabase = createClient(
@@ -96,14 +97,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const subscriptionTier = profile?.subscription_tier || 'foundation'
 
     // Check usage limits based on subscription tier
-    const limits = {
-      foundation: 5,
-      recovery: 100,
-      empowerment: -1 // unlimited
-    }
+    const monthlyLimit = AI_LIMITS[subscriptionTier as keyof typeof AI_LIMITS]
+    let currentUsage = 0
 
-    const monthlyLimit = limits[subscriptionTier as keyof typeof limits]
-    
     if (monthlyLimit !== -1) {
       const { data: limitCheck, error: limitError } = await checkFeatureLimit(
         user.id, 
@@ -116,18 +112,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ error: 'Failed to check usage limits' })
       }
 
-      if (limitCheck && limitCheck.current_usage >= monthlyLimit) {
+      currentUsage = limitCheck?.current_usage || 0
+
+      if (limitCheck && currentUsage >= monthlyLimit) {
         return res.status(429).json({ 
           error: 'Monthly AI interaction limit reached',
           limit: monthlyLimit,
-          current_usage: limitCheck.current_usage,
+          current_usage: currentUsage,
           upgrade_required: subscriptionTier === 'foundation' ? 'recovery' : 'empowerment'
         })
       }
     }
 
+    // Select model based on subscription tier
+    const model = subscriptionTier === 'foundation' ? DEFAULT_FREE_TIER_MODEL : DEFAULT_PAID_TIER_MODEL
+
     // Make AI chat request
-    const aiResponse = await geminiAI.chat(message, conversationHistory, context)
+    const aiResponse = await geminiAI.chat(message, conversationHistory, context, model)
 
     // Save conversation to database
     const conversationId = `conv_${user.id}_${Date.now()}`
@@ -169,7 +170,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       usage_info: {
         subscription_tier: subscriptionTier,
         monthly_limit: monthlyLimit,
-        remaining: monthlyLimit === -1 ? -1 : Math.max(0, monthlyLimit - (limitCheck?.current_usage || 0) - 1)
+        remaining: monthlyLimit === -1 ? -1 : Math.max(0, monthlyLimit - currentUsage - 1)
       }
     })
 

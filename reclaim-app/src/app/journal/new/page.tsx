@@ -129,6 +129,11 @@ export default function NewJournalEntryPage() {
   const [subscriptionTier, setSubscriptionTier] = useState<'foundation' | 'recovery' | 'empowerment'>('foundation')
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false)
 
+  // AI Suggest Title state
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [suggesting, setSuggesting] = useState(false)
+  const [suggestError, setSuggestError] = useState<string | null>(null)
+
   // Evidence state
   const [photoEvidence, setPhotoEvidence] = useState<PhotoEvidence[]>([])
   const [audioEvidence, setAudioEvidence] = useState<AudioEvidence[]>([])
@@ -200,6 +205,56 @@ export default function NewJournalEntryPage() {
 
     getUser()
   }, [router, supabase])
+
+  // Call server API to suggest a title based on description/content
+  const handleSuggestTitle = async () => {
+    setSuggestError(null)
+    setSuggestions([])
+    setSuggesting(true)
+    try {
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+      if (!accessToken) throw new Error('Missing session token')
+
+      const text = [title, description, content].filter(Boolean).join('\n\n') || description || content
+      if (!text || text.trim().length < 10) {
+        setSuggestError('Please enter a brief description of what happened first.')
+        setSuggesting(false)
+        return
+      }
+
+      const res = await fetch('/api/ai/suggest-title', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ text }),
+      })
+
+      const data = await res.json()
+      if (!res.ok) {
+        if (data?.code === 'LIMIT_EXCEEDED' || data?.upgrade_required) {
+          setSuggestError('You’ve reached your monthly AI limit on the current plan. Consider upgrading to continue using AI features.')
+        } else {
+          setSuggestError(data?.error || 'Failed to get suggestions')
+        }
+        return
+      }
+      if (Array.isArray(data?.suggestions)) {
+        setSuggestions(data.suggestions)
+      } else if (data?.result?.suggestions) {
+        setSuggestions(data.result.suggestions)
+      } else {
+        setSuggestError('No suggestions returned')
+      }
+    } catch (e: any) {
+      console.error('Suggest title error:', e)
+      setSuggestError(e?.message || 'Failed to get suggestions')
+    } finally {
+      setSuggesting(false)
+    }
+  }
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
@@ -455,6 +510,31 @@ export default function NewJournalEntryPage() {
 
     try {
       if (!user) throw new Error('Not authenticated')
+
+      // Enforce storage cap for foundation users before any uploads
+      const totalIncomingBytes = [...photoEvidence.map(p => p.file.size), ...audioEvidence.map(a => a.file.size)]
+        .reduce((acc, n) => acc + (n || 0), 0)
+
+      if (totalIncomingBytes > 0) {
+        const { data: sessionData } = await supabase.auth.getSession()
+        const accessToken = sessionData.session?.access_token
+        if (!accessToken) throw new Error('Missing session token')
+
+        const resp = await fetch('/api/storage/check-cap', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ incoming_bytes: totalIncomingBytes })
+        })
+        const cap = await resp.json()
+        if (!resp.ok || cap?.allowed === false) {
+          toast.error(cap?.error || 'Storage limit reached. Please remove some files or upgrade to upload more.')
+          setSaving(false)
+          return
+        }
+      }
 
       const incidentDateTime = incidentDate + (incidentTime ? 'T' + incidentTime : 'T12:00:00')
       
@@ -762,9 +842,20 @@ export default function NewJournalEntryPage() {
             {!collapsedSections.basicInfo && (
               <CardContent className="space-y-4 md:space-y-6">
                 <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Title <span className="text-red-500">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Title <span className="text-red-500">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleSuggestTitle}
+                    className="inline-flex items-center px-3 py-1.5 text-sm rounded-md border border-indigo-300 text-indigo-700 hover:bg-indigo-50 disabled:opacity-50"
+                    disabled={suggesting}
+                    aria-label="Suggest title"
+                  >
+                    {suggesting ? 'Getting suggestions…' : 'Suggest title'}
+                  </button>
+                </div>
                 <input
                   type="text"
                   value={title}
@@ -773,6 +864,27 @@ export default function NewJournalEntryPage() {
                   placeholder="Brief description of the incident"
                   required
                 />
+                {suggestError && (
+                  <p className="text-sm text-red-600 mt-2">{suggestError}</p>
+                )}
+                {suggestions.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm text-gray-600 mb-2">Suggestions:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestions.map((s, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setTitle(s)}
+                          className="px-3 py-1.5 text-sm rounded-full border border-gray-300 hover:bg-gray-50"
+                          title="Use this title"
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>

@@ -1,7 +1,7 @@
 // Next.js API route for AI pattern analysis
 import { NextApiRequest, NextApiResponse } from 'next'
 import { createClient } from '@supabase/supabase-js'
-import { geminiAI } from '../../../lib/gemini-ai'
+import { geminiAI, DEFAULT_FREE_TIER_MODEL, DEFAULT_PAID_TIER_MODEL } from '../../../lib/gemini-ai'
 import { createPatternAnalysis, checkFeatureLimit, recordFeatureUsage } from '../../../lib/supabase'
 
 const supabase = createClient(
@@ -67,8 +67,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     }
 
+    // Determine subscription tier to select model
+    const subscriptionTier = (await supabase
+      .from('profiles')
+      .select('subscription_tier')
+      .eq('id', user.id)
+      .maybeSingle()
+    ).data?.subscription_tier || 'foundation'
+
+    const model = subscriptionTier === 'foundation' ? DEFAULT_FREE_TIER_MODEL : DEFAULT_PAID_TIER_MODEL
+
     // Perform AI pattern analysis
-    const analysisResult = await geminiAI.analyzePatterns(journalEntries)
+    const analysisResult = await geminiAI.analyzePatterns(journalEntries, model)
 
     // Save analysis results to database
     const { data: savedAnalysis, error: saveError } = await createPatternAnalysis({

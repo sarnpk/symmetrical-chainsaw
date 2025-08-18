@@ -85,7 +85,8 @@ class GeminiAI {
   async chat(
     message: string,
     conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
-    context: 'general' | 'crisis' | 'pattern-analysis' | 'mind-reset' | 'grey-rock' = 'general'
+    context: 'general' | 'crisis' | 'pattern-analysis' | 'mind-reset' | 'grey-rock' = 'general',
+    model?: string
   ): Promise<string> {
     const systemPrompt = this.getSystemPrompt(context)
     
@@ -101,7 +102,7 @@ class GeminiAI {
       }
     ]
 
-    const response = await this.makeRequest('gemini-pro:generateContent', {
+    const response = await this.makeRequest(`${model || DEFAULT_PAID_TIER_MODEL}:generateContent`, {
       contents,
       generationConfig: {
         temperature: 0.7,
@@ -127,7 +128,7 @@ class GeminiAI {
     emotional_state_before?: string
     emotional_state_after?: string
     location?: string
-  }>): Promise<PatternAnalysisResult> {
+  }>, model?: string): Promise<PatternAnalysisResult> {
     const analysisPrompt = `
 You are an AI specialist in narcissistic abuse pattern recognition. Analyze the following journal entries and provide a comprehensive pattern analysis.
 
@@ -179,7 +180,7 @@ Please provide a JSON response with the following structure:
 
 Focus on identifying cycles, escalation patterns, triggers, and provide trauma-informed recommendations.`
 
-    const response = await this.makeRequest('gemini-pro:generateContent', {
+    const response = await this.makeRequest(`${model || DEFAULT_PAID_TIER_MODEL}:generateContent`, {
       contents: [{ parts: [{ text: analysisPrompt }] }],
       generationConfig: {
         temperature: 0.3,
@@ -212,7 +213,8 @@ Focus on identifying cycles, escalation patterns, triggers, and provide trauma-i
       emotional_state?: string
       trigger?: string
       situation?: string
-    }
+    },
+    model?: string
   ): Promise<MindResetResult> {
     const mindResetPrompt = `
 You are a trauma-informed AI therapist specializing in cognitive reframing for narcissistic abuse survivors.
@@ -239,7 +241,7 @@ Focus on:
 - Providing practical coping strategies
 - Building resilience and self-worth`
 
-    const response = await this.makeRequest('gemini-pro:generateContent', {
+    const response = await this.makeRequest(`${model || DEFAULT_PAID_TIER_MODEL}:generateContent`, {
       contents: [{ parts: [{ text: mindResetPrompt }] }],
       generationConfig: {
         temperature: 0.6,
@@ -271,7 +273,7 @@ Focus on:
     most_common_abuse_types: string[]
     boundary_violations: number
     coping_strategy_effectiveness: number
-  }): Promise<{
+  }, model?: string): Promise<{
     insights: Array<{
       type: 'pattern' | 'recommendation' | 'warning' | 'progress' | 'achievement'
       title: string
@@ -304,7 +306,7 @@ Generate 3-5 insights in JSON format:
 
 Focus on being supportive, trauma-informed, and actionable.`
 
-    const response = await this.makeRequest('gemini-pro:generateContent', {
+    const response = await this.makeRequest(`${model || DEFAULT_PAID_TIER_MODEL}:generateContent`, {
       contents: [{ parts: [{ text: insightsPrompt }] }],
       generationConfig: {
         temperature: 0.5,
@@ -395,8 +397,12 @@ Focus on being supportive, trauma-informed, and actionable.`
   }
 }
 
-// Export singleton instance
-export const geminiAI = new GeminiAI(process.env.GOOGLE_AI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || '')
+// Model defaults (server-side only)
+export const DEFAULT_FREE_TIER_MODEL = 'gemini-2.5-flash-lite'
+export const DEFAULT_PAID_TIER_MODEL = 'gemini-1.5-flash'
+
+// Export singleton instance (no client-exposed key fallback)
+export const geminiAI = new GeminiAI(process.env.GOOGLE_AI_API_KEY || '')
 
 // Export types
 export type { PatternAnalysisResult, MindResetResult }

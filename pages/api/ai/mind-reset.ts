@@ -1,8 +1,9 @@
 // Next.js API route for AI mind reset tool
 import { NextApiRequest, NextApiResponse } from 'next'
 import { createClient } from '@supabase/supabase-js'
-import { geminiAI } from '../../../lib/gemini-ai'
+import { geminiAI, DEFAULT_FREE_TIER_MODEL, DEFAULT_PAID_TIER_MODEL } from '../../../lib/gemini-ai'
 import { createMindResetSession, checkFeatureLimit, recordFeatureUsage } from '../../../lib/supabase'
+import { AI_LIMITS } from '../../../lib/usage-limits'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -40,17 +41,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ error: 'Invalid authorization' })
     }
 
-    // Check if user can use AI features
-    const { data: canUseAI } = await checkFeatureLimit(user.id, 'ai_interactions')
-    if (!canUseAI) {
-      return res.status(429).json({ 
-        error: 'AI interaction limit reached for your subscription tier',
-        code: 'LIMIT_EXCEEDED'
-      })
+    // Determine subscription tier
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_tier')
+      .eq('id', user.id)
+      .single()
+
+    const subscriptionTier = profile?.subscription_tier || 'foundation'
+
+    // Enforce monthly AI limits
+    const monthlyLimit = AI_LIMITS[subscriptionTier as keyof typeof AI_LIMITS]
+    let currentUsage = 0
+    if (monthlyLimit !== -1) {
+      const { data: limitCheck, error: limitError } = await checkFeatureLimit(
+        user.id,
+        'ai_interactions',
+        'monthly_count'
+      )
+      if (limitError) {
+        console.error('Error checking feature limit:', limitError)
+        return res.status(500).json({ error: 'Failed to check usage limits' })
+      }
+      currentUsage = limitCheck?.current_usage || 0
+      if (limitCheck && currentUsage >= monthlyLimit) {
+        return res.status(429).json({
+          error: 'Monthly AI interaction limit reached',
+          limit: monthlyLimit,
+          current_usage: currentUsage,
+          upgrade_required: subscriptionTier === 'foundation' ? 'recovery' : 'empowerment'
+        })
+      }
     }
 
+    // Select model based on subscription tier
+    const model = subscriptionTier === 'foundation' ? DEFAULT_FREE_TIER_MODEL : DEFAULT_PAID_TIER_MODEL
+
     // Perform AI mind reset
-    const mindResetResult = await geminiAI.mindReset(original_thought, context)
+    const mindResetResult = await geminiAI.mindReset(original_thought, context, model)
 
     // Save mind reset session to database
     const { data: savedSession, error: saveError } = await createMindResetSession({

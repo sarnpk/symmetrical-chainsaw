@@ -361,7 +361,7 @@ export interface UserLessonProgress {
 }
 
 // Helper functions for database operations
-export const createClient = () => {
+export const getSupabaseClient = () => {
   return supabase
 }
 
@@ -887,7 +887,6 @@ export const getUserUsage = async (userId: string, featureName?: string) => {
   if (featureName) {
     query = query.eq('feature_name', featureName)
   }
-
   const { data, error } = await query
   return { data, error }
 }
@@ -899,6 +898,24 @@ export const checkFeatureLimit = async (userId: string, featureName: string, lim
     p_limit_type: limitType
   })
 
+  return { data, error }
+}
+
+// Record feature usage via RPC
+export const recordFeatureUsage = async (
+  userId: string,
+  featureName: string,
+  usageType: string = 'monthly_count',
+  usageCount: number = 1,
+  metadata: Record<string, any> = {}
+) => {
+  const { data, error } = await supabase.rpc('record_feature_usage', {
+    p_user_id: userId,
+    p_feature_name: featureName,
+    p_usage_type: usageType,
+    p_usage_count: usageCount,
+    p_metadata: metadata
+  })
   return { data, error }
 }
 
