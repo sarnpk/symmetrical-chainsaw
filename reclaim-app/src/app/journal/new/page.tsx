@@ -86,6 +86,19 @@ interface AudioEvidence {
   audioUrl: string
 }
 
+// AI Assist types
+interface AISuggestTitle {
+  text: string
+  confidence: number
+  rationale: string
+}
+
+interface AIPrediction {
+  key: string
+  confidence: number
+  evidence: string[]
+}
+
 export default function NewJournalEntryPage() {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -134,12 +147,32 @@ export default function NewJournalEntryPage() {
   const [suggesting, setSuggesting] = useState(false)
   const [suggestError, setSuggestError] = useState<string | null>(null)
 
+  // AI Assist (Recovery+): combined metadata suggestions
+  const [aiAssistEnabled, setAiAssistEnabled] = useState<boolean>(false)
+  const [aiLoading, setAiLoading] = useState<boolean>(false)
+  const [aiError, setAiError] = useState<string | null>(null)
+  const [aiTitleSuggestions, setAiTitleSuggestions] = useState<AISuggestTitle[]>([])
+  const [aiBehaviorPreds, setAiBehaviorPreds] = useState<AIPrediction[]>([])
+  const [aiAbusePreds, setAiAbusePreds] = useState<AIPrediction[]>([])
+  const [aiWarnings, setAiWarnings] = useState<string[]>([])
+  const aiDebounceRef = useRef<number | undefined>(undefined)
+
   // Evidence state
   const [photoEvidence, setPhotoEvidence] = useState<PhotoEvidence[]>([])
   const [audioEvidence, setAudioEvidence] = useState<AudioEvidence[]>([])
   const [isRecording, setIsRecording] = useState(false)
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
   const [audioStream, setAudioStream] = useState<MediaStream | null>(null)
+
+  // Transcription usage (minutes)
+  const [txUsage, setTxUsage] = useState<{
+    usedMinutes: number
+    remainingMinutes: number | 'unlimited'
+    limitMinutes: number | 'unlimited'
+    tier: string
+  } | null>(null)
+  const [txUsageLoading, setTxUsageLoading] = useState(false)
+  const [txUsageError, setTxUsageError] = useState<string | null>(null)
 
   // Collapsible sections state for mobile optimization
   const [collapsedSections, setCollapsedSections] = useState({
@@ -152,6 +185,7 @@ export default function NewJournalEntryPage() {
 
   // Help dialog state
   const [showBehaviorHelp, setShowBehaviorHelp] = useState(false)
+  const [showWhatHelp, setShowWhatHelp] = useState(false)
 
   const toggleSection = (section: keyof typeof collapsedSections) => {
     setCollapsedSections(prev => ({
@@ -206,6 +240,37 @@ export default function NewJournalEntryPage() {
     getUser()
   }, [router, supabase])
 
+  // Fetch transcription usage for paid users
+  useEffect(() => {
+    const fetchUsage = async () => {
+      if (!user) return
+      setTxUsageError(null)
+      setTxUsageLoading(true)
+      try {
+        const { data: sessionData } = await supabase.auth.getSession()
+        const accessToken = sessionData.session?.access_token
+        if (!accessToken) throw new Error('Missing session token')
+        const res = await fetch('/api/usage/transcription', {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${accessToken}` },
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data?.error || 'Failed to load usage')
+        setTxUsage({
+          usedMinutes: Number(data.usedMinutes) || 0,
+          remainingMinutes: data.remainingMinutes,
+          limitMinutes: data.limitMinutes,
+          tier: data.tier,
+        })
+      } catch (e: any) {
+        setTxUsageError(e?.message || 'Failed to load usage')
+      } finally {
+        setTxUsageLoading(false)
+      }
+    }
+    fetchUsage()
+  }, [user, subscriptionTier])
+
   // Call server API to suggest a title based on description/content
   const handleSuggestTitle = async () => {
     setSuggestError(null)
@@ -231,8 +296,18 @@ export default function NewJournalEntryPage() {
         },
         body: JSON.stringify({ text }),
       })
-
-      const data = await res.json()
+      const ct = res.headers.get('content-type') || ''
+      let data: any
+      if (!ct.includes('application/json')) {
+        const textBody = await res.text()
+        console.error('Non-JSON response from /api/ai/suggest-title', {
+          status: res.status,
+          bodySnippet: textBody.slice(0, 300)
+        })
+        throw new Error(`Unexpected response (${res.status}). Please try again.`)
+      } else {
+        data = await res.json()
+      }
       if (!res.ok) {
         if (data?.code === 'LIMIT_EXCEEDED' || data?.upgrade_required) {
           setSuggestError('You’ve reached your monthly AI limit on the current plan. Consider upgrading to continue using AI features.')
@@ -255,6 +330,102 @@ export default function NewJournalEntryPage() {
       setSuggesting(false)
     }
   }
+
+  // Debounced AI Assist metadata fetch (Recovery+ only)
+  useEffect(() => {
+    if (!aiAssistEnabled) return
+    if (!isPaidUser()) return
+    const text = [title, description, content].filter(Boolean).join('\n\n') || description || content
+    if (!text || text.trim().length < 20) {
+      // Clear if input too short
+      setAiTitleSuggestions([])
+      setAiBehaviorPreds([])
+      setAiAbusePreds([])
+      setAiWarnings([])
+      setAiError(null)
+      return
+    }
+
+    if (aiDebounceRef.current) {
+      window.clearTimeout(aiDebounceRef.current)
+    }
+    aiDebounceRef.current = window.setTimeout(async () => {
+      try {
+        setAiLoading(true)
+        setAiError(null)
+        const { data: sessionData } = await supabase.auth.getSession()
+        const accessToken = sessionData.session?.access_token
+        if (!accessToken) throw new Error('Missing session token')
+
+        const res = await fetch('/api/ai/suggest-metadata', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ text, limit: 5 }),
+        })
+        const ct = res.headers.get('content-type') || ''
+        let data: any
+        if (!ct.includes('application/json')) {
+          const textBody = await res.text()
+          console.error('Non-JSON response from /api/ai/suggest-metadata', {
+            status: res.status,
+            bodySnippet: textBody.slice(0, 300)
+          })
+          throw new Error(`AI service returned an unexpected response (${res.status}).`)
+        } else {
+          data = await res.json()
+        }
+        if (!res.ok) {
+          if (data?.upgrade_required) {
+            setAiError('AI Assist is available on Recovery+ plans.')
+          } else if (data?.code === 'LIMIT_EXCEEDED') {
+            setAiError('You’ve reached your monthly AI limit for your plan.')
+          } else {
+            setAiError(data?.error || 'Failed to get AI suggestions')
+          }
+          setAiTitleSuggestions([])
+          setAiBehaviorPreds([])
+          setAiAbusePreds([])
+          setAiWarnings([])
+          return
+        }
+
+        const titles: AISuggestTitle[] = Array.isArray(data?.title_suggestions) ? data.title_suggestions : []
+        const behaviors: AIPrediction[] = Array.isArray(data?.behavior_categories) ? data.behavior_categories : []
+        const abuses: AIPrediction[] = Array.isArray(data?.abuse_types) ? data.abuse_types : []
+        const warnings: string[] = Array.isArray(data?.warnings) ? data.warnings : []
+
+        setAiTitleSuggestions(titles)
+        setAiBehaviorPreds(behaviors)
+        setAiAbusePreds(abuses)
+        setAiWarnings(warnings)
+
+        // Preselect high-confidence behavior categories without removing user-chosen ones
+        const high = behaviors.filter(b => b.confidence >= 0.6).map(b => b.key)
+        if (high.length) {
+          setBehaviorCategories(prev => Array.from(new Set([...prev, ...high.filter(k => behaviorCategoryOptions.includes(k))])))
+        }
+        const highAbuse = abuses.filter(a => a.confidence >= 0.65).map(a => a.key)
+        if (highAbuse.length) {
+          setSelectedAbuseTypes(prev => Array.from(new Set([...prev, ...highAbuse.filter(k => abuseTypes.includes(k))])))
+        }
+      } catch (e: any) {
+        console.error('AI Assist error:', e)
+        setAiError(e?.message || 'Failed to get AI suggestions')
+      } finally {
+        setAiLoading(false)
+      }
+    }, 650) as unknown as number
+
+    // Cleanup on unmount or change
+    return () => {
+      if (aiDebounceRef.current) {
+        window.clearTimeout(aiDebounceRef.current)
+      }
+    }
+  }, [aiAssistEnabled, title, description, content, subscriptionTier])
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
@@ -287,6 +458,22 @@ export default function NewJournalEntryPage() {
     ))
   }
 
+  // Update caption text for an audio recording
+  const updateAudioCaption = (index: number, caption: string) => {
+    setAudioEvidence(prev => prev.map((rec, i) => 
+      i === index ? { ...rec, caption } : rec
+    ))
+  }
+
+  // Remove an audio recording and revoke its object URL
+  const removeAudioRecording = (index: number) => {
+    const rec = audioEvidence[index]
+    if (rec?.audioUrl) {
+      try { URL.revokeObjectURL(rec.audioUrl) } catch {}
+    }
+    setAudioEvidence(prev => prev.filter((_, i) => i !== index))
+  }
+
   const startAudioRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -301,22 +488,25 @@ export default function NewJournalEntryPage() {
         const blob = new Blob(chunks, { type: 'audio/wav' })
         const audioUrl = URL.createObjectURL(blob)
         const file = new File([blob], `recording-${Date.now()}.wav`, { type: 'audio/wav' })
-        
+
         const newRecording: AudioEvidence = {
           file,
           caption: '',
           timestamp: new Date().toISOString(),
-          duration: 0, // Will be calculated later
+          duration: 0,
           transcription: '',
           transcriptionStatus: 'pending',
           audioUrl
         }
-        
+
+        const newIndex = audioEvidence.length
         setAudioEvidence(prev => [...prev, newRecording])
-        
-        // Start transcription (paid tiers only)
-        if (isPaidUser()) {
-          transcribeAudio(newRecording, audioEvidence.length)
+
+        // Calculate duration once metadata is available
+        const tempAudio = new Audio(audioUrl)
+        tempAudio.onloadedmetadata = () => {
+          const dur = isFinite(tempAudio.duration) ? tempAudio.duration : 0
+          setAudioEvidence(prev => prev.map((rec, i) => i === newIndex ? { ...rec, duration: dur } : rec))
         }
       }
 
@@ -331,72 +521,124 @@ export default function NewJournalEntryPage() {
   }
 
   const stopAudioRecording = () => {
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-      mediaRecorder.stop()
+    try {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop()
+      }
+      if (audioStream) {
+        audioStream.getTracks().forEach(t => t.stop())
+      }
+    } finally {
       setIsRecording(false)
     }
-    if (audioStream) {
-      audioStream.getTracks().forEach(track => track.stop())
-      setAudioStream(null)
-    }
   }
 
+  const handleAudioFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    if (!files.length) return
+    const audioFiles = files.filter(f => f.type.startsWith('audio/'))
+    if (!audioFiles.length) return
+
+    const baseIndex = audioEvidence.length
+    audioFiles.forEach((file, idx) => {
+      const audioUrl = URL.createObjectURL(file)
+      const newRecording: AudioEvidence = {
+        file,
+        caption: '',
+        timestamp: new Date().toISOString(),
+        duration: 0,
+        transcription: '',
+        transcriptionStatus: 'pending',
+        audioUrl
+      }
+      const thisIndex = baseIndex + idx
+      setAudioEvidence(prev => [...prev, newRecording])
+      const temp = new Audio(audioUrl)
+      temp.onloadedmetadata = () => {
+        const dur = isFinite(temp.duration) ? temp.duration : 0
+        setAudioEvidence(prev => prev.map((rec, i) => i === thisIndex ? { ...rec, duration: dur } : rec))
+      }
+    })
+    // Reset the input so same file can be selected again
+    e.currentTarget.value = ''
+  }
+
+  // Manually trigger transcription for a specific audio evidence item (paid users)
   const transcribeAudio = async (recording: AudioEvidence, index: number) => {
     try {
-      // Update status to processing
-      setAudioEvidence(prev => prev.map((rec, i) => 
-        i === index ? { ...rec, transcriptionStatus: 'processing' } : rec
-      ))
+      if (!user) throw new Error('Not authenticated')
+      if (!isPaidUser()) {
+        toast.error('Transcription is available on paid plans')
+        return
+      }
 
-      // Upload to Supabase Storage first
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      // Mark as processing in UI
+      setAudioEvidence(prev => prev.map((rec, i) => i === index ? { ...rec, transcriptionStatus: 'processing' } : rec))
+
+      // Upload to a temp path in evidence-audio
+      const ext = (recording.file.name.split('.').pop() || 'wav').toLowerCase()
+      const tempPath = `temp/${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+
+      const { error: upErr } = await supabaseAdmin.storage
         .from('evidence-audio')
-        .upload(`temp/${recording.file.name}`, recording.file)
+        .upload(tempPath, recording.file, { cacheControl: '3600', upsert: false })
+      if (upErr) throw upErr
 
-      if (uploadError) throw uploadError
+      // Call server API to insert evidence_files row and invoke Edge Function
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+      if (!accessToken) throw new Error('Missing session token')
 
-      // Call our transcription Edge Function
-      const { data: transcriptionData, error: transcriptionError } = await supabase.functions
-        .invoke('transcribe-audio', {
-          body: { 
-            fileId: 'temp', // temporary ID
-            storagePath: uploadData.path
-          }
+      const resp = await fetch('/api/evidence/transcribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          storage_path: tempPath,
+          file_name: recording.file.name,
+          file_type: recording.file.type,
+          file_size: recording.file.size,
+          caption: recording.caption || null,
+          duration_seconds: Math.round(recording.duration || 0),
         })
+      })
 
-      if (transcriptionError) throw transcriptionError
+      // Be robust to non-JSON responses (e.g., HTML error pages)
+      const ct = resp.headers.get('content-type') || ''
+      let data: any = null
+      if (ct.includes('application/json')) {
+        data = await resp.json().catch(() => ({}))
+      } else {
+        const textBody = await resp.text().catch(() => '')
+        console.error('Non-JSON response from /api/evidence/transcribe', {
+          status: resp.status,
+          bodySnippet: textBody.slice(0, 300)
+        })
+        if (!resp.ok) {
+          throw new Error(`Failed to start transcription: ${resp.status} ${resp.statusText}`)
+        }
+      }
+      if (!resp.ok) {
+        throw new Error(data?.error || 'Transcription failed')
+      }
 
-      // Update with transcription result
-      setAudioEvidence(prev => prev.map((rec, i) => 
-        i === index ? { 
-          ...rec, 
-          transcription: transcriptionData.transcription,
-          transcriptionStatus: 'completed'
-        } : rec
-      ))
+      // If the Edge Function returns transcription synchronously (or partially), reflect it
+      const text: string | undefined = data?.transcription || data?.result?.text
+      setAudioEvidence(prev => prev.map((rec, i) => i === index ? {
+        ...rec,
+        transcription: text || rec.transcription,
+        transcriptionStatus: text ? 'completed' : 'processing'
+      } : rec))
 
-      toast.success('Audio transcribed successfully!')
-    } catch (error) {
-      console.error('Transcription error:', error)
-      setAudioEvidence(prev => prev.map((rec, i) => 
-        i === index ? { ...rec, transcriptionStatus: 'failed' } : rec
-      ))
-      toast.error('Failed to transcribe audio')
+      toast.success(text ? 'Transcription completed' : 'Transcription started')
+    } catch (e: any) {
+      console.error('Manual transcription error:', e)
+      toast.error(e?.message || 'Failed to transcribe')
+      setAudioEvidence(prev => prev.map((rec, i) => i === index ? { ...rec, transcriptionStatus: 'failed' } : rec))
     }
   }
-
-  const removeAudioRecording = (index: number) => {
-    const recording = audioEvidence[index]
-    URL.revokeObjectURL(recording.audioUrl)
-    setAudioEvidence(prev => prev.filter((_, i) => i !== index))
-  }
-
-  const updateAudioCaption = (index: number, caption: string) => {
-    setAudioEvidence(prev => prev.map((recording, i) => 
-      i === index ? { ...recording, caption } : recording
-    ))
-  }
-
   const handleAbuseTypeToggle = (type: string) => {
     setSelectedAbuseTypes(prev =>
       prev.includes(type)
@@ -516,23 +758,36 @@ export default function NewJournalEntryPage() {
         .reduce((acc, n) => acc + (n || 0), 0)
 
       if (totalIncomingBytes > 0) {
-        const { data: sessionData } = await supabase.auth.getSession()
-        const accessToken = sessionData.session?.access_token
-        if (!accessToken) throw new Error('Missing session token')
+        try {
+          const { data: sessionData } = await supabase.auth.getSession()
+          const accessToken = sessionData.session?.access_token
+          if (!accessToken) throw new Error('Missing session token')
 
-        const resp = await fetch('/api/storage/check-cap', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ incoming_bytes: totalIncomingBytes })
-        })
-        const cap = await resp.json()
-        if (!resp.ok || cap?.allowed === false) {
-          toast.error(cap?.error || 'Storage limit reached. Please remove some files or upgrade to upload more.')
-          setSaving(false)
-          return
+          const resp = await fetch('/api/storage/check-cap', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ incoming_bytes: totalIncomingBytes })
+          })
+          const ct = resp.headers.get('content-type') || ''
+          let cap: any = null
+          if (ct.includes('application/json')) {
+            cap = await resp.json().catch(() => null)
+          } else {
+            const txt = await resp.text().catch(() => '')
+            console.warn('check-cap returned non-JSON', { status: resp.status, snippet: txt.slice(0, 200) })
+          }
+          if (!resp.ok) {
+            console.warn('check-cap not OK; proceeding without cap enforcement', cap)
+          } else if (cap && cap.allowed === false) {
+            toast.error(cap?.error || 'Storage limit reached. Please remove some files or upgrade to upload more.')
+            setSaving(false)
+            return
+          }
+        } catch (e) {
+          console.warn('check-cap failed; proceeding without cap enforcement', e)
         }
       }
 
@@ -888,15 +1143,25 @@ export default function NewJournalEntryPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  What happened? <span className="text-red-500">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-gray-700">
+                    What happened? <span className="text-red-500">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowWhatHelp(true)}
+                    className="p-1 hover:bg-gray-100 rounded"
+                    aria-label="Get help writing what happened"
+                  >
+                    <HelpCircle className="h-5 w-5 text-gray-500" />
+                  </button>
+                </div>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors resize-none text-base"
-                  placeholder="Brief summary of what happened"
+                  placeholder="Example: Partner denied saying hurtful things I have in messages, insisted I 'imagined it,' and said I'm too sensitive. I started doubting my memory despite the proof."
                   required
                 />
               </div>
@@ -916,6 +1181,153 @@ export default function NewJournalEntryPage() {
                   />
                 </div>
               )}
+
+              {/* AI Assist (Recovery+) */}
+              <div className="mt-4 border-t pt-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-medium text-gray-800">AI Assist</div>
+                    <div className="text-xs text-gray-600">Suggests a title and likely behavior patterns based on your description. You can edit everything before saving.</div>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={aiAssistEnabled}
+                    aria-label="Enable AI Assist"
+                    disabled={!isPaidUser()}
+                    onClick={() => setAiAssistEnabled(!aiAssistEnabled)}
+                    className={`inline-flex items-center gap-2 select-none ${!isPaidUser() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <span
+                      className={`relative inline-flex h-6 w-11 rounded-full transition-colors duration-200 ${aiAssistEnabled ? 'bg-indigo-600' : 'bg-gray-300'}`}
+                    >
+                      <span
+                        className={`inline-block h-5 w-5 bg-white rounded-full shadow transform transition-transform duration-200 mt-[2px] ${aiAssistEnabled ? 'translate-x-5' : 'translate-x-1'}`}
+                      />
+                    </span>
+                    <span className="text-sm text-gray-700">Enable</span>
+                  </button>
+                </div>
+
+                {!isPaidUser() && (
+                  <p className="mt-2 text-xs text-purple-700 bg-purple-50 border border-purple-200 rounded px-3 py-2">
+                    AI Assist is available on Recovery and Empowerment plans. Upgrade to use automatic suggestions.
+                  </p>
+                )}
+
+                {aiAssistEnabled && (
+                  <div className="mt-3 space-y-3">
+                    {aiError && (
+                      <p className="text-sm text-red-600">{aiError}</p>
+                    )}
+                    {aiWarnings.length > 0 && (
+                      <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
+                        <ul className="list-disc ml-5">
+                          {aiWarnings.map((w, i) => (
+                            <li key={i}>{w}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Title suggestions with confidence */}
+                    {aiTitleSuggestions.length > 0 && (
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-sm text-gray-700">AI title suggestions</p>
+                          <button
+                            type="button"
+                            className="text-xs text-gray-600 hover:text-gray-900 underline"
+                            onClick={() => setAiTitleSuggestions([])}
+                          >
+                            Clear
+                          </button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {aiTitleSuggestions.map((t, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setTitle(t.text)}
+                              className="px-3 py-1.5 text-sm rounded-full border border-gray-300 hover:bg-gray-50"
+                              title={t.rationale || 'Use this title'}
+                            >
+                              {t.text}
+                              <span className="ml-2 text-[10px] text-gray-500">{Math.round((t.confidence || 0) * 100)}%</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Behavior category predictions */}
+                    {aiBehaviorPreds.length > 0 && (
+                      <div>
+                        <p className="text-sm text-gray-700 mb-1">Suggested behavior categories</p>
+                        <div className="flex flex-wrap gap-2">
+                          {aiBehaviorPreds
+                            .slice()
+                            .sort((a,b) => b.confidence - a.confidence)
+                            .map((b) => (
+                              <button
+                                key={b.key}
+                                type="button"
+                                onClick={() => {
+                                  setBehaviorCategories(prev =>
+                                    prev.includes(b.key)
+                                      ? prev.filter(k => k !== b.key)
+                                      : [...prev, b.key]
+                                  )
+                                }}
+                                className={`px-2.5 py-1.5 text-xs rounded-full border-2 transition-colors ${
+                                  behaviorCategories.includes(b.key)
+                                    ? 'border-green-500 bg-green-50 text-green-700'
+                                    : 'border-gray-200 hover:border-gray-300'
+                                }`}
+                                title={(b.evidence || []).join('\n')}
+                              >
+                                {b.key.replace(/_/g,' ')}
+                                <span className="ml-2 text-[10px] text-gray-500">{Math.round((b.confidence || 0) * 100)}%</span>
+                              </button>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Abuse type predictions */}
+                    {aiAbusePreds.length > 0 && (
+                      <div>
+                        <p className="text-sm text-gray-700 mb-1">Suggested abuse types</p>
+                        <div className="flex flex-wrap gap-2">
+                          {aiAbusePreds
+                            .slice()
+                            .sort((a,b) => b.confidence - a.confidence)
+                            .map((a) => (
+                              <button
+                                key={a.key}
+                                type="button"
+                                onClick={() => handleAbuseTypeToggle(a.key)}
+                                className={`px-2.5 py-1.5 text-xs rounded-full border-2 transition-colors ${
+                                  selectedAbuseTypes.includes(a.key)
+                                    ? 'border-teal-500 bg-teal-50 text-teal-700'
+                                    : 'border-gray-200 hover:border-gray-300'
+                                }`}
+                                title={(a.evidence || []).join('\n')}
+                              >
+                                {a.key.replace(/_/g,' ')}
+                                <span className="ml-2 text-[10px] text-gray-500">{Math.round((a.confidence || 0) * 100)}%</span>
+                              </button>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {aiLoading && (
+                      <div className="text-xs text-gray-600">Analyzing your description…</div>
+                    )}
+                  </div>
+                )}
+              </div>
 
 
               </CardContent>
@@ -1423,19 +1835,77 @@ export default function NewJournalEntryPage() {
                   </button>
                 </div>
 
+                {isPaidUser() && (
+                  <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                    <input
+                      id="audio-file-input"
+                      type="file"
+                      accept="audio/*"
+                      multiple
+                      onChange={handleAudioFileUpload}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="audio-file-input"
+                      className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer inline-flex items-center gap-2 w-fit"
+                    >
+                      <Upload className="h-4 w-4" />
+                      Upload audio file(s)
+                    </label>
+                    <span className="text-xs text-gray-500 self-center sm:self-auto">MP3, WAV, M4A, or other audio formats.</span>
+                  </div>
+                )}
+
+                {/* Transcription usage badge */}
+                <div className="mt-2">
+                  {txUsageLoading ? (
+                    <span className="text-xs text-gray-500">Checking transcription usage…</span>
+                  ) : txUsageError ? (
+                    <span className="text-xs text-red-600">{txUsageError}</span>
+                  ) : txUsage ? (
+                    txUsage.tier === 'foundation' ? (
+                      <span className="text-xs text-gray-600">Transcription is not available on Foundation.</span>
+                    ) : (
+                      <span className={`text-xs font-medium px-2 py-1 rounded-full ${typeof txUsage.remainingMinutes === 'number' && txUsage.remainingMinutes <= 20 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}>
+                        {`Transcription quota: ${txUsage.usedMinutes} min used · ${txUsage.limitMinutes === 'unlimited' ? 'unlimited' : txUsage.remainingMinutes + ' min'} left this month`}
+                      </span>
+                    )
+                  ) : null}
+                </div>
+
                 {audioEvidence.length > 0 && (
                   <div className="space-y-4">
                     {audioEvidence.map((recording, index) => (
                       <div key={index} className="border border-gray-200 rounded-lg p-4">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
                           <audio controls src={recording.audioUrl} className="flex-1 w-full" />
-                          <button
-                            type="button"
-                            onClick={() => removeAudioRecording(index)}
-                            className="bg-red-600 text-white rounded-full p-1 hover:bg-red-700 self-end sm:self-auto"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
+                          <div className="flex items-center gap-2 self-end sm:self-auto">
+                            {isPaidUser() && (recording.transcriptionStatus === 'pending' || recording.transcriptionStatus === 'failed') && (
+                              <button
+                                type="button"
+                                onClick={() => transcribeAudio(recording, index)}
+                                className="px-3 py-1.5 text-xs rounded-md bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
+                              >
+                                {recording.transcriptionStatus === 'failed' ? 'Retry Transcribe' : 'Transcribe'}
+                              </button>
+                            )}
+                            {recording.transcriptionStatus === 'processing' && (
+                              <button
+                                type="button"
+                                disabled
+                                className="px-3 py-1.5 text-xs rounded-md bg-gray-200 text-gray-700"
+                              >
+                                Transcribing…
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => removeAudioRecording(index)}
+                              className="bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
                         </div>
 
                         <input
@@ -1450,25 +1920,23 @@ export default function NewJournalEntryPage() {
                           {new Date(recording.timestamp).toLocaleString()}
                         </div>
 
-                        {recording.transcriptionStatus !== 'pending' && (
-                          <div className="bg-gray-50 p-3 rounded-lg">
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                              <span className="text-xs font-medium text-gray-700">Transcription:</span>
-                              <span className={`text-xs px-2 py-1 rounded-full w-fit ${
-                                recording.transcriptionStatus === 'completed' ? 'bg-green-100 text-green-700' :
-                                recording.transcriptionStatus === 'processing' ? 'bg-yellow-100 text-yellow-700' :
-                                'bg-red-100 text-red-700'
-                              }`}>
-                                {recording.transcriptionStatus}
-                              </span>
-                            </div>
-                            {recording.transcription && (
-                              <div className="bg-white border border-gray-200 rounded-2xl px-3 py-2 shadow-sm text-sm text-gray-800 max-w-full whitespace-pre-wrap">
-                                {recording.transcription}
-                              </div>
-                            )}
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                            <span className="text-xs font-medium text-gray-700">Transcription:</span>
+                            <span className={`text-xs px-2 py-1 rounded-full w-fit ${
+                              recording.transcriptionStatus === 'completed' ? 'bg-green-100 text-green-700' :
+                              recording.transcriptionStatus === 'processing' ? 'bg-yellow-100 text-yellow-700' :
+                              recording.transcriptionStatus === 'failed' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'
+                            }`}>
+                              {recording.transcriptionStatus}
+                            </span>
                           </div>
-                        )}
+                          {recording.transcription && (
+                            <div className="bg-white border border-gray-200 rounded-2xl px-3 py-2 shadow-sm text-sm text-gray-800 max-w-full whitespace-pre-wrap">
+                              {recording.transcription}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1666,6 +2134,49 @@ export default function NewJournalEntryPage() {
                   </button>
                 </div>
               </div>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
+
+      {/* What Happened Help Dialog */}
+      <Dialog open={showWhatHelp} onClose={() => setShowWhatHelp(false)} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-black/30" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogPanel className="mx-auto max-w-2xl w-full bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b flex items-center justify-between">
+              <DialogTitle className="text-lg font-semibold text-gray-900">
+                Tips for "What happened?"
+              </DialogTitle>
+              <button
+                onClick={() => setShowWhatHelp(false)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Close help"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4 text-sm text-gray-700">
+              <p>Write a brief, factual description in your own words. Include specific actions, quotes, and context.</p>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>Who was involved and when it happened</li>
+                <li>Key actions or words used (quotes help)</li>
+                <li>Any evidence you have (texts, audio, photos)</li>
+                <li>How it made you feel or impacted you</li>
+              </ul>
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-800">
+                <div className="text-xs font-medium text-gray-600 mb-1">Example</div>
+                <p>Partner denied saying hurtful things I have in messages, insisted I “imagined it,” and said I’m too sensitive. I started doubting my memory despite the proof.</p>
+              </div>
+              <p className="text-xs text-gray-600">Tip: Longer, concrete details improve AI suggestions. Minimum ~20 characters.</p>
+            </div>
+            <div className="flex justify-end px-6 pb-6">
+              <button
+                onClick={() => setShowWhatHelp(false)}
+                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Got it
+              </button>
             </div>
           </DialogPanel>
         </div>
