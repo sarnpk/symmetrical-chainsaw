@@ -7,20 +7,21 @@ const corsHeaders = {
 }
 
 interface GladiaTranscriptionRequest {
-  audio_url?: string
+  audio_url: string
   language?: string
-  language_behaviour?: 'manual' | 'automatic single language' | 'automatic multiple languages'
+  // v2 uses American spelling
+  language_behavior?: 'manual' | 'automatic single language' | 'automatic multiple languages'
   transcription_hint?: string
-  detect_language?: boolean
   enable_code_switching?: boolean
   custom_vocabulary?: string[]
 }
 
 interface GladiaTranscriptionResponse {
-  id: string
+  id?: string
   status: 'queued' | 'processing' | 'done' | 'error'
   result_url?: string
   error?: string
+  // Legacy shape
   prediction?: {
     language: string
     language_probability: number
@@ -35,6 +36,31 @@ interface GladiaTranscriptionResponse {
       confidence: number
     }>
   }[]
+  // v2 shape
+  transcription?: {
+    languages?: string[]
+    utterances?: Array<{
+      text: string
+      language?: string
+      start?: number
+      end?: number
+      confidence?: number
+      channel?: number
+      words?: Array<{
+        word: string
+        start?: number
+        end?: number
+        confidence?: number
+      }>
+    }>
+    full_transcript?: string
+  }
+  metadata?: {
+    audio_duration?: number
+    number_of_distinct_channels?: number
+    billing_time?: number
+    transcription_time?: number
+  }
 }
 
 serve(async (req) => {
@@ -44,15 +70,25 @@ serve(async (req) => {
   }
 
   try {
-    // Initialize Supabase client
+    // Initialize Supabase clients
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? ''
+    const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+
     const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY,
       {
         global: {
           headers: { Authorization: req.headers.get('Authorization')! },
         },
       }
+    )
+
+    // Admin client bypasses RLS for storage and DB updates
+    const supabaseAdmin = createClient(
+      SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY
     )
 
     // Get user from JWT
@@ -61,7 +97,7 @@ serve(async (req) => {
       throw new Error('Unauthorized')
     }
 
-    const { evidence_file_id, options = {} } = await req.json()
+    const { evidence_file_id, audio_url: preSignedAudioUrl, options = {} } = await req.json()
 
     if (!evidence_file_id) {
       throw new Error('Evidence file ID is required')
@@ -99,8 +135,8 @@ serve(async (req) => {
       throw new Error('File is not an audio file')
     }
 
-    // Update status to processing
-    await supabaseClient
+    // Update status to processing (use admin to bypass RLS)
+    await supabaseAdmin
       .from('evidence_files')
       .update({
         transcription_status: 'processing',
@@ -112,20 +148,26 @@ serve(async (req) => {
       })
       .eq('id', evidence_file_id)
 
-    // Generate signed URL for audio file
-    const { data: signedUrlData } = await supabaseClient.storage
-      .from(evidenceFile.storage_bucket)
-      .createSignedUrl(evidenceFile.storage_path, 3600) // 1 hour
-
-    if (!signedUrlData?.signedUrl) {
-      throw new Error('Failed to generate audio URL')
+    // Use provided pre-signed URL if available, otherwise generate one (admin bypasses policies)
+    let audioUrlToUse = preSignedAudioUrl as string | undefined
+    let audioUrlSource: 'pre-signed' | 'generated' = 'pre-signed'
+    if (!audioUrlToUse) {
+      const { data: signedUrlData, error: signedErr } = await supabaseAdmin.storage
+        .from(evidenceFile.storage_bucket)
+        .createSignedUrl(evidenceFile.storage_path, 3600) // 1 hour
+      if (!signedUrlData?.signedUrl) {
+        const detail = signedErr?.message || 'no signedUrl returned'
+        throw new Error(`Failed to generate audio URL: ${detail}`)
+      }
+      audioUrlToUse = signedUrlData.signedUrl
+      audioUrlSource = 'generated'
     }
 
     // Start transcription with Gladia API
-    const transcriptionResult = await transcribeWithGladia(signedUrlData.signedUrl, options)
+    const transcriptionResult = await transcribeWithGladia(audioUrlToUse!, options, audioUrlSource)
 
-    // Update evidence file with transcription results
-    await supabaseClient
+    // Update evidence file with transcription results (admin)
+    await supabaseAdmin
       .from('evidence_files')
       .update({
         transcription: transcriptionResult.transcription,
@@ -144,7 +186,7 @@ serve(async (req) => {
       .eq('id', evidence_file_id)
 
     // Record usage for billing
-    await recordTranscriptionUsage(supabaseClient, user.id, transcriptionResult)
+    await recordTranscriptionUsage(supabaseAdmin, user.id, transcriptionResult)
 
     return new Response(
       JSON.stringify({
@@ -176,20 +218,15 @@ serve(async (req) => {
   }
 })
 
-async function transcribeWithGladia(audioUrl: string, options: any) {
+async function transcribeWithGladia(audioUrl: string, options: any, source: 'pre-signed' | 'generated') {
   const gladiaApiKey = Deno.env.get('GLADIA_API_KEY')
   if (!gladiaApiKey) {
     throw new Error('Gladia API key not configured')
   }
 
-  // Start transcription
+  // Start transcription with minimal valid v2 payload to avoid schema issues
   const transcriptionRequest: GladiaTranscriptionRequest = {
     audio_url: audioUrl,
-    language_behaviour: 'automatic single language',
-    detect_language: true,
-    enable_code_switching: false,
-    transcription_hint: 'This recording may contain evidence of emotional abuse, manipulation, or threatening behavior.',
-    ...options,
   }
 
   const startResponse = await fetch('https://api.gladia.io/v2/transcription', {
@@ -202,7 +239,22 @@ async function transcribeWithGladia(audioUrl: string, options: any) {
   })
 
   if (!startResponse.ok) {
-    throw new Error(`Failed to start transcription: ${startResponse.statusText}`)
+    let bodyText = ''
+    let validationErrors: string[] | undefined
+    try {
+      const maybeJson = await startResponse.clone().json()
+      bodyText = JSON.stringify(maybeJson)
+      if (maybeJson && Array.isArray(maybeJson.validation_errors)) {
+        validationErrors = maybeJson.validation_errors
+      }
+    } catch (_) {
+      try { bodyText = await startResponse.text() } catch (_) {}
+    }
+    // Avoid leaking token in logs if present in URL
+    const safeUrl = audioUrl.replace(/(token=)[^&]+/i, '$1***')
+    console.error('Gladia start error', { status: startResponse.status, statusText: startResponse.statusText, body: bodyText.slice(0, 500), validation_errors: validationErrors, audioUrlSource: source, audioUrl: safeUrl })
+    const ve = validationErrors ? ` validation_errors: ${validationErrors.join('; ').slice(0, 300)}` : ''
+    throw new Error(`Failed to start transcription: ${startResponse.status} ${startResponse.statusText}${ve}${bodyText ? ' - ' + bodyText.slice(0, 200) : ''}`)
   }
 
   const { id: transcriptionId } = await startResponse.json()
@@ -224,25 +276,141 @@ async function transcribeWithGladia(audioUrl: string, options: any) {
 
     const result: GladiaTranscriptionResponse = await statusResponse.json()
 
-    if (result.status === 'done') {
-      if (!result.prediction || result.prediction.length === 0) {
+    // If v2 shape is present, treat as done even if 'status' is missing
+    if (result.transcription && (result.status === 'done' || result.status === undefined)) {
+      const t = result.transcription
+      const transcript = t.full_transcript || (t.utterances?.map(u => u.text).join(' ') || '')
+      if (!transcript) {
+        console.error('Gladia done without transcript', { snippet: JSON.stringify(result).slice(0, 500) })
         throw new Error('No transcription result available')
       }
-
-      const prediction = result.prediction[0]
+      const lang = t.languages?.[0] || t.utterances?.[0]?.language || 'unknown'
+      // Rough confidence: average of utterance confidences if available
+      let confidence = 0
+      if (t.utterances && t.utterances.length > 0) {
+        const vals = t.utterances.map(u => typeof u.confidence === 'number' ? u.confidence : 0)
+        confidence = vals.reduce((a, b) => a + b, 0) / vals.length
+      }
+      const duration = result.metadata?.audio_duration ?? undefined
 
       return {
-        transcription: prediction.transcription,
-        language: prediction.language,
-        confidence: prediction.confidence,
-        duration: prediction.time_end - prediction.time_begin,
-        words: prediction.words?.map(word => ({
-          word: word.word,
-          start_time: word.time_begin,
-          end_time: word.time_end,
-          confidence: word.confidence,
-        })),
+        transcription: transcript,
+        language: lang,
+        confidence: confidence || 0,
+        duration: typeof duration === 'number' ? duration : undefined,
+        words: t.utterances?.flatMap(u => (u.words || []).map(w => ({
+          word: w.word,
+          start_time: w.start ?? 0,
+          end_time: w.end ?? 0,
+          confidence: w.confidence ?? 0,
+        })))
       }
+    }
+
+    if (result.status === 'done') {
+      // Prefer v2 shape if present
+      if (result.transcription) {
+        const t = result.transcription
+        const transcript = t.full_transcript || (t.utterances?.map(u => u.text).join(' ') || '')
+        if (!transcript) {
+          console.error('Gladia done without transcript', { snippet: JSON.stringify(result).slice(0, 500) })
+          throw new Error('No transcription result available')
+        }
+        const lang = t.languages?.[0] || t.utterances?.[0]?.language || 'unknown'
+        // Rough confidence: average of utterance confidences if available
+        let confidence = 0
+        if (t.utterances && t.utterances.length > 0) {
+          const vals = t.utterances.map(u => typeof u.confidence === 'number' ? u.confidence : 0)
+          confidence = vals.reduce((a, b) => a + b, 0) / vals.length
+        }
+        // duration: prefer metadata; fallback to last utterance end
+        let duration = result.metadata?.audio_duration as number | undefined
+        if ((duration === undefined || isNaN(duration)) && t.utterances && t.utterances.length > 0) {
+          const last = t.utterances.reduce((a, b) => (typeof a.end === 'number' && typeof b.end === 'number' ? (a.end > b.end ? a : b) : a), t.utterances[0])
+          if (typeof last.end === 'number') duration = last.end
+        }
+
+        return {
+          transcription: transcript,
+          language: lang,
+          confidence: confidence || 0,
+          duration: typeof duration === 'number' ? duration : undefined,
+          words: t.utterances?.flatMap(u => (u.words || []).map(w => ({
+            word: w.word,
+            start_time: w.start ?? 0,
+            end_time: w.end ?? 0,
+            confidence: w.confidence ?? 0,
+          })))
+        }
+      }
+
+      // Legacy inline shape
+      if (result.prediction && result.prediction.length > 0) {
+        const prediction = result.prediction[0]
+        return {
+          transcription: prediction.transcription,
+          language: prediction.language,
+          confidence: prediction.confidence,
+          duration: prediction.time_end - prediction.time_begin,
+          words: prediction.words?.map(word => ({
+            word: word.word,
+            start_time: word.time_begin,
+            end_time: word.time_end,
+            confidence: word.confidence,
+          })),
+        }
+      }
+
+      // If no inline result provided, try fetching result_url (v2 behavior)
+      if (result.result_url) {
+        try {
+          const res2 = await fetch(result.result_url, { headers: { 'x-gladia-key': gladiaApiKey } })
+          if (res2.ok) {
+            const body2 = await res2.json()
+            const t = (body2.transcription ?? body2.result ?? {}) as GladiaTranscriptionResponse['transcription']
+            if (t) {
+              const transcript = t.full_transcript || (t.utterances?.map((u: any) => u.text).join(' ') || '')
+              if (transcript) {
+                const lang = t.languages?.[0] || t.utterances?.[0]?.language || 'unknown'
+                let confidence = 0
+                if (t.utterances && t.utterances.length > 0) {
+                  const vals = t.utterances.map((u: any) => typeof u.confidence === 'number' ? u.confidence : 0)
+                  confidence = vals.reduce((a: number, b: number) => a + b, 0) / vals.length
+                }
+                // duration: prefer metadata from first call; else from body2.metadata; else last utterance end
+                let duration = result.metadata?.audio_duration as number | undefined
+                if ((duration === undefined || isNaN(duration)) && typeof body2?.metadata?.audio_duration === 'number') {
+                  duration = body2.metadata.audio_duration
+                }
+                if ((duration === undefined || isNaN(duration)) && t.utterances && t.utterances.length > 0) {
+                  const last = t.utterances.reduce((a: any, b: any) => (typeof a.end === 'number' && typeof b.end === 'number' ? (a.end > b.end ? a : b) : a), t.utterances[0])
+                  if (typeof last.end === 'number') duration = last.end
+                }
+
+                return {
+                  transcription: transcript,
+                  language: lang,
+                  confidence: confidence || 0,
+                  duration: typeof duration === 'number' ? duration : undefined,
+                  words: t.utterances?.flatMap((u: any) => ((u.words || []).map((w: any) => ({
+                    word: w.word,
+                    start_time: w.start ?? 0,
+                    end_time: w.end ?? 0,
+                    confidence: w.confidence ?? 0,
+                  }))))
+                }
+              }
+            }
+          } else {
+            console.error('Failed to fetch Gladia result_url', { status: res2.status, statusText: res2.statusText })
+          }
+        } catch (e) {
+          console.error('Error fetching Gladia result_url', { error: (e as Error).message })
+        }
+      }
+
+      console.error('Gladia done but no inline result and no usable result_url', { snippet: JSON.stringify(result).slice(0, 500) })
+      throw new Error('No transcription result available')
     }
 
     if (result.status === 'error') {
