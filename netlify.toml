@@ -1,7 +1,7 @@
 [build]
   base = "reclaim-app"
   command = "next build"
-  publish = "reclaim-app/.next"
+  publish = ".next"
 
 # Use the official Next.js runtime/plugin on Netlify
 [[plugins]]
