@@ -36,11 +36,14 @@ export default function PricingPage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ 10 standard calls / month</li>
-                  <li>✗ Audio transcription (0 minutes)</li>
-                  <li>✓ ~5,000 input + ~1,750 output tokens</li>
-                  <li>✓ Community support</li>
-                  <li>✓ In-app usage tracking</li>
+                  <li>✓ Journal: up to 3 new titles per day</li>
+                  <li>✓ AI Coach: up to 5 chats per day</li>
+                  <li>✓ Patterns: 1 pattern check per day</li>
+                  <li>✓ Mind Reset: 1 exercise per day</li>
+                  <li>✓ Safety Plan & Boundary Builder: full access</li>
+                  <li>✗ Audio transcription not included</li>
+                  <li>✓ 100 MB secure file storage</li>
+                  <li>✓ Community access & usage visible in the app</li>
                 </ul>
               </CardContent>
             </Card>
@@ -57,12 +60,15 @@ export default function PricingPage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ 1,200 standard calls / month (≈ 40/day)</li>
-                  <li>✓ 60 transcription minutes / month</li>
-                  <li>✓ ~715,200 input + ~222,000 output tokens</li>
-                  <li>✓ Priority email support</li>
-                  <li>✓ Faster response times</li>
-                  <li>✓ Access to new AI features</li>
+                  <li>✓ Journal: plenty of new entries each day</li>
+                  <li>✓ AI Coach: frequent daily chats</li>
+                  <li>✓ Patterns: multiple checks per day</li>
+                  <li>✓ Mind Reset: several exercises per day</li>
+                  <li>✓ Safety Plan & Boundary Builder: full access</li>
+                  <li>✓ 60 minutes of audio transcription each month</li>
+                  <li>✓ 10 GB secure file storage</li>
+                  <li>✓ Priority email support & faster answers</li>
+                  <li>✓ Access to new features as they launch</li>
                 </ul>
               </CardContent>
             </Card>
@@ -76,14 +82,15 @@ export default function PricingPage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ 1,830 standard calls / month (≈ 61/day)</li>
-                  <li>✓ 300 transcription minutes / month</li>
-                  <li>✓ ~1,476,000 input + ~348,000 output tokens</li>
-                  <li>✓ Unlimited analysis runs (fair use)</li>
-                  <li>✓ Premium support (24/7 chat)</li>
-                  <li>✓ Priority queuing</li>
-                  <li>✓ Custom pattern templates</li>
-                  <li>✓ Early access to beta features</li>
+                  <li>✓ Journal: create freely every day</li>
+                  <li>✓ AI Coach: long, ongoing conversations</li>
+                  <li>✓ Patterns: "unlimited" checks (fair use)</li>
+                  <li>✓ Mind Reset: many exercises daily</li>
+                  <li>✓ Safety Plan & Boundary Builder: full access</li>
+                  <li>✓ 300 minutes of audio transcription each month</li>
+                  <li>✓ 100 GB secure file storage</li>
+                  <li>✓ 24/7 chat support & priority queue</li>
+                  <li>✓ Custom pattern templates & early beta access</li>
                 </ul>
               </CardContent>
             </Card>
@@ -95,42 +102,42 @@ export default function PricingPage() {
               <thead className="bg-gray-50">
                 <tr className="text-left">
                   <th className="p-3 border-b">Tier</th>
-                  <th className="p-3 border-b">Price/Month</th>
-                  <th className="p-3 border-b">Monthly Calls (Standard)</th>
-                  <th className="p-3 border-b">Transcription Quota</th>
-                  <th className="p-3 border-b">Approx. Tokens/Month</th>
-                  <th className="p-3 border-b">Additional Benefits</th>
+                  <th className="p-3 border-b">What you get</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td className="p-3 border-b font-medium">Foundation (Free)</td>
-                  <td className="p-3 border-b">$0</td>
-                  <td className="p-3 border-b">10 calls</td>
-                  <td className="p-3 border-b">0 minutes</td>
-                  <td className="p-3 border-b">~5,000 input + ~1,750 output</td>
-                  <td className="p-3 border-b">Basic access, community support, in-app usage tracking. No audio transcription.</td>
+                  <td className="p-3 border-b">
+                    • Journal (3/day), AI Coach (5/day), Patterns (1/day), Mind Reset (1/day)
+                    <br />• Full access to Safety Plan & Boundary Builder
+                    <br />• 100 MB file storage, no audio transcription
+                    <br />• Community access and in‑app usage tracking
+                  </td>
                 </tr>
                 <tr>
                   <td className="p-3 border-b font-medium">Recovery</td>
-                  <td className="p-3 border-b">$15.00</td>
-                  <td className="p-3 border-b">1,200 calls</td>
-                  <td className="p-3 border-b">60 minutes/month</td>
-                  <td className="p-3 border-b">~715,200 input + ~222,000 output</td>
-                  <td className="p-3 border-b">Priority email support, faster response times, audio transcription (60 min/month), access to new AI features</td>
+                  <td className="p-3 border-b">
+                    • Plenty of daily use across Journal, AI Coach, Patterns, and Mind Reset
+                    <br />• 60 minutes of audio transcription each month
+                    <br />• 10 GB file storage
+                    <br />• Priority email support, faster responses, early features
+                  </td>
                 </tr>
                 <tr>
                   <td className="p-3 border-b font-medium">Empowered</td>
-                  <td className="p-3 border-b">$24.99</td>
-                  <td className="p-3 border-b">1,830 calls</td>
-                  <td className="p-3 border-b">300 minutes/month</td>
-                  <td className="p-3 border-b">~1,476,000 input + ~348,000 output</td>
-                  <td className="p-3 border-b">Unlimited analysis runs (fair use), premium support (24/7 chat), priority queuing, custom pattern templates, audio transcription (300 min/month), early access to beta features</td>
+                  <td className="p-3 border-b">
+                    • Create freely every day across all features
+                    <br />• 300 minutes of audio transcription each month
+                    <br />• 100 GB file storage
+                    <br />• "Unlimited" pattern checks (fair use), 24/7 chat support, priority queue
+                    <br />• Custom templates and early beta access
+                  </td>
                 </tr>
               </tbody>
             </table>
             <p className="text-xs text-gray-500 max-w-6xl mx-auto mt-3">
-              Standard Calls: Title, chat, analysis, mind reset. Transcription minutes tracked separately (overages $0.10/min). Token counts include estimated transcription usage.
+              Notes: “Actions” are things like creating a journal title, chatting with the AI coach, running a pattern check, or doing a mind‑reset. Transcription minutes are counted separately. Fair‑use applies to unlimited analysis.
             </p>
           </div>
 

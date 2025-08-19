@@ -35,6 +35,7 @@ const navigation = [
   { name: 'AI Coach', href: '/ai-coach', icon: Brain },
   { name: 'Patterns', href: '/patterns', icon: BarChart3 },
   { name: 'Mind Reset', href: '/mind-reset', icon: Heart },
+  { name: 'Wellness', href: '/wellness', icon: Heart },
   { name: 'Safety Plan', href: '/safety-plan', icon: Shield },
   { name: 'Boundary Builder', href: '/boundary-builder', icon: Target },
   { name: 'Grey Rock', href: '/grey-rock', icon: RefreshCw },

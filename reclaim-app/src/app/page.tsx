@@ -131,11 +131,14 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ 10 standard calls / month</li>
-                  <li>✗ Audio transcription (0 minutes)</li>
-                  <li>✓ ~5,000 input + ~1,750 output tokens</li>
-                  <li>✓ Community support</li>
-                  <li>✓ In-app usage tracking</li>
+                  <li>✓ Journal: up to 3 new titles per day</li>
+                  <li>✓ AI Coach: up to 5 chats per day</li>
+                  <li>✓ Patterns: 1 pattern check per day</li>
+                  <li>✓ Mind Reset: 1 exercise per day</li>
+                  <li>✓ Safety Plan & Boundary Builder: full access</li>
+                  <li>✗ Audio transcription not included</li>
+                  <li>✓ 100 MB secure file storage</li>
+                  <li>✓ Community access & usage visible in the app</li>
                 </ul>
               </CardContent>
             </Card>
@@ -152,12 +155,15 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ 1,200 standard calls / month (≈ 40/day)</li>
-                  <li>✓ 60 transcription minutes / month</li>
-                  <li>✓ ~715,200 input + ~222,000 output tokens</li>
-                  <li>✓ Priority email support</li>
-                  <li>✓ Faster response times</li>
-                  <li>✓ Access to new AI features</li>
+                  <li>✓ Journal: plenty of new entries each day</li>
+                  <li>✓ AI Coach: frequent daily chats</li>
+                  <li>✓ Patterns: multiple checks per day</li>
+                  <li>✓ Mind Reset: several exercises per day</li>
+                  <li>✓ Safety Plan & Boundary Builder: full access</li>
+                  <li>✓ 60 minutes of audio transcription each month</li>
+                  <li>✓ 10 GB secure file storage</li>
+                  <li>✓ Priority email support & faster answers</li>
+                  <li>✓ Access to new features as they launch</li>
                 </ul>
               </CardContent>
             </Card>
@@ -171,14 +177,15 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ 1,830 standard calls / month (≈ 61/day)</li>
-                  <li>✓ 300 transcription minutes / month</li>
-                  <li>✓ ~1,476,000 input + ~348,000 output tokens</li>
-                  <li>✓ Unlimited analysis runs (fair use)</li>
-                  <li>✓ Premium support (24/7 chat)</li>
-                  <li>✓ Priority queuing</li>
-                  <li>✓ Custom pattern templates</li>
-                  <li>✓ Early access to beta features</li>
+                  <li>✓ Journal: create freely every day</li>
+                  <li>✓ AI Coach: long, ongoing conversations</li>
+                  <li>✓ Patterns: "unlimited" checks (fair use)</li>
+                  <li>✓ Mind Reset: many exercises daily</li>
+                  <li>✓ Safety Plan & Boundary Builder: full access</li>
+                  <li>✓ 300 minutes of audio transcription per month</li>
+                  <li>✓ 100 GB secure file storage</li>
+                  <li>✓ 24/7 chat support & priority queue</li>
+                  <li>✓ Custom pattern templates & early beta access</li>
                 </ul>
               </CardContent>
             </Card>

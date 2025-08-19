@@ -120,7 +120,7 @@ export default function WellnessPage() {
         </Card>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3 md:mb-5">
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -164,8 +164,8 @@ export default function WellnessPage() {
           </Card>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Main Content Grid (always stacked to keep Coping Strategies below Mood Check-in) */}
+        <div className="grid grid-cols-1 gap-6">
           {/* Mood Check-in */}
           <div className="space-y-6">
             <MoodCheckIn 
@@ -175,7 +175,7 @@ export default function WellnessPage() {
           </div>
 
           {/* Coping Strategies */}
-          <div className="space-y-6">
+          <div className="space-y-6" id="coping-strategies">
             <CopingStrategies 
               userId={user.id} 
               subscriptionTier={subscriptionTier as 'foundation' | 'recovery' | 'empowerment'} 
