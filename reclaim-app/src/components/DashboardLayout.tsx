@@ -15,9 +15,11 @@ import {
   X,
   Home,
   Heart,
+  HeartPulse,
   Users,
   Target,
-  RefreshCw
+  RefreshCw,
+  RotateCcw
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
@@ -34,8 +36,8 @@ const navigation = [
   { name: 'Journal', href: '/journal', icon: BookOpen },
   { name: 'AI Coach', href: '/ai-coach', icon: Brain },
   { name: 'Patterns', href: '/patterns', icon: BarChart3 },
-  { name: 'Mind Reset', href: '/mind-reset', icon: Heart },
-  { name: 'Wellness', href: '/wellness', icon: Heart },
+  { name: 'Mind Reset', href: '/mind-reset', icon: RotateCcw },
+  { name: 'Wellness', href: '/wellness', icon: HeartPulse },
   { name: 'Safety Plan', href: '/safety-plan', icon: Shield },
   { name: 'Boundary Builder', href: '/boundary-builder', icon: Target },
   { name: 'Grey Rock', href: '/grey-rock', icon: RefreshCw },
