@@ -41,8 +41,9 @@ if ($ShowOnly) {
   exit 0
 }
 
-# Save back
-$ver | ConvertTo-Json -Depth 3 | Set-Content -Path $versionFile -Encoding UTF8
+# Save back (UTF-8 without BOM)
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($versionFile, ($ver | ConvertTo-Json -Depth 3), $utf8NoBom)
 
 # Output human-friendly version
 $semver = "$($ver.major).$($ver.minor).$($ver.patch)+$($ver.build)"
