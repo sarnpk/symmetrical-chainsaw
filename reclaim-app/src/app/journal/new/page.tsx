@@ -701,7 +701,7 @@ export default function NewJournalEntryPage() {
     }
   }
 
-  // Numeric descriptors for Enhanced Impact Assessment
+  // Numeric descriptors for Impact Assessment
   const getMoodDescriptor = (val: number) => {
     if (val <= 2) return 'Very Low'
     if (val <= 4) return 'Low'
@@ -948,7 +948,7 @@ export default function NewJournalEntryPage() {
   // Upgrade prompt component with tier-specific messaging
   const UpgradePrompt = ({ feature }: { feature: string }) => {
     const getUpgradeMessage = () => {
-      if (feature.includes('How This Affected You') || feature.includes('Enhanced Impact Assessment')) {
+      if (feature.includes('How This Affected You') || feature.includes('Impact Assessment')) {
         return {
           title: `Unlock ${feature} with Recovery Plan`,
           description: 'Track emotional impact and get enhanced documentation features starting at $9.99/month.',
@@ -1404,78 +1404,14 @@ export default function NewJournalEntryPage() {
 
           {/* Enhanced Ratings - Paid Users Only */}
           {featureAccess.enhancedRatings ? (
-            <Card className="border-l-4 border-l-purple-500">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                  📊 Enhanced Impact Assessment
-                </CardTitle>
-                <CardDescription>Detailed analysis of emotional and psychological impact</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Mood Rating */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-4">
-                    How would you rate your mood during this incident? (1-10)
-                  </label>
-                  <div className="grid grid-cols-5 gap-2">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
-                      <button
-                        key={rating}
-                        type="button"
-                        onClick={() => setMoodRating(rating)}
-                        className={`p-2 text-center rounded-lg border-2 transition-all ${
-                          moodRating === rating
-                            ? 'border-purple-500 bg-purple-50 text-purple-700'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="font-bold">{rating}</div>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <span>Very Low</span>
-                    <span>Very High</span>
-                  </div>
-                  <div className="mt-2 text-sm text-gray-700">
-                    Selected: <span className="font-medium">{moodRating}</span> — {getMoodDescriptor(moodRating)}
-                  </div>
-                </div>
-
-                {/* Trigger Level */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-4">
-                    How triggering was this experience? (1-5)
-                  </label>
-                  <div className="grid grid-cols-5 gap-2">
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                      <button
-                        key={rating}
-                        type="button"
-                        onClick={() => setTriggerLevel(rating)}
-                        className={`p-3 text-center rounded-lg border-2 transition-all ${
-                          triggerLevel === rating
-                            ? 'border-purple-500 bg-purple-50 text-purple-700'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="font-bold text-lg">{rating}</div>
-                        <div className="text-xs">{getTriggerDescriptor(rating)}</div>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <span>Mild</span>
-                    <span>Severe</span>
-                  </div>
-                  <div className="mt-2 text-sm text-gray-700">
-                    Selected: <span className="font-medium">{triggerLevel}</span> — {getTriggerDescriptor(triggerLevel)}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <EnhancedImpactAssessment
+              moodRating={moodRating}
+              triggerLevel={triggerLevel}
+              onMoodRatingChange={setMoodRating}
+              onTriggerLevelChange={setTriggerLevel}
+            />
           ) : (
-            <UpgradePrompt feature="Enhanced Impact Assessment" />
+            <UpgradePrompt feature="Impact Assessment" />
           )}
 
 
