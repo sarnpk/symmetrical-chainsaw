@@ -54,7 +54,7 @@ export default function EnhancedImpactAssessment({
     <Card className="border-l-4 border-l-purple-500">
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-          📊 Enhanced Impact Assessment
+          📊 Impact Assessment
         </CardTitle>
         <CardDescription className="text-sm">
           Detailed analysis of emotional and psychological impact
@@ -67,35 +67,37 @@ export default function EnhancedImpactAssessment({
             How would you rate your mood during this incident? (1-10)
           </label>
           
-          {/* Mobile: 2 rows of 5, Desktop: 2 rows of 5 */}
-          <div className="grid grid-cols-5 gap-2 sm:gap-3">
+          {/* Mobile: 2 rows of 5, Desktop: 2 rows of 5. Wrap in overflow container to avoid clipping on very small screens */}
+          <div className="overflow-x-auto">
+          <div className="grid grid-cols-5 gap-1 sm:gap-3">
             {[1, 2, 3, 4, 5].map((rating) => (
               <button
                 key={rating}
                 type="button"
                 onClick={() => onMoodRatingChange(rating)}
-                className={`p-3 sm:p-4 text-center rounded-lg border-2 transition-all transform hover:scale-105 ${
+                className={`w-full p-2 sm:p-4 text-center rounded-lg border-2 transition-all transform sm:hover:scale-105 ${
                   getMoodColor(rating, moodRating === rating)
                 }`}
               >
-                <div className="font-bold text-base sm:text-lg">{rating}</div>
+                <div className="font-bold text-sm sm:text-lg">{rating}</div>
               </button>
             ))}
           </div>
           
-          <div className="grid grid-cols-5 gap-2 sm:gap-3 mt-2">
+          <div className="grid grid-cols-5 gap-1 sm:gap-3 mt-2">
             {[6, 7, 8, 9, 10].map((rating) => (
               <button
                 key={rating}
                 type="button"
                 onClick={() => onMoodRatingChange(rating)}
-                className={`p-3 sm:p-4 text-center rounded-lg border-2 transition-all transform hover:scale-105 ${
+                className={`w-full p-2 sm:p-4 text-center rounded-lg border-2 transition-all transform hover:scale-105 ${
                   getMoodColor(rating, moodRating === rating)
                 }`}
               >
-                <div className="font-bold text-base sm:text-lg">{rating}</div>
+                <div className="font-bold text-sm sm:text-lg">{rating}</div>
               </button>
             ))}
+          </div>
           </div>
           
           <div className="flex justify-between text-xs text-gray-500 mt-3">
@@ -113,14 +115,14 @@ export default function EnhancedImpactAssessment({
             How triggering was this experience? (1-5)
           </label>
           
-          {/* Mobile: Single row with larger buttons */}
+          {/* Mobile: Single column full-width buttons; Desktop: 5 columns */}
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-2">
             {[1, 2, 3, 4, 5].map((rating) => (
               <button
                 key={rating}
                 type="button"
                 onClick={() => onTriggerLevelChange(rating)}
-                className={`p-4 sm:p-3 text-center rounded-xl sm:rounded-lg border-2 transition-all transform hover:scale-105 ${
+                className={`w-full p-4 sm:p-3 text-center rounded-xl sm:rounded-lg border-2 transition-all transform sm:hover:scale-105 ${
                   getTriggerColor(rating, triggerLevel === rating)
                 }`}
               >
