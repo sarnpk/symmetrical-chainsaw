@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast'
+import AppVersion from "../components/AppVersion"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({
         <main className="min-h-screen">
           {children}
         </main>
+        <AppVersion />
         <Toaster 
           position="top-right"
           toastOptions={{
