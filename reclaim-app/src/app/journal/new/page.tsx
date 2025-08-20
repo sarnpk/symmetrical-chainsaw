@@ -11,6 +11,7 @@ import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/re
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
+import EnhancedImpactAssessment from '@/components/journal/EnhancedImpactAssessment'
 import toast from 'react-hot-toast'
 
 const abuseTypes = [
