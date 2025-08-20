@@ -1,10 +1,17 @@
 export default function AppVersion() {
-  // Read various CI/CD commit refs; prefer explicit NEXT_PUBLIC_APP_VERSION if set
+  // Version sources
   const explicit = process.env.NEXT_PUBLIC_APP_VERSION
   const vercel = process.env.VERCEL_GIT_COMMIT_SHA
   const netlify = process.env.COMMIT_REF || process.env.NETLIFY_COMMIT_REF
   const sha = (explicit || vercel || netlify || '').toString()
   const short = sha ? sha.substring(0, 7) : 'dev'
+
+  // Build time sources (prefer explicit)
+  const tExplicit = process.env.NEXT_PUBLIC_BUILD_TIME
+  const tVercel = process.env.VERCEL_GIT_COMMIT_TIMESTAMP
+  const tNetlify = process.env.DEPLOY_ID || process.env.DEPLOY_TIMESTAMP
+  const iso = (tExplicit || tVercel || tNetlify || new Date().toISOString()).toString()
+  const displayTime = iso.replace('T', ' ').replace('Z', '')
 
   return (
     <footer className="w-full py-4 text-center text-xs text-gray-500 select-none">
@@ -13,6 +20,8 @@ export default function AppVersion() {
         <span className="text-gray-300">•</span>
         <span>version</span>
         <code className="font-mono">{short}</code>
+        <span className="text-gray-300">•</span>
+        <span>{displayTime}</span>
       </span>
     </footer>
   )
