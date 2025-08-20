@@ -1,3 +1,6 @@
+// deno-lint-ignore-file no-explicit-any
+// Declare Deno for TypeScript tooling in Edge Function context
+declare const Deno: any
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -97,7 +100,7 @@ serve(async (req) => {
       throw new Error('Unauthorized')
     }
 
-    const { evidence_file_id, audio_url: preSignedAudioUrl, options = {} } = await req.json()
+    const { evidence_file_id, audio_url: preSignedAudioUrl, options = {}, check_status, job_id } = await req.json()
 
     if (!evidence_file_id) {
       throw new Error('Evidence file ID is required')
@@ -128,6 +131,51 @@ serve(async (req) => {
 
     if (fileError || !evidenceFile) {
       throw new Error('Evidence file not found')
+    }
+
+    // Status check mode: do not start new jobs, only check existing
+    if (check_status === true) {
+      const jobId = job_id || evidenceFile?.metadata?.transcription_job_id
+      if (!jobId) {
+        return new Response(
+          JSON.stringify({ error: 'Missing job_id for status check' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+        )
+      }
+
+      const status = await pollGladiaResultShort(String(jobId))
+      if (status) {
+        await supabaseAdmin
+          .from('evidence_files')
+          .update({
+            transcription: status.transcription,
+            transcription_status: 'completed',
+            processing_status: 'completed',
+            processed_at: new Date().toISOString(),
+            metadata: {
+              ...evidenceFile.metadata,
+              transcription_job_id: jobId,
+              transcription_language: status.language,
+              transcription_confidence: status.confidence,
+              transcription_duration: status.duration,
+              transcription_completed_at: new Date().toISOString(),
+              word_timestamps: status.words
+            }
+          })
+          .eq('id', evidence_file_id)
+
+        await recordTranscriptionUsage(supabaseAdmin, user.id, status)
+
+        return new Response(
+          JSON.stringify({ success: true, status: 'completed', job_id: jobId }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        )
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, status: 'processing', job_id: jobId }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      )
     }
 
     // Check if file is audio
@@ -163,43 +211,70 @@ serve(async (req) => {
       audioUrlSource = 'generated'
     }
 
-    // Start transcription with Gladia API
-    const transcriptionResult = await transcribeWithGladia(audioUrlToUse!, options, audioUrlSource)
+    // Start transcription with Gladia API (non-blocking pattern)
+    const start = await startGladiaTranscription(audioUrlToUse!, options, audioUrlSource)
 
-    // Update evidence file with transcription results (admin)
+    // Store job id and audio URL source in metadata
     await supabaseAdmin
       .from('evidence_files')
       .update({
-        transcription: transcriptionResult.transcription,
-        transcription_status: 'completed',
-        processing_status: 'completed',
-        processed_at: new Date().toISOString(),
         metadata: {
           ...evidenceFile.metadata,
-          transcription_language: transcriptionResult.language,
-          transcription_confidence: transcriptionResult.confidence,
-          transcription_duration: transcriptionResult.duration,
-          transcription_completed_at: new Date().toISOString(),
-          word_timestamps: transcriptionResult.words
+          transcription_job_id: start.jobId,
+          transcription_audio_url_source: audioUrlSource,
+          transcription_started_at: new Date().toISOString()
         }
       })
       .eq('id', evidence_file_id)
 
-    // Record usage for billing
-    await recordTranscriptionUsage(supabaseAdmin, user.id, transcriptionResult)
+    // Optional short initial poll (up to ~15s) to fast-complete short audios
+    try {
+      const quick = await pollGladiaResultShort(start.jobId)
+      if (quick) {
+        // Update DB with results
+        await supabaseAdmin
+          .from('evidence_files')
+          .update({
+            transcription: quick.transcription,
+            transcription_status: 'completed',
+            processing_status: 'completed',
+            processed_at: new Date().toISOString(),
+            metadata: {
+              ...evidenceFile.metadata,
+              transcription_job_id: start.jobId,
+              transcription_language: quick.language,
+              transcription_confidence: quick.confidence,
+              transcription_duration: quick.duration,
+              transcription_completed_at: new Date().toISOString(),
+              word_timestamps: quick.words
+            }
+          })
+          .eq('id', evidence_file_id)
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        transcription: transcriptionResult.transcription,
-        language: transcriptionResult.language,
-        confidence: transcriptionResult.confidence,
-        duration: transcriptionResult.duration
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
+        await recordTranscriptionUsage(supabaseAdmin, user.id, quick)
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            status: 'completed',
+            job_id: start.jobId,
+            transcription: quick.transcription,
+            language: quick.language,
+            confidence: quick.confidence,
+            duration: quick.duration
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        )
       }
+    } catch (e) {
+      // Ignore quick-poll errors; fall back to async completion
+      console.warn('Quick poll failed, continuing async:', (e as Error).message)
+    }
+
+    // Return 202 to indicate processing continues asynchronously; UI/cron can poll DB status
+    return new Response(
+      JSON.stringify({ success: true, status: 'processing', job_id: start.jobId }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 202 }
     )
 
   } catch (error) {
@@ -218,81 +293,56 @@ serve(async (req) => {
   }
 })
 
-async function transcribeWithGladia(audioUrl: string, options: any, source: 'pre-signed' | 'generated') {
+async function startGladiaTranscription(audioUrl: string, options: any, source: 'pre-signed' | 'generated') {
   const gladiaApiKey = Deno.env.get('GLADIA_API_KEY')
-  if (!gladiaApiKey) {
-    throw new Error('Gladia API key not configured')
-  }
+  if (!gladiaApiKey) throw new Error('Gladia API key not configured')
 
-  // Start transcription with minimal valid v2 payload to avoid schema issues
-  const transcriptionRequest: GladiaTranscriptionRequest = {
-    audio_url: audioUrl,
-  }
+  const transcriptionRequest: GladiaTranscriptionRequest = { audio_url: audioUrl }
 
-  const startResponse = await fetch('https://api.gladia.io/v2/transcription', {
+  const resp = await fetch('https://api.gladia.io/v2/transcription', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-gladia-key': gladiaApiKey,
-    },
+    headers: { 'Content-Type': 'application/json', 'x-gladia-key': gladiaApiKey },
     body: JSON.stringify(transcriptionRequest),
   })
 
-  if (!startResponse.ok) {
+  if (!resp.ok) {
     let bodyText = ''
-    let validationErrors: string[] | undefined
-    try {
-      const maybeJson = await startResponse.clone().json()
-      bodyText = JSON.stringify(maybeJson)
-      if (maybeJson && Array.isArray(maybeJson.validation_errors)) {
-        validationErrors = maybeJson.validation_errors
-      }
-    } catch (_) {
-      try { bodyText = await startResponse.text() } catch (_) {}
-    }
-    // Avoid leaking token in logs if present in URL
+    try { bodyText = await resp.clone().text() } catch {}
     const safeUrl = audioUrl.replace(/(token=)[^&]+/i, '$1***')
-    console.error('Gladia start error', { status: startResponse.status, statusText: startResponse.statusText, body: bodyText.slice(0, 500), validation_errors: validationErrors, audioUrlSource: source, audioUrl: safeUrl })
-    const ve = validationErrors ? ` validation_errors: ${validationErrors.join('; ').slice(0, 300)}` : ''
-    throw new Error(`Failed to start transcription: ${startResponse.status} ${startResponse.statusText}${ve}${bodyText ? ' - ' + bodyText.slice(0, 200) : ''}`)
+    console.error('Gladia start error', { status: resp.status, statusText: resp.statusText, body: bodyText.slice(0, 500), audioUrlSource: source, audioUrl: safeUrl })
+    throw new Error(`Failed to start transcription: ${resp.status} ${resp.statusText}`)
   }
 
-  const { id: transcriptionId } = await startResponse.json()
+  const { id } = await resp.json()
+  return { jobId: id as string }
+}
 
-  // Poll for results
-  const maxAttempts = 60 // 5 minutes max
-  let attempts = 0
+async function pollGladiaResultShort(jobId: string) {
+  const gladiaApiKey = Deno.env.get('GLADIA_API_KEY')
+  if (!gladiaApiKey) throw new Error('Gladia API key not configured')
 
-  while (attempts < maxAttempts) {
-    const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${transcriptionId}`, {
-      headers: {
-        'x-gladia-key': gladiaApiKey,
-      },
+  const attemptsMax = 3 // ~15s total
+  for (let i = 0; i < attemptsMax; i++) {
+    const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
+      headers: { 'x-gladia-key': gladiaApiKey },
     })
-
     if (!statusResponse.ok) {
       throw new Error(`Failed to get transcription status: ${statusResponse.statusText}`)
     }
-
     const result: GladiaTranscriptionResponse = await statusResponse.json()
 
-    // If v2 shape is present, treat as done even if 'status' is missing
+    // v2 shape handling
     if (result.transcription && (result.status === 'done' || result.status === undefined)) {
       const t = result.transcription
       const transcript = t.full_transcript || (t.utterances?.map(u => u.text).join(' ') || '')
-      if (!transcript) {
-        console.error('Gladia done without transcript', { snippet: JSON.stringify(result).slice(0, 500) })
-        throw new Error('No transcription result available')
-      }
+      if (!transcript) throw new Error('No transcription result available')
       const lang = t.languages?.[0] || t.utterances?.[0]?.language || 'unknown'
-      // Rough confidence: average of utterance confidences if available
       let confidence = 0
       if (t.utterances && t.utterances.length > 0) {
         const vals = t.utterances.map(u => typeof u.confidence === 'number' ? u.confidence : 0)
         confidence = vals.reduce((a, b) => a + b, 0) / vals.length
       }
       const duration = result.metadata?.audio_duration ?? undefined
-
       return {
         transcription: transcript,
         language: lang,
@@ -308,43 +358,6 @@ async function transcribeWithGladia(audioUrl: string, options: any, source: 'pre
     }
 
     if (result.status === 'done') {
-      // Prefer v2 shape if present
-      if (result.transcription) {
-        const t = result.transcription
-        const transcript = t.full_transcript || (t.utterances?.map(u => u.text).join(' ') || '')
-        if (!transcript) {
-          console.error('Gladia done without transcript', { snippet: JSON.stringify(result).slice(0, 500) })
-          throw new Error('No transcription result available')
-        }
-        const lang = t.languages?.[0] || t.utterances?.[0]?.language || 'unknown'
-        // Rough confidence: average of utterance confidences if available
-        let confidence = 0
-        if (t.utterances && t.utterances.length > 0) {
-          const vals = t.utterances.map(u => typeof u.confidence === 'number' ? u.confidence : 0)
-          confidence = vals.reduce((a, b) => a + b, 0) / vals.length
-        }
-        // duration: prefer metadata; fallback to last utterance end
-        let duration = result.metadata?.audio_duration as number | undefined
-        if ((duration === undefined || isNaN(duration)) && t.utterances && t.utterances.length > 0) {
-          const last = t.utterances.reduce((a, b) => (typeof a.end === 'number' && typeof b.end === 'number' ? (a.end > b.end ? a : b) : a), t.utterances[0])
-          if (typeof last.end === 'number') duration = last.end
-        }
-
-        return {
-          transcription: transcript,
-          language: lang,
-          confidence: confidence || 0,
-          duration: typeof duration === 'number' ? duration : undefined,
-          words: t.utterances?.flatMap(u => (u.words || []).map(w => ({
-            word: w.word,
-            start_time: w.start ?? 0,
-            end_time: w.end ?? 0,
-            confidence: w.confidence ?? 0,
-          })))
-        }
-      }
-
-      // Legacy inline shape
       if (result.prediction && result.prediction.length > 0) {
         const prediction = result.prediction[0]
         return {
@@ -360,69 +373,17 @@ async function transcribeWithGladia(audioUrl: string, options: any, source: 'pre
           })),
         }
       }
-
-      // If no inline result provided, try fetching result_url (v2 behavior)
-      if (result.result_url) {
-        try {
-          const res2 = await fetch(result.result_url, { headers: { 'x-gladia-key': gladiaApiKey } })
-          if (res2.ok) {
-            const body2 = await res2.json()
-            const t = (body2.transcription ?? body2.result ?? {}) as GladiaTranscriptionResponse['transcription']
-            if (t) {
-              const transcript = t.full_transcript || (t.utterances?.map((u: any) => u.text).join(' ') || '')
-              if (transcript) {
-                const lang = t.languages?.[0] || t.utterances?.[0]?.language || 'unknown'
-                let confidence = 0
-                if (t.utterances && t.utterances.length > 0) {
-                  const vals = t.utterances.map((u: any) => typeof u.confidence === 'number' ? u.confidence : 0)
-                  confidence = vals.reduce((a: number, b: number) => a + b, 0) / vals.length
-                }
-                // duration: prefer metadata from first call; else from body2.metadata; else last utterance end
-                let duration = result.metadata?.audio_duration as number | undefined
-                if ((duration === undefined || isNaN(duration)) && typeof body2?.metadata?.audio_duration === 'number') {
-                  duration = body2.metadata.audio_duration
-                }
-                if ((duration === undefined || isNaN(duration)) && t.utterances && t.utterances.length > 0) {
-                  const last = t.utterances.reduce((a: any, b: any) => (typeof a.end === 'number' && typeof b.end === 'number' ? (a.end > b.end ? a : b) : a), t.utterances[0])
-                  if (typeof last.end === 'number') duration = last.end
-                }
-
-                return {
-                  transcription: transcript,
-                  language: lang,
-                  confidence: confidence || 0,
-                  duration: typeof duration === 'number' ? duration : undefined,
-                  words: t.utterances?.flatMap((u: any) => ((u.words || []).map((w: any) => ({
-                    word: w.word,
-                    start_time: w.start ?? 0,
-                    end_time: w.end ?? 0,
-                    confidence: w.confidence ?? 0,
-                  }))))
-                }
-              }
-            }
-          } else {
-            console.error('Failed to fetch Gladia result_url', { status: res2.status, statusText: res2.statusText })
-          }
-        } catch (e) {
-          console.error('Error fetching Gladia result_url', { error: (e as Error).message })
-        }
-      }
-
-      console.error('Gladia done but no inline result and no usable result_url', { snippet: JSON.stringify(result).slice(0, 500) })
-      throw new Error('No transcription result available')
     }
 
     if (result.status === 'error') {
       throw new Error(`Transcription failed: ${result.error}`)
     }
 
-    // Wait 5 seconds before next poll
-    await new Promise(resolve => setTimeout(resolve, 5000))
-    attempts++
+    await new Promise(r => setTimeout(r, 5000))
   }
 
-  throw new Error('Transcription timeout - please try again')
+  // Not ready yet
+  return null
 }
 
 async function checkTranscriptionLimit(supabaseClient: any, userId: string): Promise<boolean> {
