@@ -13,7 +13,8 @@ import {
   Calendar,
   Sparkles,
   Shield,
-  Sun
+  Sun,
+  Shuffle
 } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -23,6 +24,7 @@ export default function WellnessPage() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [dailyAffirmation, setDailyAffirmation] = useState('')
+  const [affirmationIndex, setAffirmationIndex] = useState<number>(0)
 
   const router = useRouter()
   const supabase = createClient()
@@ -64,10 +66,11 @@ export default function WellnessPage() {
       
       setProfile(profile)
       
-      // Set daily affirmation based on date
+      // Set daily affirmation index based on date (deterministic initial)
       const today = new Date().toDateString()
-      const affirmationIndex = today.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % affirmations.length
-      setDailyAffirmation(affirmations[affirmationIndex])
+      const idx = today.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % affirmations.length
+      setAffirmationIndex(idx)
+      setDailyAffirmation(affirmations[idx])
       
       setLoading(false)
     }
@@ -99,19 +102,36 @@ export default function WellnessPage() {
         </div>
 
         {/* Daily Affirmation */}
-        <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-purple-900">
-              <Sparkles className="h-5 w-5" />
-              Daily Affirmation
-            </CardTitle>
+        <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 rounded-xl shadow-sm">
+          <CardHeader className="p-3 md:p-6 pb-1.5 md:pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-purple-900 text-base md:text-lg">
+                <Sparkles className="h-5 w-5 md:h-6 md:w-6" />
+                <span className="font-semibold">Daily Affirmation</span>
+              </CardTitle>
+              <button
+                type="button"
+                onClick={() => {
+                  const next = (affirmationIndex + 1) % affirmations.length
+                  setAffirmationIndex(next)
+                  setDailyAffirmation(affirmations[next])
+                }}
+                className="inline-flex items-center gap-1.5 rounded-md border border-purple-200 bg-white/70 px-2.5 py-1 text-xs font-medium text-purple-700 hover:bg-white shadow-sm"
+                aria-label="Shuffle affirmation"
+              >
+                <Shuffle className="h-3.5 w-3.5" /> Shuffle
+              </button>
+            </div>
           </CardHeader>
-          <CardContent>
-            <blockquote className="text-lg font-medium text-purple-800 italic text-center">
+          <CardContent className="p-3 md:p-6 pt-1.5">
+            <blockquote
+              className="text-center text-base md:text-xl leading-relaxed text-purple-800 italic mx-auto max-w-[30ch] md:max-w-[40ch]"
+              style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }}
+            >
               "{dailyAffirmation}"
             </blockquote>
-            <div className="flex justify-center mt-4">
-              <div className="flex items-center gap-2 text-sm text-purple-600">
+            <div className="flex justify-center mt-2 md:mt-4">
+              <div className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm text-purple-600">
                 <Sun className="h-4 w-4" />
                 <span>Take a moment to breathe and reflect on this</span>
               </div>

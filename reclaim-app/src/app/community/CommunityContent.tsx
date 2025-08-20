@@ -127,9 +127,9 @@ export default function CommunityContent() {
 
   const renderPosts = () => (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h2 className="text-xl font-semibold text-gray-900">Community Posts</h2>
-        <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+        <button className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
           <Plus className="h-4 w-4" />
           New Post
         </button>
@@ -196,9 +196,9 @@ export default function CommunityContent() {
 
   const renderGroups = () => (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h2 className="text-xl font-semibold text-gray-900">Support Groups</h2>
-        <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+        <button className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
           <Plus className="h-4 w-4" />
           Request to Join
         </button>
@@ -316,24 +316,26 @@ export default function CommunityContent() {
 
       {/* Tab Navigation */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="flex">
-          {tabs.map(tab => {
-            const IconComponent = tab.icon
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === tab.id
-                    ? 'border-indigo-500 text-indigo-600 bg-indigo-50'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
-              >
-                <IconComponent className="h-4 w-4" />
-                {tab.name}
-              </button>
-            )
-          })}
+        <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-px-4 overscroll-x-contain">
+          <div className="flex gap-2 py-2 md:p-0 md:gap-0 md:grid md:grid-cols-3 snap-x snap-mandatory">
+            {tabs.map(tab => {
+              const IconComponent = tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex-none md:flex-1 snap-start inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors rounded-md md:rounded-none ${
+                    activeTab === tab.id
+                      ? 'border-indigo-500 text-indigo-600 bg-indigo-50'
+                      : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  <IconComponent className="h-4 w-4" />
+                  {tab.name}
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
 

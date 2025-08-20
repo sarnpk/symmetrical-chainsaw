@@ -39,6 +39,9 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
   const [todayEntry, setTodayEntry] = useState<MoodEntry | null>(null)
   const [recentEntries, setRecentEntries] = useState<MoodEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [dragMood, setDragMood] = useState(false)
+  const [dragEnergy, setDragEnergy] = useState(false)
+  const [dragAnxiety, setDragAnxiety] = useState(false)
 
   const supabase = createClient()
 
@@ -75,6 +78,29 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
       // No entry for today, which is fine
     }
   }
+
+  // UX helpers
+  const valueToPercent = (val: number, min = 1, max = 10) => ((val - min) / (max - min)) * 100
+
+  const descriptorMoodOrEnergy = (val: number) => {
+    if (val <= 2) return 'Very Low'
+    if (val <= 4) return 'Low'
+    if (val <= 7) return 'Moderate'
+    if (val <= 9) return 'High'
+    return 'Very High'
+  }
+
+  const descriptorAnxiety = (val: number) => {
+    if (val <= 2) return 'Very Calm'
+    if (val <= 4) return 'Calm'
+    if (val <= 7) return 'Moderate'
+    if (val <= 9) return 'Anxious'
+    return 'Very Anxious'
+  }
+
+  const moodGradient = 'linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #22c55e 100%)'
+  const energyGradient = 'linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #22c55e 100%)'
+  const anxietyGradient = 'linear-gradient(90deg, #22c55e 0%, #f59e0b 50%, #ef4444 100%)'
 
   const loadRecentEntries = async () => {
     try {
@@ -231,21 +257,55 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Overall Mood (1-10)
             </label>
-            <div className="grid grid-cols-10 gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
-                <button
-                  key={rating}
-                  type="button"
-                  onClick={() => setMoodRating(rating)}
-                  className={`p-2 text-center rounded-lg border-2 transition-all ${
-                    moodRating === rating
-                      ? 'border-pink-500 bg-pink-50 text-pink-700'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="font-bold text-sm">{rating}</div>
-                </button>
-              ))}
+            {/* Discrete slider 1–10 with value chip, ticks, and drag bubble */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="relative w-full">
+                  <input
+                    type="range"
+                    min={1}
+                    max={10}
+                    step={1}
+                    value={moodRating}
+                    onChange={(e) => setMoodRating(Number(e.target.value))}
+                    onMouseDown={() => setDragMood(true)}
+                    onMouseUp={() => setDragMood(false)}
+                    onTouchStart={() => setDragMood(true)}
+                    onTouchEnd={() => setDragMood(false)}
+                    onBlur={() => setDragMood(false)}
+                    aria-label="Overall Mood from 1 to 10"
+                    aria-valuemin={1}
+                    aria-valuemax={10}
+                    aria-valuenow={moodRating}
+                    className="w-full h-2 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-pink-400"
+                    style={{ background: moodGradient }}
+                  />
+                  {dragMood && (
+                    <div
+                      className="absolute -top-8 left-0 translate-x-[-50%] px-2 py-1 text-xs rounded-md bg-pink-600 text-white shadow"
+                      style={{ left: `${valueToPercent(moodRating)}%` }}
+                    >
+                      {moodRating}
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-[44px] h-9 px-2 inline-flex items-center justify-center rounded-md border border-pink-300 bg-pink-50 text-pink-700 font-semibold">
+                  {moodRating}
+                </div>
+              </div>
+              <div className="flex justify-between">
+                {[...Array(10)].map((_, i) => {
+                  const idx = i + 1
+                  const isMajor = idx === 1 || idx === 5 || idx === 10
+                  return (
+                    <span
+                      key={idx}
+                      className={isMajor ? 'w-px h-3 bg-gray-400' : 'w-px h-2 bg-gray-300'}
+                    />
+                  )
+                })}
+              </div>
+              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-pink-700">{moodRating}</span> — {descriptorMoodOrEnergy(moodRating)}</div>
             </div>
             <div className="flex justify-between text-xs text-gray-500 mt-2">
               <span>Very Low</span>
@@ -259,21 +319,54 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
               <Zap className="inline h-4 w-4 mr-1" />
               Energy Level (1-10)
             </label>
-            <div className="grid grid-cols-10 gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
-                <button
-                  key={rating}
-                  type="button"
-                  onClick={() => setEnergyLevel(rating)}
-                  className={`p-2 text-center rounded-lg border-2 transition-all ${
-                    energyLevel === rating
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="font-bold text-sm">{rating}</div>
-                </button>
-              ))}
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="relative w-full">
+                  <input
+                    type="range"
+                    min={1}
+                    max={10}
+                    step={1}
+                    value={energyLevel}
+                    onChange={(e) => setEnergyLevel(Number(e.target.value))}
+                    onMouseDown={() => setDragEnergy(true)}
+                    onMouseUp={() => setDragEnergy(false)}
+                    onTouchStart={() => setDragEnergy(true)}
+                    onTouchEnd={() => setDragEnergy(false)}
+                    onBlur={() => setDragEnergy(false)}
+                    aria-label="Energy Level from 1 to 10"
+                    aria-valuemin={1}
+                    aria-valuemax={10}
+                    aria-valuenow={energyLevel}
+                    className="w-full h-2 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    style={{ background: energyGradient }}
+                  />
+                  {dragEnergy && (
+                    <div
+                      className="absolute -top-8 left-0 translate-x-[-50%] px-2 py-1 text-xs rounded-md bg-blue-600 text-white shadow"
+                      style={{ left: `${valueToPercent(energyLevel)}%` }}
+                    >
+                      {energyLevel}
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-[44px] h-9 px-2 inline-flex items-center justify-center rounded-md border border-blue-300 bg-blue-50 text-blue-700 font-semibold">
+                  {energyLevel}
+                </div>
+              </div>
+              <div className="flex justify-between">
+                {[...Array(10)].map((_, i) => {
+                  const idx = i + 1
+                  const isMajor = idx === 1 || idx === 5 || idx === 10
+                  return (
+                    <span
+                      key={idx}
+                      className={isMajor ? 'w-px h-3 bg-gray-400' : 'w-px h-2 bg-gray-300'}
+                    />
+                  )
+                })}
+              </div>
+              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-blue-700">{energyLevel}</span> — {descriptorMoodOrEnergy(energyLevel)}</div>
             </div>
           </div>
 
@@ -283,21 +376,54 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
               <AlertTriangle className="inline h-4 w-4 mr-1" />
               Anxiety Level (1-10)
             </label>
-            <div className="grid grid-cols-10 gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
-                <button
-                  key={rating}
-                  type="button"
-                  onClick={() => setAnxietyLevel(rating)}
-                  className={`p-2 text-center rounded-lg border-2 transition-all ${
-                    anxietyLevel === rating
-                      ? 'border-orange-500 bg-orange-50 text-orange-700'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="font-bold text-sm">{rating}</div>
-                </button>
-              ))}
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="relative w-full">
+                  <input
+                    type="range"
+                    min={1}
+                    max={10}
+                    step={1}
+                    value={anxietyLevel}
+                    onChange={(e) => setAnxietyLevel(Number(e.target.value))}
+                    onMouseDown={() => setDragAnxiety(true)}
+                    onMouseUp={() => setDragAnxiety(false)}
+                    onTouchStart={() => setDragAnxiety(true)}
+                    onTouchEnd={() => setDragAnxiety(false)}
+                    onBlur={() => setDragAnxiety(false)}
+                    aria-label="Anxiety Level from 1 to 10"
+                    aria-valuemin={1}
+                    aria-valuemax={10}
+                    aria-valuenow={anxietyLevel}
+                    className="w-full h-2 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    style={{ background: anxietyGradient }}
+                  />
+                  {dragAnxiety && (
+                    <div
+                      className="absolute -top-8 left-0 translate-x-[-50%] px-2 py-1 text-xs rounded-md bg-orange-600 text-white shadow"
+                      style={{ left: `${valueToPercent(anxietyLevel)}%` }}
+                    >
+                      {anxietyLevel}
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-[44px] h-9 px-2 inline-flex items-center justify-center rounded-md border border-orange-300 bg-orange-50 text-orange-700 font-semibold">
+                  {anxietyLevel}
+                </div>
+              </div>
+              <div className="flex justify-between">
+                {[...Array(10)].map((_, i) => {
+                  const idx = i + 1
+                  const isMajor = idx === 1 || idx === 5 || idx === 10
+                  return (
+                    <span
+                      key={idx}
+                      className={isMajor ? 'w-px h-3 bg-gray-400' : 'w-px h-2 bg-gray-300'}
+                    />
+                  )
+                })}
+              </div>
+              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-orange-700">{anxietyLevel}</span> — {descriptorAnxiety(anxietyLevel)}</div>
             </div>
             <div className="flex justify-between text-xs text-gray-500 mt-2">
               <span>Very Calm</span>
