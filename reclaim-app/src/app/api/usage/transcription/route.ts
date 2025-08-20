@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-// Service role client for server-side auth and RLS bypass when needed
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Helper to safely create a Supabase client at request time.
+// Avoids import-time crashes during build when env vars are not present.
+function getServerSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !serviceKey) {
+    return { error: 'Server misconfigured: missing Supabase env vars', client: null as any }
+  }
+  return { error: null as string | null, client: createClient(url, serviceKey) }
+}
 
 const TRANSCRIPTION_LIMITS_MIN = {
   foundation: 0,
@@ -23,6 +28,11 @@ function startOfCurrentMonthUTC(): string {
 
 export async function GET(request: Request) {
   try {
+    const { client: supabase, error: cfgError } = getServerSupabase()
+    if (cfgError) {
+      console.error('usage/transcription config error:', cfgError)
+      return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
+    }
     // Auth
     const authHeader = request.headers.get('authorization') || ''
     if (!authHeader) {
