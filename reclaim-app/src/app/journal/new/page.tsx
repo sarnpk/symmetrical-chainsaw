@@ -618,27 +618,124 @@ export default function NewJournalEntryPage() {
           bodySnippet: textBody.slice(0, 300)
         })
         if (!resp.ok) {
-          throw new Error(`Failed to start transcription: ${resp.status} ${resp.statusText}`)
+          throw new Error(`Failed to start transcription: ${resp.status} ${resp.status}`)
         }
       }
       if (!resp.ok) {
         throw new Error(data?.error || 'Transcription failed')
       }
 
-      // If the Edge Function returns transcription synchronously (or partially), reflect it
+      const evidenceFileId = data?.evidence_file_id
+      const jobId = data?.job_id
+      
+      // If the Edge Function returns transcription synchronously, reflect it
       const text: string | undefined = data?.transcription || data?.result?.text
-      setAudioEvidence(prev => prev.map((rec, i) => i === index ? {
-        ...rec,
-        transcription: text || rec.transcription,
-        transcriptionStatus: text ? 'completed' : 'processing'
-      } : rec))
+      if (text) {
+        setAudioEvidence(prev => prev.map((rec, i) => i === index ? {
+          ...rec,
+          transcription: text,
+          transcriptionStatus: 'completed'
+        } : rec))
+        toast.success('Transcription completed')
+        return
+      }
 
-      toast.success(text ? 'Transcription completed' : 'Transcription started')
+      // If not completed immediately, start polling for completion
+      if (evidenceFileId) {
+        toast.success('Transcription started - checking for completion...')
+        pollForTranscriptionCompletion(evidenceFileId, jobId, index)
+      } else {
+        throw new Error('No evidence file ID returned')
+      }
+
     } catch (e: any) {
       console.error('Manual transcription error:', e)
       toast.error(e?.message || 'Failed to transcribe')
       setAudioEvidence(prev => prev.map((rec, i) => i === index ? { ...rec, transcriptionStatus: 'failed' } : rec))
     }
+  }
+
+  // Poll for transcription completion
+  const pollForTranscriptionCompletion = async (evidenceFileId: string, jobId: string | undefined, index: number) => {
+    const maxAttempts = 60 // 5 minutes with 5-second intervals
+    let attempts = 0
+
+    const poll = async (): Promise<void> => {
+      try {
+        attempts++
+        
+        const { data: sessionData } = await supabase.auth.getSession()
+        const accessToken = sessionData.session?.access_token
+        if (!accessToken) throw new Error('Missing session token')
+
+        const resp = await fetch('/api/evidence/transcribe/status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            evidence_file_id: evidenceFileId,
+            job_id: jobId
+          })
+        })
+
+        if (!resp.ok) {
+          const errorData = await resp.json().catch(() => ({}))
+          throw new Error(errorData?.error || `Status check failed: ${resp.status}`)
+        }
+
+        const result = await resp.json()
+        
+        if (result.status === 'completed') {
+          // Fetch the updated evidence file to get the transcription
+          const { data: evidenceFile, error: fetchError } = await supabase
+            .from('evidence_files')
+            .select('transcription')
+            .eq('id', evidenceFileId)
+            .single()
+
+          if (fetchError) {
+            console.error('Failed to fetch transcription result:', fetchError)
+            throw new Error('Failed to retrieve transcription result')
+          }
+
+          // Update the UI with the completed transcription
+          setAudioEvidence(prev => prev.map((rec, i) => i === index ? {
+            ...rec,
+            transcription: evidenceFile.transcription || 'Transcription completed but text not available',
+            transcriptionStatus: 'completed'
+          } : rec))
+
+          toast.success('Transcription completed successfully!')
+          return
+        }
+
+        if (result.status === 'failed') {
+          throw new Error(result.error || 'Transcription failed')
+        }
+
+        // If still processing and we haven't exceeded max attempts, continue polling
+        if (result.status === 'processing' && attempts < maxAttempts) {
+          setTimeout(poll, 5000) // Poll every 5 seconds
+          return
+        }
+
+        // If we've exceeded max attempts or got an unexpected status
+        throw new Error(attempts >= maxAttempts ? 'Transcription timed out' : `Unexpected status: ${result.status}`)
+
+      } catch (e: any) {
+        console.error('Transcription polling error:', e)
+        setAudioEvidence(prev => prev.map((rec, i) => i === index ? { 
+          ...rec, 
+          transcriptionStatus: 'failed' 
+        } : rec))
+        toast.error(e?.message || 'Transcription failed')
+      }
+    }
+
+    // Start polling
+    setTimeout(poll, 2000) // Initial delay of 2 seconds
   }
   const handleAbuseTypeToggle = (type: string) => {
     setSelectedAbuseTypes(prev =>
