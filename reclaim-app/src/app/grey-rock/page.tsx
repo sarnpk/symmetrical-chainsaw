@@ -53,7 +53,7 @@ export default function GreyRockPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <GreyRockContent />
+      <GreyRockContent userId={user.id} subscriptionTier={profile.subscription_tier} />
     </DashboardLayout>
   )
 }

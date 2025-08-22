@@ -17,8 +17,8 @@ export default function JournalEntryCard({ entry, viewMode }: JournalEntryCardPr
   const behaviorTypes = entry.abuse_types || entry.pattern_flags || []
 
   const getSafetyColor = (rating: number) => {
-    if (rating <= 3) return 'bg-red-100 text-red-800 border-red-200'
-    if (rating <= 6) return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+    if (rating <= 2) return 'bg-red-100 text-red-800 border-red-200'
+    if (rating === 3) return 'bg-yellow-100 text-yellow-800 border-yellow-200'
     return 'bg-green-100 text-green-800 border-green-200'
   }
 
@@ -74,7 +74,7 @@ export default function JournalEntryCard({ entry, viewMode }: JournalEntryCardPr
             <div className="flex items-center gap-2 sm:gap-3">
               <div className={`px-2 py-1 rounded-full text-xs font-medium border ${getSafetyColor(safetyRating)}`}>
                 <Shield className="h-3 w-3 inline mr-1" />
-                {safetyRating}/10
+                {safetyRating}/5
               </div>
               {moodRating !== null && (
                 <div className="flex items-center gap-1 text-sm">
@@ -178,7 +178,7 @@ export default function JournalEntryCard({ entry, viewMode }: JournalEntryCardPr
           <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
             <div className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getSafetyColor(safetyRating)}`}>
               <Shield className="h-3 sm:h-4 w-3 sm:w-4 inline mr-1" />
-              <span className="hidden sm:inline">Safety: </span>{safetyRating}/10
+              <span className="hidden sm:inline">Safety: </span>{safetyRating}/5
             </div>
             {moodRating !== null && (
               <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-gray-100 rounded-full">

@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { message, context = 'general', conversationHistory = [] } = req.body
+    const { message, context = 'general', conversationHistory = [], conversation_id } = req.body
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Message is required' })
@@ -127,12 +127,72 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Select model based on subscription tier
     const model = subscriptionTier === 'foundation' ? DEFAULT_FREE_TIER_MODEL : DEFAULT_PAID_TIER_MODEL
 
-    // Make AI chat request
-    const aiResponse = await geminiAI.chat(message, conversationHistory, context, model)
+    // Create an AbortController to enforce a server-side timeout
+    const controller = new AbortController()
+    const TIMEOUT_MS = 18000 // 18s server-side timeout
+    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS)
 
-    // Save conversation to database
-    const conversationId = `conv_${user.id}_${Date.now()}`
-    
+    // Rolling history cap: keep the most recent messages and cap total chars to avoid token overflow
+    const MAX_MESSAGES = 12
+    const MAX_CHARS = 8000
+    const recentHistory = (Array.isArray(conversationHistory) ? conversationHistory : [])
+      .slice(-MAX_MESSAGES)
+
+    // Further trim by total characters if necessary (oldest-first removal)
+    const trimmedHistory: Array<{ role: 'user' | 'assistant'; content: string }> = []
+    let total = 0
+    for (const h of recentHistory) {
+      const c = typeof h.content === 'string' ? h.content : ''
+      if (total + c.length > MAX_CHARS) break
+      const role: 'user' | 'assistant' = h.role === 'assistant' ? 'assistant' : 'user'
+      trimmedHistory.push({ role, content: c })
+      total += c.length
+    }
+
+    // Make AI chat request with abort support
+    let aiResponse: string
+    try {
+      aiResponse = await geminiAI.chat(message, trimmedHistory, context, model, { signal: controller.signal })
+    } catch (err) {
+      if ((err as any).name === 'AbortError') {
+        return res.status(504).json({ error: 'AI request timed out' })
+      }
+      throw err
+    } finally {
+      clearTimeout(timeout)
+    }
+
+    // Resolve conversation ID: use existing if provided (and owned by user), else create new
+    let conversationId = conversation_id as string | undefined
+    if (conversationId) {
+      const { data: existingConv, error: convGetErr } = await supabase
+        .from('ai_conversations')
+        .select('id, user_id')
+        .eq('id', conversationId)
+        .single()
+      if (convGetErr || !existingConv || existingConv.user_id !== user.id) {
+        return res.status(404).json({ error: 'Conversation not found' })
+      }
+      // Touch updated_at for ordering
+      await supabase
+        .from('ai_conversations')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('id', conversationId)
+    } else {
+      const title = (message as string).slice(0, 60)
+      const { data: convIns, error: convErr } = await supabase
+        .from('ai_conversations')
+        .insert({ user_id: user.id, title, context_type: context })
+        .select('id')
+        .single()
+
+      if (convErr || !convIns) {
+        console.error('Failed to create conversation:', convErr)
+        return res.status(500).json({ error: 'Failed to create conversation' })
+      }
+      conversationId = convIns.id
+    }
+
     // Save user message
     await supabase
       .from('ai_messages')
@@ -141,7 +201,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         user_id: user.id,
         role: 'user',
         content: message,
-        context_type: context
+        metadata: { context_type: context }
       })
 
     // Save AI response
@@ -152,7 +212,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         user_id: user.id,
         role: 'assistant',
         content: aiResponse,
-        context_type: context
+        metadata: { context_type: context }
       })
 
     // Record usage for billing
@@ -171,7 +231,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         subscription_tier: subscriptionTier,
         monthly_limit: monthlyLimit,
         remaining: monthlyLimit === -1 ? -1 : Math.max(0, monthlyLimit - currentUsage - 1)
-      }
+      },
+      conversation_id: conversationId
     })
 
   } catch (error) {

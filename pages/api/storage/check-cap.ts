@@ -1,7 +1,6 @@
 // API route to check storage cap for uploads
 import { NextApiRequest, NextApiResponse } from 'next'
 import { createClient } from '@supabase/supabase-js'
-import { STORAGE_LIMITS_BYTES } from '../../../lib/usage-limits'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -29,7 +28,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const tier = profile?.subscription_tier || 'foundation'
 
-    const capBytes = STORAGE_LIMITS_BYTES[tier as keyof typeof STORAGE_LIMITS_BYTES]
+    // Fetch storage limit (in MB) from Supabase feature_limits
+    const { data: limitRow, error: limitErr } = await supabase
+      .from('feature_limits')
+      .select('limit_value')
+      .eq('subscription_tier', tier)
+      .eq('feature_name', 'storage')
+      .eq('limit_type', 'storage_mb')
+      .single()
+    if (limitErr) {
+      console.error('Failed to read storage limit:', limitErr)
+      return res.status(500).json({ error: 'Failed to read plan limits' })
+    }
+    const storageMb = typeof limitRow?.limit_value === 'number' ? limitRow!.limit_value : -1
+    const capBytes = storageMb === -1 ? -1 : storageMb * 1024 * 1024
     if (capBytes === -1) {
       return res.status(200).json({ allowed: true, remaining_bytes: -1 })
     }

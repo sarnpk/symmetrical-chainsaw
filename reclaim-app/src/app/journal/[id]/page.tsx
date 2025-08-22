@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { createClient } from '@supabase/supabase-js'
+
 import DashboardLayout from '@/components/DashboardLayout'
 import JournalEntryHeader from '@/components/journal/entry/JournalEntryHeader'
 import SafetyRatingCard from '@/components/journal/entry/SafetyRatingCard'
@@ -36,11 +36,7 @@ export default function JournalEntryDetailPage({ params }: Props) {
 
   const router = useRouter()
   
-  // Create admin client to bypass RLS for storage operations
-  const supabaseAdmin = createClient(
-    'https://gstiokcvqmxiaqzmtzmv.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzdGlva2N2cW14aWFxem10em12Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTM4NDQ4NiwiZXhwIjoyMDcwOTYwNDg2fQ.pE3OAwQKCZjg8PGpLBPCeZpJC2kXC-du2XSGOa8CJ48'
-  )
+  // Evidence and signed URLs are fetched via secure server API
 
   useEffect(() => {
     const getEntry = async () => {
@@ -83,32 +79,23 @@ export default function JournalEntryDetailPage({ params }: Props) {
 
       setEntry(entry)
 
-      // Get evidence files for this entry using admin client
-      const { data: evidence } = await supabaseAdmin
-        .from('evidence_files')
-        .select('*')
-        .eq('journal_entry_id', resolvedParams.id)
-        .order('uploaded_at', { ascending: true })
-
-      if (evidence) {
-        setEvidenceFiles(evidence)
-        
-        // Generate signed URLs for evidence files
-        const urls: {[key: string]: string} = {}
-        for (const file of evidence) {
-          try {
-            const { data } = await supabaseAdmin.storage
-              .from(file.storage_bucket)
-              .createSignedUrl(file.storage_path, 3600) // 1 hour expiry
-            
-            if (data?.signedUrl) {
-              urls[file.id] = data.signedUrl
+      // Get evidence files and signed URLs via server API
+      try {
+        const res = await fetch(`/api/journal/${resolvedParams.id}/evidence`, { cache: 'no-store' })
+        if (res.ok) {
+          const json = await res.json()
+          const evidence = json.evidence || []
+          setEvidenceFiles(evidence)
+          const urls: {[key: string]: string} = {}
+          for (const file of evidence) {
+            if (file.signedUrl) {
+              urls[file.id] = file.signedUrl
             }
-          } catch (error) {
-            console.error('Failed to generate signed URL for file:', file.id, error)
           }
+          setEvidenceUrls(urls)
         }
-        setEvidenceUrls(urls)
+      } catch (e) {
+        console.error('Failed to load evidence via API', e)
       }
 
       setLoading(false)
@@ -142,16 +129,8 @@ export default function JournalEntryDetailPage({ params }: Props) {
     
     setDeleting(true)
     try {
-      // First delete all evidence files from storage and database
+      // First delete evidence DB rows (storage deletion will move to secure server API)
       for (const file of evidenceFiles) {
-        // Delete from storage
-        if (file.storage_bucket && file.storage_path) {
-          await supabaseAdmin.storage
-            .from(file.storage_bucket)
-            .remove([file.storage_path])
-        }
-        
-        // Delete from database
         await supabase
           .from('evidence_files')
           .delete()

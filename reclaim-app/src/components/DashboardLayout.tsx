@@ -9,6 +9,7 @@ import {
   BookOpen,
   Brain,
   BarChart3,
+  PieChart,
   Settings,
   LogOut,
   Menu,
@@ -19,11 +20,13 @@ import {
   Users,
   Target,
   RefreshCw,
-  RotateCcw
+  RotateCcw,
+  Crown
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
 import toast from 'react-hot-toast'
+import MobileNavbar from '@/ui/tailwindplus/MobileNavbar'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -36,6 +39,8 @@ const navigation = [
   { name: 'Journal', href: '/journal', icon: BookOpen },
   { name: 'AI Coach', href: '/ai-coach', icon: Brain },
   { name: 'Patterns', href: '/patterns', icon: BarChart3 },
+  { name: 'Usage', href: '/usage', icon: PieChart },
+  { name: 'Subscription', href: '/subscription', icon: Crown },
   { name: 'Wellness', href: '/wellness', icon: HeartPulse },
   { name: 'Healing', href: '/healing', icon: Heart },
   { name: 'Community', href: '/community', icon: Users },
@@ -57,7 +62,7 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex overflow-x-hidden">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
@@ -152,26 +157,12 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
       </div>
 
       {/* Main content */}
-      <div className="flex-1 lg:ml-0">
+      <div className="flex-1 lg:ml-0 overflow-x-hidden">
         {/* Mobile header */}
-        <div className="lg:hidden bg-white shadow-sm border-b px-4 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="p-2 rounded-md text-gray-400 hover:text-gray-600"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
-            <div className="flex items-center">
-              <Shield className="h-6 w-6 text-indigo-600" />
-              <span className="ml-2 text-lg font-bold text-gray-900">Reclaim</span>
-            </div>
-            <div className="w-10" /> {/* Spacer for balance */}
-          </div>
-        </div>
+        <MobileNavbar onMenuClick={() => setSidebarOpen(true)} />
 
         {/* Page content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-full overflow-x-hidden">
           {children}
         </main>
       </div>

@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
+import UsageTrackingDashboard from '@/components/UsageTrackingDashboard'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Plus, BookOpen, Brain, BarChart3, Shield } from 'lucide-react'
 import Link from 'next/link'
@@ -144,6 +146,15 @@ export default function DashboardPage() {
               </CardHeader>
             </Card>
           </Link>
+        </div>
+
+        {/* Monthly Usage & Limits */}
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">This month</h2>
+          <UsageTrackingDashboard 
+            userId={user.id} 
+            subscriptionTier={(profile.subscription_tier || 'foundation') as 'foundation' | 'recovery' | 'empowerment'} 
+          />
         </div>
 
         {/* Recent Entries */}

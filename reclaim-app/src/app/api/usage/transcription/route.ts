@@ -12,13 +12,7 @@ function getServerSupabase() {
   return { error: null as string | null, client: createClient(url, serviceKey) }
 }
 
-const TRANSCRIPTION_LIMITS_MIN = {
-  foundation: 0,
-  recovery: 300,
-  empowerment: 600,
-} as const
-
-type Tier = keyof typeof TRANSCRIPTION_LIMITS_MIN
+type Tier = 'foundation' | 'recovery' | 'empowerment'
 
 function startOfCurrentMonthUTC(): string {
   const now = new Date()
@@ -52,7 +46,19 @@ export async function GET(request: Request) {
       .single()
     const tier = ((profile as any)?.subscription_tier || 'foundation') as Tier
 
-    const monthlyLimitMin = TRANSCRIPTION_LIMITS_MIN[tier]
+    // Fetch limit from Supabase feature_limits (minutes)
+    const { data: limitRow, error: limitErr } = await supabase
+      .from('feature_limits')
+      .select('limit_value')
+      .eq('subscription_tier', tier)
+      .eq('feature_name', 'transcription_minutes')
+      .eq('limit_type', 'minutes')
+      .single()
+    if (limitErr) {
+      console.error('transcription limit read error:', limitErr)
+      return NextResponse.json({ error: 'Failed to read plan limits' }, { status: 500 })
+    }
+    const monthlyLimitMin = typeof limitRow?.limit_value === 'number' ? limitRow!.limit_value : -1
 
     // Sum usage for current month
     const since = startOfCurrentMonthUTC()
@@ -75,7 +81,7 @@ export async function GET(request: Request) {
     const usedMinutes = Math.ceil(usedSeconds / 60)
 
     let remainingMinutes: number | 'unlimited' = 0
-    if (monthlyLimitMin <= 0 && tier === 'empowerment') {
+    if (monthlyLimitMin === -1) {
       remainingMinutes = 'unlimited'
     } else if (monthlyLimitMin <= 0) {
       remainingMinutes = 0
@@ -87,7 +93,7 @@ export async function GET(request: Request) {
       ok: true,
       tier,
       usedMinutes,
-      limitMinutes: monthlyLimitMin <= 0 && tier === 'empowerment' ? 'unlimited' : monthlyLimitMin,
+      limitMinutes: monthlyLimitMin === -1 ? 'unlimited' : monthlyLimitMin,
       remainingMinutes,
       since,
     })

@@ -7,19 +7,21 @@ import { Search, BookOpen, Plus } from 'lucide-react'
 interface JournalEmptyStatesProps {
   type: 'no-entries' | 'no-results'
   onClearFilters?: () => void
+  titleOverride?: string
+  subtitleOverride?: string
 }
 
-export default function JournalEmptyStates({ type, onClearFilters }: JournalEmptyStatesProps) {
+export default function JournalEmptyStates({ type, onClearFilters, titleOverride, subtitleOverride }: JournalEmptyStatesProps) {
   if (type === 'no-results') {
     return (
       <Card className="text-center py-8 sm:py-12">
         <CardContent>
           <Search className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
-            No entries match your search
+            {titleOverride || 'No entries match your search'}
           </h3>
           <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
-            Try adjusting your search terms or filters.
+            {subtitleOverride || 'Try adjusting your search terms or filters.'}
           </p>
           {onClearFilters && (
             <button
@@ -39,10 +41,10 @@ export default function JournalEmptyStates({ type, onClearFilters }: JournalEmpt
       <CardContent>
         <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
-          No journal entries yet
+          {titleOverride || 'No journal entries yet'}
         </h3>
         <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
-          Start documenting your experiences to track patterns and progress.
+          {subtitleOverride || 'Start documenting your experiences to track patterns and progress.'}
         </p>
         <Link 
           href="/journal/new"
