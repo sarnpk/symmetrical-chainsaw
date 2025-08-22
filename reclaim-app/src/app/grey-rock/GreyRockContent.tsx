@@ -27,6 +27,7 @@ import {
   incrementPackAttempts
 } from '@/lib/supabase'
 import { supabase } from '@/lib/supabase'
+import appVersion from '@/version.json'
 
 interface Scenario {
   id: string
@@ -459,6 +460,9 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
         <h1 className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-3 mb-4">
           <Target className="h-8 w-8 text-indigo-600" />
           Grey Rock Method
+          <span className="text-xs font-normal text-gray-500 border border-gray-200 rounded-full px-2 py-0.5">
+            v{(appVersion as any).major}.{(appVersion as any).minor}.{(appVersion as any).patch}{((appVersion as any).build ?? 0) ? `+${(appVersion as any).build}` : ''}
+          </span>
         </h1>
         <p className="text-gray-600 max-w-3xl mx-auto">
           Learn and practice the Grey Rock method - a technique to become uninteresting and unresponsive to narcissistic behavior, 

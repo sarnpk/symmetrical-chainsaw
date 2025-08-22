@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
@@ -135,7 +136,12 @@ export default function SafetyPlanPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <SafetyPlanContent userId={user.id} />
+      <div className="pt-4 sm:pt-6">
+        <div className="flex items-center justify-end mb-3">
+          <Link href="/safety-plan/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
+        </div>
+        <SafetyPlanContent userId={user.id} />
+      </div>
     </DashboardLayout>
   )
 }

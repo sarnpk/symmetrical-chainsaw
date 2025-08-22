@@ -18,7 +18,7 @@ export default function JournalEmptyStates({ type, onClearFilters, titleOverride
         <CardContent>
           <Search className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
-            {titleOverride || 'No entries match your search'}
+            {titleOverride || 'No experiences match your search'}
           </h3>
           <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
             {subtitleOverride || 'Try adjusting your search terms or filters.'}
@@ -41,7 +41,7 @@ export default function JournalEmptyStates({ type, onClearFilters, titleOverride
       <CardContent>
         <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
-          {titleOverride || 'No journal entries yet'}
+          {titleOverride || 'No experiences yet'}
         </h3>
         <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
           {subtitleOverride || 'Start documenting your experiences to track patterns and progress.'}
@@ -51,7 +51,7 @@ export default function JournalEmptyStates({ type, onClearFilters, titleOverride
           className="bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2 text-sm sm:text-base font-medium"
         >
           <Plus className="h-4 w-4" />
-          Create your first entry
+          Create your first experience
         </Link>
       </CardContent>
     </Card>
