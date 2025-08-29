@@ -76,6 +76,81 @@ export default function AudioEvidenceCard({ evidenceFiles, evidenceUrls }: Audio
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
+  const formatTranscript = (raw: string) => {
+    // Try Gladia JSON first
+    try {
+      const obj = JSON.parse(raw)
+      const segs: any[] = obj?.segments || obj?.result?.segments || []
+      if (Array.isArray(segs) && segs.length) {
+        const mmss = (t: number) => {
+          const m = Math.floor(t / 60)
+          const s = Math.floor(t % 60)
+          return `${m}:${s.toString().padStart(2, '0')}`
+        }
+        const lines: string[] = []
+        for (const s of segs) {
+          const start = Number(s.start ?? s.start_time ?? s.from) || 0
+          const end = Number(s.end ?? s.end_time ?? s.to) || start
+          const isUser = Boolean(s.is_user ?? s.speaker?.is_user)
+          const name = (s.speaker_name || s.speaker_label || s.speaker || (isUser ? 'You' : 'Speaker')).toString()
+          const txt = String(s.text ?? s.transcript ?? '').trim()
+          if (txt) lines.push(`${name} [${mmss(start)}–${mmss(end)}]: ${txt}`)
+        }
+        if (lines.length) return lines.join('\n')
+      }
+    } catch {}
+    // Fallback: regex diarized text
+    try {
+      let text = raw.replace(/\r\n|\r/g, '\n').replace(/\t/g, ' ').replace(/ +/g, ' ')
+      text = text.replace(/\s*(Speaker_\d+\s*\(([^)]+)\)\s*\[[^\]]*\]:)/g, '\n$1 ')
+      text = text.replace(/Speaker_\d+\s*\(([^)]+)\)\s*\[[^\]]*\]:\s*/g, (_m, name) => `${name}: `)
+      return text.trim()
+    } catch {
+      return raw
+    }
+  }
+
+  // Parse diarized transcript into structured segments with speaker and time range
+  const parseTranscript = (raw: string) => {
+    // Try Gladia JSON segments first
+    try {
+      const obj = JSON.parse(raw)
+      const segs: any[] = obj?.segments || obj?.result?.segments || []
+      if (Array.isArray(segs) && segs.length) {
+        const out: { speaker: string; start: number; end: number; text: string }[] = []
+        for (const s of segs) {
+          const start = Number(s.start ?? s.start_time ?? s.from) || 0
+          const end = Number(s.end ?? s.end_time ?? s.to) || start
+          const isUser = Boolean(s.is_user ?? s.speaker?.is_user)
+          const speaker = (s.speaker_name || s.speaker_label || s.speaker || (isUser ? 'You' : 'Speaker')).toString()
+          const text = String(s.text ?? s.transcript ?? '').trim()
+          if (text) out.push({ speaker, start, end, text })
+        }
+        if (out.length) return out
+      }
+    } catch {}
+    // Fallback to regex diarized text lines
+    const norm = raw.replace(/\r\n|\r/g, '\n').trim()
+    const re = /Speaker_\d+\s*\(([^)]+)\)\s*\[\s*([0-9.]+)\s*-\s*([0-9.]+)\s*\]:\s*([\s\S]*?)(?=(?:\n\s*Speaker_\d+\s*\(|$))/g
+    const out: { speaker: string; start: number; end: number; text: string }[] = []
+    let m: RegExpExecArray | null
+    while ((m = re.exec(norm)) !== null) {
+      const speaker = m[1].trim()
+      const start = parseFloat(m[2])
+      const end = parseFloat(m[3])
+      const text = m[4].trim()
+      if (!isNaN(start) && !isNaN(end) && text) out.push({ speaker, start, end, text })
+    }
+    return out
+  }
+
+  const fmtMmSs = (t: number) => {
+    if (!isFinite(t)) return '0:00'
+    const m = Math.floor(t / 60)
+    const s = Math.floor(t % 60)
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
   return (
     <Card>
       <CardHeader className="pb-3 sm:pb-4">
@@ -194,7 +269,21 @@ export default function AudioEvidenceCard({ evidenceFiles, evidenceUrls }: Audio
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="inline-block bg-white border border-gray-200 rounded-2xl px-3 py-2 sm:px-4 sm:py-3 shadow-sm text-sm text-gray-800 max-w-full whitespace-pre-wrap break-words">
-                          {file.transcription}
+                          {(() => {
+                            const segs = parseTranscript(file.transcription)
+                            if (segs.length === 0) return formatTranscript(file.transcription)
+                            return (
+                              <div className="space-y-2">
+                                {segs.map((seg, idx) => (
+                                  <div key={idx}>
+                                    <span className="font-medium text-gray-900">{seg.speaker}</span>
+                                    <span className="text-gray-500"> {'['}{fmtMmSs(seg.start)}{'–'}{fmtMmSs(seg.end)}{']'}:</span>
+                                    <div className="mt-0.5">{seg.text}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            )
+                          })()}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                           {new Date(file.uploaded_at).toLocaleString()}

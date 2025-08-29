@@ -11,6 +11,7 @@ import JournalStats from '@/components/journal/JournalStats'
 import JournalFilters from '@/components/journal/JournalFilters'
 import JournalEntryCard from '@/components/journal/JournalEntryCard'
 import JournalEmptyStates from '@/components/journal/JournalEmptyStates'
+import Link from 'next/link'
 
 export default function JournalPage() {
   const router = useRouter()
@@ -22,11 +23,13 @@ export default function JournalPage() {
   const [filteredEntries, setFilteredEntries] = useState<JournalEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortBy, setSortBy] = useState<'date' | 'safety' | 'mood'>('date')
+  const [sortBy, setSortBy] = useState<'date' | 'draft' | 'mood'>('date')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list')
   const [filterSafety, setFilterSafety] = useState<number | null>(null)
   const [showFilters, setShowFilters] = useState(false)
+  const [draftFilter, setDraftFilter] = useState<'all' | 'published' | 'drafts'>('published')
+  const [draftFilterSyncedBySort, setDraftFilterSyncedBySort] = useState(false)
 
   useEffect(() => {
     const load = async () => {
@@ -56,6 +59,27 @@ export default function JournalPage() {
     load()
   }, [router, supabase])
 
+  // If user selects 'Draft' in sort segmented control, treat it as a quick filter to show drafts only.
+  // When switching back to Date/Mood, reset to published if it was applied via sort.
+  useEffect(() => {
+    if (sortBy === 'draft') {
+      if (draftFilter !== 'drafts') setDraftFilter('drafts')
+      setDraftFilterSyncedBySort(true)
+    } else {
+      if (draftFilterSyncedBySort) {
+        setDraftFilter('published')
+        setDraftFilterSyncedBySort(false)
+      }
+    }
+  }, [sortBy])
+
+  // If user manually changes draftFilter (e.g., via dropdown), stop syncing via sort chip
+  useEffect(() => {
+    if (draftFilter !== 'drafts') {
+      setDraftFilterSyncedBySort(false)
+    }
+  }, [draftFilter])
+
   // Filter and sort entries
   useEffect(() => {
     let filtered = [...entries]
@@ -77,14 +101,22 @@ export default function JournalPage() {
       })
     }
 
+    // Apply draft filter (client-side safeguard in addition to server-side query)
+    if (draftFilter === 'drafts') {
+      filtered = filtered.filter(e => e.is_draft === true)
+    } else if (draftFilter === 'published') {
+      filtered = filtered.filter(e => e.is_draft !== true)
+    }
+
     // Apply sorting
     filtered.sort((a, b) => {
       let aValue, bValue
       
       switch (sortBy) {
-        case 'safety':
-          aValue = a.safety_rating || a.ai_analysis?.safety_level || 5
-          bValue = b.safety_rating || b.ai_analysis?.safety_level || 5
+        case 'draft':
+          // Drafts first when asc (0 = published, 1 = draft)
+          aValue = a.is_draft ? 1 : 0
+          bValue = b.is_draft ? 1 : 0
           break
         case 'mood':
           aValue = a.mood_rating || 5
@@ -101,11 +133,12 @@ export default function JournalPage() {
     })
 
     setFilteredEntries(filtered)
-  }, [entries, searchTerm, sortBy, sortOrder, filterSafety])
+  }, [entries, searchTerm, sortBy, sortOrder, filterSafety, draftFilter])
 
   const handleClearFilters = () => {
     setSearchTerm('')
     setFilterSafety(null)
+    setDraftFilter('all')
   }
 
   if (loading) {
@@ -121,6 +154,9 @@ export default function JournalPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-4 sm:space-y-6">
+        <div className="flex items-center justify-end pt-4 sm:pt-6 -mb-2">
+          <Link href="/journal/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
+        </div>
         {/* Header */}
         <JournalHeader 
           entriesCount={entries.length}
@@ -144,6 +180,8 @@ export default function JournalPage() {
           filterSafety={filterSafety}
           onFilterSafetyChange={setFilterSafety}
           onClearFilters={handleClearFilters}
+          draftFilter={draftFilter}
+          onDraftFilterChange={setDraftFilter}
         />
 
         {/* Journal Entries */}
@@ -162,8 +200,10 @@ export default function JournalPage() {
           </div>
         ) : (
           <JournalEmptyStates 
-            type={entries.length > 0 ? 'no-results' : 'no-entries'}
-            onClearFilters={entries.length > 0 ? handleClearFilters : undefined}
+            type={(entries.length > 0 || draftFilter !== 'all' || filterSafety !== null || !!searchTerm) ? 'no-results' : 'no-entries'}
+            onClearFilters={(entries.length > 0 || draftFilter !== 'all' || filterSafety !== null || !!searchTerm) ? handleClearFilters : undefined}
+            titleOverride={draftFilter === 'drafts' && sortBy === 'draft' ? 'No draft entries available' : undefined}
+            subtitleOverride={draftFilter === 'drafts' && sortBy === 'draft' ? 'You don\'t have any draft entries yet.' : undefined}
           />
         )}
       </div>

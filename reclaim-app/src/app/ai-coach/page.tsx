@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import AICoachContent from './AICoachContent'
+import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 
@@ -53,7 +54,12 @@ export default function AICoachPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <AICoachContent />
+      <div className="pt-4 sm:pt-6">
+        <div className="flex items-center justify-end mb-3">
+          <Link href="/ai-coach/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
+        </div>
+        <AICoachContent />
+      </div>
     </DashboardLayout>
   )
 }

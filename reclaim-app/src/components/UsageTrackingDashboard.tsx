@@ -25,6 +25,13 @@ interface UsageStats {
     limit: number
     remaining: number
     duration_minutes: number
+    minutes_limit: number
+    minutes_remaining: number
+  }
+  pattern_analysis: {
+    current: number
+    limit: number
+    remaining: number
   }
   subscription_tier: 'foundation' | 'recovery' | 'empowerment'
 }
@@ -42,55 +49,40 @@ export default function UsageTrackingDashboard({ userId, subscriptionTier }: Usa
   useEffect(() => {
     const loadUsageStats = async () => {
       try {
-        // Get current month usage
-        const currentMonth = new Date().toISOString().slice(0, 7) // YYYY-MM format
-        
-        const { data: usage } = await supabase
-          .from('usage_tracking')
-          .select('feature_name, usage_count, usage_metadata')
-          .eq('user_id', userId)
-          .gte('created_at', `${currentMonth}-01`)
-          .lt('created_at', `${currentMonth}-32`)
+        const { data: sessionRes } = await supabase.auth.getSession()
+        const token = sessionRes?.session?.access_token
+        if (!token) throw new Error('No auth token')
 
-        // Calculate AI interactions
-        const aiInteractions = usage?.filter(u => u.feature_name === 'ai_interactions')
-          .reduce((sum, record) => sum + record.usage_count, 0) || 0
+        const res = await fetch('/api/usage/limits', {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (!res.ok) throw new Error('Failed to fetch usage limits')
+        const data = await res.json()
 
-        // Calculate audio transcription
-        const transcriptionRecords = usage?.filter(u => 
-          u.feature_name === 'ai_interactions' && 
-          u.usage_metadata?.feature === 'audio_transcription'
-        ) || []
-        
-        const audioTranscriptions = transcriptionRecords.length
-        const totalDuration = transcriptionRecords.reduce((sum, record) => 
-          sum + (record.usage_metadata?.duration || 0), 0
-        )
-
-        // Define limits based on subscription tier
-        const limits = {
-          foundation: { ai: 5, transcription: 5, transcription_minutes: 10 },
-          recovery: { ai: 100, transcription: 30, transcription_minutes: 60 },
-          empowerment: { ai: -1, transcription: -1, transcription_minutes: -1 } // unlimited
-        }
-
-        const tierLimits = limits[subscriptionTier]
-
-        setUsageStats({
+        const mapped: UsageStats = {
           ai_interactions: {
-            current: aiInteractions,
-            limit: tierLimits.ai,
-            remaining: tierLimits.ai === -1 ? -1 : Math.max(0, tierLimits.ai - aiInteractions)
+            current: data.ai_interactions.current,
+            limit: data.ai_interactions.limit,
+            remaining: data.ai_interactions.remaining,
           },
           audio_transcription: {
-            current: audioTranscriptions,
-            limit: tierLimits.transcription,
-            remaining: tierLimits.transcription === -1 ? -1 : Math.max(0, tierLimits.transcription - audioTranscriptions),
-            duration_minutes: Math.round(totalDuration / 60)
+            current: data.audio_transcription.current,
+            limit: data.audio_transcription.limit,
+            remaining: data.audio_transcription.remaining,
+            duration_minutes: data.audio_transcription.duration_minutes,
+            minutes_limit: data.audio_transcription.minutes_limit,
+            minutes_remaining: data.audio_transcription.minutes_remaining,
           },
-          subscription_tier: subscriptionTier
-        })
+          pattern_analysis: {
+            current: data.pattern_analysis.current,
+            limit: data.pattern_analysis.limit,
+            remaining: data.pattern_analysis.remaining,
+          },
+          subscription_tier: data.subscription_tier,
+        }
 
+        setUsageStats(mapped)
       } catch (error) {
         console.error('Failed to load usage stats:', error)
       } finally {
@@ -203,7 +195,7 @@ export default function UsageTrackingDashboard({ userId, subscriptionTier }: Usa
       </Card>
 
       {/* Usage Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* AI Interactions */}
         <Card>
           <CardHeader className="pb-3">
@@ -257,30 +249,77 @@ export default function UsageTrackingDashboard({ userId, subscriptionTier }: Usa
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">This month</span>
-                <span className={`font-medium ${getUsageColor(usageStats.audio_transcription.current, usageStats.audio_transcription.limit)}`}>
-                  {usageStats.audio_transcription.limit === -1 
+                <span className={`font-medium ${getUsageColor(usageStats.audio_transcription.duration_minutes, usageStats.audio_transcription.minutes_limit)}`}>
+                  {usageStats.audio_transcription.minutes_limit === -1
                     ? `${usageStats.audio_transcription.current} (Unlimited)`
-                    : `${usageStats.audio_transcription.current} / ${usageStats.audio_transcription.limit}`
-                  }
+                    : `${usageStats.audio_transcription.current}`}
                 </span>
               </div>
               
-              {usageStats.audio_transcription.limit !== -1 && (
+              {usageStats.audio_transcription.minutes_limit !== -1 && (
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
-                    className={`h-2 rounded-full transition-all ${getProgressBarColor(usageStats.audio_transcription.current, usageStats.audio_transcription.limit)}`}
+                    className={`h-2 rounded-full transition-all ${getProgressBarColor(usageStats.audio_transcription.duration_minutes, usageStats.audio_transcription.minutes_limit)}`}
                     style={{ 
-                      width: `${Math.min(100, (usageStats.audio_transcription.current / usageStats.audio_transcription.limit) * 100)}%` 
+                      width: `${Math.min(100, (usageStats.audio_transcription.duration_minutes / usageStats.audio_transcription.minutes_limit) * 100)}%` 
                     }}
                   ></div>
                 </div>
               )}
 
-              <div className="text-xs text-gray-500">
-                {usageStats.audio_transcription.duration_minutes} minutes transcribed
+              <div className="text-xs text-gray-600 space-y-0.5">
+                <div>
+                  {usageStats.audio_transcription.duration_minutes} minutes transcribed
+                </div>
+                <div>
+                  Minutes remaining: {usageStats.audio_transcription.minutes_limit === -1 
+                    ? 'Unlimited' 
+                    : `${usageStats.audio_transcription.minutes_remaining} / ${usageStats.audio_transcription.minutes_limit}`}
+                </div>
               </div>
 
-              {usageStats.audio_transcription.remaining === 0 && usageStats.audio_transcription.limit !== -1 && (
+              {usageStats.audio_transcription.minutes_remaining === 0 && usageStats.audio_transcription.minutes_limit !== -1 && (
+                <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded">
+                  <AlertCircle className="h-4 w-4" />
+                  Monthly limit reached
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Pattern Analysis */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <TrendingUp className="h-4 w-4 text-emerald-600" />
+              Pattern Analysis
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">This month</span>
+                <span className={`font-medium ${getUsageColor(usageStats.pattern_analysis.current, usageStats.pattern_analysis.limit)}`}>
+                  {usageStats.pattern_analysis.limit === -1 
+                    ? `${usageStats.pattern_analysis.current} (Unlimited)`
+                    : `${usageStats.pattern_analysis.current} / ${usageStats.pattern_analysis.limit}`
+                  }
+                </span>
+              </div>
+
+              {usageStats.pattern_analysis.limit !== -1 && (
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className={`h-2 rounded-full transition-all ${getProgressBarColor(usageStats.pattern_analysis.current, usageStats.pattern_analysis.limit)}`}
+                    style={{ 
+                      width: `${Math.min(100, (usageStats.pattern_analysis.current / usageStats.pattern_analysis.limit) * 100)}%` 
+                    }}
+                  ></div>
+                </div>
+              )}
+
+              {usageStats.pattern_analysis.remaining === 0 && usageStats.pattern_analysis.limit !== -1 && (
                 <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded">
                   <AlertCircle className="h-4 w-4" />
                   Monthly limit reached

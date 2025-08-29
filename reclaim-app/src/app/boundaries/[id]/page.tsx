@@ -334,86 +334,91 @@ export default function BoundaryDetailPage() {
             </span>
           </h2>
           <p className="sm:hidden text-xs text-gray-500 mb-3">Success rates over the last 30/90 days and recent counts of violations and successes.</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="border border-gray-200 rounded-lg p-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">30d Success Rate</div>
               <div className="text-xl font-bold text-gray-900">{sr30 != null ? `${sr30.toFixed(0)}%` : '—'}</div>
             </div>
-            <div className="border border-gray-200 rounded-lg p-3">
+            <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">90d Success Rate</div>
               <div className="text-xl font-bold text-gray-900">{sr90 != null ? `${sr90.toFixed(0)}%` : '—'}</div>
             </div>
-            <div className="border border-gray-200 rounded-lg p-3">
+            <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">Violations (recent)</div>
               <div className="text-xl font-bold text-red-600">{ixCounts.violations}</div>
             </div>
-            <div className="border border-gray-200 rounded-lg p-3">
+            <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">Successes (recent)</div>
               <div className="text-xl font-bold text-green-600">{ixCounts.successes}</div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/boundaries" className="text-indigo-600 hover:underline">Back</Link>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center">Edit Boundary
-              <span className="ml-2 inline-flex items-center text-gray-400" title="Update the title, description, category, priority, and status. Status affects whether the boundary is considered active.">
-                <Info className="h-4 w-4" aria-hidden />
-              </span>
-            </h1>
+        <div className="sm:flex sm:items-center sm:justify-between">
+          <div className="flex-1">
+            <Link href="/boundaries" className="text-indigo-600 hover:underline block mb-1 sm:mb-0 sm:inline-block sm:mr-3">Back</Link>
+            <div className="sm:inline-flex sm:items-center">
+              <h1 className="text-2xl font-bold text-gray-900 flex items-center">Edit Boundary
+                <span className="ml-2 inline-flex items-center text-gray-400" title="Update the title, description, category, priority, and status. Status affects whether the boundary is considered active.">
+                  <Info className="h-4 w-4" aria-hidden />
+                </span>
+              </h1>
+            </div>
+            <p className="sm:hidden text-xs text-gray-500 mt-1">Update the title, description, category, priority, and status. Status affects whether the boundary is considered active.</p>
           </div>
-          <p className="sm:hidden text-xs text-gray-500">Update the title, description, category, priority, and status. Status affects whether the boundary is considered active.</p>
           <button
             onClick={onDelete}
             disabled={deleting}
-            className="border border-red-300 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 disabled:opacity-50"
+            className="hidden sm:inline-flex border border-red-300 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 disabled:opacity-50"
           >
             {deleting ? 'Deleting...' : 'Delete'}
           </button>
         </div>
 
-        <form ref={formRef} onSubmit={onSave} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form ref={formRef} onSubmit={onSave} className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Title</label>
-              <input className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={title} onChange={(e)=>setTitle(e.target.value)} />
+              <input className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={title} onChange={(e)=>setTitle(e.target.value)} />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Category</label>
-              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={category} onChange={(e)=>setCategory(e.target.value as any)}>
+              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={category} onChange={(e)=>setCategory(e.target.value as any)}>
                 {CATEGORY_OPTIONS.map(c => (<option key={c} value={c}>{c}</option>))}
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Priority</label>
-              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={priority} onChange={(e)=>setPriority(e.target.value as any)}>
+              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={priority} onChange={(e)=>setPriority(e.target.value as any)}>
                 {PRIORITY_OPTIONS.map(p => (<option key={p} value={p}>{p}</option>))}
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Status</label>
-              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={status} onChange={(e)=>setStatus(e.target.value as any)}>
+              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={status} onChange={(e)=>setStatus(e.target.value as any)}>
                 {STATUS_OPTIONS.map(s => (<option key={s} value={s}>{s}</option>))}
               </select>
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700">Description</label>
-              <textarea className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 min-h-[100px]" value={description} onChange={(e)=>setDescription(e.target.value)} />
+              <textarea className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 min-h-[100px] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={description} onChange={(e)=>setDescription(e.target.value)} />
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="hidden sm:flex gap-3">
             <button type="submit" disabled={saving} className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50">
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
             <Link href="/boundaries" className="w-full sm:w-auto inline-flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">
               Cancel
             </Link>
+            <button type="button" onClick={onDelete} disabled={deleting} className="w-full sm:w-auto border border-red-300 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 disabled:opacity-50">
+              {deleting ? 'Deleting...' : 'Delete'}
+            </button>
           </div>
         </form>
 
         {/* Sticky mobile action bar */}
-        <div className="fixed bottom-0 left-0 right-0 sm:hidden bg-white/95 backdrop-blur border-t border-gray-200 px-4 py-3 z-40">
+        <div className="fixed bottom-0 left-0 right-0 sm:hidden bg-white/95 backdrop-blur border-t border-gray-200 px-4 py-3 pb-[env(safe-area-inset-bottom)] z-40 shadow-lg">
           <div className="flex items-center gap-3">
             <button
               onClick={() => formRef.current?.requestSubmit()}
@@ -428,6 +433,13 @@ export default function BoundaryDetailPage() {
             >
               Cancel
             </Link>
+            <button
+              onClick={onDelete}
+              disabled={deleting}
+              className="px-4 py-3 rounded-lg border border-red-300 text-red-700 font-medium hover:bg-red-50 disabled:opacity-50"
+            >
+              {deleting ? 'Deleting…' : 'Delete'}
+            </button>
           </div>
         </div>
 
@@ -442,7 +454,7 @@ export default function BoundaryDetailPage() {
           <form onSubmit={scheduleReview} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700">Scheduled Date & Time</label>
-              <input type="datetime-local" className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={scheduledDate} onChange={e=>setScheduledDate(e.target.value)} />
+              <input type="datetime-local" className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={scheduledDate} onChange={e=>setScheduledDate(e.target.value)} />
             </div>
             <div className="md:col-span-2">
               <button type="submit" disabled={scheduling} className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50">{scheduling ? 'Scheduling...' : 'Schedule Review'}</button>
@@ -483,7 +495,7 @@ export default function BoundaryDetailPage() {
           <form onSubmit={addInteraction} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700">Type</label>
-              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={ixType} onChange={e=>setIxType(e.target.value as any)}>
+              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={ixType} onChange={e=>setIxType(e.target.value as any)}>
                 <option value="success">success</option>
                 <option value="violation">violation</option>
                 <option value="review">review</option>
@@ -492,7 +504,7 @@ export default function BoundaryDetailPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Severity</label>
-              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={ixSeverity} onChange={e=>setIxSeverity(e.target.value as any)}>
+              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={ixSeverity} onChange={e=>setIxSeverity(e.target.value as any)}>
                 <option value="low">low</option>
                 <option value="medium">medium</option>
                 <option value="high">high</option>
@@ -500,7 +512,7 @@ export default function BoundaryDetailPage() {
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700">Description</label>
-              <input className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={ixDescription} onChange={e=>setIxDescription(e.target.value)} placeholder="Optional notes" />
+              <input className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={ixDescription} onChange={e=>setIxDescription(e.target.value)} placeholder="Optional notes" />
             </div>
             <div className="md:col-span-4">
               <button type="submit" disabled={addingIx} className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50">{addingIx ? 'Logging...' : 'Log Interaction'}</button>
@@ -542,7 +554,7 @@ export default function BoundaryDetailPage() {
           <form onSubmit={completeReview} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700">Review Type</label>
-              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" value={reviewType} onChange={e=>setReviewType(e.target.value as any)}>
+              <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={reviewType} onChange={e=>setReviewType(e.target.value as any)}>
                 <option value="manual">manual</option>
                 <option value="scheduled">scheduled</option>
                 <option value="triggered">triggered</option>
@@ -559,7 +571,7 @@ export default function BoundaryDetailPage() {
             <div className="md:col-span-1"></div>
             <div className="md:col-span-4">
               <label className="block text-sm font-medium text-gray-700">Notes</label>
-              <textarea className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 min-h-[80px]" value={modificationNotes} onChange={e=>setModificationNotes(e.target.value)} placeholder="What changed, what needs to improve, support needed, etc." />
+              <textarea className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 min-h-[80px] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500" value={modificationNotes} onChange={e=>setModificationNotes(e.target.value)} placeholder="What changed, what needs to improve, support needed, etc." />
             </div>
             <div className="md:col-span-4">
               <button type="submit" disabled={completingReview} className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50">{completingReview ? 'Saving...' : 'Complete Review'}</button>

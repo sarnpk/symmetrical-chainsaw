@@ -24,9 +24,9 @@ export default function JournalStats({ entries }: JournalStatsProps) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="p-3 sm:p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div className="mb-2 sm:mb-0">
+        <CardContent className="p-3 sm:p-4 h-full">
+          <div className="flex items-center justify-between">
+            <div>
               <p className="text-xs sm:text-sm font-medium text-gray-600">Total</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-900">{entries.length}</p>
             </div>
@@ -36,9 +36,9 @@ export default function JournalStats({ entries }: JournalStatsProps) {
       </Card>
       
       <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="p-3 sm:p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div className="mb-2 sm:mb-0">
+        <CardContent className="p-3 sm:p-4 h-full">
+          <div className="flex items-center justify-between">
+            <div>
               <p className="text-xs sm:text-sm font-medium text-gray-600">This Week</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-900">{thisWeekCount}</p>
             </div>
@@ -48,10 +48,10 @@ export default function JournalStats({ entries }: JournalStatsProps) {
       </Card>
       
       <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="p-3 sm:p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div className="mb-2 sm:mb-0">
-              <p className="text-xs sm:text-sm font-medium text-gray-600">Avg Safety</p>
+        <CardContent className="p-3 sm:p-4 h-full">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm font-medium text-gray-600">Avg Safety (/5)</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-900">{avgSafety}</p>
             </div>
             <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 self-end sm:self-auto" />
@@ -60,9 +60,9 @@ export default function JournalStats({ entries }: JournalStatsProps) {
       </Card>
       
       <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="p-3 sm:p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div className="mb-2 sm:mb-0">
+        <CardContent className="p-3 sm:p-4 h-full">
+          <div className="flex items-center justify-between">
+            <div>
               <p className="text-xs sm:text-sm font-medium text-gray-600">Avg Mood</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-900">{avgMood}</p>
             </div>
