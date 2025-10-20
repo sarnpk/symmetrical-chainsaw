@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
@@ -54,7 +55,12 @@ export default function BoundaryBuilderPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <BoundaryBuilderContent />
+      <div className="pt-4 sm:pt-6">
+        <div className="flex items-center justify-end mb-3">
+          <Link href="/boundary-builder/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
+        </div>
+        <BoundaryBuilderContent />
+      </div>
     </DashboardLayout>
   )
 }

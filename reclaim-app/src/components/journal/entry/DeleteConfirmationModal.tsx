@@ -28,14 +28,14 @@ export default function DeleteConfirmationModal({
             <Trash2 className="h-5 w-5 text-red-600" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Delete Journal Entry</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Delete Experience</h3>
             <p className="text-xs sm:text-sm text-gray-600">This action cannot be undone</p>
           </div>
         </div>
         
         <p className="text-sm sm:text-base text-gray-700 mb-6">
           Are you sure you want to delete "<strong className="break-words">{entry.title}</strong>"? 
-          This will permanently remove the entry and all associated evidence files.
+          This will permanently remove the experience and all associated evidence files.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
@@ -59,7 +59,7 @@ export default function DeleteConfirmationModal({
             ) : (
               <>
                 <Trash2 className="h-4 w-4" />
-                Delete Entry
+                Delete Experience
               </>
             )}
           </button>

@@ -48,3 +48,4 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 # Output human-friendly version
 $semver = "$($ver.major).$($ver.minor).$($ver.patch)+$($ver.build)"
 Write-Host "Bumped $Part -> $semver at $($ver.timestamp)" -ForegroundColor Green
+pause

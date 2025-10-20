@@ -12,6 +12,7 @@ interface PhotoEvidenceCardProps {
 
 export default function PhotoEvidenceCard({ evidenceFiles, evidenceUrls }: PhotoEvidenceCardProps) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
+  const [errorIds, setErrorIds] = useState<Record<string, boolean>>({})
   
   const photoFiles = evidenceFiles.filter(file => file.file_type?.startsWith('image'))
   
@@ -53,32 +54,46 @@ export default function PhotoEvidenceCard({ evidenceFiles, evidenceUrls }: Photo
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {photoFiles.map((file, index) => (
               <div key={file.id} className="group relative">
-                <div className="aspect-square sm:aspect-video overflow-hidden rounded-lg bg-gray-100 border border-gray-200">
-                  <img
-                    src={evidenceUrls[file.id] || ''}
-                    alt={file.caption || 'Evidence photo'}
-                    className="w-full h-full object-cover cursor-pointer transition-transform group-hover:scale-105"
-                    loading="lazy"
-                    onClick={() => openImageModal(index)}
-                    onError={(e) => {
-                      console.error('Image failed to load:', file.storage_path, 'Bucket:', file.storage_bucket)
-                      e.currentTarget.style.display = 'none'
-                    }}
-                  />
-                  {/* Zoom overlay */}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
-                    <ZoomIn className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
+                <div className="aspect-square sm:aspect-video overflow-hidden rounded-lg bg-transparent border border-gray-200 relative">
+                  {!errorIds[file.id] ? (
+                    <img
+                      src={evidenceUrls[file.id] || ''}
+                      alt={(file.caption?.trim() || file.file_name?.trim() || file.storage_path?.split('/').pop() || 'Photo') as string}
+                      className="block w-full h-full object-cover cursor-pointer"
+                      loading="lazy"
+                      onClick={() => openImageModal(index)}
+                      onError={() => {
+                        console.error('Image failed to load:', file.storage_path, 'Bucket:', file.storage_bucket)
+                        setErrorIds(prev => ({ ...prev, [file.id]: true }))
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-600 text-sm">
+                      Image unavailable
+                    </div>
+                  )}
                 </div>
                 
-                {/* Caption and timestamp */}
+                {/* Caption (with fallback) and timestamp */}
                 <div className="mt-2 space-y-1">
-                  {file.caption && (
-                    <p className="text-sm font-medium text-gray-900 line-clamp-2">{file.caption}</p>
-                  )}
+                  <p className="text-sm font-medium text-gray-900 line-clamp-2">
+                    {file.caption?.trim() || file.file_name?.trim() || file.storage_path?.split('/').pop() || 'Photo'}
+                  </p>
                   <p className="text-xs text-gray-500">
                     📅 {new Date(file.uploaded_at).toLocaleString()}
                   </p>
+                  {/* Quick debug open link */}
+                  {evidenceUrls[file.id] && (
+                    <a
+                      href={evidenceUrls[file.id]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={evidenceUrls[file.id]}
+                      className="text-xs text-indigo-600 hover:underline"
+                    >
+                      Open image
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
@@ -119,15 +134,15 @@ export default function PhotoEvidenceCard({ evidenceFiles, evidenceUrls }: Photo
             {/* Image */}
             <img
               src={evidenceUrls[photoFiles[selectedImage].id] || ''}
-              alt={photoFiles[selectedImage].caption || 'Evidence photo'}
+              alt={photoFiles[selectedImage].caption?.trim() || photoFiles[selectedImage].file_name?.trim() || photoFiles[selectedImage].storage_path?.split('/').pop() || 'Photo'}
               className="max-w-full max-h-full object-contain"
             />
 
             {/* Image info */}
-            <div className="absolute bottom-4 left-4 right-4 bg-black bg-opacity-50 text-white p-4 rounded-lg">
-              {photoFiles[selectedImage].caption && (
-                <p className="font-medium mb-1">{photoFiles[selectedImage].caption}</p>
-              )}
+            <div className="absolute bottom-4 left-4 right-4 bg-black/50 text-white p-4 rounded-lg">
+              <p className="font-medium mb-1">
+                {photoFiles[selectedImage].caption?.trim() || photoFiles[selectedImage].file_name?.trim() || photoFiles[selectedImage].storage_path?.split('/').pop() || 'Photo'}
+              </p>
               <p className="text-sm opacity-75">
                 📅 {new Date(photoFiles[selectedImage].uploaded_at).toLocaleString()}
               </p>

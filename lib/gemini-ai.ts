@@ -3,10 +3,16 @@
 
 interface GeminiRequest {
   contents: Array<{
+    role?: 'user' | 'model'
     parts: Array<{
       text: string
     }>
   }>
+  systemInstruction?: {
+    parts: Array<{
+      text: string
+    }>
+  }
   generationConfig?: {
     temperature?: number
     topK?: number
@@ -86,32 +92,39 @@ class GeminiAI {
     message: string,
     conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
     context: 'general' | 'crisis' | 'pattern-analysis' | 'mind-reset' | 'grey-rock' = 'general',
-    model?: string
+    model?: string,
+    options?: { signal?: AbortSignal }
   ): Promise<string> {
     const systemPrompt = this.getSystemPrompt(context)
     
-    const contents = [
-      {
-        parts: [{ text: systemPrompt }]
-      },
+    const contents: Array<{ role?: 'user' | 'model'; parts: { text: string }[] }> = [
       ...conversationHistory.map(msg => ({
-        parts: [{ text: `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}` }]
+        role: (msg.role === 'user' ? 'user' : 'model') as 'user' | 'model',
+        parts: [{ text: msg.content }]
       })),
       {
-        parts: [{ text: `User: ${message}` }]
+        role: 'user',
+        parts: [{ text: message }]
       }
     ]
 
-    const response = await this.makeRequest(`${model || DEFAULT_PAID_TIER_MODEL}:generateContent`, {
-      contents,
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 1024,
+    const response = await this.makeRequest(
+      `${model || DEFAULT_PAID_TIER_MODEL}:generateContent`,
+      {
+        contents,
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        },
+        safetySettings: this.getSafetySettings()
       },
-      safetySettings: this.getSafetySettings()
-    })
+      { signal: options?.signal }
+    )
 
     return this.extractTextFromResponse(response)
   }
@@ -332,17 +345,19 @@ Focus on being supportive, trauma-informed, and actionable.`
   /**
    * Make request to Gemini API
    */
-  private async makeRequest(endpoint: string, body: GeminiRequest): Promise<GeminiResponse> {
+  private async makeRequest(endpoint: string, body: GeminiRequest, init?: { signal?: AbortSignal }): Promise<GeminiResponse> {
     const response = await fetch(`${this.baseUrl}/${endpoint}?key=${this.apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
+      signal: init?.signal,
     })
 
     if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.statusText}`)
+      const errText = await response.text().catch(() => '')
+      throw new Error(`Gemini API error ${response.status}: ${errText || response.statusText}`)
     }
 
     return await response.json()
@@ -369,7 +384,7 @@ Focus on being supportive, trauma-informed, and actionable.`
       'grey-rock': `${basePrompt} Provide guidance on the grey rock technique for minimizing conflict.`
     }
 
-    return contextPrompts[context] || contextPrompts.general
+    return (contextPrompts as any)[context] || contextPrompts.general
   }
 
   /**

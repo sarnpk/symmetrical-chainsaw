@@ -1,0 +1,48 @@
+--- INSTRUCTIONS FOR FIXING EDGE FUNCTION ---
+
+The issue is that Supabase signed URLs may not be accessible by external services like Gladia API.
+
+OPTION 1: Fix Storage Policies (Recommended)
+1. Go to your Supabase dashboard
+2. Navigate to SQL Editor
+3. Run the SQL from fix-storage-policies.sql
+
+OPTION 2: Use Audio Proxy (Alternative)
+Replace the signed URL generation section in your Edge function with:
+
+```typescript
+// Use provided pre-signed URL if available, otherwise use audio proxy
+let audioUrlToUse = preSignedAudioUrl as string | undefined
+let audioUrlSource: 'pre-signed' | 'generated' | 'proxy' = 'pre-signed'
+
+if (!audioUrlToUse) {
+  // Try signed URL first
+  const { data: signedUrlData, error: signedErr } = await supabaseAdmin.storage
+    .from(evidenceFile.storage_bucket)
+    .createSignedUrl(evidenceFile.storage_path, 3600) // 1 hour
+  
+  if (signedUrlData?.signedUrl) {
+    audioUrlToUse = signedUrlData.signedUrl
+    audioUrlSource = 'generated'
+    console.log('✅ Using signed URL for transcription')
+  } else {
+    // Fallback to audio proxy if signed URL fails
+    console.warn('⚠️ Signed URL failed, using audio proxy:', signedErr?.message)
+    
+    // Construct proxy URL - this serves the file directly from our API
+    const baseUrl = Deno.env.get('SUPABASE_URL')?.replace('/v1', '') || 'http://localhost:3000'
+    audioUrlToUse = `${baseUrl}/api/audio-proxy?evidence_file_id=${evidence_file_id}`
+    audioUrlSource = 'proxy'
+    console.log('🔄 Using audio proxy URL:', audioUrlToUse)
+  }
+}
+```
+
+OPTION 3: Test First
+Before making changes, test the storage access:
+1. Go to http://localhost:3000/test-storage
+2. Upload an audio file in your journal
+3. Get the storage_path from evidence_files table
+4. Test if signed URLs work with external access
+
+The audio proxy endpoint (/api/audio-proxy) is already created and should work as a fallback.

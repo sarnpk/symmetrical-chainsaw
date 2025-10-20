@@ -16,7 +16,8 @@ import {
   Briefcase,
   MessageCircle,
   Clock,
-  Target
+  Target,
+  Lock
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import toast from 'react-hot-toast'
@@ -118,6 +119,8 @@ export default function BoundaryBuilderContent() {
   const [customBoundary, setCustomBoundary] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('communication')
   const [showAddForm, setShowAddForm] = useState(false)
+  const [tier, setTier] = useState<'foundation' | 'recovery' | 'empowerment' | null>(null)
+  const isPaid = tier === 'recovery' || tier === 'empowerment'
 
   // Map UI category to DB enum (schema doesn't have 'financial')
   const mapCategoryToDb = (cat: string): 'communication' | 'emotional' | 'physical' | 'time' | 'social' | 'workplace' => {
@@ -131,6 +134,15 @@ export default function BoundaryBuilderContent() {
       try {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
+        // Load user tier
+        try {
+          const { data: prof } = await supabase
+            .from('profiles')
+            .select('subscription_tier')
+            .eq('id', user.id)
+            .maybeSingle()
+          if (prof?.subscription_tier) setTier(prof.subscription_tier)
+        } catch (_) {}
         const { data, error } = await supabase
           .from('boundaries')
           .select('*')
@@ -396,15 +408,29 @@ export default function BoundaryBuilderContent() {
         </div>
       )}
 
-      {/* Boundary Templates */}
+      {/* Boundary Templates (Paid feature) */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Boundary Templates</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+            Boundary Templates
+            {!isPaid && (
+              <span className="inline-flex items-center gap-1 text-xs text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                <Lock className="h-3.5 w-3.5" /> Paid
+              </span>
+            )}
+          </h2>
+          {!isPaid && (
+            <Link href="/pricing" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+              Upgrade to unlock
+            </Link>
+          )}
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {boundaryTemplates.map((template) => {
             const IconComponent = template.icon
             return (
-              <div key={template.id} className="border border-gray-200 rounded-lg p-4">
+              <div key={template.id} className={`border border-gray-200 rounded-lg p-4 ${!isPaid ? 'opacity-70' : ''}`}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`p-2 rounded-lg ${template.color}`}>
                     <IconComponent className="h-5 w-5" />
@@ -420,12 +446,21 @@ export default function BoundaryBuilderContent() {
                   ))}
                 </div>
 
-                <button
-                  onClick={() => setSelectedTemplate(template.id)}
-                  className="w-full mt-4 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
-                >
-                  View All Examples
-                </button>
+                {isPaid ? (
+                  <button
+                    onClick={() => setSelectedTemplate(template.id)}
+                    className="w-full mt-4 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                  >
+                    View All Examples
+                  </button>
+                ) : (
+                  <Link
+                    href="/pricing"
+                    className="w-full mt-4 inline-flex items-center justify-center gap-1 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                  >
+                    <Lock className="h-4 w-4" /> Upgrade to view all examples
+                  </Link>
+                )}
               </div>
             )
           })}
@@ -433,7 +468,7 @@ export default function BoundaryBuilderContent() {
       </div>
 
       {/* Template Modal */}
-      {selectedTemplate && (
+      {isPaid && selectedTemplate && (
         <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
           <div className="bg-white w-full sm:max-w-2xl rounded-t-2xl sm:rounded-lg p-4 sm:p-6 max-h-[85vh] overflow-y-auto">
             {(() => {

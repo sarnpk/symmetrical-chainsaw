@@ -16,10 +16,10 @@ export default function JournalHeader({ entriesCount, viewMode, onViewModeChange
       <div className="text-center sm:text-left">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center justify-center sm:justify-start gap-2">
           <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600" />
-          Your Journal
+          Your Experiences
         </h1>
         <p className="text-gray-600 mt-1 text-sm sm:text-base">
-          {entriesCount} {entriesCount === 1 ? 'entry' : 'entries'}
+          {entriesCount} {entriesCount === 1 ? 'experience' : 'experiences'}
         </p>
       </div>
 
@@ -31,7 +31,7 @@ export default function JournalHeader({ entriesCount, viewMode, onViewModeChange
           className="order-1 sm:order-2 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-lg font-medium"
         >
           <Plus className="h-5 w-5" />
-          New Entry
+          New Experience
         </Link>
 
         {/* View Toggle - Secondary on mobile */}

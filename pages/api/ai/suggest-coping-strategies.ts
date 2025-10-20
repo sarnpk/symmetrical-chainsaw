@@ -20,10 +20,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const anxietyLine = typeof context?.anxiety === 'number' ? `Anxiety: ${context.anxiety}/10` : 'Anxiety: n/a'
     const energyLine = typeof context?.energy === 'number' ? `Energy: ${context.energy}/10` : 'Energy: n/a'
 
+    const rawNote: string | undefined = typeof context?.note === 'string' ? context.note : undefined
+    const noteLine = rawNote && rawNote.trim().length > 0
+      ? `Context note: "${rawNote.trim().slice(0, 500)}"\n`
+      : ''
+
     const prompt = `
 You are a trauma-informed coach. Suggest practical coping strategies tailored to the user's current state.
 ${moodLine}; ${anxietyLine}; ${energyLine}; ${preferred}.
-
+${noteLine}
 Return STRICT JSON with this shape:
 {
   "suggestions": [

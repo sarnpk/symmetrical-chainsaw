@@ -13,6 +13,9 @@ import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import EnhancedImpactAssessment from '@/components/journal/EnhancedImpactAssessment'
 import toast from 'react-hot-toast'
+import Section from '@/components/layout/Section'
+
+const V3_MOBILE_ENABLED = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_V3_MOBILE === '1'
 
 const abuseTypes = [
   'gaslighting',
@@ -175,29 +178,43 @@ export default function NewJournalEntryPage() {
   const [txUsageLoading, setTxUsageLoading] = useState(false)
   const [txUsageError, setTxUsageError] = useState<string | null>(null)
 
-  // Collapsible sections state for mobile optimization
-  const [collapsedSections, setCollapsedSections] = useState({
-    basicInfo: false,
-    behaviorTypes: true,
-    safetyEmotional: true,
-    evidence: true,
-    context: true
+  // Collapsible sections (new Section component)
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    basicInfo: true, // first section open by default
+    behavior: false,
   })
 
   // Help dialog state
   const [showBehaviorHelp, setShowBehaviorHelp] = useState(false)
   const [showWhatHelp, setShowWhatHelp] = useState(false)
 
-  const toggleSection = (section: keyof typeof collapsedSections) => {
-    setCollapsedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }))
+  const handleSectionToggle = (id: string, open: boolean) => {
+    setOpenSections(prev => ({ ...prev, [id]: open }))
+  }
+
+  const handleNextSection = (nextId: string) => {
+    setOpenSections(prev => ({ ...prev, [nextId]: true }))
+    // Smooth scroll to next section
+    const el = document.getElementById(nextId)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
   }
 
   const router = useRouter()
   const supabase = createClient()
   
+  // Redirect to v3 mobile stepper when feature flag is enabled
+  useEffect(() => {
+    if (V3_MOBILE_ENABLED) {
+      router.replace('/journal/new/when-where')
+    }
+  }, [router])
+  if (V3_MOBILE_ENABLED) {
+    // Prevent rendering legacy combined form when v3 is on
+    return null
+  }
+
   // Create admin client for storage uploads (bypasses RLS)
   const supabaseAdmin = createSupabaseClient(
     'https://gstiokcvqmxiaqzmtzmv.supabase.co',
@@ -428,7 +445,21 @@ export default function NewJournalEntryPage() {
     }
   }, [aiAssistEnabled, title, description, content, subscriptionTier])
 
+  // Check if mandatory fields are filled
+  const areMandatoryFieldsFilled = () => {
+    return title.trim().length > 0 && 
+           description.trim().length > 0 && 
+           incidentDate.trim().length > 0
+  }
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Prevent file upload if mandatory fields are not filled
+    if (!areMandatoryFieldsFilled()) {
+      toast.error('Please fill in the required fields (Date, Title, and Description) before uploading photos.')
+      e.target.value = '' // Reset the input
+      return
+    }
+
     const files = Array.from(e.target.files || [])
     
     files.forEach(file => {
@@ -476,6 +507,12 @@ export default function NewJournalEntryPage() {
   }
 
   const startAudioRecording = async () => {
+    // Prevent audio recording if mandatory fields are not filled
+    if (!areMandatoryFieldsFilled()) {
+      toast.error('Please fill in the required fields (Date, Title, and Description) before recording audio.')
+      return
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       const recorder = new MediaRecorder(stream)
@@ -535,6 +572,13 @@ export default function NewJournalEntryPage() {
   }
 
   const handleAudioFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Prevent file upload if mandatory fields are not filled
+    if (!areMandatoryFieldsFilled()) {
+      toast.error('Please fill in the required fields (Date, Title, and Description) before uploading audio files.')
+      e.target.value = '' // Reset the input
+      return
+    }
+
     const files = Array.from(e.target.files || [])
     if (!files.length) return
     const audioFiles = files.filter(f => f.type.startsWith('audio/'))
@@ -618,27 +662,124 @@ export default function NewJournalEntryPage() {
           bodySnippet: textBody.slice(0, 300)
         })
         if (!resp.ok) {
-          throw new Error(`Failed to start transcription: ${resp.status} ${resp.statusText}`)
+          throw new Error(`Failed to start transcription: ${resp.status} ${resp.status}`)
         }
       }
       if (!resp.ok) {
         throw new Error(data?.error || 'Transcription failed')
       }
 
-      // If the Edge Function returns transcription synchronously (or partially), reflect it
+      const evidenceFileId = data?.evidence_file_id
+      const jobId = data?.job_id
+      
+      // If the Edge Function returns transcription synchronously, reflect it
       const text: string | undefined = data?.transcription || data?.result?.text
-      setAudioEvidence(prev => prev.map((rec, i) => i === index ? {
-        ...rec,
-        transcription: text || rec.transcription,
-        transcriptionStatus: text ? 'completed' : 'processing'
-      } : rec))
+      if (text) {
+        setAudioEvidence(prev => prev.map((rec, i) => i === index ? {
+          ...rec,
+          transcription: text,
+          transcriptionStatus: 'completed'
+        } : rec))
+        toast.success('Transcription completed')
+        return
+      }
 
-      toast.success(text ? 'Transcription completed' : 'Transcription started')
+      // If not completed immediately, start polling for completion
+      if (evidenceFileId) {
+        toast.success('Transcription started - checking for completion...')
+        pollForTranscriptionCompletion(evidenceFileId, jobId, index)
+      } else {
+        throw new Error('No evidence file ID returned')
+      }
+
     } catch (e: any) {
       console.error('Manual transcription error:', e)
       toast.error(e?.message || 'Failed to transcribe')
       setAudioEvidence(prev => prev.map((rec, i) => i === index ? { ...rec, transcriptionStatus: 'failed' } : rec))
     }
+  }
+
+  // Poll for transcription completion
+  const pollForTranscriptionCompletion = async (evidenceFileId: string, jobId: string | undefined, index: number) => {
+    const maxAttempts = 60 // 5 minutes with 5-second intervals
+    let attempts = 0
+
+    const poll = async (): Promise<void> => {
+      try {
+        attempts++
+        
+        const { data: sessionData } = await supabase.auth.getSession()
+        const accessToken = sessionData.session?.access_token
+        if (!accessToken) throw new Error('Missing session token')
+
+        const resp = await fetch('/api/evidence/transcribe/status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            evidence_file_id: evidenceFileId,
+            job_id: jobId
+          })
+        })
+
+        if (!resp.ok) {
+          const errorData = await resp.json().catch(() => ({}))
+          throw new Error(errorData?.error || `Status check failed: ${resp.status}`)
+        }
+
+        const result = await resp.json()
+        
+        if (result.status === 'completed') {
+          // Fetch the updated evidence file to get the transcription
+          const { data: evidenceFile, error: fetchError } = await supabase
+            .from('evidence_files')
+            .select('transcription')
+            .eq('id', evidenceFileId)
+            .single()
+
+          if (fetchError) {
+            console.error('Failed to fetch transcription result:', fetchError)
+            throw new Error('Failed to retrieve transcription result')
+          }
+
+          // Update the UI with the completed transcription
+          setAudioEvidence(prev => prev.map((rec, i) => i === index ? {
+            ...rec,
+            transcription: evidenceFile.transcription || 'Transcription completed but text not available',
+            transcriptionStatus: 'completed'
+          } : rec))
+
+          toast.success('Transcription completed successfully!')
+          return
+        }
+
+        if (result.status === 'failed') {
+          throw new Error(result.error || 'Transcription failed')
+        }
+
+        // If still processing and we haven't exceeded max attempts, continue polling
+        if (result.status === 'processing' && attempts < maxAttempts) {
+          setTimeout(poll, 5000) // Poll every 5 seconds
+          return
+        }
+
+        // If we've exceeded max attempts or got an unexpected status
+        throw new Error(attempts >= maxAttempts ? 'Transcription timed out' : `Unexpected status: ${result.status}`)
+
+      } catch (e: any) {
+        console.error('Transcription polling error:', e)
+        setAudioEvidence(prev => prev.map((rec, i) => i === index ? { 
+          ...rec, 
+          transcriptionStatus: 'failed' 
+        } : rec))
+        toast.error(e?.message || 'Transcription failed')
+      }
+    }
+
+    // Start polling
+    setTimeout(poll, 2000) // Initial delay of 2 seconds
   }
   const handleAbuseTypeToggle = (type: string) => {
     setSelectedAbuseTypes(prev =>
@@ -655,23 +796,23 @@ export default function NewJournalEntryPage() {
   const isFoundationUser = () => subscriptionTier === 'foundation'
 
   const getFeatureAccess = () => ({
-    // Foundation (Free) - Basic features
-    basicForm: true, // Available to all users
-    behaviorAssessment: true, // Basic behavior pattern selection
-    basicEvidence: true, // Photo upload only (3 max)
-    emotionalTracking: true, // Before/after emotional states
+  // Foundation (Free) - Basic features
+  basicForm: true, // Available to all users
+  behaviorAssessment: true, // Basic behavior pattern selection
+  basicEvidence: true, // Photo upload only (3 max)
+  emotionalTracking: true, // Before/after emotional states
 
-    // Recovery (Mid-tier) - Enhanced documentation
-    howThisAffectedYou: isPaidUser(), // "How This Affected You" section
-    enhancedRatings: isPaidUser(), // Mood rating, trigger level
-    audioEvidence: isPaidUser(), // Audio recording + transcription
-    draftMode: isPaidUser(), // Save as draft functionality
+  // Recovery (Mid-tier) - Enhanced documentation
+  howThisAffectedYou: isPaidUser(), // "How This Affected You" section
+  enhancedRatings: isPaidUser(), // Mood rating, trigger level
+  audioEvidence: isPaidUser(), // Audio recording + transcription
+  draftMode: true, // Save as draft functionality (enabled for all tiers including Foundation)
 
-    // Empowerment (Premium) - Complete toolkit
-    detailedAnalysis: isEmpowermentUser(), // Behavior categories, emotional impact, pattern flags
-    evidenceDocumentation: isEmpowermentUser(), // Evidence types, notes, legal flagging, content warnings
-    advancedFields: isEmpowermentUser(), // Content field, enhanced metadata
-  })
+  // Empowerment (Premium) - Complete toolkit
+  detailedAnalysis: isEmpowermentUser(), // Behavior categories, emotional impact, pattern flags
+  evidenceDocumentation: isEmpowermentUser(), // Evidence types, notes, legal flagging, content warnings
+  advancedFields: isEmpowermentUser(), // Content field, enhanced metadata
+})
 
   // Debug logging for subscription tier (remove in production)
   console.log('Current subscription tier:', subscriptionTier)
@@ -701,7 +842,7 @@ export default function NewJournalEntryPage() {
     }
   }
 
-  // Numeric descriptors for Enhanced Impact Assessment
+  // Numeric descriptors for Impact Assessment
   const getMoodDescriptor = (val: number) => {
     if (val <= 2) return 'Very Low'
     if (val <= 4) return 'Low'
@@ -948,7 +1089,7 @@ export default function NewJournalEntryPage() {
   // Upgrade prompt component with tier-specific messaging
   const UpgradePrompt = ({ feature }: { feature: string }) => {
     const getUpgradeMessage = () => {
-      if (feature.includes('How This Affected You') || feature.includes('Enhanced Impact Assessment')) {
+      if (feature.includes('How This Affected You') || feature.includes('Impact Assessment')) {
         return {
           title: `Unlock ${feature} with Recovery Plan`,
           description: 'Track emotional impact and get enhanced documentation features starting at $9.99/month.',
@@ -1027,8 +1168,8 @@ export default function NewJournalEntryPage() {
               <ArrowLeft className="h-5 w-5 text-gray-600" />
             </Link>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Document Your Experience</h1>
-              <p className="text-sm md:text-base text-gray-600 mt-1">Create a safe record of what happened</p>
+              <h1 className="text-xl md:text-3xl font-bold text-gray-900">Document Your Experience</h1>
+              <p className="text-xs md:text-base text-gray-600 mt-1">Create a safe record of what happened</p>
             </div>
           </div>
         </div>
@@ -1072,31 +1213,18 @@ export default function NewJournalEntryPage() {
             </CardContent>
           </Card>
 
-          {/* Basic Information */}
-          <Card className="border-l-4 border-l-indigo-500">
-            <CardHeader 
-              className="cursor-pointer md:cursor-default"
-              onClick={() => window.innerWidth < 768 && toggleSection('basicInfo')}
-            >
-              <CardTitle className="flex items-center justify-between text-lg md:text-xl">
-                <span className="flex items-center gap-2">
-                  📝 What Happened
-                </span>
-                <button
-                  type="button"
-                  className="md:hidden p-1 hover:bg-gray-100 rounded"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    toggleSection('basicInfo')
-                  }}
-                >
-                  {collapsedSections.basicInfo ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
-                </button>
-              </CardTitle>
-              <CardDescription>Tell your story in your own words</CardDescription>
-            </CardHeader>
-            {!collapsedSections.basicInfo && (
-              <CardContent className="space-y-4 md:space-y-6">
+          {/* What Happened - wrapped in Section */}
+          <Section
+            id="basicInfo"
+            title="📝 What Happened"
+            description="Tell your story in your own words"
+            isOpen={openSections.basicInfo}
+            onToggle={handleSectionToggle}
+            showChevron={true}
+            nextId="behavior"
+            onNext={handleNextSection}
+          >
+            <div className="space-y-4 md:space-y-6">
                 <div>
                 <div className="flex items-center justify-between mb-3">
                   <label className="block text-sm font-medium text-gray-700">
@@ -1185,11 +1313,9 @@ export default function NewJournalEntryPage() {
 
               {/* AI Assist (Recovery+) */}
               <div className="mt-4 border-t pt-4">
+                {/* Row 1: Heading + switch */}
                 <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-medium text-gray-800">AI Assist</div>
-                    <div className="text-xs text-gray-600">Suggests a title and likely behavior patterns based on your description. You can edit everything before saving.</div>
-                  </div>
+                  <div className="text-sm font-medium text-gray-800">AI Assist</div>
                   <button
                     type="button"
                     role="switch"
@@ -1209,6 +1335,11 @@ export default function NewJournalEntryPage() {
                     <span className="text-sm text-gray-700">Enable</span>
                   </button>
                 </div>
+
+                {/* Row 2: Description (separate row for mobile clarity) */}
+                <p className="mt-2 text-xs text-gray-600">
+                  Suggests a title and likely behavior patterns based on your description. You can edit everything before saving.
+                </p>
 
                 {!isPaidUser() && (
                   <p className="mt-2 text-xs text-purple-700 bg-purple-50 border border-purple-200 rounded px-3 py-2">
@@ -1330,358 +1461,312 @@ export default function NewJournalEntryPage() {
                 )}
               </div>
 
+            </div>
+          </Section>
 
-              </CardContent>
-            )}
-          </Card>
-
-          {/* Behavior Assessment - Moved right after "What Happened" */}
-          <Card className="border-l-4 border-l-teal-500">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between text-lg md:text-xl">
-                <span className="flex items-center gap-2">
-                  🎭 Behavior Assessment
-                </span>
+          {/* Behavior Assessment - wrapped in Section */}
+          <Section
+            id="behavior"
+            title="🎭 Behavior Assessment"
+            description="Select all patterns that apply (optional)"
+            isOpen={openSections.behavior}
+            onToggle={handleSectionToggle}
+            showChevron={true}
+          >
+            <div className="flex items-center justify-end mb-2">
+              <button
+                type="button"
+                onClick={() => setShowBehaviorHelp(true)}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Learn about behavior assessment"
+              >
+                <HelpCircle className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {abuseTypes.map((type) => (
                 <button
+                  key={type}
                   type="button"
-                  onClick={() => setShowBehaviorHelp(true)}
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-                  aria-label="Learn about behavior assessment"
+                  onClick={() => handleAbuseTypeToggle(type)}
+                  className={`p-3 md:p-4 text-sm rounded-xl border-2 transition-all transform hover:scale-105 ${
+                    selectedAbuseTypes.includes(type)
+                      ? 'border-teal-500 bg-teal-50 text-teal-700 shadow-lg'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
                 >
-                  <HelpCircle className="h-5 w-5 text-gray-500" />
+                  <div className="font-medium">{type.replace('_', ' ')}</div>
                 </button>
-              </CardTitle>
-              <CardDescription>Select all patterns that apply (optional)</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                {abuseTypes.map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => handleAbuseTypeToggle(type)}
-                    className={`p-3 md:p-4 text-sm rounded-xl border-2 transition-all transform hover:scale-105 ${
-                      selectedAbuseTypes.includes(type)
-                        ? 'border-teal-500 bg-teal-50 text-teal-700 shadow-lg'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="font-medium">{type.replace('_', ' ')}</div>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+              ))}
+            </div>
+          </Section>
 
-          {/* Basic Safety Rating - Always Available */}
-          <Card className="border-l-4 border-l-orange-500">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                🛡️ Safety Assessment
-              </CardTitle>
-              <CardDescription>How safe did you feel during this experience?</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <button
-                    key={rating}
-                    type="button"
-                    onClick={() => setSafetyRating(rating)}
-                    className={`p-3 md:p-4 rounded-xl border-2 font-medium transition-all transform hover:scale-105 text-center ${
-                      safetyRating === rating
-                        ? getSafetyColor(rating.toString()) + ' shadow-lg'
-                        : 'border-gray-200 hover:border-gray-300 bg-white'
-                    }`}
-                  >
-                    <div className="text-xl md:text-2xl font-bold mb-1">{rating}</div>
-                    <div className="text-xs">{getSafetyLabel(rating.toString())}</div>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Safety Assessment - wrapped in Section */}
+          <Section
+            id="safety"
+            title="🛡️ Safety Assessment"
+            description="How safe did you feel during this experience?"
+            isOpen={openSections.safety}
+            onToggle={handleSectionToggle}
+            showChevron={true}
+            nextId="impact"
+            onNext={handleNextSection}
+          >
+            <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <button
+                  key={rating}
+                  type="button"
+                  onClick={() => setSafetyRating(rating)}
+                  className={`p-3 md:p-4 rounded-xl border-2 font-medium transition-all transform hover:scale-105 text-center ${
+                    safetyRating === rating
+                      ? getSafetyColor(rating.toString()) + ' shadow-lg'
+                      : 'border-gray-200 hover:border-gray-300 bg-white'
+                  }`}
+                >
+                  <div className="text-xl md:text-2xl font-bold mb-1">{rating}</div>
+                  <div className="text-xs">{getSafetyLabel(rating.toString())}</div>
+                </button>
+              ))}
+            </div>
+          </Section>
 
-          {/* Enhanced Ratings - Paid Users Only */}
-          {featureAccess.enhancedRatings ? (
-            <Card className="border-l-4 border-l-purple-500">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                  📊 Enhanced Impact Assessment
-                </CardTitle>
-                <CardDescription>Detailed analysis of emotional and psychological impact</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Mood Rating */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-4">
-                    How would you rate your mood during this incident? (1-10)
-                  </label>
-                  <div className="grid grid-cols-5 gap-2">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
-                      <button
-                        key={rating}
-                        type="button"
-                        onClick={() => setMoodRating(rating)}
-                        className={`p-2 text-center rounded-lg border-2 transition-all ${
-                          moodRating === rating
-                            ? 'border-purple-500 bg-purple-50 text-purple-700'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="font-bold">{rating}</div>
-                      </button>
-                    ))}
+          {/* Impact Assessment - wrapped in Section */}
+          <Section
+            id="impact"
+            title="💟 Impact Assessment"
+            description="Mood and trigger level (optional)"
+            isOpen={openSections.impact}
+            onToggle={handleSectionToggle}
+            showChevron={true}
+            nextId="detailed"
+            onNext={handleNextSection}
+          >
+            {/* Enhanced Ratings - Paid Users Only */}
+            {featureAccess.enhancedRatings ? (
+              <EnhancedImpactAssessment
+                moodRating={moodRating}
+                triggerLevel={triggerLevel}
+                onMoodRatingChange={setMoodRating}
+                onTriggerLevelChange={setTriggerLevel}
+              />
+            ) : (
+              <UpgradePrompt feature="Impact Assessment" />
+            )}
+          </Section>
+
+
+
+          {/* Detailed Analysis - wrapped in Section */}
+          <Section
+            id="detailed"
+            title="🔍 Detailed Analysis"
+            description="Help identify patterns and behaviors (optional)"
+            isOpen={openSections.detailed}
+            onToggle={handleSectionToggle}
+            showChevron={true}
+            nextId="evidence"
+            onNext={handleNextSection}
+          >
+            <div className="space-y-6">
+              {featureAccess.detailedAnalysis ? (
+                <>
+                  {/* Behavior Categories */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Specific Behaviors Observed
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {behaviorCategoryOptions.map((category) => (
+                        <button
+                          key={category}
+                          type="button"
+                          onClick={() => {
+                            setBehaviorCategories(prev =>
+                              prev.includes(category)
+                                ? prev.filter(c => c !== category)
+                                : [...prev, category]
+                            )
+                          }}
+                          className={`p-2 text-sm rounded-lg border-2 transition-all ${
+                            behaviorCategories.includes(category)
+                              ? 'border-green-500 bg-green-50 text-green-700'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          {category.replace(/_/g, ' ')}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <span>Very Low</span>
-                    <span>Very High</span>
+
+                  {/* Emotional Impact */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Emotional Impact
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {emotionalImpactOptions.map((impact) => (
+                        <button
+                          key={impact}
+                          type="button"
+                          onClick={() => {
+                            setEmotionalImpact(prev =>
+                              prev.includes(impact)
+                                ? prev.filter(i => i !== impact)
+                                : [...prev, impact]
+                            )
+                          }}
+                          className={`p-2 text-sm rounded-lg border-2 transition-all ${
+                            emotionalImpact.includes(impact)
+                              ? 'border-green-500 bg-green-50 text-green-700'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          {impact.replace(/_/g, ' ')}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="mt-2 text-sm text-gray-700">
-                    Selected: <span className="font-medium">{moodRating}</span> — {getMoodDescriptor(moodRating)}
+
+                  {/* Pattern Flags */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Pattern Indicators
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {patternFlagOptions.map((flag) => (
+                        <button
+                          key={flag}
+                          type="button"
+                          onClick={() => {
+                            setPatternFlags(prev =>
+                              prev.includes(flag)
+                                ? prev.filter(f => f !== flag)
+                                : [...prev, flag]
+                            )
+                          }}
+                          className={`p-2 text-sm rounded-lg border-2 transition-all ${
+                            patternFlags.includes(flag)
+                              ? 'border-green-500 bg-green-50 text-green-700'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          {flag.replace(/_/g, ' ')}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                </>
+              ) : (
+                <UpgradePrompt feature="Detailed Pattern Analysis" />
+              )}
+            </div>
+          </Section>
 
-                {/* Trigger Level */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-4">
-                    How triggering was this experience? (1-5)
-                  </label>
-                  <div className="grid grid-cols-5 gap-2">
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                      <button
-                        key={rating}
-                        type="button"
-                        onClick={() => setTriggerLevel(rating)}
-                        className={`p-3 text-center rounded-lg border-2 transition-all ${
-                          triggerLevel === rating
-                            ? 'border-purple-500 bg-purple-50 text-purple-700'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="font-bold text-lg">{rating}</div>
-                        <div className="text-xs">{getTriggerDescriptor(rating)}</div>
-                      </button>
-                    ))}
+          {/* Evidence Documentation - wrapped in Section */}
+          <Section
+            id="evidence"
+            title="📋 Evidence Documentation"
+            description="Document evidence and important details"
+            isOpen={openSections.evidence}
+            onToggle={handleSectionToggle}
+            showChevron={true}
+          >
+            <div className="space-y-6 md:space-y-8">
+              {featureAccess.evidenceDocumentation ? (
+                <>
+                  {/* Evidence Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Types of Evidence Available
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {evidenceTypeOptions.map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => {
+                            setEvidenceType(prev =>
+                              prev.includes(type)
+                                ? prev.filter(t => t !== type)
+                                : [...prev, type]
+                            )
+                          }}
+                          className={`p-3 min-h-[44px] text-sm rounded-lg border-2 transition-all ${
+                            evidenceType.includes(type)
+                              ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          {type.replace(/_/g, ' ')}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <span>Mild</span>
-                    <span>Severe</span>
+
+                  {/* Evidence Notes */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Evidence Notes
+                    </label>
+                    <textarea
+                      value={evidenceNotes}
+                      onChange={(e) => setEvidenceNotes(e.target.value)}
+                      rows={3}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-colors resize-none text-base"
+                      placeholder="Notes about evidence, where it's stored, how to access it, etc."
+                    />
                   </div>
-                  <div className="mt-2 text-sm text-gray-700">
-                    Selected: <span className="font-medium">{triggerLevel}</span> — {getTriggerDescriptor(triggerLevel)}
+
+                  {/* Evidence Flag */}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="isEvidence"
+                      checked={isEvidence}
+                      onChange={(e) => setIsEvidence(e.target.checked)}
+                      className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
+                    />
+                    <label htmlFor="isEvidence" className="text-sm font-medium text-gray-700">
+                      Mark this entry as containing evidence for potential legal use
+                    </label>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <UpgradePrompt feature="Enhanced Impact Assessment" />
-          )}
 
-
-
-          {/* Enhanced Categories - Paid Users Only */}
-          {featureAccess.detailedAnalysis ? (
-            <Card className="border-l-4 border-l-green-500">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                  🔍 Detailed Analysis
-                </CardTitle>
-                <CardDescription>Help identify patterns and behaviors (optional)</CardDescription>
-              </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Behavior Categories */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Specific Behaviors Observed
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {behaviorCategoryOptions.map((category) => (
-                    <button
-                      key={category}
-                      type="button"
-                      onClick={() => {
-                        setBehaviorCategories(prev =>
-                          prev.includes(category)
-                            ? prev.filter(c => c !== category)
-                            : [...prev, category]
-                        )
-                      }}
-                      className={`p-2 text-sm rounded-lg border-2 transition-all ${
-                        behaviorCategories.includes(category)
-                          ? 'border-green-500 bg-green-50 text-green-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      {category.replace(/_/g, ' ')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Emotional Impact */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Emotional Impact
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {emotionalImpactOptions.map((impact) => (
-                    <button
-                      key={impact}
-                      type="button"
-                      onClick={() => {
-                        setEmotionalImpact(prev =>
-                          prev.includes(impact)
-                            ? prev.filter(i => i !== impact)
-                            : [...prev, impact]
-                        )
-                      }}
-                      className={`p-2 text-sm rounded-lg border-2 transition-all ${
-                        emotionalImpact.includes(impact)
-                          ? 'border-green-500 bg-green-50 text-green-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      {impact.replace(/_/g, ' ')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Pattern Flags */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Pattern Indicators
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {patternFlagOptions.map((flag) => (
-                    <button
-                      key={flag}
-                      type="button"
-                      onClick={() => {
-                        setPatternFlags(prev =>
-                          prev.includes(flag)
-                            ? prev.filter(f => f !== flag)
-                            : [...prev, flag]
-                        )
-                      }}
-                      className={`p-2 text-sm rounded-lg border-2 transition-all ${
-                        patternFlags.includes(flag)
-                          ? 'border-green-500 bg-green-50 text-green-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      {flag.replace(/_/g, ' ')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          ) : (
-            <UpgradePrompt feature="Detailed Pattern Analysis" />
-          )}
-
-          {/* Evidence and Documentation - Paid Users Only */}
-          {featureAccess.evidenceDocumentation ? (
-          <Card className="border-l-4 border-l-yellow-500">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                📋 Evidence Documentation
-              </CardTitle>
-              <CardDescription>Document evidence and important details</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Evidence Type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Types of Evidence Available
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {evidenceTypeOptions.map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => {
-                        setEvidenceType(prev =>
-                          prev.includes(type)
-                            ? prev.filter(t => t !== type)
-                            : [...prev, type]
-                        )
-                      }}
-                      className={`p-2 text-sm rounded-lg border-2 transition-all ${
-                        evidenceType.includes(type)
-                          ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      {type.replace(/_/g, ' ')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Evidence Notes */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Evidence Notes
-                </label>
-                <textarea
-                  value={evidenceNotes}
-                  onChange={(e) => setEvidenceNotes(e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-colors resize-none text-base"
-                  placeholder="Notes about evidence, where it's stored, how to access it, etc."
-                />
-              </div>
-
-              {/* Evidence Flag */}
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  id="isEvidence"
-                  checked={isEvidence}
-                  onChange={(e) => setIsEvidence(e.target.checked)}
-                  className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
-                />
-                <label htmlFor="isEvidence" className="text-sm font-medium text-gray-700">
-                  Mark this entry as containing evidence for potential legal use
-                </label>
-              </div>
-
-              {/* Content Warnings */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Content Warnings (optional)
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {contentWarningOptions.map((warning) => (
-                    <button
-                      key={warning}
-                      type="button"
-                      onClick={() => {
-                        setContentWarnings(prev =>
-                          prev.includes(warning)
-                            ? prev.filter(w => w !== warning)
-                            : [...prev, warning]
-                        )
-                      }}
-                      className={`p-2 text-sm rounded-lg border-2 transition-all ${
-                        contentWarnings.includes(warning)
-                          ? 'border-red-500 bg-red-50 text-red-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      {warning.replace(/_/g, ' ')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          ) : (
-            <UpgradePrompt feature="Evidence Documentation" />
-          )}
+                  {/* Content Warnings */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Content Warnings (optional)
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {contentWarningOptions.map((warning) => (
+                        <button
+                          key={warning}
+                          type="button"
+                          onClick={() => {
+                            setContentWarnings(prev =>
+                              prev.includes(warning)
+                                ? prev.filter(w => w !== warning)
+                                : [...prev, warning]
+                            )
+                          }}
+                          className={`p-3 min-h-[44px] text-sm rounded-lg border-2 transition-all ${
+                            contentWarnings.includes(warning)
+                              ? 'border-red-500 bg-red-50 text-red-700'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          {warning.replace(/_/g, ' ')}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <UpgradePrompt feature="Evidence Documentation" />
+              )}
+            </div>
+          </Section>
 
           {/* How This Affected You - Recovery & Empowerment Only */}
           {featureAccess.howThisAffectedYou ? (
@@ -1699,13 +1784,13 @@ export default function NewJournalEntryPage() {
                       <Heart className="inline h-4 w-4 mr-1 text-blue-500" />
                       How were you feeling before?
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {emotionalStates.map((state) => (
                         <button
                           key={state.value}
                           type="button"
                           onClick={() => handleEmotionalStateToggle(state.value, 'before')}
-                          className={`p-3 rounded-lg border-2 transition-all text-sm font-medium ${
+                          className={`p-3 min-h-[44px] rounded-lg border-2 transition-all text-sm font-medium ${
                             getEmotionalIntensityStyle(state.intensity, emotionalStateBefore.includes(state.value))
                           }`}
                         >
@@ -1720,13 +1805,13 @@ export default function NewJournalEntryPage() {
                       <Heart className="inline h-4 w-4 mr-1 text-red-500" />
                       How did you feel after?
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {emotionalStates.map((state) => (
                         <button
                           key={state.value}
                           type="button"
                           onClick={() => handleEmotionalStateToggle(state.value, 'after')}
-                          className={`p-3 rounded-lg border-2 transition-all text-sm font-medium ${
+                          className={`p-3 min-h-[44px] rounded-lg border-2 transition-all text-sm font-medium ${
                             getEmotionalIntensityStyle(state.intensity, emotionalStateAfter.includes(state.value))
                           }`}
                         >
@@ -1743,21 +1828,30 @@ export default function NewJournalEntryPage() {
           )}
 
           {/* Photo Evidence Upload */}
-          <Card className="border-l-4 border-l-blue-500">
+          <Card className={`border-l-4 ${!areMandatoryFieldsFilled() ? 'border-l-gray-300 opacity-60' : 'border-l-blue-500'} mb-4 md:mb-6`}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
                 📸 Photo Evidence
               </CardTitle>
-              <CardDescription>Upload photos related to this entry (optional)</CardDescription>
+              <CardDescription>
+                {!areMandatoryFieldsFilled() 
+                  ? "Please fill in Date, Title, and Description before uploading photos"
+                  : "Upload photos related to this entry (optional)"
+                }
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 md:space-y-8">
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                   <label className="block text-sm font-medium text-gray-700">
                     <Camera className="inline h-4 w-4 mr-1" />
                     Photos
                   </label>
-                  <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 justify-center sm:justify-start">
+                  <label className={`w-full sm:w-fit px-4 py-3 h-11 rounded-lg transition-colors flex items-center gap-2 justify-center sm:justify-start ${
+                    !areMandatoryFieldsFilled() 
+                      ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                      : 'cursor-pointer bg-blue-600 text-white hover:bg-blue-700'
+                  }`}>
                     <Upload className="h-4 w-4" />
                     Add Photos
                     <input
@@ -1766,39 +1860,45 @@ export default function NewJournalEntryPage() {
                       accept="image/*"
                       onChange={handlePhotoUpload}
                       className="hidden"
+                      disabled={!areMandatoryFieldsFilled()}
                     />
                   </label>
                 </div>
 
                 {photoEvidence.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-4">
                     {photoEvidence.map((photo, index) => (
-                      <div key={index} className="border border-gray-200 rounded-lg p-4">
-                        <div className="relative mb-3">
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                        {/* Photo Display Row */}
+                        <div className="relative">
                           <img
                             src={photo.preview}
                             alt="Evidence"
-                            className="w-full h-32 sm:h-48 object-cover rounded-lg"
+                            className="w-full h-48 sm:h-64 object-cover rounded-lg"
                             loading="lazy"
                           />
                           <button
                             type="button"
                             onClick={() => removePhoto(index)}
-                            className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                            className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1.5 hover:bg-red-700 shadow-lg"
                           >
                             <X className="h-4 w-4" />
                           </button>
                         </div>
-                        <input
-                          type="text"
-                          placeholder="Add a caption..."
-                          value={photo.caption}
-                          onChange={(e) => updatePhotoCaption(index, e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">
-                          {new Date(photo.timestamp).toLocaleString()}
-                        </p>
+                        
+                        {/* Caption and Timestamp Row */}
+                        <div className="space-y-2">
+                          <input
+                            type="text"
+                            placeholder="Add a caption..."
+                            value={photo.caption}
+                            onChange={(e) => updatePhotoCaption(index, e.target.value)}
+                            className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <p className="text-xs text-gray-500">
+                            Uploaded: {new Date(photo.timestamp).toLocaleString()}
+                          </p>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1808,16 +1908,21 @@ export default function NewJournalEntryPage() {
           </Card>
 
           {/* Audio Evidence Recording */}
-          <Card className="border-l-4 border-l-purple-500">
+          <Card className={`border-l-4 ${!areMandatoryFieldsFilled() ? 'border-l-gray-300 opacity-60' : 'border-l-purple-500'} mt-2 md:mt-4`}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
                 🎙️ Audio Evidence
               </CardTitle>
-              <CardDescription>Record or upload audio evidence (optional)</CardDescription>
+              <CardDescription>
+                {!areMandatoryFieldsFilled() 
+                  ? "Please fill in Date, Title, and Description before recording or uploading audio"
+                  : "Record or upload audio evidence (optional)"
+                }
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 md:space-y-8">
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                   <label className="block text-sm font-medium text-gray-700">
                     <Mic className="inline h-4 w-4 mr-1" />
                     Audio Recordings
@@ -1825,8 +1930,11 @@ export default function NewJournalEntryPage() {
                   <button
                     type="button"
                     onClick={isRecording ? stopAudioRecording : startAudioRecording}
-                    className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 justify-center sm:justify-start ${
-                      isRecording
+                    disabled={!areMandatoryFieldsFilled() && !isRecording}
+                    className={`w-full sm:w-auto px-4 py-3 h-11 rounded-lg transition-colors flex items-center gap-2 justify-center sm:justify-start ${
+                      !areMandatoryFieldsFilled() && !isRecording
+                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                        : isRecording
                         ? 'bg-red-600 text-white hover:bg-red-700 animate-pulse'
                         : 'bg-green-600 text-white hover:bg-green-700'
                     }`}
@@ -1837,7 +1945,7 @@ export default function NewJournalEntryPage() {
                 </div>
 
                 {isPaidUser() && (
-                  <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                  <div className="mt-2 flex flex-col sm:flex-row gap-3">
                     <input
                       id="audio-file-input"
                       type="file"
@@ -1848,7 +1956,7 @@ export default function NewJournalEntryPage() {
                     />
                     <label
                       htmlFor="audio-file-input"
-                      className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer inline-flex items-center gap-2 w-fit"
+                      className="w-full sm:w-fit px-4 py-3 h-11 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer inline-flex items-center gap-2"
                     >
                       <Upload className="h-4 w-4" />
                       Upload audio file(s)
@@ -1877,10 +1985,15 @@ export default function NewJournalEntryPage() {
                 {audioEvidence.length > 0 && (
                   <div className="space-y-4">
                     {audioEvidence.map((recording, index) => (
-                      <div key={index} className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
-                          <audio controls src={recording.audioUrl} className="flex-1 w-full" />
-                          <div className="flex items-center gap-2 self-end sm:self-auto">
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
+                        {/* Audio Player Row */}
+                        <div className="w-full">
+                          <audio controls src={recording.audioUrl} className="w-full" />
+                        </div>
+                        
+                        {/* Controls and Actions Row */}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                          <div className="flex items-center gap-2 flex-wrap">
                             {isPaidUser() && (recording.transcriptionStatus === 'pending' || recording.transcriptionStatus === 'failed') && (
                               <button
                                 type="button"
@@ -1914,7 +2027,7 @@ export default function NewJournalEntryPage() {
                           placeholder="Add a caption..."
                           value={recording.caption}
                           onChange={(e) => updateAudioCaption(index, e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2"
+                          className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm mb-2"
                         />
 
                         <div className="text-xs text-gray-500 mb-2">
@@ -1954,7 +2067,7 @@ export default function NewJournalEntryPage() {
               </CardTitle>
               <CardDescription>These details can be helpful but are optional</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 md:space-y-6">
+            <CardContent className="space-y-6 md:space-y-8">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   <MapPin className="inline h-4 w-4 mr-1" />
@@ -2054,7 +2167,7 @@ export default function NewJournalEntryPage() {
             </div>
           </div>
           {/* Spacer to prevent content hidden behind sticky bar */}
-          <div className="h-20 sm:h-0" />
+          <div className="h-16 sm:h-0" />
         </form>
       </div>
 

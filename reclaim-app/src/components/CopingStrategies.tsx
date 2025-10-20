@@ -74,6 +74,8 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
     effectiveness_rating: number
     rationale?: string
   }>>([])
+  const [selectedIdx, setSelectedIdx] = useState<number[]>([])
+  const [aiError, setAiError] = useState<string | null>(null)
   const [aiContext, setAiContext] = useState<{
     mood?: number
     anxiety?: number
@@ -240,9 +242,10 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
   }
 
   // AI suggest
-  const fetchAISuggestions = async (context?: { mood?: number; anxiety?: number; energy?: number; preferred_categories?: string[] }) => {
+  const fetchAISuggestions = async (context?: { mood?: number; anxiety?: number; energy?: number; preferred_categories?: string[]; note?: string }) => {
     try {
       setAiLoading(true)
+      setAiError(null)
       // keep modal open while generating
       const res = await fetch('/api/ai/suggest-coping-strategies', {
         method: 'POST',
@@ -257,9 +260,12 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'AI error')
       setAiSuggestions(data.suggestions || [])
+      setSelectedIdx([])
     } catch (e) {
       console.error('AI suggest failed', e)
-      toast.error('Failed to get AI suggestions')
+      const msg = e instanceof Error ? e.message : 'Failed to get AI suggestions'
+      setAiError(msg)
+      toast.error(msg)
       // keep modal so the user can try again
     } finally {
       setAiLoading(false)
@@ -269,6 +275,41 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
   const addAISuggestion = async (s: { strategy_name: string; description: string; category: string; effectiveness_rating: number }) => {
     await addFromTemplate(s)
     setShowAISuggest(false)
+  }
+
+  const addSelectedAISuggestions = async () => {
+    const items = selectedIdx.map((i) => aiSuggestions[i]).filter(Boolean)
+    if (items.length === 0) return
+    for (const s of items) {
+      await addFromTemplate(s)
+    }
+    setShowAISuggest(false)
+  }
+
+  const importLatestCheckIn = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('mood_check_ins')
+        .select('mood_rating, energy_level, anxiety_level, notes')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+      if (error) throw error
+      if (data) {
+        setAiContext((c) => ({
+          ...c,
+          mood: data.mood_rating ?? c.mood,
+          energy: data.energy_level ?? c.energy,
+          anxiety: data.anxiety_level ?? c.anxiety,
+          note: data.notes ?? c.note,
+        }))
+        toast.success('Imported latest check-in')
+      }
+    } catch (e) {
+      console.error('Failed to import check-in', e)
+      toast.error('Could not import latest check-in')
+    }
   }
 
   if (loading) {
@@ -328,30 +369,28 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <Heart className="h-5 w-5 text-green-500" />
-              Coping Strategies
-            </CardTitle>
-            <CardDescription>Your personal toolkit for managing difficult moments</CardDescription>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap gap-y-2 justify-end">
+        <div className="flex flex-col gap-2">
+          <CardTitle className="flex items-center gap-2">
+            <Heart className="h-5 w-5 text-green-500" />
+            Coping Strategies
+          </CardTitle>
+          <CardDescription>Your personal toolkit for managing difficult moments</CardDescription>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1">
             <button
               onClick={() => setShowTemplates(true)}
-              className="inline-flex items-center gap-2 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
               Browse Templates
             </button>
             <button
               onClick={() => setShowAISuggest(true)}
-              className="inline-flex items-center gap-2 px-3 py-2 border border-indigo-300 text-indigo-700 text-sm font-medium rounded-lg hover:bg-indigo-50 transition-colors"
+              className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-3 py-2 border border-indigo-300 text-indigo-700 text-sm font-medium rounded-lg hover:bg-indigo-50 transition-colors"
             >
               Suggest for me
             </button>
             <button
               onClick={() => setShowAddForm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+              className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
             >
               <Plus className="h-4 w-4" />
               Add Strategy
@@ -397,108 +436,134 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
 
         {/* AI Suggestions Modal */}
         {showAISuggest && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 z-50">
             <div className="absolute inset-0 bg-black/50" onClick={() => setShowAISuggest(false)} />
-            <div className="relative bg-white rounded-lg shadow-lg w-full max-w-2xl p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="font-medium text-gray-900">AI Suggestions</h4>
-                <button onClick={() => setShowAISuggest(false)} className="p-1 hover:bg-gray-100 rounded">
-                  <X className="h-4 w-4 text-gray-500" />
-                </button>
-              </div>
-              {/* Context inputs */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">Mood (1–10)</label>
-                  <input type="range" min={1} max={10} value={aiContext.mood ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, mood: Number(e.target.value) }))} className="w-full" />
+            <div className="relative mx-auto h-full w-full md:h-auto md:w-full md:max-w-2xl">
+              <div className="md:rounded-lg md:shadow-lg bg-white h-full md:h-auto flex flex-col">
+                {/* Sticky Header: title row + buttons row */}
+                <div className="sticky top-0 z-10 bg-white border-b p-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium text-gray-900">AI Suggestions</h4>
+                    <button onClick={() => setShowAISuggest(false)} className="p-1 hover:bg-gray-100 rounded" aria-label="Close">
+                      <X className="h-4 w-4 text-gray-500" />
+                    </button>
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <button onClick={importLatestCheckIn} className="px-2 py-1 text-xs border rounded hover:bg-gray-50">Import latest check-in</button>
+                    <button onClick={() => fetchAISuggestions(aiContext)} disabled={aiLoading} className="px-2 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-60">{aiLoading ? 'Generating…' : 'Generate'}</button>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">Anxiety (1–10)</label>
-                  <input type="range" min={1} max={10} value={aiContext.anxiety ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, anxiety: Number(e.target.value) }))} className="w-full" />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">Energy (1–10)</label>
-                  <input type="range" min={1} max={10} value={aiContext.energy ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, energy: Number(e.target.value) }))} className="w-full" />
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="block text-xs text-gray-600 mb-1">What's happening right now? (optional)</label>
-                <textarea
-                  value={aiContext.note ?? ''}
-                  onChange={(e) => setAiContext((c) => ({ ...c, note: e.target.value }))}
-                  rows={3}
-                  placeholder="e.g., Had a stressful call; feeling overwhelmed and low energy"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-xs text-gray-600 mb-2">Preferred categories</label>
-                <div className="flex flex-wrap gap-2">
-                  {(['breathing','grounding','physical','creative','emotional','other'] as const).map((cat) => {
-                    const active = aiContext.preferred_categories.includes(cat)
-                    return (
-                      <button
-                        key={cat}
-                        type="button"
-                        onClick={() => setAiContext((c) => ({
-                          ...c,
-                          preferred_categories: active
-                            ? c.preferred_categories.filter((x) => x !== cat)
-                            : [...c.preferred_categories, cat]
-                        }))}
-                        className={`px-2 py-1 rounded-full border text-xs ${active ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}
-                      >
-                        {cat}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-              <div className="mb-4 flex justify-end">
-                <button
-                  onClick={() => fetchAISuggestions(aiContext)}
-                  className="inline-flex items-center gap-2 px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700"
-                  disabled={aiLoading}
-                >
-                  {aiLoading ? 'Generating…' : 'Generate suggestions'}
-                </button>
-              </div>
-              {aiLoading ? (
-                <div className="py-6 text-center text-gray-600">Generating suggestions…</div>
-              ) : aiSuggestions.length === 0 ? (
-                <div className="py-6 text-center text-gray-600">No suggestions returned</div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[60vh] overflow-auto">
-                  {aiSuggestions.map((s, idx) => (
-                    <div key={idx} className="border border-gray-200 rounded-lg p-3">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${categoryColors[s.category as keyof typeof categoryColors] || categoryColors.other}`}>
-                          {categoryIcons[s.category as keyof typeof categoryIcons] || categoryIcons.other}
-                          {s.category}
-                        </span>
-                      </div>
-                      <div className="font-medium text-gray-900">{s.strategy_name}</div>
-                      <div className="text-sm text-gray-600 mb-2">{s.description}</div>
-                      {s.rationale && (
-                        <div className="text-xs text-gray-500 mb-2">Why: {s.rationale}</div>
-                      )}
-                      <button
-                        onClick={() => addAISuggestion(s)}
-                        className="w-full px-3 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                      >
-                        Add
-                      </button>
+
+                {/* Scrollable Content */}
+                <div className="p-4 overflow-y-auto grow">
+                  {aiError && (
+                    <div className="mb-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded p-2">{aiError}</div>
+                  )}
+                  {/* Context inputs */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <label className="block text-xs text-gray-600 mb-1">Mood (1–10)</label>
+                      <input type="range" min={1} max={10} value={aiContext.mood ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, mood: Number(e.target.value) }))} className="w-full" />
                     </div>
-                  ))}
+                    <div>
+                      <label className="block text-xs text-gray-600 mb-1">Anxiety (1–10)</label>
+                      <input type="range" min={1} max={10} value={aiContext.anxiety ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, anxiety: Number(e.target.value) }))} className="w-full" />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-600 mb-1">Energy (1–10)</label>
+                      <input type="range" min={1} max={10} value={aiContext.energy ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, energy: Number(e.target.value) }))} className="w-full" />
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-xs text-gray-600 mb-1">What's happening right now? (optional)</label>
+                    <textarea
+                      value={aiContext.note ?? ''}
+                      onChange={(e) => setAiContext((c) => ({ ...c, note: e.target.value }))}
+                      rows={3}
+                      placeholder="e.g., Had a stressful call; feeling overwhelmed and low energy"
+                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-xs text-gray-600 mb-2">Preferred categories</label>
+                    <div className="flex flex-wrap gap-2">
+                      {(['breathing','grounding','physical','creative','emotional','other'] as const).map((cat) => {
+                        const active = aiContext.preferred_categories.includes(cat)
+                        return (
+                          <button
+                            key={cat}
+                            type="button"
+                            onClick={() => setAiContext((c) => ({
+                              ...c,
+                              preferred_categories: active
+                                ? c.preferred_categories.filter((x) => x !== cat)
+                                : [...c.preferred_categories, cat]
+                            }))}
+                            className={`px-2 py-1 rounded-full border text-xs ${active ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}
+                          >
+                            {cat}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Suggestions Grid */}
+                  {aiLoading ? (
+                    <div className="py-6 text-center text-gray-600">Generating suggestions…</div>
+                  ) : aiSuggestions.length === 0 ? (
+                    <div className="py-6 text-center text-gray-600">No suggestions returned</div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {aiSuggestions.map((s, idx) => {
+                        const checked = selectedIdx.includes(idx)
+                        return (
+                          <div key={idx} className={`border rounded-lg p-3 ${checked ? 'border-indigo-400 bg-indigo-50/40' : 'border-gray-200'}`}>
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${categoryColors[s.category as keyof typeof categoryColors] || categoryColors.other}`}>
+                                    {categoryIcons[s.category as keyof typeof categoryIcons] || categoryIcons.other}
+                                    {s.category}
+                                  </span>
+                                </div>
+                                <div className="font-medium text-gray-900">{s.strategy_name}</div>
+                                <div className="text-sm text-gray-600 mb-2">{s.description}</div>
+                                {s.rationale && (
+                                  <div className="text-xs text-gray-500 mb-2">Why: {s.rationale}</div>
+                                )}
+                              </div>
+                              <div className="flex flex-col items-end gap-2">
+                                <label className="inline-flex items-center gap-2 text-xs text-gray-700">
+                                  <input type="checkbox" checked={checked} onChange={() => setSelectedIdx((arr) => arr.includes(idx) ? arr.filter(i => i !== idx) : [...arr, idx])} />
+                                  Select
+                                </label>
+                                <button
+                                  onClick={() => navigator.clipboard.writeText(`${s.strategy_name}\n${s.description}${s.rationale ? `\nWhy: ${s.rationale}` : ''}`)}
+                                  className="px-2 py-1 text-xs border rounded hover:bg-gray-50"
+                                >Copy</button>
+                                <button
+                                  onClick={() => addAISuggestion(s)}
+                                  className="px-2 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                                >Add</button>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
-              )}
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={() => setShowAISuggest(false)}
-                  className="inline-flex items-center gap-2 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50"
-                >
-                  Close
-                </button>
+
+                {/* Sticky Footer */}
+                <div className="sticky bottom-0 bg-white border-t p-3 flex items-center justify-between">
+                  <div className="text-xs text-gray-600">{selectedIdx.length} selected</div>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setSelectedIdx([])} className="px-3 py-2 text-sm border rounded hover:bg-gray-50">Clear</button>
+                    <button onClick={addSelectedAISuggestions} disabled={selectedIdx.length === 0} className="px-3 py-2 text-sm bg-green-600 text-white rounded disabled:opacity-50">Add selected</button>
+                    <button onClick={() => setShowAISuggest(false)} className="px-3 py-2 text-sm border rounded hover:bg-gray-50">Close</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
@@ -53,7 +54,12 @@ export default function MindResetPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <MindResetContent />
+      <div className="pt-4 sm:pt-6">
+        <div className="flex items-center justify-end mb-3">
+          <Link href="/mind-reset/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
+        </div>
+        <MindResetContent />
+      </div>
     </DashboardLayout>
   )
 }

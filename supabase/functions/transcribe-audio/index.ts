@@ -12,7 +12,6 @@ const corsHeaders = {
 interface GladiaTranscriptionRequest {
   audio_url: string
   language?: string
-  // v2 uses American spelling
   language_behavior?: 'manual' | 'automatic single language' | 'automatic multiple languages'
   transcription_hint?: string
   enable_code_switching?: boolean
@@ -143,39 +142,79 @@ serve(async (req) => {
         )
       }
 
-      const status = await pollGladiaResultShort(String(jobId))
-      if (status) {
-        await supabaseAdmin
-          .from('evidence_files')
-          .update({
-            transcription: status.transcription,
-            transcription_status: 'completed',
-            processing_status: 'completed',
-            processed_at: new Date().toISOString(),
-            metadata: {
-              ...evidenceFile.metadata,
-              transcription_job_id: jobId,
-              transcription_language: status.language,
-              transcription_confidence: status.confidence,
-              transcription_duration: status.duration,
-              transcription_completed_at: new Date().toISOString(),
-              word_timestamps: status.words
-            }
-          })
-          .eq('id', evidence_file_id)
+      console.log(`🔍 Checking status for job ${jobId}`)
 
-        await recordTranscriptionUsage(supabaseAdmin, user.id, status)
+      try {
+        const statusResult = await checkGladiaStatus(String(jobId))
+        console.log(`📊 Status result for job ${jobId}:`, JSON.stringify(statusResult, null, 2))
+        
+        if (statusResult.status === 'completed') {
+          console.log(`✅ Transcription completed for job ${jobId}: "${statusResult.transcription}"`)
+          
+          // Update DB with completed transcription
+          await supabaseAdmin
+            .from('evidence_files')
+            .update({
+              transcription: statusResult.transcription,
+              transcription_status: 'completed',
+              processing_status: 'completed',
+              processed_at: new Date().toISOString(),
+              metadata: {
+                ...evidenceFile.metadata,
+                transcription_job_id: jobId,
+                transcription_language: statusResult.language,
+                transcription_confidence: statusResult.confidence,
+                transcription_duration: statusResult.duration,
+                transcription_completed_at: new Date().toISOString(),
+                word_timestamps: statusResult.words
+              }
+            })
+            .eq('id', evidence_file_id)
 
+          await recordTranscriptionUsage(supabaseAdmin, user.id, statusResult)
+
+          return new Response(
+            JSON.stringify({ success: true, status: 'completed', job_id: jobId }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          )
+        } else if (statusResult.status === 'failed') {
+          console.log(`❌ Transcription failed for job ${jobId}: ${statusResult.error}`)
+          
+          // Update DB with failed status
+          await supabaseAdmin
+            .from('evidence_files')
+            .update({
+              transcription_status: 'failed',
+              processing_status: 'failed',
+              processed_at: new Date().toISOString(),
+              metadata: {
+                ...evidenceFile.metadata,
+                transcription_job_id: jobId,
+                transcription_error: statusResult.error,
+                transcription_failed_at: new Date().toISOString()
+              }
+            })
+            .eq('id', evidence_file_id)
+
+          return new Response(
+            JSON.stringify({ success: false, status: 'failed', error: statusResult.error, job_id: jobId }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          )
+        } else {
+          console.log(`⏳ Job ${jobId} still processing`)
+          // Still processing
+          return new Response(
+            JSON.stringify({ success: true, status: 'processing', job_id: jobId }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          )
+        }
+      } catch (error) {
+        console.error('Status check error:', error)
         return new Response(
-          JSON.stringify({ success: true, status: 'completed', job_id: jobId }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          JSON.stringify({ success: false, status: 'error', error: error.message, job_id: jobId }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
         )
       }
-
-      return new Response(
-        JSON.stringify({ success: true, status: 'processing', job_id: jobId }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-      )
     }
 
     // Check if file is audio
@@ -213,6 +252,7 @@ serve(async (req) => {
 
     // Start transcription with Gladia API (non-blocking pattern)
     const start = await startGladiaTranscription(audioUrlToUse!, options, audioUrlSource)
+    console.log(`🚀 Started transcription job ${start.jobId}`)
 
     // Store job id and audio URL source in metadata
     await supabaseAdmin
@@ -231,6 +271,8 @@ serve(async (req) => {
     try {
       const quick = await pollGladiaResultShort(start.jobId)
       if (quick) {
+        console.log(`⚡ Quick completion for job ${start.jobId}: "${quick.transcription}"`)
+        
         // Update DB with results
         await supabaseAdmin
           .from('evidence_files')
@@ -317,61 +359,103 @@ async function startGladiaTranscription(audioUrl: string, options: any, source: 
   return { jobId: id as string }
 }
 
+// ROBUST transcription extraction - standardized across all components
+function getTranscriptionText(result: any): string | null {
+  console.log('🔍 EXTRACTING TRANSCRIPTION FROM:', JSON.stringify(result, null, 2))
+  
+  // Priority 1: v2 format full_transcript (most reliable)
+  if (result?.transcription?.full_transcript && typeof result.transcription.full_transcript === 'string') {
+    const text = result.transcription.full_transcript.trim()
+    if (text) {
+      console.log('✅ FOUND FULL_TRANSCRIPT:', text)
+      return text
+    }
+  }
+  
+  // Priority 2: v2 format utterances
+  if (result?.transcription?.utterances && Array.isArray(result.transcription.utterances) && result.transcription.utterances.length > 0) {
+    const text = result.transcription.utterances
+      .map((u: any) => (u.text || '').trim())
+      .filter((text: string) => text.length > 0)
+      .join(' ')
+      .trim()
+    
+    if (text) {
+      console.log('✅ FOUND UTTERANCES TRANSCRIPTION:', text)
+      return text
+    }
+  }
+  
+  // Priority 3: v1 format prediction (legacy)
+  if (result?.prediction && Array.isArray(result.prediction) && result.prediction.length > 0) {
+    const prediction = result.prediction[0]
+    if (prediction?.transcription && typeof prediction.transcription === 'string') {
+      const text = prediction.transcription.trim()
+      if (text) {
+        console.log('✅ FOUND PREDICTION TRANSCRIPTION:', text)
+        return text
+      }
+    }
+  }
+  
+  console.log('❌ NO TRANSCRIPTION TEXT FOUND')
+  return null
+}
+
 async function pollGladiaResultShort(jobId: string) {
   const gladiaApiKey = Deno.env.get('GLADIA_API_KEY')
   if (!gladiaApiKey) throw new Error('Gladia API key not configured')
 
   const attemptsMax = 3 // ~15s total
   for (let i = 0; i < attemptsMax; i++) {
+    console.log(`⚡ Quick poll attempt ${i + 1}/${attemptsMax} for job ${jobId}`)
+    
     const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
       headers: { 'x-gladia-key': gladiaApiKey },
     })
+    
     if (!statusResponse.ok) {
       throw new Error(`Failed to get transcription status: ${statusResponse.statusText}`)
     }
+    
     const result: GladiaTranscriptionResponse = await statusResponse.json()
+    console.log(`📊 Quick poll result for job ${jobId}:`, JSON.stringify(result, null, 2))
 
-    // v2 shape handling
-    if (result.transcription && (result.status === 'done' || result.status === undefined)) {
-      const t = result.transcription
-      const transcript = t.full_transcript || (t.utterances?.map(u => u.text).join(' ') || '')
-      if (!transcript) throw new Error('No transcription result available')
-      const lang = t.languages?.[0] || t.utterances?.[0]?.language || 'unknown'
+    // Try to get transcription text
+    const transcript = getTranscriptionText(result)
+    
+    if (transcript) {
+      const lang = result.transcription?.languages?.[0] || 
+                  result.transcription?.utterances?.[0]?.language || 
+                  result.prediction?.[0]?.language || 'unknown'
+      
       let confidence = 0
-      if (t.utterances && t.utterances.length > 0) {
-        const vals = t.utterances.map(u => typeof u.confidence === 'number' ? u.confidence : 0)
+      if (result.transcription?.utterances && result.transcription.utterances.length > 0) {
+        const vals = result.transcription.utterances.map(u => typeof u.confidence === 'number' ? u.confidence : 0)
         confidence = vals.reduce((a, b) => a + b, 0) / vals.length
+      } else if (result.prediction?.[0]?.confidence) {
+        confidence = result.prediction[0].confidence
       }
-      const duration = result.metadata?.audio_duration ?? undefined
+      
+      const duration = result.metadata?.audio_duration ?? 
+                      (result.prediction?.[0] ? result.prediction[0].time_end - result.prediction[0].time_begin : undefined)
+      
       return {
         transcription: transcript,
         language: lang,
         confidence: confidence || 0,
         duration: typeof duration === 'number' ? duration : undefined,
-        words: t.utterances?.flatMap(u => (u.words || []).map(w => ({
+        words: result.transcription?.utterances?.flatMap(u => (u.words || []).map(w => ({
           word: w.word,
           start_time: w.start ?? 0,
           end_time: w.end ?? 0,
           confidence: w.confidence ?? 0,
-        })))
-      }
-    }
-
-    if (result.status === 'done') {
-      if (result.prediction && result.prediction.length > 0) {
-        const prediction = result.prediction[0]
-        return {
-          transcription: prediction.transcription,
-          language: prediction.language,
-          confidence: prediction.confidence,
-          duration: prediction.time_end - prediction.time_begin,
-          words: prediction.words?.map(word => ({
-            word: word.word,
-            start_time: word.time_begin,
-            end_time: word.time_end,
-            confidence: word.confidence,
-          })),
-        }
+        }))) || result.prediction?.[0]?.words?.map(word => ({
+          word: word.word,
+          start_time: word.time_begin,
+          end_time: word.time_end,
+          confidence: word.confidence,
+        }))
       }
     }
 
@@ -384,6 +468,80 @@ async function pollGladiaResultShort(jobId: string) {
 
   // Not ready yet
   return null
+}
+
+// Enhanced polling function for status checks that can handle longer waits
+async function checkGladiaStatus(jobId: string) {
+  const gladiaApiKey = Deno.env.get('GLADIA_API_KEY')
+  if (!gladiaApiKey) throw new Error('Gladia API key not configured')
+
+  console.log(`🔍 Checking Gladia status for job ${jobId}`)
+  
+  const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
+    headers: { 'x-gladia-key': gladiaApiKey },
+  })
+  
+  if (!statusResponse.ok) {
+    throw new Error(`Failed to get transcription status: ${statusResponse.statusText}`)
+  }
+  
+  const result: GladiaTranscriptionResponse = await statusResponse.json()
+  console.log(`📊 Gladia API response for job ${jobId}:`, JSON.stringify(result, null, 2))
+
+  // Try to get transcription text - SIMPLE APPROACH
+  const transcript = getTranscriptionText(result)
+  
+  if (transcript) {
+    console.log(`✅ TRANSCRIPTION COMPLETED: "${transcript}"`)
+    
+    const lang = result.transcription?.languages?.[0] || 
+                result.transcription?.utterances?.[0]?.language || 
+                result.prediction?.[0]?.language || 'unknown'
+    
+    let confidence = 0
+    if (result.transcription?.utterances && result.transcription.utterances.length > 0) {
+      const vals = result.transcription.utterances.map(u => typeof u.confidence === 'number' ? u.confidence : 0)
+      confidence = vals.reduce((a, b) => a + b, 0) / vals.length
+    } else if (result.prediction?.[0]?.confidence) {
+      confidence = result.prediction[0].confidence
+    }
+    
+    const duration = result.metadata?.audio_duration ?? 
+                    (result.prediction?.[0] ? result.prediction[0].time_end - result.prediction[0].time_begin : undefined)
+    
+    return {
+      status: 'completed' as const,
+      transcription: transcript,
+      language: lang,
+      confidence: confidence || 0,
+      duration: typeof duration === 'number' ? duration : undefined,
+      words: result.transcription?.utterances?.flatMap(u => (u.words || []).map(w => ({
+        word: w.word,
+        start_time: w.start ?? 0,
+        end_time: w.end ?? 0,
+        confidence: w.confidence ?? 0,
+      }))) || result.prediction?.[0]?.words?.map(word => ({
+        word: word.word,
+        start_time: word.time_begin,
+        end_time: word.time_end,
+        confidence: word.confidence,
+      }))
+    }
+  }
+
+  if (result.status === 'error') {
+    console.log(`❌ TRANSCRIPTION ERROR: ${result.error}`)
+    return {
+      status: 'failed' as const,
+      error: result.error || 'Transcription failed'
+    }
+  }
+
+  // Still processing
+  console.log(`⏳ STILL PROCESSING (status: ${result.status})`)
+  return {
+    status: 'processing' as const
+  }
 }
 
 async function checkTranscriptionLimit(supabaseClient: any, userId: string): Promise<boolean> {

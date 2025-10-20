@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Custom mobile styles for journal form */
+@layer components {
+  /* Mobile slider styles */
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  .slider::-webkit-slider-track {
+    background: transparent;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #6366f1;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .slider::-moz-range-track {
+    background: transparent;
+    border: none;
+  }
+
+  .slider::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #6366f1;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Safe area insets for mobile */
+  .safe-area-inset {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Mobile viewport height */
+  .min-h-dvh {
+    min-height: 100dvh;
+  }
+
+  @supports not (height: 100dvh) {
+    .min-h-dvh {
+      min-height: 100vh;
+    }
+  }
 }

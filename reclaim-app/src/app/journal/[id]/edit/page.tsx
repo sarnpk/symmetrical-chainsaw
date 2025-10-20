@@ -3,13 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Save, ArrowLeft, Calendar, MapPin, Users, Heart, Camera, Upload, X, Mic, MicOff, HelpCircle } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
-import { Profile, JournalEntry } from '@/lib/supabase'
+import { Profile, JournalEntry, EvidenceFile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 
 const abuseTypes = [
@@ -46,6 +45,22 @@ interface Props {
 }
 
 export default function EditJournalEntryPage({ params }: Props) {
+  // Local evidence item types for client-only state
+  interface PhotoEvidence {
+    file: File
+    caption: string
+    timestamp: string
+    preview: string
+  }
+  interface AudioEvidence {
+    file: File
+    caption: string
+    timestamp: string
+    duration: number
+    transcription: string
+    transcriptionStatus: 'pending' | 'processing' | 'completed' | 'failed'
+    audioUrl: string
+  }
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [entry, setEntry] = useState<JournalEntry | null>(null)
@@ -79,12 +94,6 @@ export default function EditJournalEntryPage({ params }: Props) {
   const router = useRouter()
   const supabase = createClient()
   
-  // Create admin client for storage uploads (bypasses RLS)
-  const supabaseAdmin = createSupabaseClient(
-    'https://gstiokcvqmxiaqzmtzmv.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzdGlva2N2cW14aWFxem10em12Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTM4NDQ4NiwiZXhwIjoyMDcwOTYwNDg2fQ.pE3OAwQKCZjg8PGpLBPCeZpJC2kXC-du2XSGOa8CJ48'
-  )
-
   useEffect(() => {
     const loadEntry = async () => {
       const { data: { user } } = await supabase.auth.getUser()
@@ -127,32 +136,21 @@ export default function EditJournalEntryPage({ params }: Props) {
 
       setEntry(entry)
       
-      // Load existing evidence files using admin client
-      const { data: existingEvidence } = await supabaseAdmin
-        .from('evidence_files')
-        .select('*')
-        .eq('journal_entry_id', resolvedParams.id)
-        .order('uploaded_at', { ascending: true })
-
-      if (existingEvidence) {
-        setExistingEvidence(existingEvidence)
-        
-        // Generate signed URLs for existing evidence files
-        const urls: {[key: string]: string} = {}
-        for (const file of existingEvidence) {
-          try {
-            const { data } = await supabaseAdmin.storage
-              .from(file.storage_bucket)
-              .createSignedUrl(file.storage_path, 3600) // 1 hour expiry
-            
-            if (data?.signedUrl) {
-              urls[file.id] = data.signedUrl
-            }
-          } catch (error) {
-            console.error('Failed to generate signed URL for file:', file.id, error)
+      // Load existing evidence via server API
+      try {
+        const res = await fetch(`/api/journal/${resolvedParams.id}/evidence`, { cache: 'no-store' })
+        if (res.ok) {
+          const json = await res.json()
+          const evidence = json.evidence || []
+          setExistingEvidence(evidence)
+          const urls: {[key: string]: string} = {}
+          for (const file of evidence) {
+            if (file.signedUrl) urls[file.id] = file.signedUrl
           }
+          setEvidenceUrls(urls)
         }
-        setEvidenceUrls(urls)
+      } catch (e) {
+        console.error('Failed to load evidence via API', e)
       }
       
       // Populate form fields
@@ -297,13 +295,13 @@ export default function EditJournalEntryPage({ params }: Props) {
       console.log('Photos to upload:', photoEvidence.length)
       console.log('Audio to upload:', audioEvidence.length)
 
-      // Upload new photos using Supabase Storage API
+      // Upload new photos using Supabase Storage API (user-scoped, RLS enforced)
       for (const [index, photo] of photoEvidence.entries()) {
         const fileName = `${entry.id}/photo-${index}-${Date.now()}.jpg`
         
         try {
           // Use standard Supabase Storage API
-          const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+          const { data: uploadData, error: uploadError } = await supabase.storage
             .from('evidence-photos')
             .upload(fileName, photo.file, {
               cacheControl: '3600',
@@ -342,13 +340,13 @@ export default function EditJournalEntryPage({ params }: Props) {
         }
       }
 
-      // Upload new audio recordings using direct S3 API
+      // Upload new audio recordings using Supabase Storage API
       for (const [index, audio] of audioEvidence.entries()) {
         const fileName = `${entry.id}/audio-${index}-${Date.now()}.wav`
         
         try {
           // Use standard Supabase Storage API
-          const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+          const { data: uploadData, error: uploadError } = await supabase.storage
             .from('evidence-audio')
             .upload(fileName, audio.file, {
               cacheControl: '3600',

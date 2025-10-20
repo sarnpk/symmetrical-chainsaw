@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reclaim.example.com/schemas/risk-assessment.schema.json",
+  "title": "RiskAssessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "risk_label",
+    "score",
+    "binary_summary",
+    "top_reasons",
+    "evidence_refs",
+    "timeframe",
+    "model",
+    "disclaimer_version"
+  ],
+  "properties": {
+    "risk_label": {
+      "type": "string",
+      "enum": ["low", "moderate", "high"]
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 20
+    },
+    "binary_summary": {
+      "type": "string",
+      "enum": ["abusive_patterns_likely", "insufficient_evidence"]
+    },
+    "top_reasons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reason", "weight"],
+        "properties": {
+          "reason": { "type": "string", "minLength": 1 },
+          "weight": { "type": "number" }
+        }
+      },
+      "maxItems": 5
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entry_id", "incident_date", "matched_signals", "snippet"],
+        "properties": {
+          "entry_id": { "type": "string" },
+          "incident_date": { "type": "string", "format": "date-time" },
+          "matched_signals": {
+            "type": "array",
+            "items": { "type": "string" },
+            "maxItems": 10
+          },
+          "snippet": { "type": "string", "maxLength": 240 }
+        }
+      },
+      "maxItems": 10
+    },
+    "timeframe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" }
+      }
+    },
+    "model": { "type": "string" },
+    "disclaimer_version": { "type": "string" }
+  }
+}
