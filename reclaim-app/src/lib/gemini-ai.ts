@@ -184,14 +184,23 @@ Focus on:
   }
 
   private async makeRequest(endpoint: string, body: GeminiRequest, init?: { signal?: AbortSignal }): Promise<GeminiResponse> {
-    const response = await fetch(`${this.baseUrl}/${endpoint}?key=${this.apiKey}`, {
+    const fetchOptions: RequestInit = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
       signal: init?.signal,
-    })
+    };
+
+    // Use proxy if configured
+    if (process.env.HTTP_PROXY || process.env.HTTPS_PROXY) {
+      const { HttpsProxyAgent } = require('https-proxy-agent');
+      const proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
+      (fetchOptions as any).agent = new HttpsProxyAgent(proxyUrl);
+    }
+
+    const response = await fetch(`${this.baseUrl}/${endpoint}?key=${this.apiKey}`, fetchOptions)
 
     if (!response.ok) {
       const errText = await response.text().catch(() => '')
@@ -241,8 +250,8 @@ Focus on:
   }
 }
 
-export const DEFAULT_FREE_TIER_MODEL = 'gemini-2.5-flash-lite'
-export const DEFAULT_PAID_TIER_MODEL = 'gemini-1.5-flash'
+export const DEFAULT_FREE_TIER_MODEL = 'gemini-1.5-flash-latest'
+export const DEFAULT_PAID_TIER_MODEL = 'gemini-1.5-pro-latest'
 
 export const geminiAI = new GeminiAI(process.env.GOOGLE_AI_API_KEY || '')
 
