@@ -79,7 +79,7 @@ interface MindResetResult {
 
 class GeminiAI {
   private apiKey: string
-  private baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models'
+  private baseUrl = 'https://generativelanguage.googleapis.com/v1/models'
 
   constructor(apiKey: string) {
     this.apiKey = apiKey
@@ -250,8 +250,8 @@ Focus on:
   }
 }
 
-export const DEFAULT_FREE_TIER_MODEL = 'gemini-1.5-flash'
-export const DEFAULT_PAID_TIER_MODEL = 'gemini-1.5-pro'
+export const DEFAULT_FREE_TIER_MODEL = 'gemini-2.0-flash-exp'
+export const DEFAULT_PAID_TIER_MODEL = 'gemini-2.0-flash-exp'
 
 export const geminiAI = new GeminiAI(process.env.GOOGLE_AI_API_KEY || '')
 
