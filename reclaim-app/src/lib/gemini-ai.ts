@@ -95,6 +95,14 @@ class GeminiAI {
     const systemPrompt = this.getSystemPrompt(context)
     
     const contents: Array<{ role?: 'user' | 'model'; parts: { text: string }[] }> = [
+      {
+        role: 'user',
+        parts: [{ text: systemPrompt }]
+      },
+      {
+        role: 'model',
+        parts: [{ text: 'I understand. I am a trauma-informed AI coach specialized in helping survivors of narcissistic abuse. How can I help you today?' }]
+      },
       ...conversationHistory.map(msg => ({
         role: (msg.role === 'user' ? 'user' : 'model') as 'user' | 'model',
         parts: [{ text: msg.content }]
@@ -109,9 +117,6 @@ class GeminiAI {
       `${model || DEFAULT_PAID_TIER_MODEL}:generateContent`,
       {
         contents,
-        systemInstruction: {
-          parts: [{ text: systemPrompt }]
-        },
         generationConfig: {
           temperature: 0.7,
           topK: 40,
