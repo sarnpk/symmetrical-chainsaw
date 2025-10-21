@@ -21,7 +21,12 @@ import {
   Target,
   RefreshCw,
   RotateCcw,
-  Crown
+  Crown,
+  CheckCircle,
+  Briefcase,
+  HeartHandshake,
+  MessageSquare,
+  FileText
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
@@ -37,6 +42,12 @@ interface DashboardLayoutProps {
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Journal', href: '/journal', icon: BookOpen },
+  { name: 'NPD Traits', href: '/npd-traits', icon: Target },
+  { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
+  { name: 'Grey Rock Templates', href: '/grey-rock-templates', icon: FileText },
+  { name: 'Acceptance', href: '/acceptance', icon: CheckCircle },
+  { name: 'Role Reframing', href: '/role-reframing', icon: Briefcase },
+  { name: 'Empathy Audit', href: '/empathy-audit', icon: HeartHandshake },
   { name: 'AI Coach', href: '/ai-coach', icon: Brain },
   { name: 'Patterns', href: '/patterns', icon: BarChart3 },
   { name: 'Usage', href: '/usage', icon: PieChart },

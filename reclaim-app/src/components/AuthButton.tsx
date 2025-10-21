@@ -15,6 +15,8 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [displayName, setDisplayName] = useState('')
+  const [abuserGender, setAbuserGender] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
   
@@ -27,7 +29,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -35,10 +37,24 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
           },
         })
         if (error) throw error
+        
+        // Create profile with additional info
+        if (data.user) {
+          await supabase.from('profiles').insert({
+            id: data.user.id,
+            email: data.user.email!,
+            display_name: displayName || data.user.email?.split('@')[0],
+            abuser_gender: abuserGender || null,
+            subscription_tier: 'foundation',
+          })
+        }
+        
         toast.success('Check your email for confirmation link!')
         setShowForm(false)
         setEmail('')
         setPassword('')
+        setDisplayName('')
+        setAbuserGender('')
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -100,6 +116,8 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
     setShowForm(false)
     setEmail('')
     setPassword('')
+    setDisplayName('')
+    setAbuserGender('')
     setLoading(false)
   }
   
@@ -127,6 +145,21 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
         </div>
 
         <form onSubmit={handleAuth} className="space-y-4">
+          {isSignUp && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Display Name
+              </label>
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                placeholder="How should we address you?"
+              />
+            </div>
+          )}
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email Address
@@ -140,6 +173,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
               required
             />
           </div>
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Password
@@ -157,6 +191,27 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
               <p className="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
             )}
           </div>
+          
+          {isSignUp && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Person You're Managing Interactions With (Optional)
+              </label>
+              <select
+                value={abuserGender}
+                onChange={(e) => setAbuserGender(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+              >
+                <option value="">Prefer not to say</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="non-binary">Non-binary</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                This helps us personalize content and pronouns in your experience
+              </p>
+            </div>
+          )}
           
           <div className="pt-4">
             <button

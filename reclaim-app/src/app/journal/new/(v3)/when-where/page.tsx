@@ -116,25 +116,6 @@ export default function WhenWherePage() {
           </div>
         </MobileFormCard>
 
-        {/* Mockup Status Notice */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                <span className="text-amber-600 font-bold text-sm">🚧</span>
-              </div>
-            </div>
-            <div className="ml-3">
-              <h4 className="text-sm font-medium text-amber-900">
-                Mobile Experience Preview
-              </h4>
-              <p className="text-sm text-amber-700 mt-1">
-                This is a preview of the new mobile-first journal experience. Data is saved locally but not yet connected to the database. Full integration coming soon!
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Help Text */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
           <div className="flex">
