@@ -250,8 +250,8 @@ Focus on:
   }
 }
 
-export const DEFAULT_FREE_TIER_MODEL = 'gemini-1.5-flash-latest'
-export const DEFAULT_PAID_TIER_MODEL = 'gemini-1.5-pro-latest'
+export const DEFAULT_FREE_TIER_MODEL = 'gemini-1.5-flash'
+export const DEFAULT_PAID_TIER_MODEL = 'gemini-1.5-pro'
 
 export const geminiAI = new GeminiAI(process.env.GOOGLE_AI_API_KEY || '')
 
