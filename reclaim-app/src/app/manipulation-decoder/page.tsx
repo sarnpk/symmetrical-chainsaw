@@ -38,7 +38,7 @@ export default function ManipulationDecoderPage() {
       setProfile(profile);
       setLoading(false);
       
-      fetch('/api/npd-traits').then(r => r.json()).then(setTraits);
+      fetch('/api/npd-traits').then(r => r.json()).then(data => setTraits(Array.isArray(data) ? data : [])).catch(() => setTraits([]));
       fetch('/api/manipulation-decoder').then(r => r.json()).then(data => setHistory(Array.isArray(data) ? data : []));
     };
     init();
@@ -95,7 +95,7 @@ export default function ManipulationDecoderPage() {
   };
 
   const getIdentifiedTraits = (tacticIds: string[]) => {
-    return traits.filter(t => tacticIds?.includes(t.id));
+    return (Array.isArray(traits) ? traits : []).filter(t => tacticIds?.includes(t.id));
   };
 
   if (loading) {
