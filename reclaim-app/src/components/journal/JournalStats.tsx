@@ -18,8 +18,27 @@ export default function JournalStats({ entries }: JournalStatsProps) {
     return entryDate >= weekAgo
   }).length
 
-  const avgSafety = (entries.reduce((acc, e) => acc + (e.safety_rating || e.ai_analysis?.safety_level || 5), 0) / entries.length).toFixed(1)
-  const avgMood = (entries.reduce((acc, e) => acc + (e.mood_rating || 5), 0) / entries.length).toFixed(1)
+  const safetyEntries = entries.filter(e => {
+    const safety = e.safety_rating || e.ai_analysis?.safety_level
+    return safety != null && !isNaN(Number(safety)) && Number(safety) >= 0 && Number(safety) <= 5
+  })
+  const avgSafety = safetyEntries.length > 0 
+    ? (safetyEntries.reduce((acc, e) => {
+        const safety = Number(e.safety_rating || e.ai_analysis?.safety_level || 0)
+        return acc + Math.min(Math.max(safety, 0), 5)
+      }, 0) / safetyEntries.length).toFixed(1)
+    : '0.0'
+    
+  const moodEntries = entries.filter(e => {
+    const mood = e.mood_rating
+    return mood != null && !isNaN(Number(mood)) && Number(mood) >= 0 && Number(mood) <= 5
+  })
+  const avgMood = moodEntries.length > 0
+    ? (moodEntries.reduce((acc, e) => {
+        const mood = Number(e.mood_rating || 0)
+        return acc + Math.min(Math.max(mood, 0), 5)
+      }, 0) / moodEntries.length).toFixed(1)
+    : '0.0'
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

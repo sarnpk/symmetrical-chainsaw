@@ -355,6 +355,7 @@ export default function LearnMorePage() {
           </div>
           
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500 border-t pt-6">
+            <a href="/faq" className="hover:text-indigo-600 transition-colors">FAQ</a>
             <a href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-indigo-600 transition-colors">Terms of Service</a>
             <a href="/cookies" className="hover:text-indigo-600 transition-colors">Cookie Policy</a>
