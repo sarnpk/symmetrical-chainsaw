@@ -63,15 +63,28 @@ export default function MorningIntentionPage() {
           console.error('Intention error:', intentionError)
         }
 
-        // If no intention, get a random affirmation
+        // If no intention, get a personalized affirmation
         if (!intention) {
-          const { data: affirmation } = await supabase
+          // Get user preferences
+          const { data: preferences } = await supabase
+            .from('affirmation_preferences')
+            .select('*')
+            .eq('user_id', user.id)
+            .single()
+
+          let affirmationQuery = supabase
             .from('affirmations')
             .select('*')
             .eq('category', 'morning')
             .eq('is_default', true)
-            .limit(1)
-            .single()
+
+          // Prioritize parent-focused affirmations if user has children
+          if (preferences?.has_children || profile?.has_children) {
+            affirmationQuery = affirmationQuery.eq('is_parent_focused', true)
+          }
+
+          const { data: affirmations } = await affirmationQuery.limit(10)
+          const affirmation = affirmations?.[Math.floor(Math.random() * affirmations.length)]
 
           setIntention(affirmation || {
             id: 'default',

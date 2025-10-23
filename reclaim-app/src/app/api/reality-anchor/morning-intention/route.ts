@@ -33,15 +33,35 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: intentionError.message }, { status: 500 })
     }
 
-    // If no intention exists, get a random default affirmation
+    // If no intention exists, get a personalized affirmation
     if (!intention) {
-      console.log('No intention found, fetching random affirmation')
-      const { data: affirmation, error: affError } = await supabase
+      console.log('No intention found, fetching personalized affirmation')
+      
+      // Get user preferences and profile
+      const { data: preferences } = await supabase
+        .from('affirmation_preferences')
+        .select('*')
+        .eq('user_id', userId)
+        .single()
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('has_children')
+        .eq('id', userId)
+        .single()
+
+      let affirmationQuery = supabase
         .from('affirmations')
         .select('*')
         .eq('category', 'morning')
         .eq('is_default', true)
-        .limit(1)
+
+      // Prioritize parent-focused affirmations if user has children
+      if (preferences?.has_children || profile?.has_children) {
+        affirmationQuery = affirmationQuery.eq('is_parent_focused', true)
+      }
+
+      const { data: affirmation, error: affError } = await affirmationQuery.limit(10)
 
       if (affError) {
         console.error('Affirmation error:', affError)
@@ -56,8 +76,9 @@ export async function GET(request: NextRequest) {
         })
       }
 
-      // Get first affirmation or use default
-      const selectedAffirmation = Array.isArray(affirmation) ? affirmation[0] : affirmation
+      // Get random affirmation from results or use default
+      const affirmations = Array.isArray(affirmation) ? affirmation : [affirmation]
+      const selectedAffirmation = affirmations?.[Math.floor(Math.random() * affirmations.length)]
       
       return NextResponse.json({
         intention: null,

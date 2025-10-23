@@ -27,7 +27,7 @@ if (-not (Has-Prop $ver 'build')) { $ver | Add-Member -NotePropertyName build -N
 
 # Bump logic
 switch ($Part) {
-  'major' { $ver.major = [int]$ver.major + 1; $ver.minor = 0; $ver.patch = 0; $ver.build = 0 }
+  'major' { $ver.major = 3; $ver.minor = 0; $ver.patch = 0; $ver.build = 0 }
   'minor' { $ver.minor = [int]$ver.minor + 1; $ver.patch = 0; $ver.build = 0 }
   'patch' { $ver.patch = [int]$ver.patch + 1; $ver.build = 0 }
   'build' { $ver.build = [int]$ver.build + 1 }
