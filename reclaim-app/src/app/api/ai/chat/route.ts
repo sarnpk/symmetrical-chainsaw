@@ -86,10 +86,11 @@ export async function POST(req: Request) {
     // Subscription tier and limits
     const { data: profile } = await supabase
       .from('profiles')
-      .select('subscription_tier')
+      .select('subscription_tier, preferred_language')
       .eq('id', user.id)
       .single()
     const subscriptionTier = profile?.subscription_tier || 'foundation'
+    const preferredLanguage = profile?.preferred_language || 'auto'
     // Fetch limit from feature_limits (configurable)
     const { data: limitRow } = await supabase
       .from('feature_limits')
@@ -142,7 +143,10 @@ export async function POST(req: Request) {
 
     let aiResponse = ''
     try {
-      aiResponse = await geminiAI.chat(message, trimmedHistory, context, model, { signal: controller.signal })
+      aiResponse = await geminiAI.chat(message, trimmedHistory, context, model, { 
+        signal: controller.signal,
+        preferredLanguage 
+      })
     } catch (err: any) {
       if (err?.name === 'AbortError') {
         return NextResponse.json({ error: 'AI request timed out' }, { status: 504 })

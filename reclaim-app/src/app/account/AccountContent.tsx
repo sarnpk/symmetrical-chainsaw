@@ -36,6 +36,7 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
   const [activeTab, setActiveTab] = useState<'profile' | 'settings' | 'data'>('profile')
   const [displayName, setDisplayName] = useState(profile?.display_name || '')
   const [abuserGender, setAbuserGender] = useState(profile?.abuser_gender || '')
+  const [preferredLanguage, setPreferredLanguage] = useState(profile?.preferred_language || 'auto')
   const [hasChildren, setHasChildren] = useState(profile?.has_children || false)
   const [childrenCount, setChildrenCount] = useState(0)
   const [custodyArrangement, setCustodyArrangement] = useState(profile?.custody_arrangement || '')
@@ -157,6 +158,7 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
         .update({ 
           display_name: displayName,
           abuser_gender: abuserGender || null,
+          preferred_language: preferredLanguage,
           has_children: hasChildren,
           custody_arrangement: custodyArrangement || null
         })
@@ -346,6 +348,100 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
             <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
           </div>
           
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              AI Response Language
+            </label>
+            <p className="text-xs text-gray-500 mb-2">
+              Choose your preferred language for AI responses
+            </p>
+            <select
+              value={preferredLanguage}
+              onChange={(e) => setPreferredLanguage(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="auto">Auto-detect from my messages</option>
+              <option value="en">English</option>
+              <option value="ur">Urdu (اردو)</option>
+              <option value="ar">Arabic (العربية)</option>
+              <option value="es">Spanish (Español)</option>
+              <option value="fr">French (Français)</option>
+              <option value="de">German (Deutsch)</option>
+              <option value="it">Italian (Italiano)</option>
+              <option value="pt">Portuguese (Português)</option>
+              <option value="ru">Russian (Русский)</option>
+              <option value="hi">Hindi (हिन्दी)</option>
+              <option value="bn">Bengali (বাংলা)</option>
+              <option value="zh">Chinese (中文)</option>
+              <option value="ja">Japanese (日本語)</option>
+              <option value="ko">Korean (한국어)</option>
+              <option value="th">Thai (ไทย)</option>
+              <option value="vi">Vietnamese (Tiếng Việt)</option>
+              <option value="id">Indonesian (Bahasa Indonesia)</option>
+              <option value="ms">Malay (Bahasa Melayu)</option>
+              <option value="tl">Filipino (Tagalog)</option>
+              <option value="tr">Turkish (Türkçe)</option>
+              <option value="fa">Persian (فارسی)</option>
+              <option value="he">Hebrew (עברית)</option>
+              <option value="sw">Swahili (Kiswahili)</option>
+              <option value="am">Amharic (አማርኛ)</option>
+              <option value="yo">Yoruba (Yorùbá)</option>
+              <option value="ig">Igbo (Asụsụ Igbo)</option>
+              <option value="ha">Hausa (Harsən Hausa)</option>
+              <option value="zu">Zulu (isiZulu)</option>
+              <option value="xh">Xhosa (isiXhosa)</option>
+              <option value="af">Afrikaans</option>
+              <option value="nl">Dutch (Nederlands)</option>
+              <option value="sv">Swedish (Svenska)</option>
+              <option value="no">Norwegian (Norsk)</option>
+              <option value="da">Danish (Dansk)</option>
+              <option value="fi">Finnish (Suomi)</option>
+              <option value="is">Icelandic (Íslenska)</option>
+              <option value="pl">Polish (Polski)</option>
+              <option value="cs">Czech (Čeština)</option>
+              <option value="sk">Slovak (Slovenčina)</option>
+              <option value="hu">Hungarian (Magyar)</option>
+              <option value="ro">Romanian (Română)</option>
+              <option value="bg">Bulgarian (Български)</option>
+              <option value="hr">Croatian (Hrvatski)</option>
+              <option value="sr">Serbian (Српски)</option>
+              <option value="bs">Bosnian (Bosanski)</option>
+              <option value="mk">Macedonian (Македонски)</option>
+              <option value="sl">Slovenian (Slovenščina)</option>
+              <option value="lv">Latvian (Latviešu)</option>
+              <option value="lt">Lithuanian (Lietuvių)</option>
+              <option value="et">Estonian (Eesti)</option>
+              <option value="mt">Maltese (Malti)</option>
+              <option value="ga">Irish (Gaeilge)</option>
+              <option value="cy">Welsh (Cymraeg)</option>
+              <option value="eu">Basque (Euskera)</option>
+              <option value="ca">Catalan (Català)</option>
+              <option value="gl">Galician (Galego)</option>
+              <option value="el">Greek (Ελληνικά)</option>
+              <option value="uk">Ukrainian (Українська)</option>
+              <option value="be">Belarusian (Беларуская)</option>
+              <option value="kk">Kazakh (Қазақ тілі)</option>
+              <option value="ky">Kyrgyz (Кыргыз тили)</option>
+              <option value="uz">Uzbek (Oʻzbek tili)</option>
+              <option value="tg">Tajik (Тоҷикӣ)</option>
+              <option value="mn">Mongolian (Монгол)</option>
+              <option value="my">Burmese (မြန်မာစာ)</option>
+              <option value="km">Khmer (ភាសាខ្មែរ)</option>
+              <option value="lo">Lao (ພາສາລາວ)</option>
+              <option value="si">Sinhala (සිංහල)</option>
+              <option value="ta">Tamil (தமிழ்)</option>
+              <option value="te">Telugu (తెలుగు)</option>
+              <option value="kn">Kannada (ಕನ್ನಡ)</option>
+              <option value="ml">Malayalam (മലയാളം)</option>
+              <option value="gu">Gujarati (ગુજરાતી)</option>
+              <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+              <option value="or">Odia (ଓଡ଼ିଆ)</option>
+              <option value="as">Assamese (অসমীয়া)</option>
+              <option value="ne">Nepali (नेपाली)</option>
+              <option value="mr">Marathi (मराठी)</option>
+            </select>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Person You're Managing Interactions With

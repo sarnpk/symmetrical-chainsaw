@@ -90,9 +90,9 @@ class GeminiAI {
     conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
     context: 'general' | 'crisis' | 'pattern-analysis' | 'mind-reset' | 'grey-rock' = 'general',
     model?: string,
-    options?: { signal?: AbortSignal }
+    options?: { signal?: AbortSignal; preferredLanguage?: string }
   ): Promise<string> {
-    const systemPrompt = this.getSystemPrompt(context)
+    const systemPrompt = this.getSystemPrompt(context, options?.preferredLanguage, message)
     
     const contents: Array<{ role?: 'user' | 'model'; parts: { text: string }[] }> = [
       {
@@ -219,7 +219,7 @@ Focus on:
     return response.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated'
   }
 
-  private getSystemPrompt(context: string): string {
+  private getSystemPrompt(context: string, preferredLanguage?: string, userMessage?: string): string {
     const basePrompt = `You are a compassionate AI coach specialized in helping survivors of narcissistic abuse. You are trauma-informed, validating, and focused on empowerment and healing.`
 
     const contextPrompts = {
@@ -230,7 +230,32 @@ Focus on:
       'grey-rock': `${basePrompt} Provide guidance on the grey rock technique for minimizing conflict.`
     }
 
-    return (contextPrompts as any)[context] || contextPrompts.general
+    let prompt = (contextPrompts as any)[context] || contextPrompts.general
+
+    // Add language instruction
+    if (preferredLanguage && preferredLanguage !== 'auto' && preferredLanguage !== 'en') {
+      const languageNames: { [key: string]: string } = {
+        'ur': 'Urdu', 'ar': 'Arabic', 'es': 'Spanish', 'fr': 'French', 'de': 'German', 'it': 'Italian',
+        'pt': 'Portuguese', 'ru': 'Russian', 'hi': 'Hindi', 'bn': 'Bengali', 'zh': 'Chinese', 'ja': 'Japanese',
+        'ko': 'Korean', 'th': 'Thai', 'vi': 'Vietnamese', 'id': 'Indonesian', 'ms': 'Malay', 'tl': 'Filipino',
+        'tr': 'Turkish', 'fa': 'Persian', 'he': 'Hebrew', 'sw': 'Swahili', 'am': 'Amharic', 'yo': 'Yoruba',
+        'ig': 'Igbo', 'ha': 'Hausa', 'zu': 'Zulu', 'xh': 'Xhosa', 'af': 'Afrikaans', 'nl': 'Dutch',
+        'sv': 'Swedish', 'no': 'Norwegian', 'da': 'Danish', 'fi': 'Finnish', 'is': 'Icelandic', 'pl': 'Polish',
+        'cs': 'Czech', 'sk': 'Slovak', 'hu': 'Hungarian', 'ro': 'Romanian', 'bg': 'Bulgarian', 'hr': 'Croatian',
+        'sr': 'Serbian', 'bs': 'Bosnian', 'mk': 'Macedonian', 'sl': 'Slovenian', 'lv': 'Latvian', 'lt': 'Lithuanian',
+        'et': 'Estonian', 'mt': 'Maltese', 'ga': 'Irish', 'cy': 'Welsh', 'eu': 'Basque', 'ca': 'Catalan',
+        'gl': 'Galician', 'el': 'Greek', 'uk': 'Ukrainian', 'be': 'Belarusian', 'kk': 'Kazakh', 'ky': 'Kyrgyz',
+        'uz': 'Uzbek', 'tg': 'Tajik', 'mn': 'Mongolian', 'my': 'Burmese', 'km': 'Khmer', 'lo': 'Lao',
+        'si': 'Sinhala', 'ta': 'Tamil', 'te': 'Telugu', 'kn': 'Kannada', 'ml': 'Malayalam', 'gu': 'Gujarati',
+        'pa': 'Punjabi', 'or': 'Odia', 'as': 'Assamese', 'ne': 'Nepali', 'mr': 'Marathi'
+      }
+      const langName = languageNames[preferredLanguage] || preferredLanguage
+      prompt += ` IMPORTANT: Respond in ${langName} language.`
+    } else if (preferredLanguage === 'auto' && userMessage) {
+      prompt += ` IMPORTANT: Detect the language of the user's message and respond in the same language. If the user writes in English, respond in English. If they write in another language, respond in that language.`
+    }
+
+    return prompt
   }
 
   private getSafetySettings() {
