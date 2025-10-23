@@ -34,7 +34,7 @@ export default async function HomePage() {
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             A secure, private platform designed specifically for survivors of narcissistic abuse. 
-            Document your experiences, recognize patterns, and heal with AI-powered support.
+            Build emotional boundaries with Reality Anchor routines, get multilingual AI support, and heal at your own pace.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <AuthButton variant="primary" />
@@ -52,22 +52,38 @@ export default async function HomePage() {
             Powerful Tools for Your Recovery
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="hover:shadow-lg transition-shadow">
+            <Card className="hover:shadow-lg transition-shadow border-amber-200">
               <CardHeader>
-                <BookOpen className="h-8 w-8 text-indigo-600 mb-2" />
-                <CardTitle>Experience Journal</CardTitle>
+                <div className="flex items-center gap-2 mb-2">
+                  <Heart className="h-8 w-8 text-amber-600" />
+                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-medium">NEW</span>
+                </div>
+                <CardTitle>Reality Anchor Routine</CardTitle>
                 <CardDescription>
-                  Document incidents with detailed descriptions, photos, and audio evidence
+                  Daily emotional detachment practice with Morning Intentions, Mental Pause, and Decompression Rituals
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-purple-200">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Brain className="h-8 w-8 text-purple-600" />
+                  <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full font-medium">UPDATED</span>
+                </div>
+                <CardTitle>Multilingual AI Coach</CardTitle>
+                <CardDescription>
+                  Get trauma-informed support in 70+ languages including Urdu, Arabic, Hindi, Spanish, and more
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
-                <Brain className="h-8 w-8 text-purple-600 mb-2" />
-                <CardTitle>AI Coach</CardTitle>
+                <BookOpen className="h-8 w-8 text-indigo-600 mb-2" />
+                <CardTitle>Reality Log & Journal</CardTitle>
                 <CardDescription>
-                  Get personalized support and coping strategies from our trauma-informed AI
+                  Document incidents objectively and track emotional patterns with structured templates
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -75,9 +91,9 @@ export default async function HomePage() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <BarChart3 className="h-8 w-8 text-green-600 mb-2" />
-                <CardTitle>Pattern Analysis</CardTitle>
+                <CardTitle>Manipulation Decoder</CardTitle>
                 <CardDescription>
-                  Identify abuse cycles and escalation patterns with intelligent analytics
+                  Analyze messages and conversations to identify NPD tactics and get Grey Rock responses
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -85,9 +101,9 @@ export default async function HomePage() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <Heart className="h-8 w-8 text-pink-600 mb-2" />
-                <CardTitle>Mind Reset Tools</CardTitle>
+                <CardTitle>Mind Reset & Wellness</CardTitle>
                 <CardDescription>
-                  Reframe negative thoughts and practice healthy coping mechanisms
+                  Guided breathing, thought reframing, and personalized coping strategies
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -95,19 +111,9 @@ export default async function HomePage() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <Shield className="h-8 w-8 text-blue-600 mb-2" />
-                <CardTitle>Safety Planning</CardTitle>
+                <CardTitle>Safety & Boundaries</CardTitle>
                 <CardDescription>
-                  Create emergency plans and track personal boundaries
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Lock className="h-8 w-8 text-gray-600 mb-2" />
-                <CardTitle>Secure & Private</CardTitle>
-                <CardDescription>
-                  End-to-end encryption keeps your data safe and confidential
+                  Emergency planning, Grey Rock techniques, and boundary-setting tools
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -131,14 +137,14 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ Journal: up to 3 new titles per day</li>
-                  <li>✓ AI Coach: up to 5 chats per day</li>
-                  <li>✓ Patterns: 1 pattern check per day</li>
-                  <li>✓ Mind Reset: 1 exercise per day</li>
-                  <li>✓ Safety Plan & Boundary Builder: full access</li>
+                  <li>✓ Reality Anchor: Morning Intentions & Mental Pause</li>
+                  <li>✓ Journal & Reality Log: up to 3 entries per day</li>
+                  <li>✓ Multilingual AI Coach: up to 5 chats per day</li>
+                  <li>✓ Manipulation Decoder: 1 analysis per day</li>
+                  <li>✓ Mind Reset & Wellness: 1 exercise per day</li>
+                  <li>✓ Safety Plan & Grey Rock: full access</li>
                   <li>✗ Audio transcription not included</li>
                   <li>✓ 100 MB secure file storage</li>
-                  <li>✓ Community access & usage visible in the app</li>
                 </ul>
               </CardContent>
             </Card>
@@ -155,15 +161,15 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ Journal: plenty of new entries each day</li>
-                  <li>✓ AI Coach: frequent daily chats</li>
-                  <li>✓ Patterns: multiple checks per day</li>
-                  <li>✓ Mind Reset: several exercises per day</li>
-                  <li>✓ Safety Plan & Boundary Builder: full access</li>
-                  <li>✓ 60 minutes of audio transcription each month</li>
+                  <li>✓ Reality Anchor: Complete routine with streak tracking</li>
+                  <li>✓ Journal & Reality Log: plenty of entries daily</li>
+                  <li>✓ Multilingual AI Coach: frequent daily conversations</li>
+                  <li>✓ Manipulation Decoder: multiple analyses per day</li>
+                  <li>✓ Mind Reset & Wellness: several exercises daily</li>
+                  <li>✓ Advanced NPD trait library & pattern insights</li>
+                  <li>✓ 60 minutes of audio transcription monthly</li>
                   <li>✓ 10 GB secure file storage</li>
-                  <li>✓ Priority email support & faster answers</li>
-                  <li>✓ Access to new features as they launch</li>
+                  <li>✓ Priority support & early feature access</li>
                 </ul>
               </CardContent>
             </Card>
@@ -177,15 +183,15 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li>✓ Journal: create freely every day</li>
-                  <li>✓ AI Coach: long, ongoing conversations</li>
-                  <li>✓ Patterns: "unlimited" checks (fair use)</li>
-                  <li>✓ Mind Reset: many exercises daily</li>
-                  <li>✓ Safety Plan & Boundary Builder: full access</li>
-                  <li>✓ 300 minutes of audio transcription per month</li>
+                  <li>✓ Reality Anchor: Unlimited with advanced analytics</li>
+                  <li>✓ Journal & Reality Log: unlimited daily entries</li>
+                  <li>✓ Multilingual AI Coach: unlimited conversations</li>
+                  <li>✓ Manipulation Decoder: unlimited analyses</li>
+                  <li>✓ Mind Reset & Wellness: unlimited exercises</li>
+                  <li>✓ Advanced behavior pattern dashboard</li>
+                  <li>✓ 300 minutes of audio transcription monthly</li>
                   <li>✓ 100 GB secure file storage</li>
-                  <li>✓ 24/7 chat support & priority queue</li>
-                  <li>✓ Custom pattern templates & early beta access</li>
+                  <li>✓ 24/7 priority support & beta features</li>
                 </ul>
               </CardContent>
             </Card>
