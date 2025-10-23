@@ -55,7 +55,13 @@ export default function MindResetPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="pt-4 sm:pt-6">
-        <div className="flex items-center justify-end mb-3">
+        <div className="flex items-center justify-between mb-3">
+          <Link 
+            href="/wellness" 
+            className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+          >
+            ← Back to Wellness
+          </Link>
           <Link href="/mind-reset/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
         </div>
         <MindResetContent />

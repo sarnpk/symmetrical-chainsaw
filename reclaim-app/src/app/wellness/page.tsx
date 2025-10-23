@@ -15,7 +15,8 @@ import {
   Sparkles,
   Shield,
   Sun,
-  Shuffle
+  Shuffle,
+  Brain
 } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -191,7 +192,7 @@ export default function WellnessPage() {
         {/* Main Content Grid (always stacked to keep Coping Strategies below Mood Check-in) */}
         <div className="grid grid-cols-1 gap-6">
           {/* Mood Check-in */}
-          <div className="space-y-6">
+          <div className="space-y-6" id="mood-checkin">
             <MoodCheckIn 
               userId={user.id} 
               subscriptionTier={subscriptionTier as 'foundation' | 'recovery' | 'empowerment'} 
@@ -206,6 +207,58 @@ export default function WellnessPage() {
             />
           </div>
         </div>
+
+        {/* Wellness Tools Navigation */}
+        <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-indigo-900">
+              <Brain className="h-5 w-5" />
+              More Wellness Tools
+            </CardTitle>
+            <CardDescription className="text-indigo-700">
+              Explore additional tools for your healing journey
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Link href="/mind-reset" className="block">
+                <div className="p-4 bg-white rounded-lg border border-indigo-200 hover:border-indigo-300 hover:shadow-md transition-all">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-purple-100 rounded-full">
+                      <Brain className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <h4 className="font-medium text-gray-900">Mind Reset</h4>
+                  </div>
+                  <p className="text-sm text-gray-600">Reframe thoughts and practice mindfulness</p>
+                </div>
+              </Link>
+              
+              <Link href="/affirmations" className="block">
+                <div className="p-4 bg-white rounded-lg border border-indigo-200 hover:border-indigo-300 hover:shadow-md transition-all">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-pink-100 rounded-full">
+                      <Sparkles className="h-4 w-4 text-pink-600" />
+                    </div>
+                    <h4 className="font-medium text-gray-900">Affirmations</h4>
+                  </div>
+                  <p className="text-sm text-gray-600">Browse affirmations by category</p>
+                </div>
+              </Link>
+              
+              <Link href="/safety-plan" className="block">
+                <div className="p-4 bg-white rounded-lg border border-indigo-200 hover:border-indigo-300 hover:shadow-md transition-all">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-blue-100 rounded-full">
+                      <Shield className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <h4 className="font-medium text-gray-900">Safety Plan</h4>
+                  </div>
+                  <p className="text-sm text-gray-600">Create your personal safety plan</p>
+                </div>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Crisis Resources */}
         <Card className="bg-red-50 border-red-200">

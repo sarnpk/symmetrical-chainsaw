@@ -79,9 +79,17 @@ export default function AffirmationsPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Affirmations</h1>
-          <p className="text-gray-600 mt-2">Browse affirmations by category</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Affirmations</h1>
+            <p className="text-gray-600 mt-2">Browse affirmations by category</p>
+          </div>
+          <Link 
+            href="/wellness" 
+            className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+          >
+            ← Back to Wellness
+          </Link>
         </div>
 
         {/* Category Tabs */}

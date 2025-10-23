@@ -7,11 +7,12 @@ import DashboardLayout from '@/components/DashboardLayout'
 import UsageTrackingDashboard from '@/components/UsageTrackingDashboard'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, BookOpen, Brain, BarChart3, Shield } from 'lucide-react'
+import { Plus, BookOpen, Brain, BarChart3, Shield, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
 import RealityAnchorWidget from '@/components/reality-anchor/RealityAnchorWidget'
+import WellnessWidget from '@/components/WellnessWidget'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -136,18 +137,24 @@ export default function DashboardPage() {
             </Card>
           </Link>
 
-          <Link href="/analytics">
+          <Link href="/wellness">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader className="text-center">
-                <div className="mx-auto bg-green-100 p-3 rounded-full w-fit mb-3">
-                  <BarChart3 className="h-6 w-6 text-green-600" />
+                <div className="mx-auto bg-pink-100 p-3 rounded-full w-fit mb-3">
+                  <Heart className="h-6 w-6 text-pink-600" />
                 </div>
-                <CardTitle className="text-lg">Patterns</CardTitle>
-                <CardDescription>Analyze your progress</CardDescription>
+                <CardTitle className="text-lg">Wellness</CardTitle>
+                <CardDescription>Daily self-care & mood tracking</CardDescription>
               </CardHeader>
             </Card>
           </Link>
         </div>
+
+        {/* Wellness Widget */}
+        <WellnessWidget 
+          userId={user.id} 
+          subscriptionTier={(profile.subscription_tier || 'foundation') as 'foundation' | 'recovery' | 'empowerment'} 
+        />
 
         {/* Reality Anchor Widget - Recovery tier and above */}
         {(profile.subscription_tier === 'recovery' || profile.subscription_tier === 'empowerment') && (
