@@ -38,9 +38,9 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <AuthButton variant="primary" />
-            <button className="px-8 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+            <a href="/learn-more" className="px-8 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors inline-block">
               Learn More
-            </button>
+            </a>
           </div>
         </div>
       </section>
