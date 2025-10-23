@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   Send,
   Bot,
@@ -21,6 +21,85 @@ interface Message {
   content: string
   timestamp: Date
   helpful?: boolean
+}
+
+// Helper function to decode HTML entities and format text
+function decodeAndFormatText(text: string): string {
+  // Decode HTML entities
+  const decoded = text
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ')
+  
+  return decoded
+}
+
+// Helper function to format text with proper line breaks and structure
+function formatAIResponse(text: string): JSX.Element {
+  const decoded = decodeAndFormatText(text)
+  
+  // Split into paragraphs and format
+  const paragraphs = decoded.split(/\n\s*\n/).filter(p => p.trim())
+  
+  return (
+    <div className="space-y-3">
+      {paragraphs.map((paragraph, index) => {
+        // Check if it's a list item
+        if (paragraph.includes('* ')) {
+          const items = paragraph.split('* ').filter(item => item.trim())
+          return (
+            <ul key={index} className="list-disc list-inside space-y-1 ml-2">
+              {items.map((item, itemIndex) => (
+                <li key={itemIndex} className="text-sm leading-relaxed">
+                  {item.trim()}
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        
+        // Check if it's a numbered list
+        if (/^\d+\./.test(paragraph.trim())) {
+          const items = paragraph.split(/\n(?=\d+\.)/).filter(item => item.trim())
+          return (
+            <ol key={index} className="list-decimal list-inside space-y-1 ml-2">
+              {items.map((item, itemIndex) => (
+                <li key={itemIndex} className="text-sm leading-relaxed">
+                  {item.replace(/^\d+\.\s*/, '').trim()}
+                </li>
+              ))}
+            </ol>
+          )
+        }
+        
+        // Check if it contains bold text markers
+        if (paragraph.includes('**')) {
+          const parts = paragraph.split(/\*\*(.*?)\*\*/g)
+          return (
+            <p key={index} className="text-sm leading-relaxed">
+              {parts.map((part, partIndex) => 
+                partIndex % 2 === 1 ? (
+                  <strong key={partIndex} className="font-semibold">{part}</strong>
+                ) : (
+                  part
+                )
+              )}
+            </p>
+          )
+        }
+        
+        // Regular paragraph
+        return (
+          <p key={index} className="text-sm leading-relaxed">
+            {paragraph.trim()}
+          </p>
+        )
+      })}
+    </div>
+  )
 }
 
 interface UsageInfo {
@@ -510,7 +589,11 @@ export default function AICoachContent() {
                     : 'bg-white border border-gray-200 text-gray-900'
                 }`}
               >
-                <p className="text-sm leading-relaxed">{message.content}</p>
+                {message.type === 'ai' ? (
+                  formatAIResponse(message.content)
+                ) : (
+                  <p className="text-sm leading-relaxed">{message.content}</p>
+                )}
               </div>
               
               <div className={`flex items-center gap-2 mt-2 text-xs text-gray-500 ${
