@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Save, ArrowLeft, Calendar, MapPin, Users, Heart, Camera, Upload, X, Mic, MicOff, HelpCircle } from 'lucide-react'
+import NPDTraitTagger from '@/components/journal/NPDTraitTagger'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry, EvidenceFile } from '@/lib/supabase'
@@ -77,6 +78,7 @@ export default function EditJournalEntryPage({ params }: Props) {
   const [emotionalStateBefore, setEmotionalStateBefore] = useState<string[]>([])
   const [emotionalStateAfter, setEmotionalStateAfter] = useState<string[]>([])
   const [moodRating, setMoodRating] = useState<number | null>(null)
+  const [npdTraitsIdentified, setNpdTraitsIdentified] = useState<string[]>([])
 
   // Evidence state
   const [existingEvidence, setExistingEvidence] = useState<EvidenceFile[]>([])
@@ -169,6 +171,7 @@ export default function EditJournalEntryPage({ params }: Props) {
       setEmotionalStateBefore(entry.emotional_state_before ? entry.emotional_state_before.split(', ') : [])
       setEmotionalStateAfter(entry.emotional_state_after ? entry.emotional_state_after.split(', ') : [])
       setMoodRating(entry.mood_rating ?? null)
+      setNpdTraitsIdentified(entry.npd_traits_identified || [])
       
       setLoading(false)
     }
@@ -277,6 +280,7 @@ export default function EditJournalEntryPage({ params }: Props) {
         witnesses: witnesses ? witnesses.split(',').map(w => w.trim()).filter(w => w) : null,
         emotional_state_before: emotionalStateBefore.join(', ') || null,
         emotional_state_after: emotionalStateAfter.join(', ') || null,
+        npd_traits_identified: npdTraitsIdentified,
         updated_at: new Date().toISOString()
       }
 
@@ -720,6 +724,22 @@ export default function EditJournalEntryPage({ params }: Props) {
                   </button>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+
+          {/* NPD Trait Tagging */}
+          <Card className="border-l-4 border-l-red-600">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+                🎯 NPD Traits Identified
+              </CardTitle>
+              <CardDescription>Tag specific narcissistic traits you observed (optional)</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <NPDTraitTagger
+                selectedTraits={npdTraitsIdentified}
+                onTraitsChange={setNpdTraitsIdentified}
+              />
             </CardContent>
           </Card>
 
