@@ -145,7 +145,7 @@ export default function BehaviorAssessmentPage() {
         {/* NPD Trait Tagging */}
         <MobileFormCard 
           title="🎯 NPD Traits Identified"
-          description="Tag specific narcissistic traits you observed (optional)"
+          description="Tag specific narcissistic traits you observed (Recovery+ feature)"
         >
           <NPDTraitTagger
             selectedTraits={draft.npdTraitsIdentified}

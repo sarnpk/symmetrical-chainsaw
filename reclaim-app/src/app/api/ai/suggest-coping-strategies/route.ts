@@ -40,7 +40,7 @@ Keep items actionable and safe. Avoid clinical claims or diagnoses. Limit to 3-5
       return NextResponse.json({ error: 'Missing GOOGLE_AI_API_KEY' }, { status: 500 })
     }
 
-    const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+    const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent'
 
     const resp = await fetch(`${endpoint}?key=${apiKey}`, {
       method: 'POST',

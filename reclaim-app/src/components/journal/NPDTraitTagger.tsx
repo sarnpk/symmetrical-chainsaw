@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
-import { Badge, X, Plus, Search } from 'lucide-react'
+import { Badge, X, Plus, Search, Lock, Zap } from 'lucide-react'
 
 interface NPDTrait {
   id: string
@@ -22,11 +22,25 @@ export default function NPDTraitTagger({ selectedTraits, onTraitsChange, classNa
   const [searchTerm, setSearchTerm] = useState('')
   const [showSelector, setShowSelector] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [subscriptionTier, setSubscriptionTier] = useState<string>('foundation')
   const supabase = createClient()
 
   useEffect(() => {
-    const loadTraits = async () => {
+    const loadData = async () => {
       try {
+        // Load user subscription tier
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('subscription_tier')
+            .eq('id', user.id)
+            .single()
+          
+          setSubscriptionTier(profile?.subscription_tier || 'foundation')
+        }
+
+        // Load NPD traits
         const { data, error } = await supabase
           .from('npd_traits')
           .select('*')
@@ -35,13 +49,13 @@ export default function NPDTraitTagger({ selectedTraits, onTraitsChange, classNa
         if (error) throw error
         setTraits(data || [])
       } catch (error) {
-        console.error('Error loading NPD traits:', error)
+        console.error('Error loading data:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    loadTraits()
+    loadData()
   }, [supabase])
 
   const filteredTraits = traits.filter(trait =>
@@ -52,6 +66,11 @@ export default function NPDTraitTagger({ selectedTraits, onTraitsChange, classNa
   const selectedTraitObjects = traits.filter(trait => selectedTraits.includes(trait.id))
 
   const handleTraitToggle = (traitId: string) => {
+    // Only allow trait selection for Recovery+ users
+    if (subscriptionTier === 'foundation') {
+      return // Prevent selection for Foundation users
+    }
+    
     if (selectedTraits.includes(traitId)) {
       onTraitsChange(selectedTraits.filter(id => id !== traitId))
     } else {
@@ -74,10 +93,43 @@ export default function NPDTraitTagger({ selectedTraits, onTraitsChange, classNa
     )
   }
 
+  // Show upgrade prompt for Foundation users
+  if (subscriptionTier === 'foundation') {
+    return (
+      <div className={`${className}`}>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          NPD Traits Identified
+        </label>
+        
+        <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center bg-gray-50">
+          <Lock className="h-8 w-8 text-gray-400 mx-auto mb-3" />
+          <h3 className="text-sm font-medium text-gray-900 mb-2">
+            Recovery+ Feature
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Tag specific NPD traits to track patterns and build stronger evidence for your recovery journey.
+          </p>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium"
+            onClick={() => window.open('/subscription', '_blank')}
+          >
+            <Zap className="h-4 w-4" />
+            Upgrade to Recovery+
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`${className}`}>
       <label className="block text-sm font-medium text-gray-700 mb-2">
         NPD Traits Identified
+        <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">
+          <Zap className="h-3 w-3" />
+          Recovery+
+        </span>
       </label>
       
       {/* Selected Traits */}
