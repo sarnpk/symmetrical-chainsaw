@@ -36,6 +36,11 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
   const [activeTab, setActiveTab] = useState<'profile' | 'settings' | 'data'>('profile')
   const [displayName, setDisplayName] = useState(profile?.display_name || '')
   const [abuserGender, setAbuserGender] = useState(profile?.abuser_gender || '')
+  const [hasChildren, setHasChildren] = useState(profile?.has_children || false)
+  const [childrenCount, setChildrenCount] = useState(0)
+  const [custodyArrangement, setCustodyArrangement] = useState(profile?.custody_arrangement || '')
+  const [preferredFocus, setPreferredFocus] = useState<string[]>([])
+  const [preferences, setPreferences] = useState<any>(null)
   const [entriesCount, setEntriesCount] = useState<number>(0)
   const [streakDays, setStreakDays] = useState<number>(0)
   const [achievements, setAchievements] = useState<Achievement[]>([])
@@ -48,6 +53,21 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
   useEffect(() => {
     const loadStats = async () => {
       try {
+        // Load affirmation preferences
+        const { data: prefs } = await supabase
+          .from('affirmation_preferences')
+          .select('*')
+          .eq('user_id', user.id)
+          .single()
+        
+        if (prefs) {
+          setPreferences(prefs)
+          setHasChildren(prefs.has_children || false)
+          setChildrenCount(prefs.children_count || 0)
+          setCustodyArrangement(prefs.custody_situation || '')
+          setPreferredFocus(prefs.preferred_focus || [])
+        }
+
         const { count: countEntries, error: countErr } = await supabase
           .from('journal_entries')
           .select('id', { count: 'exact', head: true })
@@ -131,17 +151,35 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
 
   const handleSave = async () => {
     try {
-      const { error } = await supabase
+      // Update profile
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({ 
           display_name: displayName,
-          abuser_gender: abuserGender || null
+          abuser_gender: abuserGender || null,
+          has_children: hasChildren,
+          custody_arrangement: custodyArrangement || null
         })
         .eq('id', user.id)
 
-      if (error) throw error
+      if (profileError) throw profileError
+
+      // Update or create affirmation preferences
+      const { error: prefsError } = await supabase
+        .from('affirmation_preferences')
+        .upsert({
+          user_id: user.id,
+          has_children: hasChildren,
+          children_count: childrenCount,
+          custody_situation: custodyArrangement || null,
+          preferred_focus: preferredFocus,
+          updated_at: new Date().toISOString()
+        })
+
+      if (prefsError) throw prefsError
       toast.success('Settings saved successfully!')
     } catch (error) {
+      console.error('Save error:', error)
       toast.error('Failed to save settings')
     }
   }
@@ -313,7 +351,7 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
               Person You're Managing Interactions With
             </label>
             <p className="text-xs text-gray-500 mb-2">
-              This personalizes mantras and language throughout the app
+              This personalizes language and pronouns throughout the app
             </p>
             <select
               value={abuserGender}
@@ -326,6 +364,102 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
               <option value="non-binary">Non-binary (uses they/them)</option>
             </select>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Do you have children together?
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="hasChildren"
+                  checked={hasChildren === true}
+                  onChange={() => setHasChildren(true)}
+                  className="mr-2"
+                />
+                Yes
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="hasChildren"
+                  checked={hasChildren === false}
+                  onChange={() => setHasChildren(false)}
+                  className="mr-2"
+                />
+                No
+              </label>
+            </div>
+          </div>
+
+          {hasChildren && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  How many children?
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={childrenCount || ''}
+                  onChange={(e) => setChildrenCount(parseInt(e.target.value) || 0)}
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Custody arrangement
+                </label>
+                <select
+                  value={custodyArrangement}
+                  onChange={(e) => setCustodyArrangement(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select arrangement</option>
+                  <option value="full">Full custody</option>
+                  <option value="shared">Shared custody</option>
+                  <option value="limited">Limited visitation</option>
+                  <option value="supervised">Supervised visitation</option>
+                  <option value="none">No contact/custody</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Focus areas for affirmations
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { id: 'children', label: "Children's wellbeing" },
+                    { id: 'healing', label: 'Personal healing' },
+                    { id: 'boundaries', label: 'Setting boundaries' },
+                    { id: 'strength', label: 'Building strength' },
+                    { id: 'clarity', label: 'Mental clarity' },
+                    { id: 'peace', label: 'Inner peace' }
+                  ].map((focus) => (
+                    <label key={focus.id} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={preferredFocus.includes(focus.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setPreferredFocus([...preferredFocus, focus.id])
+                          } else {
+                            setPreferredFocus(preferredFocus.filter(f => f !== focus.id))
+                          }
+                        }}
+                        className="mr-2"
+                      />
+                      <span className="text-sm">{focus.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Subscription</label>
