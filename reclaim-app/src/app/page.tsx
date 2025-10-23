@@ -205,14 +205,25 @@ export default async function HomePage() {
 
       {/* Footer */}
       <footer className="border-t bg-white py-12 px-4">
-        <div className="container mx-auto text-center text-gray-600">
-          <p className="mb-4">
-            &copy; 2024 Reclaim Platform. Your safety and privacy are our priority.
-          </p>
-          <p className="text-sm">
-            This platform is designed for educational and support purposes. 
-            Always consult with qualified professionals for medical or legal advice.
-          </p>
+        <div className="container mx-auto">
+          <div className="text-center text-gray-600 mb-6">
+            <p className="mb-4">
+              &copy; 2025 Reclaim Platform. Your safety and privacy are our priority.
+            </p>
+            <p className="text-sm mb-6">
+              This platform is designed for educational and support purposes. 
+              Always consult with qualified professionals for medical or legal advice.
+            </p>
+          </div>
+          
+          {/* Legal Links */}
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500 border-t pt-6">
+            <a href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-indigo-600 transition-colors">Terms of Service</a>
+            <a href="/cookies" className="hover:text-indigo-600 transition-colors">Cookie Policy</a>
+            <a href="/gdpr" className="hover:text-indigo-600 transition-colors">Data Rights</a>
+            <a href="mailto:support@reclaim.app" className="hover:text-indigo-600 transition-colors">Contact</a>
+          </div>
         </div>
       </footer>
     </div>

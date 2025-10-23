@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast'
 import AppVersion from "../components/AppVersion"
+import CookieBanner from "../components/CookieBanner"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -49,6 +50,7 @@ export default function RootLayout({
           {children}
         </main>
         <AppVersion />
+        <CookieBanner />
         <Toaster 
           position="top-right"
           toastOptions={{
