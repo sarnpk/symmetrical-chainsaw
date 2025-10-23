@@ -17,6 +17,9 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
   const [abuserGender, setAbuserGender] = useState<string>('')
+  const [hasChildren, setHasChildren] = useState<boolean | null>(null)
+  const [childrenCount, setChildrenCount] = useState(0)
+  const [custodyArrangement, setCustodyArrangement] = useState('')
   const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
   
@@ -45,8 +48,21 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
             email: data.user.email!,
             display_name: displayName || data.user.email?.split('@')[0],
             abuser_gender: abuserGender || null,
+            has_children: hasChildren || false,
+            custody_arrangement: custodyArrangement || null,
             subscription_tier: 'foundation',
           })
+
+          // Create affirmation preferences if user has children
+          if (hasChildren) {
+            await supabase.from('affirmation_preferences').insert({
+              user_id: data.user.id,
+              has_children: true,
+              children_count: childrenCount,
+              custody_situation: custodyArrangement,
+              preferred_focus: ['children']
+            })
+          }
         }
         
         toast.success('Check your email for confirmation link!')
@@ -55,6 +71,9 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
         setPassword('')
         setDisplayName('')
         setAbuserGender('')
+        setHasChildren(null)
+        setChildrenCount(0)
+        setCustodyArrangement('')
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -118,12 +137,15 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
     setPassword('')
     setDisplayName('')
     setAbuserGender('')
+    setHasChildren(null)
+    setChildrenCount(0)
+    setCustodyArrangement('')
     setLoading(false)
   }
   
   const Modal = (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[9999]">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md relative">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[9999] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md relative my-8 max-h-[90vh] overflow-y-auto">
         {/* Close button */}
         <button
           onClick={closeModal}
@@ -132,7 +154,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
           <X className="h-6 w-6" />
         </button>
 
-        <div className="text-center mb-6">
+        <div className="text-center mb-4">
           <div className="mx-auto w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
             {isSignUp ? <UserPlus className="h-6 w-6 text-indigo-600" /> : <LogIn className="h-6 w-6 text-indigo-600" />}
           </div>
@@ -144,7 +166,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
           </p>
         </div>
 
-        <form onSubmit={handleAuth} className="space-y-4">
+        <form onSubmit={handleAuth} className="space-y-3">
           {isSignUp && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -154,7 +176,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                 placeholder="How should we address you?"
               />
             </div>
@@ -168,7 +190,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
               placeholder="your@email.com"
               required
             />
@@ -182,7 +204,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
               placeholder="••••••••"
               required
               minLength={6}
@@ -193,31 +215,97 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
           </div>
           
           {isSignUp && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Person You're Managing Interactions With (Optional)
-              </label>
-              <select
-                value={abuserGender}
-                onChange={(e) => setAbuserGender(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
-              >
-                <option value="">Prefer not to say</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="non-binary">Non-binary</option>
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                This helps us personalize content and pronouns in your experience
-              </p>
-            </div>
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Person You're Managing Interactions With (Optional)
+                </label>
+                <select
+                  value={abuserGender}
+                  onChange={(e) => setAbuserGender(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                >
+                  <option value="">Prefer not to say</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="non-binary">Non-binary</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  This helps us personalize content and pronouns
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Do you have children together? (Optional)
+                </label>
+                <div className="flex gap-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasChildren"
+                      checked={hasChildren === true}
+                      onChange={() => setHasChildren(true)}
+                      className="mr-2"
+                    />
+                    Yes
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasChildren"
+                      checked={hasChildren === false}
+                      onChange={() => setHasChildren(false)}
+                      className="mr-2"
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
+
+              {hasChildren && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      How many children?
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={childrenCount || ''}
+                      onChange={(e) => setChildrenCount(parseInt(e.target.value) || 0)}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Custody arrangement
+                    </label>
+                    <select
+                      value={custodyArrangement}
+                      onChange={(e) => setCustodyArrangement(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                    >
+                      <option value="">Select arrangement</option>
+                      <option value="full">Full custody</option>
+                      <option value="shared">Shared custody</option>
+                      <option value="limited">Limited visitation</option>
+                      <option value="supervised">Supervised visitation</option>
+                      <option value="none">No contact/custody</option>
+                    </select>
+                  </div>
+                </>
+              )}
+            </>
           )}
           
-          <div className="pt-4">
+          <div className="pt-3">
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
@@ -231,7 +319,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
           </div>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-4 text-center">
           <button
             onClick={() => setIsSignUp(!isSignUp)}
             className="text-indigo-600 hover:text-indigo-700 text-sm font-medium transition-colors"
@@ -240,7 +328,7 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
           </button>
         </div>
 
-        <div className="mt-4 text-center">
+        <div className="mt-3 text-center">
           <p className="text-xs text-gray-500">
             By continuing, you agree to our terms of service and privacy policy.
           </p>
