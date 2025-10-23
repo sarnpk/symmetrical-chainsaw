@@ -7,6 +7,7 @@ import MobileTopBar from "@/components/journal/mobile/MobileTopBar";
 import StickyActionBar from "@/components/journal/mobile/StickyActionBar";
 import MobileFormCard from "@/components/journal/mobile/MobileFormCard";
 import MobileBehaviorGrid from "@/components/journal/mobile/MobileBehaviorGrid";
+import NPDTraitTagger from "@/components/journal/NPDTraitTagger";
 
 // Base abuse patterns - always available
 const baseAbuseTypes = [
@@ -31,6 +32,7 @@ export default function BehaviorAssessmentPage() {
     draft, 
     toggleAbuseType,
     acceptAiBehaviorSuggestion,
+    setNpdTraitsIdentified,
     nextStep,
     prevStep,
     markStepComplete,
@@ -137,6 +139,17 @@ export default function BehaviorAssessmentPage() {
             helpButton={true}
             onHelp={onHelp}
             aiSuggestions={draft.aiBehaviorSuggestions}
+          />
+        </MobileFormCard>
+
+        {/* NPD Trait Tagging */}
+        <MobileFormCard 
+          title="🎯 NPD Traits Identified"
+          description="Tag specific narcissistic traits you observed (optional)"
+        >
+          <NPDTraitTagger
+            selectedTraits={draft.npdTraitsIdentified}
+            onTraitsChange={setNpdTraitsIdentified}
           />
         </MobileFormCard>
 

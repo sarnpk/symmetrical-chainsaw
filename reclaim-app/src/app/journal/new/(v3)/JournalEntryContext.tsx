@@ -72,6 +72,9 @@ export type JournalDraft = {
   contentWarnings: string[];
   isEvidence: boolean;
   
+  // NPD Trait Tagging
+  npdTraitsIdentified: string[];
+  
   // AI Suggestions
   aiTitleSuggestions: AITitleSuggestion[];
   aiBehaviorSuggestions: AIBehaviorSuggestion[];
@@ -138,6 +141,9 @@ type Ctx = {
   setEvidenceNotes: (notes: string) => void;
   setContentWarnings: (warnings: string[]) => void;
   setIsEvidence: (isEvidence: boolean) => void;
+  
+  // NPD Trait Tagging
+  setNpdTraitsIdentified: (traits: string[]) => void;
   
   // AI Methods
   setAiAnalysisEnabled: (enabled: boolean) => void;
@@ -313,6 +319,7 @@ function getInitialDraft(): JournalDraft {
         evidenceNotes: parsed.evidenceNotes || '',
         contentWarnings: parsed.contentWarnings || [],
         isEvidence: parsed.isEvidence || false,
+        npdTraitsIdentified: parsed.npdTraitsIdentified || [],
         aiTitleSuggestions: parsed.aiTitleSuggestions || [],
         aiBehaviorSuggestions: parsed.aiBehaviorSuggestions || [],
         aiAnalysisEnabled: parsed.aiAnalysisEnabled || false,
@@ -350,6 +357,7 @@ function getInitialDraft(): JournalDraft {
     evidenceNotes: '',
     contentWarnings: [],
     isEvidence: false,
+    npdTraitsIdentified: [],
     aiTitleSuggestions: [],
     aiBehaviorSuggestions: [],
     aiAnalysisEnabled: false,
@@ -464,6 +472,9 @@ export function JournalEntryProvider({ children }: { children: React.ReactNode }
     setEvidenceNotes: (notes: string) => setDraft(d => ({ ...d, evidenceNotes: notes })),
     setContentWarnings: (warnings: string[]) => setDraft(d => ({ ...d, contentWarnings: warnings })),
     setIsEvidence: (isEvidence: boolean) => setDraft(d => ({ ...d, isEvidence })),
+    
+    // NPD Trait Tagging
+    setNpdTraitsIdentified: (traits: string[]) => setDraft(d => ({ ...d, npdTraitsIdentified: traits })),
     
     // AI Methods
     setAiAnalysisEnabled: (enabled: boolean) => setDraft(d => ({ ...d, aiAnalysisEnabled: enabled })),
@@ -633,6 +644,7 @@ export function JournalEntryProvider({ children }: { children: React.ReactNode }
           witnesses: draft.witnesses ? [draft.witnesses] : [],
           emotional_state_before: draft.emotionalStateBefore.join(', '),
           emotional_state_after: draft.emotionalStateAfter.join(', '),
+          npd_traits_identified: draft.npdTraitsIdentified,
           is_evidence: draft.isEvidence,
           is_draft: false,
           content_warnings: draft.contentWarnings,
