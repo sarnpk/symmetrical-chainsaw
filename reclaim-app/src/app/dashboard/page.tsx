@@ -155,6 +155,74 @@ export default function DashboardPage() {
           userId={user.id} 
           subscriptionTier={(profile.subscription_tier || 'foundation') as 'foundation' | 'recovery' | 'empowerment'} 
         />
+        
+        {/* Professional Support Widget */}
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <Heart className="h-6 w-6 text-green-600" />
+              <CardTitle className="text-green-800">Professional Support Network</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-green-700 mb-6">
+              Ready to take the next step? Connect with professionals who understand your situation 
+              and can provide specialized support.
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Therapy Support */}
+              <div className="p-4 bg-white rounded-lg border border-green-200">
+                <h3 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
+                  <Heart className="h-4 w-4" />
+                  Mental Health Support
+                </h3>
+                <p className="text-green-700 text-sm mb-3">
+                  Trauma-informed therapists who specialize in narcissistic abuse recovery.
+                </p>
+                <button
+                  onClick={() => {
+                    const referralUrl = 'https://www.psychology-today.com/us/therapists/referral/?ref=reclaim_dashboard&source=reclaim_app&specialty=trauma&utm_source=reclaim&utm_medium=referral&utm_campaign=dashboard';
+                    window.open(referralUrl, '_blank', 'noopener,noreferrer');
+                  }}
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center bg-green-600 hover:bg-green-700 text-white border-2 border-green-600 shadow-md hover:shadow-lg hover:scale-105 w-full text-sm"
+                >
+                  <Heart className="h-4 w-4" />
+                  Find Therapist
+                </button>
+              </div>
+
+              {/* Legal Support */}
+              <div className="p-4 bg-white rounded-lg border border-amber-200">
+                <h3 className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Legal Guidance
+                </h3>
+                <p className="text-amber-700 text-sm mb-3">
+                  Family law attorneys experienced in divorce, custody, and domestic violence cases.
+                </p>
+                <button
+                  onClick={() => {
+                    const referralUrl = 'https://www.avvo.com/find-a-lawyer/referral/?ref=reclaim_dashboard&source=reclaim_app&specialty=family_law&practice_area=divorce&utm_source=reclaim&utm_medium=legal_referral&utm_campaign=dashboard&evidence_available=true';
+                    window.open(referralUrl, '_blank', 'noopener,noreferrer');
+                  }}
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center bg-amber-600 hover:bg-amber-700 text-white border-2 border-amber-600 shadow-md hover:shadow-lg hover:scale-105 w-full text-sm"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Legal Consultation
+                </button>
+              </div>
+            </div>
+            
+            <div className="mt-4 text-xs text-green-600 text-center">
+              Specialized professionals • Evidence-ready cases • Confidential consultations
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Reality Anchor Widget - Recovery tier and above */}
         {(profile.subscription_tier === 'recovery' || profile.subscription_tier === 'empowerment') && (

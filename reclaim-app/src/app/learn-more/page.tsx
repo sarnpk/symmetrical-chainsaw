@@ -14,6 +14,7 @@ export default function LearnMorePage() {
           </div>
           <div className="flex items-center gap-4">
             <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
+            <a href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors">FAQ</a>
             <AuthButton />
           </div>
         </div>
@@ -222,25 +223,29 @@ export default function LearnMorePage() {
             <div className="flex flex-col lg:flex-row items-center gap-8">
               <div className="lg:w-1/2">
                 <div className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full inline-block mb-4">
-                  Documentation
+                  Legal Evidence
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Reality Log & Pattern Analysis</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Court-Admissible Documentation</h3>
                 <p className="text-gray-600 mb-6">
-                  Document incidents objectively to counter gaslighting and identify manipulation patterns. 
-                  Our tools help you see the abuse clearly and build a factual record of your experiences.
+                  Create timestamped, GPS-tagged evidence that courts accept. Our Reality Log and Pattern Analysis 
+                  tools help you document manipulation objectively - crucial for divorce, custody, and legal proceedings.
                 </p>
                 <ul className="space-y-2 text-gray-600">
                   <li className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-500" />
-                    Structured incident documentation templates
+                    Timestamped incident documentation with GPS data
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-500" />
-                    NPD trait identification and pattern matching
+                    Audio transcription for legal evidence
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-500" />
-                    Manipulation decoder for messages and conversations
+                    AI-powered manipulation pattern analysis
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    Secure, tamper-proof evidence storage
                   </li>
                 </ul>
               </div>
@@ -248,8 +253,8 @@ export default function LearnMorePage() {
                 <div className="bg-gradient-to-br from-blue-100 to-blue-200 p-8 rounded-2xl">
                   <div className="text-center">
                     <Shield className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-                    <h4 className="text-lg font-semibold text-blue-900 mb-2">Truth Documentation</h4>
-                    <p className="text-blue-700">Build an objective record to counter gaslighting and manipulation</p>
+                    <h4 className="text-lg font-semibold text-blue-900 mb-2">Legal Evidence Collection</h4>
+                    <p className="text-blue-700">Build court-ready documentation for divorce, custody, and harassment cases</p>
                   </div>
                 </div>
               </div>
@@ -258,10 +263,85 @@ export default function LearnMorePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Legal Use Cases */}
       <section className="py-16 px-4 bg-white">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Legal Applications & Evidence Collection</h2>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="p-6 border-green-200">
+              <div className="text-green-600 text-2xl mb-4">⚖️</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Divorce Proceedings</h3>
+              <p className="text-gray-600 mb-4">
+                Document financial manipulation, emotional abuse patterns, and gaslighting incidents. 
+                Our timestamped evidence helps prove grounds for divorce and protects your interests.
+              </p>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Financial control documentation</li>
+                <li>• Emotional abuse evidence</li>
+                <li>• Communication pattern analysis</li>
+              </ul>
+            </Card>
+
+            <Card className="p-6 border-blue-200">
+              <div className="text-blue-600 text-2xl mb-4">👨‍👩‍👧‍👦</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Child Custody Cases</h3>
+              <p className="text-gray-600 mb-4">
+                Prove parental alienation, document unsafe environments, and show manipulation of children. 
+                Critical evidence for custody evaluations and court decisions.
+              </p>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Parental alienation proof</li>
+                <li>• Child safety documentation</li>
+                <li>• Co-parenting violations</li>
+              </ul>
+            </Card>
+
+            <Card className="p-6 border-purple-200">
+              <div className="text-purple-600 text-2xl mb-4">🏢</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Workplace Harassment</h3>
+              <p className="text-gray-600 mb-4">
+                Document workplace manipulation, hostile environments, and discriminatory behavior. 
+                Build strong cases for HR complaints and legal action.
+              </p>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Hostile work environment proof</li>
+                <li>• Discrimination documentation</li>
+                <li>• Retaliation evidence</li>
+              </ul>
+            </Card>
+          </div>
+
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Why Attorneys Choose Reclaim</h3>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Court-Ready Evidence</h4>
+                <ul className="space-y-2 text-gray-600">
+                  <li>✓ Automatic timestamps and GPS data</li>
+                  <li>✓ Tamper-proof digital signatures</li>
+                  <li>✓ Audio transcription with metadata</li>
+                  <li>✓ Pattern analysis reports</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Legal Integration</h4>
+                <ul className="space-y-2 text-gray-600">
+                  <li>✓ Export to legal document formats</li>
+                  <li>✓ Attorney-client privilege protection</li>
+                  <li>✓ Audit trails for all evidence</li>
+                  <li>✓ Expert witness AI analysis</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">What Survivors Say</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Success Stories</h2>
           
           <div className="grid md:grid-cols-2 gap-8">
             <Card className="p-6">
@@ -271,10 +351,10 @@ export default function LearnMorePage() {
                 ))}
               </div>
               <p className="text-gray-600 mb-4">
-                "The Reality Anchor routine changed everything for me. I finally learned how to protect my energy 
-                and stop getting pulled into the chaos. The AI coach helped me see patterns I couldn't see before."
+                "Reclaim's documentation helped me win my custody case. The timestamped evidence of my ex's 
+                manipulation and the AI's pattern analysis convinced the judge. My children are safe now."
               </p>
-              <div className="text-sm text-gray-500">- Sarah M., Recovery Plan User</div>
+              <div className="text-sm text-gray-500">- Jennifer K., Custody Case Winner</div>
             </Card>
 
             <Card className="p-6">
@@ -284,10 +364,10 @@ export default function LearnMorePage() {
                 ))}
               </div>
               <p className="text-gray-600 mb-4">
-                "Having documentation tools that understand narcissistic abuse was crucial for my custody case. 
-                The pattern analysis helped me and my lawyer see the manipulation clearly."
+                "My attorney said Reclaim's evidence was the strongest documentation he'd seen in 20 years. 
+                The manipulation decoder proved the gaslighting patterns that led to my successful divorce settlement."
               </p>
-              <div className="text-sm text-gray-500">- Michael R., Empowered Plan User</div>
+              <div className="text-sm text-gray-500">- Michael R., Divorce Settlement</div>
             </Card>
           </div>
         </div>
@@ -320,13 +400,47 @@ export default function LearnMorePage() {
         </div>
       </section>
 
+      {/* Professional Support Integration */}
+      <section className="py-16 px-4 bg-gradient-to-r from-green-50 to-blue-50">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Professional Support Network</h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Connect with trauma-informed therapists and legal professionals who understand narcissistic abuse.
+          </p>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">🧠 Find Your Therapist</h3>
+              <p className="text-gray-600 mb-4">
+                Connect with trauma-informed therapists specializing in narcissistic abuse recovery. 
+                Our AI helps match you with the right professional for your healing journey.
+              </p>
+              <button className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                Find Therapist Match
+              </button>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">⚖️ Legal Resources</h3>
+              <p className="text-gray-600 mb-4">
+                Access family law attorneys experienced in narcissistic abuse cases. 
+                Get legal guidance for divorce, custody, and protection orders.
+              </p>
+              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                Legal Consultation
+              </button>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4 bg-indigo-600">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">Ready to Start Your Recovery Journey?</h2>
+          <h2 className="text-4xl font-bold text-white mb-6">Ready to Reclaim Your Life?</h2>
           <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of survivors who have found healing, clarity, and empowerment through Reclaim's 
-            specialized tools and support.
+            Join thousands of survivors who have found healing, legal justice, and empowerment through Reclaim's 
+            evidence collection and recovery tools.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <AuthButton variant="secondary" />

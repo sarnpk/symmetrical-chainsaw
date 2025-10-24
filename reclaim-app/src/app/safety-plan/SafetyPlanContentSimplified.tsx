@@ -1025,6 +1025,65 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
         </div>
       )}
 
+      {/* Professional Support Integration */}
+      <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border border-blue-200 p-6">
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            👥 Professional Support Available
+          </h2>
+          <p className="text-gray-700 text-sm">
+            Your safety plan is comprehensive. Consider connecting with professionals 
+            who can provide specialized support for your situation.
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Therapy Referral */}
+          <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+            <h3 className="font-semibold text-blue-900 mb-2">🧠 Mental Health Support</h3>
+            <p className="text-blue-700 mb-3 text-sm">
+              Connect with trauma-informed therapists who understand narcissistic abuse recovery.
+            </p>
+            <button
+              onClick={() => {
+                const referralUrl = 'https://www.betterhelp.com/rpc/track/referral/?ref=reclaim_safety_plan&source=reclaim_app&specialty=trauma&utm_source=reclaim&utm_medium=referral&utm_campaign=safety_plan';
+                window.open(referralUrl, '_blank', 'noopener,noreferrer');
+              }}
+              className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600 shadow-md hover:shadow-lg hover:scale-105 w-full text-sm"
+            >
+              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+              </svg>
+              Find Therapist
+            </button>
+          </div>
+
+          {/* Legal Referral */}
+          <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border border-amber-200">
+            <h3 className="font-semibold text-amber-900 mb-2">⚖️ Legal Protection</h3>
+            <p className="text-amber-700 mb-3 text-sm">
+              Your documented evidence can support legal action. Connect with family law attorneys.
+            </p>
+            <button
+              onClick={() => {
+                const referralUrl = 'https://www.avvo.com/find-a-lawyer/referral/?ref=reclaim_safety_plan&source=reclaim_app&specialty=domestic_violence&practice_area=family_law&utm_source=reclaim&utm_medium=legal_referral&utm_campaign=safety_plan&evidence_available=true';
+                window.open(referralUrl, '_blank', 'noopener,noreferrer');
+              }}
+              className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center bg-amber-600 hover:bg-amber-700 text-white border-2 border-amber-600 shadow-md hover:shadow-lg hover:scale-105 w-full text-sm"
+            >
+              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Legal Consultation
+            </button>
+          </div>
+        </div>
+        
+        <div className="mt-4 text-xs text-gray-500 text-center">
+          Secure referrals • Specialized professionals • Confidential consultations
+        </div>
+      </div>
+
       {/* Protected Information Section */}
       <ProtectedInformation userId={userId} />
     </div>

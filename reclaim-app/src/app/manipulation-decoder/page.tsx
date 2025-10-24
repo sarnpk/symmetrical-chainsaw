@@ -175,6 +175,34 @@ export default function ManipulationDecoderPage() {
                   AI Analysis
                 </h3>
                 
+                {/* Therapy Referral for Severe Manipulation */}
+                {aiAnalysis.tactics && aiAnalysis.tactics.length > 2 && (
+                  <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <h4 className="font-semibold text-red-900 mb-2">
+                      ⚠️ Severe Manipulation Detected
+                    </h4>
+                    <p className="text-red-700 text-sm mb-3">
+                      This analysis indicates serious psychological manipulation. 
+                      Professional support is strongly recommended for your safety and recovery.
+                    </p>
+                    <button
+                      onClick={() => {
+                        const referralUrl = 'https://www.talkspace.com/online-therapy/referral/?ref=reclaim_manipulation_detected&source=reclaim_app&specialty=trauma&utm_source=reclaim&utm_medium=referral&utm_campaign=manipulation_detected';
+                        window.open(referralUrl, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center bg-red-600 hover:bg-red-700 text-white border-2 border-red-600 shadow-lg hover:shadow-xl hover:scale-105 w-full"
+                    >
+                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                      </svg>
+                      Connect with Specialist Now
+                    </button>
+                    <div className="mt-2 text-xs text-red-600 text-center">
+                      Crisis support • Trauma specialists • Immediate help available
+                    </div>
+                  </div>
+                )}
+                
                 <div className="space-y-4">
                   <div className="bg-white rounded p-4">
                     <h4 className="font-semibold text-sm mb-2">Manipulation Tactics</h4>
@@ -259,6 +287,55 @@ export default function ManipulationDecoderPage() {
                   <div className="mt-4 p-4 bg-amber-100 rounded">
                     <div className="font-semibold mb-2">⚠️ Reality Check</div>
                     <p className="text-sm">You indicated this feels like your fault. Remember: Manipulation is designed to make you feel responsible for their behavior. You are not responsible for their actions, reactions, or emotions.</p>
+                  </div>
+                )}
+                
+                {/* Professional Support for Self-Blame */}
+                {analysis.is_my_fault && (
+                  <div className="mt-4 space-y-3">
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <h4 className="font-semibold text-blue-900 mb-2">
+                        🧠 Mental Health Support
+                      </h4>
+                      <p className="text-blue-700 text-sm mb-3">
+                        Self-blame is a common response to manipulation. A trauma-informed therapist 
+                        can help you rebuild confidence and recognize your true worth.
+                      </p>
+                      <button
+                        onClick={() => {
+                          const referralUrl = 'https://www.betterhelp.com/rpc/track/referral/?ref=reclaim_self_blame&source=reclaim_app&specialty=trauma&utm_source=reclaim&utm_medium=referral&utm_campaign=manipulation_detected';
+                          window.open(referralUrl, '_blank', 'noopener,noreferrer');
+                        }}
+                        className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600 shadow-md hover:shadow-lg hover:scale-105 w-full text-sm"
+                      >
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                        </svg>
+                        Find Therapist
+                      </button>
+                    </div>
+                    
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                      <h4 className="font-semibold text-amber-900 mb-2">
+                        ⚖️ Legal Documentation
+                      </h4>
+                      <p className="text-amber-700 text-sm mb-3">
+                        This manipulation analysis can serve as evidence. Consider consulting with 
+                        a family law attorney about your legal options.
+                      </p>
+                      <button
+                        onClick={() => {
+                          const referralUrl = 'https://www.findlaw.com/find-a-lawyer/referral/?ref=reclaim_manipulation_evidence&source=reclaim_app&specialty=family_law&practice_area=divorce&utm_source=reclaim&utm_medium=legal_referral&utm_campaign=manipulation_detected&evidence_available=true';
+                          window.open(referralUrl, '_blank', 'noopener,noreferrer');
+                        }}
+                        className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center bg-amber-600 hover:bg-amber-700 text-white border-2 border-amber-600 shadow-md hover:shadow-lg hover:scale-105 w-full text-sm"
+                      >
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Legal Consultation
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

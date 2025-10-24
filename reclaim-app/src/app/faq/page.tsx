@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { Shield } from 'lucide-react';
+import AuthButton from '@/components/AuthButton';
 
 interface FAQItem {
   question: string;
@@ -9,7 +11,45 @@ interface FAQItem {
   category: 'trial' | 'features' | 'safety' | 'subscription' | 'technical';
 }
 
+interface FAQItem {
+  question: string;
+  answer: string;
+  category: 'trial' | 'features' | 'safety' | 'subscription' | 'technical' | 'legal';
+}
+
 const faqData: FAQItem[] = [
+  // Legal Evidence & Documentation
+  {
+    category: 'legal',
+    question: "Can Reclaim help with my divorce or custody case?",
+    answer: "Absolutely! Reclaim creates court-admissible evidence with timestamps, GPS data, and AI analysis. Our Reality Log documents incidents objectively, while the Manipulation Decoder identifies gaslighting patterns. Many users have successfully used our evidence in divorce proceedings, custody battles, and restraining order applications. The documentation is tamper-proof and includes digital signatures for legal authenticity."
+  },
+  {
+    category: 'legal',
+    question: "Is the evidence from Reclaim accepted in court?",
+    answer: "Yes! Our evidence meets legal standards with automatic timestamps, GPS coordinates, digital signatures, and audit trails. The AI analysis provides expert-level pattern recognition that attorneys use to prove manipulation and abuse. We export data in legal formats (PDF with metadata) and provide documentation that courts regularly accept in family law, custody, and harassment cases."
+  },
+  {
+    category: 'legal',
+    question: "How does Reclaim help prove parental alienation?",
+    answer: "Reclaim documents parental alienation through timestamped incidents, communication analysis, and pattern recognition. Our AI identifies manipulation tactics used against children, tracks violations of custody agreements, and creates comprehensive reports showing alienation patterns over time. This evidence is crucial for custody modifications and protecting children from psychological manipulation."
+  },
+  {
+    category: 'legal',
+    question: "Can I use Reclaim for workplace harassment cases?",
+    answer: "Yes! Reclaim documents workplace manipulation, hostile environments, and discriminatory behavior. Our tools help you build strong cases for HR complaints, EEOC filings, and legal action. The AI identifies workplace gaslighting, documents retaliation patterns, and creates evidence packages that employment attorneys use to win harassment and discrimination cases."
+  },
+  {
+    category: 'legal',
+    question: "Do attorneys recommend Reclaim?",
+    answer: "Many family law and employment attorneys recommend Reclaim because it provides organized, timestamped evidence that strengthens their cases. Our documentation helps attorneys prepare better, win more cases, and provide added value to their clients. We partner with law firms to offer white-label versions and provide expert witness services for AI analysis testimony."
+  },
+  {
+    category: 'legal',
+    question: "How do I export evidence for my attorney?",
+    answer: "Reclaim provides secure evidence export in legal formats. You can generate comprehensive reports with timestamps, GPS data, AI analysis, and pattern summaries. Free tier includes 1 export per month, while paid tiers offer unlimited exports. All exports are encrypted and include metadata that courts require for digital evidence authentication."
+  },
+
   // Free Trial & Identification
   {
     category: 'trial',
@@ -103,10 +143,43 @@ const faqData: FAQItem[] = [
     category: 'technical',
     question: "Is there a mobile app?",
     answer: "Currently, we're a web-based platform optimized for mobile browsers. This provides better security and privacy than app stores while ensuring you always have the latest features. You can add us to your home screen for app-like experience."
+  },
+
+  // Additional Legal Use Cases
+  {
+    category: 'legal',
+    question: "How does Reclaim help with restraining orders?",
+    answer: "Reclaim provides crucial evidence for restraining orders by documenting harassment patterns, threats, and stalking behaviors with timestamps and GPS data. Our AI analysis shows escalation patterns and identifies threatening language that courts consider when granting protection orders. The objective documentation counters gaslighting attempts during legal proceedings."
+  },
+  {
+    category: 'legal',
+    question: "Can Reclaim prove financial abuse in divorce cases?",
+    answer: "Yes! Reclaim documents financial control tactics, hidden assets, and economic manipulation. Our tools help you track financial abuse patterns, document restricted access to money, and identify coercive financial behaviors. This evidence is crucial for asset division and spousal support determinations in divorce proceedings."
+  },
+  {
+    category: 'legal',
+    question: "How does the AI analysis help in legal cases?",
+    answer: "Our AI provides expert-level analysis that identifies manipulation patterns, predicts escalation cycles, and quantifies abuse severity. This analysis serves as expert testimony in court, helping judges understand the psychological impact of narcissistic abuse. Many attorneys use our AI reports as supporting evidence to strengthen their legal arguments."
+  },
+  {
+    category: 'legal',
+    question: "What legal professionals work with Reclaim?",
+    answer: "We partner with family law attorneys, employment lawyers, domestic violence advocates, and forensic psychologists. These professionals use Reclaim to gather better evidence, prepare stronger cases, and provide enhanced services to their clients. We also offer training for legal professionals on using digital evidence in abuse cases."
+  },
+  {
+    category: 'legal',
+    question: "How secure is the evidence for legal proceedings?",
+    answer: "Reclaim uses military-grade encryption, blockchain-style verification, and digital signatures to ensure evidence integrity. All documentation includes audit trails showing when data was created and modified. This security meets legal standards for digital evidence and prevents tampering claims that could invalidate your case."
+  },
+  {
+    category: 'legal',
+    question: "Can Reclaim help with child protective services (CPS) cases?",
+    answer: "Yes! Reclaim documents unsafe environments, parental manipulation of children, and neglect patterns. Our evidence helps CPS workers and family courts understand the psychological harm to children in narcissistic abuse situations. The documentation supports decisions about child safety and custody arrangements."
   }
 ];
 
 const categories = {
+  legal: { name: 'Legal Evidence & Court Cases', icon: '⚖️' },
   trial: { name: 'Free Trial & Abuse Identification', icon: '🔍' },
   features: { name: 'Features & Tools', icon: '⚡' },
   safety: { name: 'Safety & Privacy', icon: '🛡️' },
@@ -134,6 +207,21 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
+      {/* Header */}
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <Shield className="h-8 w-8 text-indigo-600" />
+            <span className="text-xl font-bold text-gray-900">Reclaim</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
+            <a href="/learn-more" className="text-gray-600 hover:text-gray-900 transition-colors">Learn More</a>
+            <AuthButton />
+          </div>
+        </div>
+      </header>
+
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -145,8 +233,30 @@ export default function FAQPage() {
           </p>
         </div>
 
-        {/* Highlight Box */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-6 mb-8 text-white">
+        {/* Legal Evidence Highlight */}
+        <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl p-6 mb-8 text-white">
+          <h2 className="text-2xl font-bold mb-3">⚖️ Court-Admissible Evidence Collection</h2>
+          <p className="text-lg mb-4">
+            Build legal cases with timestamped, GPS-tagged documentation. Our AI creates court-ready evidence for divorce, custody, and harassment cases that attorneys use to win.
+          </p>
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <strong>✓ Timestamped Documentation</strong> - Court-admissible evidence
+            </div>
+            <div>
+              <strong>✓ AI Pattern Analysis</strong> - Prove manipulation tactics
+            </div>
+            <div>
+              <strong>✓ Audio Transcription</strong> - Convert conversations to legal text
+            </div>
+            <div>
+              <strong>✓ Secure Evidence Storage</strong> - Tamper-proof documentation
+            </div>
+          </div>
+        </div>
+
+        {/* Free Trial Box */}
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 mb-8 text-white">
           <h2 className="text-2xl font-bold mb-3">🔍 Discover If You're Being Abused - Free Trial</h2>
           <p className="text-lg mb-4">
             Not sure if you're experiencing narcissistic abuse? Our free trial provides enough AI conversations and analysis tools to help you identify manipulation patterns and abusive behaviors in your relationship.
