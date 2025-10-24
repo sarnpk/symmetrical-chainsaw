@@ -216,7 +216,6 @@ export default function FAQPage() {
           </div>
           <div className="flex items-center gap-4">
             <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
-            <a href="/learn-more" className="text-gray-600 hover:text-gray-900 transition-colors">Learn More</a>
             <AuthButton />
           </div>
         </div>

@@ -14,7 +14,6 @@ export default function LearnMorePage() {
           </div>
           <div className="flex items-center gap-4">
             <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
-            <a href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors">FAQ</a>
             <AuthButton />
           </div>
         </div>
@@ -30,7 +29,12 @@ export default function LearnMorePage() {
             Narcissistic abuse is a form of emotional and psychological manipulation that can leave lasting trauma. 
             Reclaim provides specialized tools and support designed specifically for survivors on their healing journey.
           </p>
-          <AuthButton variant="primary" />
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <AuthButton variant="primary" />
+            <a href="/faq" className="px-8 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors inline-block">
+              FAQ
+            </a>
+          </div>
         </div>
       </section>
 
@@ -430,6 +434,71 @@ export default function LearnMorePage() {
                 Legal Consultation
               </button>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 px-4 bg-white">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Frequently Asked Questions</h2>
+          
+          <div className="space-y-8">
+            <div className="border-b pb-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Is my data secure and private?</h3>
+              <p className="text-gray-600">
+                Yes, absolutely. All your data is encrypted end-to-end, and we use bank-level security. 
+                You can use pseudonymous names, and we never share your information with anyone.
+              </p>
+            </div>
+            
+            <div className="border-b pb-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Can this evidence be used in court?</h3>
+              <p className="text-gray-600">
+                Yes, our documentation includes timestamps, GPS data, and tamper-proof digital signatures 
+                that courts accept as evidence. Many users have successfully used Reclaim evidence in 
+                divorce, custody, and harassment cases.
+              </p>
+            </div>
+            
+            <div className="border-b pb-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">What if I'm still living with my abuser?</h3>
+              <p className="text-gray-600">
+                Reclaim is designed with safety in mind. You can use anonymous accounts, secure deletion 
+                features, and access everything through private browsing. Always prioritize your physical safety.
+              </p>
+            </div>
+            
+            <div className="border-b pb-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">How does the AI Coach work?</h3>
+              <p className="text-gray-600">
+                Our AI is specifically trained on narcissistic abuse patterns and trauma-informed responses. 
+                It provides 24/7 support in 70+ languages and helps you understand manipulation tactics.
+              </p>
+            </div>
+            
+            <div className="border-b pb-6">
+              <h3 className="text-xl font-semibent text-gray-900 mb-3">Is there a free version?</h3>
+              <p className="text-gray-600">
+                Yes, our Foundation plan is completely free and includes basic access to all core features 
+                including Reality Anchor routines, journal entries, AI coaching, and safety planning.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Can I cancel anytime?</h3>
+              <p className="text-gray-600">
+                Absolutely. You can cancel your subscription at any time with no penalties. 
+                Your data remains accessible even after cancellation.
+              </p>
+            </div>
+          </div>
+          
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-4">Have more questions?</p>
+            <a href="mailto:support@reclaim.app" className="text-indigo-600 hover:text-indigo-700 font-medium">
+              Contact our support team
+            </a>
           </div>
         </div>
       </section>

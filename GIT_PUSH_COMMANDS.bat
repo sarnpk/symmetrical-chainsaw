@@ -9,26 +9,19 @@ git add .
 
 echo.
 echo Committing changes...
-git commit -m "feat: Complete therapy and legal referral system
+git commit -m "feat: Navigation cleanup and FAQ integration
 
-- Add therapy referral tracking system with analytics
-- Add legal referral system for attorney partnerships  
-- Implement dual referral buttons (therapy + legal)
-- Add revenue tracking and platform optimization
-- Create partnership email templates
-- Update safety plan, manipulation decoder, and dashboard
-- Add comprehensive marketing and launch strategies
+- Remove FAQ from header navigation across pages
+- Keep Learn More only in hero sections (not header nav)
+- Add FAQ section to Learn More page content
+- Add FAQ button to Learn More hero section
+- Clean mobile-optimized navigation structure
 
-Revenue potential: $350K-1.8M annually from referrals
-- Therapy: $50-75 per referral (BetterHelp, Talkspace, etc.)
-- Legal: $200-500 per referral (Avvo, FindLaw, etc.)
-
-Files added:
-- Database migrations for referral tracking
-- TherapyReferralButton and LegalReferralButton components
-- Partnership email templates
-- Marketing and launch strategy documents
-- Updated UI with referral integration"
+Navigation changes:
+- Main page: Learn More button in hero only
+- Learn More page: FAQ button in hero, FAQ content integrated
+- FAQ page: Clean header with just Home link
+- Improved mobile UX with less header clutter"
 
 echo.
 echo Pushing to remote repository...
@@ -39,11 +32,11 @@ echo ========================================
 echo PUSH COMPLETE!
 echo ========================================
 echo.
-echo Your referral system is now in Git!
-echo Next steps:
-echo 1. Send partnership emails
-echo 2. Test referral buttons
-echo 3. Monitor analytics
-echo 4. Start earning $350K-1.8M annually!
+echo Navigation cleanup is now in Git!
+echo Changes made:
+echo 1. FAQ removed from header navigation
+echo 2. Learn More kept in hero sections only
+echo 3. FAQ integrated into Learn More page
+echo 4. Mobile-optimized navigation structure
 echo.
 pause
