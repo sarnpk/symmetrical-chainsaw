@@ -1,6 +1,6 @@
 import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
-import { transcribeAudioFile } from '../../../../../lib/gladia-api';
+import { transcribeAudioFile } from '@/lib/gladia-api';
 
 export async function POST(request: Request) {
   const supabase = await createServerSupabase();
