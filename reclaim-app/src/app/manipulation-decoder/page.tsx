@@ -7,7 +7,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Sparkles, Copy, Check, Upload, Mic } from 'lucide-react';
+import { Sparkles, Copy, Check, Upload, Mic, Trash2 } from 'lucide-react';
 
 export default function ManipulationDecoderPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -129,6 +129,25 @@ export default function ManipulationDecoderPage() {
       alert('Transcription failed');
     }
     setTranscribing(false);
+  };
+
+  const handleDeleteHistoryItem = async (itemId: string) => {
+    if (!confirm('Are you sure you want to delete this analysis?')) return;
+    
+    try {
+      const response = await fetch(`/api/manipulation-decoder/${itemId}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        setHistory(history.filter(item => item.id !== itemId));
+      } else {
+        alert('Failed to delete analysis');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Failed to delete analysis');
+    }
   };
 
   const getIdentifiedTraits = (tacticIds: string[]) => {
@@ -419,8 +438,17 @@ export default function ManipulationDecoderPage() {
               <div className="space-y-3 max-h-[600px] overflow-y-auto">
                 {history.map((item: any) => (
                   <div key={item.id} className="p-4 border rounded hover:bg-gray-50">
-                    <div className="text-sm text-gray-500 mb-2">
-                      {new Date(item.created_at).toLocaleDateString()}
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="text-sm text-gray-500">
+                        {new Date(item.created_at).toLocaleDateString()}
+                      </div>
+                      <button
+                        onClick={() => handleDeleteHistoryItem(item.id)}
+                        className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
+                        title="Delete analysis"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     </div>
                     <div className="text-sm mb-2 line-clamp-2">{item.message_text}</div>
                     <div className="flex gap-2 flex-wrap">
@@ -431,7 +459,7 @@ export default function ManipulationDecoderPage() {
                       ))}
                     </div>
                   </div>
-                ))}
+                ))
               </div>
             )}
           </div>
