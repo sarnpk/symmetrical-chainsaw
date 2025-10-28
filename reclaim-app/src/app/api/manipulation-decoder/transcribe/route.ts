@@ -86,40 +86,38 @@ export async function POST(request: Request) {
 
     const { id: jobId } = await transcriptionResponse.json();
 
-    // Poll for results
-    const maxAttempts = 60;
-    let attempts = 0;
-
-    while (attempts < maxAttempts) {
+    // Quick poll for fast completion (max 10 seconds)
+    for (let i = 0; i < 2; i++) {
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
       const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
         headers: { 'x-gladia-key': process.env.GLADIA_API_KEY! },
       });
 
-      if (!statusResponse.ok) {
-        throw new Error(`Status check failed: ${statusResponse.statusText}`);
+      if (statusResponse.ok) {
+        const result = await statusResponse.json();
+        const transcription = extractTranscriptionText(result);
+
+        if (transcription) {
+          return NextResponse.json({
+            success: true,
+            transcription,
+            language: result.transcription?.languages?.[0] || 'en',
+            confidence: result.transcription?.utterances?.[0]?.confidence || 0.8
+          });
+        }
+
+        if (result.status === 'error') {
+          throw new Error(`Transcription failed: ${result.error}`);
+        }
       }
-
-      const result = await statusResponse.json();
-      const transcription = extractTranscriptionText(result);
-
-      if (transcription) {
-        return NextResponse.json({
-          success: true,
-          transcription,
-          language: result.transcription?.languages?.[0] || 'en',
-          confidence: result.transcription?.utterances?.[0]?.confidence || 0.8
-        });
-      }
-
-      if (result.status === 'error') {
-        throw new Error(`Transcription failed: ${result.error}`);
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      attempts++;
     }
 
-    throw new Error('Transcription timeout');
+    // Return processing status for longer transcriptions
+    return NextResponse.json({
+      success: false,
+      error: 'Audio transcription is taking longer than expected. Please try with a shorter audio file or use text input instead.'
+    }, { status: 408 });
 
   } catch (error: any) {
     console.error('Audio transcription error:', error);
