@@ -58,45 +58,52 @@ export async function POST(request: Request) {
 
     const { id: jobId } = await transcriptionResponse.json();
 
-    // Quick poll (max 15 seconds)
-    for (let i = 0; i < 3; i++) {
+    // Extended poll (max 60 seconds)
+    for (let i = 0; i < 12; i++) {
       await new Promise(resolve => setTimeout(resolve, 5000));
       
-      const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
-        headers: { 'x-gladia-key': process.env.GLADIA_API_KEY },
-      });
+      try {
+        const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
+          headers: { 'x-gladia-key': process.env.GLADIA_API_KEY },
+        });
 
-      if (statusResponse.ok) {
-        const result = await statusResponse.json();
-        
-        // Extract transcription
-        let transcription = null;
-        if (result?.transcription?.full_transcript) {
-          transcription = result.transcription.full_transcript.trim();
-        } else if (result?.transcription?.utterances?.length > 0) {
-          transcription = result.transcription.utterances
-            .map((u: any) => u.text || '')
-            .join(' ')
-            .trim();
-        }
+        if (statusResponse.ok) {
+          const result = await statusResponse.json();
+          
+          // Extract transcription
+          let transcription = null;
+          if (result?.transcription?.full_transcript) {
+            transcription = result.transcription.full_transcript.trim();
+          } else if (result?.transcription?.utterances?.length > 0) {
+            transcription = result.transcription.utterances
+              .map((u: any) => u.text || '')
+              .join(' ')
+              .trim();
+          } else if (result?.prediction?.[0]?.transcription) {
+            transcription = result.prediction[0].transcription.trim();
+          }
 
-        if (transcription) {
-          return NextResponse.json({
-            success: true,
-            transcription,
-            language: result.transcription?.languages?.[0] || 'en'
-          });
-        }
+          if (transcription) {
+            return NextResponse.json({
+              success: true,
+              transcription,
+              language: result.transcription?.languages?.[0] || result.prediction?.[0]?.language || 'en'
+            });
+          }
 
-        if (result.status === 'error') {
-          throw new Error('Transcription failed');
+          if (result.status === 'error') {
+            throw new Error(result.error || 'Transcription failed');
+          }
         }
+      } catch (pollError) {
+        console.error(`Poll attempt ${i + 1} failed:`, pollError);
+        // Continue polling on individual poll errors
       }
     }
 
     return NextResponse.json({
       success: false,
-      error: 'Transcription is taking too long. Please try a shorter audio file (under 1 minute).'
+      error: 'Audio transcription is taking longer than expected. Please try typing the text instead or use a shorter audio clip.'
     }, { status: 408 });
 
   } catch (error: any) {
