@@ -7,7 +7,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Sparkles, Copy, Check } from 'lucide-react';
+import { Sparkles, Copy, Check, Upload, Mic } from 'lucide-react';
 
 export default function ManipulationDecoderPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -22,6 +22,9 @@ export default function ManipulationDecoderPage() {
   const [emotionalImpact, setEmotionalImpact] = useState<string>('moderate');
   const [isMyFault, setIsMyFault] = useState<boolean>(false);
   const [copiedResponse, setCopiedResponse] = useState<string | null>(null);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [transcribing, setTranscribing] = useState(false);
+  const [transcriptionResult, setTranscriptionResult] = useState<string>('');
   const router = useRouter();
   const supabase = createClient();
 
@@ -94,6 +97,40 @@ export default function ManipulationDecoderPage() {
     setTimeout(() => setCopiedResponse(null), 2000);
   };
 
+  const handleAudioUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('audio/')) {
+      setAudioFile(file);
+    }
+  };
+
+  const handleTranscribeAudio = async () => {
+    if (!audioFile) return;
+    
+    setTranscribing(true);
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioFile);
+      
+      const response = await fetch('/api/manipulation-decoder/transcribe', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        setTranscriptionResult(data.transcription);
+        setMessage(data.transcription);
+      } else {
+        alert('Transcription failed: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Transcription error:', error);
+      alert('Transcription failed');
+    }
+    setTranscribing(false);
+  };
+
   const getIdentifiedTraits = (tacticIds: string[]) => {
     return (Array.isArray(traits) ? traits : []).filter(t => tacticIds?.includes(t.id));
   };
@@ -115,10 +152,41 @@ export default function ManipulationDecoderPage() {
             <div className="border rounded-lg p-6 bg-white">
               <h2 className="text-xl font-semibold mb-4">Analyze Message</h2>
               
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Mic className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm font-medium">Audio Upload</span>
+                </div>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                  <input
+                    type="file"
+                    accept="audio/*"
+                    onChange={handleAudioUpload}
+                    className="hidden"
+                    id="audio-upload"
+                  />
+                  <label htmlFor="audio-upload" className="cursor-pointer">
+                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600">
+                      {audioFile ? audioFile.name : 'Click to upload audio file'}
+                    </p>
+                  </label>
+                  {audioFile && (
+                    <button
+                      onClick={handleTranscribeAudio}
+                      disabled={transcribing}
+                      className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {transcribing ? 'Transcribing...' : 'Transcribe Audio'}
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <textarea
                 className="w-full border rounded p-3 mb-4"
                 rows={8}
-                placeholder="Paste the message, text, or email here..."
+                placeholder="Paste the message, text, or email here... or upload audio above"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />

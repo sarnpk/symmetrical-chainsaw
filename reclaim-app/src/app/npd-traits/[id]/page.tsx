@@ -10,6 +10,8 @@ import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
+import AICopingInsights from '@/components/AICopingInsights'
+import VoiceInput from '@/components/VoiceInput'
 
 interface NPDTrait {
   id: string
@@ -32,6 +34,23 @@ export default function TraitDetailPage() {
   const router = useRouter()
   const params = useParams()
   const supabase = createClient()
+
+  const getPronouns = (gender: string | null) => {
+    switch (gender) {
+      case 'female': return { they: 'she', them: 'her', their: 'her', theirs: 'hers' }
+      case 'male': return { they: 'he', them: 'him', their: 'his', theirs: 'his' }
+      default: return { they: 'they', them: 'them', their: 'their', theirs: 'theirs' }
+    }
+  }
+
+  const replacePronouns = (text: string, gender: string | null) => {
+    const pronouns = getPronouns(gender)
+    return text
+      .replace(/\bthey\b/gi, pronouns.they)
+      .replace(/\bthem\b/gi, pronouns.them)
+      .replace(/\btheir\b/gi, pronouns.their)
+      .replace(/\btheirs\b/gi, pronouns.theirs)
+  }
 
   useEffect(() => {
     const getData = async () => {
@@ -142,7 +161,7 @@ export default function TraitDetailPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-700">{trait.description}</p>
+            <p className="text-gray-700">{replacePronouns(trait.description, profile?.abuser_gender)}</p>
           </CardContent>
         </Card>
 
@@ -158,7 +177,7 @@ export default function TraitDetailPage() {
               {trait.examples.map((example, idx) => (
                 <li key={idx} className="flex items-start gap-3">
                   <span className="text-indigo-600 font-bold mt-1">•</span>
-                  <span className="text-gray-700">{example}</span>
+                  <span className="text-gray-700">{replacePronouns(example, profile?.abuser_gender)}</span>
                 </li>
               ))}
             </ul>
@@ -177,7 +196,7 @@ export default function TraitDetailPage() {
               {trait.response_strategies.map((strategy, idx) => (
                 <li key={idx} className="flex items-start gap-3">
                   <span className="text-green-600 font-bold mt-1">✓</span>
-                  <span className="text-gray-700">{strategy}</span>
+                  <span className="text-gray-700">{replacePronouns(strategy, profile?.abuser_gender)}</span>
                 </li>
               ))}
             </ul>
@@ -209,15 +228,37 @@ export default function TraitDetailPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Your observations (private)
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Your observations (private)
+                </label>
+                <VoiceInput 
+                  onTranscript={(text) => setPersonalNote(prev => prev + (prev ? ' ' : '') + text)}
+                />
+              </div>
               <textarea
                 value={personalNote}
                 onChange={(e) => setPersonalNote(e.target.value)}
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
-                placeholder="Document specific examples you've experienced..."
+                placeholder="Document specific examples you've experienced... (Click mic to use voice input)"
+              />
+              
+              <AICopingInsights 
+                text={personalNote}
+                onActionSelect={(action) => {
+                  if (action === 'Start Reality Log entry') {
+                    window.open('/reality-log/new', '_blank')
+                  } else if (action === 'Talk to AI Coach') {
+                    window.open('/ai-coach', '_blank')
+                  } else if (action === 'Review Grey Rock techniques') {
+                    window.open('/grey-rock-templates', '_blank')
+                  } else if (action === 'Practice Mind Reset') {
+                    window.open('/mind-reset', '_blank')
+                  } else if (action === 'Use Safety Plan') {
+                    window.open('/safety-plan', '_blank')
+                  }
+                }}
               />
             </div>
 
