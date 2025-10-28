@@ -23,10 +23,10 @@ export async function POST(request: Request) {
     }
 
     // Upload to Supabase storage temporarily
-    const fileName = `temp-audio-${Date.now()}.${audioFile.name.split('.').pop()}`;
+    const fileName = `${user.id}/temp-audio-${Date.now()}.${audioFile.name.split('.').pop()}`;
     const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('evidence-files')
-      .upload(`temp/${fileName}`, audioFile);
+      .from('evidence-audio')
+      .upload(fileName, audioFile);
 
     if (uploadError) {
       throw new Error(`Upload failed: ${uploadError.message}`);
@@ -34,8 +34,8 @@ export async function POST(request: Request) {
 
     // Get signed URL
     const { data: signedUrlData } = await supabase.storage
-      .from('evidence-files')
-      .createSignedUrl(`temp/${fileName}`, 3600);
+      .from('evidence-audio')
+      .createSignedUrl(fileName, 3600);
 
     if (!signedUrlData?.signedUrl) {
       throw new Error('Failed to generate audio URL');
@@ -52,8 +52,8 @@ export async function POST(request: Request) {
 
     // Clean up temporary file
     await supabase.storage
-      .from('evidence-files')
-      .remove([`temp/${fileName}`]);
+      .from('evidence-audio')
+      .remove([fileName]);
 
     if (transcriptionError) {
       throw new Error(`Transcription failed: ${transcriptionError.message}`);
