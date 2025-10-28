@@ -1,40 +1,10 @@
 import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
 
-function extractTranscriptionText(result: any): string | null {
-  if (result?.transcription?.full_transcript && typeof result.transcription.full_transcript === 'string') {
-    const text = result.transcription.full_transcript.trim()
-    if (text) return text
-  }
-  
-  if (result?.transcription?.utterances && Array.isArray(result.transcription.utterances) && result.transcription.utterances.length > 0) {
-    const text = result.transcription.utterances
-      .map((u: any) => (u.text || '').trim())
-      .filter((text: string) => text.length > 0)
-      .join(' ')
-      .trim()
-    if (text) return text
-  }
-  
-  if (result?.prediction && Array.isArray(result.prediction) && result.prediction.length > 0) {
-    const prediction = result.prediction[0]
-    if (prediction?.transcription && typeof prediction.transcription === 'string') {
-      const text = prediction.transcription.trim()
-      if (text) return text
-    }
-  }
-  
-  return null
-}
-
 export async function POST(request: Request) {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-  if (!process.env.GLADIA_API_KEY) {
-    return NextResponse.json({ error: 'Transcription service not configured' }, { status: 500 });
-  }
 
   try {
     const formData = await request.formData();
@@ -52,72 +22,53 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'File too large. Maximum size is 25MB.' }, { status: 400 });
     }
 
-    // Upload to temporary storage first
-    const uploadFormData = new FormData();
-    uploadFormData.append('audio', audioFile);
+    // Upload to Supabase storage temporarily
+    const fileName = `temp-audio-${Date.now()}.${audioFile.name.split('.').pop()}`;
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('evidence-files')
+      .upload(`temp/${fileName}`, audioFile);
 
-    const uploadResponse = await fetch('https://api.gladia.io/v2/upload', {
-      method: 'POST',
-      headers: {
-        'x-gladia-key': process.env.GLADIA_API_KEY!,
-      },
-      body: uploadFormData,
-    });
-
-    if (!uploadResponse.ok) {
-      throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+    if (uploadError) {
+      throw new Error(`Upload failed: ${uploadError.message}`);
     }
 
-    const { audio_url } = await uploadResponse.json();
+    // Get signed URL
+    const { data: signedUrlData } = await supabase.storage
+      .from('evidence-files')
+      .createSignedUrl(`temp/${fileName}`, 3600);
 
-    // Start transcription
-    const transcriptionResponse = await fetch('https://api.gladia.io/v2/transcription', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-gladia-key': process.env.GLADIA_API_KEY!,
-      },
-      body: JSON.stringify({ audio_url }),
-    });
-
-    if (!transcriptionResponse.ok) {
-      throw new Error(`Transcription failed: ${transcriptionResponse.statusText}`);
+    if (!signedUrlData?.signedUrl) {
+      throw new Error('Failed to generate audio URL');
     }
 
-    const { id: jobId } = await transcriptionResponse.json();
-
-    // Quick poll for fast completion (max 10 seconds)
-    for (let i = 0; i < 2; i++) {
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
-        headers: { 'x-gladia-key': process.env.GLADIA_API_KEY! },
+    // Call Supabase Edge Function for transcription
+    const { data: transcriptionData, error: transcriptionError } = await supabase.functions
+      .invoke('transcribe-audio', {
+        body: {
+          audio_url: signedUrlData.signedUrl,
+          evidence_file_id: null // Not storing as evidence file
+        }
       });
 
-      if (statusResponse.ok) {
-        const result = await statusResponse.json();
-        const transcription = extractTranscriptionText(result);
+    // Clean up temporary file
+    await supabase.storage
+      .from('evidence-files')
+      .remove([`temp/${fileName}`]);
 
-        if (transcription) {
-          return NextResponse.json({
-            success: true,
-            transcription,
-            language: result.transcription?.languages?.[0] || 'en',
-            confidence: result.transcription?.utterances?.[0]?.confidence || 0.8
-          });
-        }
-
-        if (result.status === 'error') {
-          throw new Error(`Transcription failed: ${result.error}`);
-        }
-      }
+    if (transcriptionError) {
+      throw new Error(`Transcription failed: ${transcriptionError.message}`);
     }
 
-    // Return processing status for longer transcriptions
-    return NextResponse.json({
-      success: false,
-      error: 'Audio transcription is taking longer than expected. Please try with a shorter audio file or use text input instead.'
-    }, { status: 408 });
+    if (transcriptionData?.success && transcriptionData?.transcription) {
+      return NextResponse.json({
+        success: true,
+        transcription: transcriptionData.transcription,
+        language: transcriptionData.language || 'en',
+        confidence: transcriptionData.confidence || 0.8
+      });
+    }
+
+    throw new Error('No transcription result received');
 
   } catch (error: any) {
     console.error('Audio transcription error:', error);
