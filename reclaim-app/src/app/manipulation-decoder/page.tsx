@@ -84,7 +84,7 @@ export default function ManipulationDecoderPage() {
         tactics: ['Analysis unavailable'],
         emotional_hooks: ['Service temporarily unavailable'],
         hidden_agenda: 'Unable to analyze at this time',
-        grey_rock_responses: ['Noted.', 'I\'ll consider that.', 'Okay.'],
+        grey_rock_responses: ['Noted.', 'I&apos;ll consider that.', 'Okay.'],
         explanation: 'AI service is currently unavailable. Please try again later.'
       });
     }
@@ -164,7 +164,7 @@ export default function ManipulationDecoderPage() {
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-6xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-2">Manipulation Decoder</h1>
-        <p className="text-gray-600 mb-8">Paste a message or conversation. We'll identify the manipulation tactics.</p>
+        <p className="text-gray-600 mb-8">Paste a message or conversation. We&apos;ll identify the manipulation tactics.</p>
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-6">
