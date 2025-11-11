@@ -42,6 +42,8 @@ interface DashboardLayoutProps {
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Journal', href: '/journal', icon: BookOpen },
+  { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
+  { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
   { name: 'NPD Traits', href: '/npd-traits', icon: Target },
   { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
   { name: 'Grey Rock Templates', href: '/grey-rock-templates', icon: FileText },

@@ -7,12 +7,13 @@ import DashboardLayout from '@/components/DashboardLayout'
 import UsageTrackingDashboard from '@/components/UsageTrackingDashboard'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, BookOpen, Brain, BarChart3, Shield, Heart } from 'lucide-react'
+import { Plus, BookOpen, Brain, BarChart3, Shield, Heart, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
 import RealityAnchorWidget from '@/components/reality-anchor/RealityAnchorWidget'
 import WellnessWidget from '@/components/WellnessWidget'
+import BeliefReframeWidget from '@/components/BeliefReframeWidget'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -148,6 +149,18 @@ export default function DashboardPage() {
               </CardHeader>
             </Card>
           </Link>
+
+          <Link href="/belief-reframe">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-green-200">
+              <CardHeader className="text-center">
+                <div className="mx-auto bg-green-100 p-3 rounded-full w-fit mb-3">
+                  <RefreshCw className="h-6 w-6 text-green-600" />
+                </div>
+                <CardTitle className="text-lg">Belief Reframe</CardTitle>
+                <CardDescription>Challenge false beliefs</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
 
         {/* Wellness Widget */}
@@ -155,6 +168,9 @@ export default function DashboardPage() {
           userId={user.id} 
           subscriptionTier={(profile.subscription_tier || 'foundation') as 'foundation' | 'recovery' | 'empowerment'} 
         />
+
+        {/* Belief Reframe Widget */}
+        <BeliefReframeWidget userId={user.id} />
         
         {/* Professional Support Widget */}
         <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
