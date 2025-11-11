@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
+import VoiceTextInput from '@/components/VoiceTextInput'
 
 interface Preset {
   text: string
@@ -23,7 +24,7 @@ export default function NewBeliefPage() {
   const [selectedPreset, setSelectedPreset] = useState<string>('')
   const [customBelief, setCustomBelief] = useState('')
   const [strength, setStrength] = useState(5)
-  const [originMemory, setOriginMemory] = useState('')
+  const [showCustomInput, setShowCustomInput] = useState(false)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
@@ -58,7 +59,7 @@ export default function NewBeliefPage() {
     setSubmitting(true)
 
     const beliefText = selectedPreset || customBelief
-    if (!beliefText.trim()) {
+    if (!beliefText || !beliefText.trim()) {
       toast.error('Please select or enter a belief')
       setSubmitting(false)
       return
@@ -73,8 +74,7 @@ export default function NewBeliefPage() {
       body: JSON.stringify({
         belief_text: beliefText,
         belief_category: category,
-        current_strength: strength,
-        origin_memory_text: originMemory || null
+        current_strength: strength
       })
     })
 
@@ -143,37 +143,28 @@ export default function NewBeliefPage() {
               <CardTitle>Write Your Own</CardTitle>
             </CardHeader>
             <CardContent>
-              <textarea
-                value={customBelief}
-                onChange={(e) => {
-                  setCustomBelief(e.target.value)
-                  setSelectedPreset('')
-                }}
-                placeholder="I believe that..."
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                rows={3}
-              />
+              <button
+                type="button"
+                onClick={() => setShowCustomInput(true)}
+                className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 text-gray-600 hover:text-green-600 transition-colors"
+              >
+                {customBelief ? customBelief : '+ Click to write your own belief'}
+              </button>
             </CardContent>
           </Card>
 
-          <Card className="bg-red-50 border-red-200">
-            <CardHeader>
-              <CardTitle className="text-red-800">Origin Memory (Optional)</CardTitle>
-              <p className="text-sm text-red-600 mt-1">When/how was this belief installed?</p>
-            </CardHeader>
-            <CardContent>
-              <textarea
-                value={originMemory}
-                onChange={(e) => setOriginMemory(e.target.value)}
-                placeholder="Describe the moment or memory when this belief was created... (e.g., 'She told me I was unlovable during an argument in 2023')" 
-                className="w-full p-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500"
-                rows={3}
-              />
-              <p className="text-xs text-red-600 mt-2">
-                💡 Recording the origin helps you see this belief came from abuse, not reality
-              </p>
-            </CardContent>
-          </Card>
+          <VoiceTextInput
+            isOpen={showCustomInput}
+            onClose={() => setShowCustomInput(false)}
+            onSave={(text) => {
+              setCustomBelief(text)
+              setSelectedPreset('')
+              setShowCustomInput(false)
+            }}
+            placeholder="I believe that..."
+            title="Write Your Own Belief"
+            initialValue={customBelief}
+          />
 
           <Card>
             <CardHeader>

@@ -65,12 +65,35 @@ export default async function HomePage() {
               </CardHeader>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow border-purple-200">
+            <Card className="hover:shadow-lg transition-shadow border-green-200">
               <CardHeader>
                 <div className="flex items-center gap-2 mb-2">
-                  <Brain className="h-8 w-8 text-purple-600" />
-                  <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full font-medium">UPDATED</span>
+                  <Brain className="h-8 w-8 text-green-600" />
+                  <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">NEW</span>
                 </div>
+                <CardTitle>Belief Reframe System</CardTitle>
+                <CardDescription>
+                  Challenge false beliefs from abuse with CBT techniques, AI-guided reality testing, and counter-evidence tracking
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-blue-200">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Heart className="h-8 w-8 text-blue-600" />
+                  <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">NEW</span>
+                </div>
+                <CardTitle>Positive Moments Journal</CardTitle>
+                <CardDescription>
+                  Capture good experiences to build counter-evidence against false beliefs and track your healing progress
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-purple-200">
+              <CardHeader>
+                <Brain className="h-8 w-8 text-purple-600 mb-2" />
                 <CardTitle>Multilingual AI Coach</CardTitle>
                 <CardDescription>
                   Get trauma-informed support in 70+ languages including Urdu, Arabic, Hindi, Spanish, and more
@@ -163,6 +186,8 @@ export default async function HomePage() {
                 <ul className="space-y-2 text-sm">
                   <li>✓ Reality Anchor: Complete routine with streak tracking</li>
                   <li>✓ Journal & Reality Log: plenty of entries daily</li>
+                  <li>✓ Belief Reframe: AI-guided CBT reality testing</li>
+                  <li>✓ Positive Moments: Counter-evidence journal</li>
                   <li>✓ Multilingual AI Coach: frequent daily conversations</li>
                   <li>✓ Manipulation Decoder: multiple analyses per day</li>
                   <li>✓ Mind Reset & Wellness: several exercises daily</li>
@@ -185,6 +210,8 @@ export default async function HomePage() {
                 <ul className="space-y-2 text-sm">
                   <li>✓ Reality Anchor: Unlimited with advanced analytics</li>
                   <li>✓ Journal & Reality Log: unlimited daily entries</li>
+                  <li>✓ Belief Reframe: Unlimited AI reality testing</li>
+                  <li>✓ Positive Moments: Unlimited entries</li>
                   <li>✓ Multilingual AI Coach: unlimited conversations</li>
                   <li>✓ Manipulation Decoder: unlimited analyses</li>
                   <li>✓ Mind Reset & Wellness: unlimited exercises</li>

@@ -33,6 +33,15 @@ export async function POST(request: Request, { params }: { params: { id: string 
     return NextResponse.json({ error: 'No memories to analyze' }, { status: 400 })
   }
 
+  // Get user's language preference
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('language_preference')
+    .eq('id', user.id)
+    .single()
+
+  const preferredLanguage = profile?.language_preference || 'auto'
+
   const memoriesText = belief.origin_memories
     .map((m: any, i: number) => `${i + 1}. ${m.memory_text}${m.memory_date ? ` (${new Date(m.memory_date).toLocaleDateString()})` : ''}`)
     .join('\n')
@@ -60,7 +69,7 @@ Focus on:
 - Providing therapeutic insight`
 
   try {
-    const response = await geminiAI.chat(prompt, [], 'pattern-analysis')
+    const response = await geminiAI.chat(prompt, [], 'pattern-analysis', undefined, { preferredLanguage })
     
     const jsonMatch = response.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {

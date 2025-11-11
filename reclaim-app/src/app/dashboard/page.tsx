@@ -7,7 +7,7 @@ import DashboardLayout from '@/components/DashboardLayout'
 import UsageTrackingDashboard from '@/components/UsageTrackingDashboard'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, BookOpen, Brain, BarChart3, Shield, Heart, RefreshCw } from 'lucide-react'
+import { Plus, BookOpen, Brain, BarChart3, Shield, Heart, RefreshCw, AlertTriangle, Smile } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
@@ -158,6 +158,30 @@ export default function DashboardPage() {
                 </div>
                 <CardTitle className="text-lg">Belief Reframe</CardTitle>
                 <CardDescription>Challenge false beliefs</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href="/positive-moments">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-blue-200">
+              <CardHeader className="text-center">
+                <div className="mx-auto bg-blue-100 p-3 rounded-full w-fit mb-3">
+                  <Smile className="h-6 w-6 text-blue-600" />
+                </div>
+                <CardTitle className="text-lg">Positive Moments</CardTitle>
+                <CardDescription>Capture good experiences</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href="/toxic-memories">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-red-200">
+              <CardHeader className="text-center">
+                <div className="mx-auto bg-red-100 p-3 rounded-full w-fit mb-3">
+                  <AlertTriangle className="h-6 w-6 text-red-600" />
+                </div>
+                <CardTitle className="text-lg">Toxic Memories</CardTitle>
+                <CardDescription>Document abuse incidents</CardDescription>
               </CardHeader>
             </Card>
           </Link>

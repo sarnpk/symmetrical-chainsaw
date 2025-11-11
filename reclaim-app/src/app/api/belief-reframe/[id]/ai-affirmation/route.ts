@@ -33,6 +33,15 @@ export async function POST(request: Request, { params }: { params: { id: string 
     return NextResponse.json({ error: 'Belief not found' }, { status: 404 })
   }
 
+  // Get user's language preference
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('language_preference')
+    .eq('id', user.id)
+    .single()
+
+  const preferredLanguage = profile?.language_preference || 'auto'
+
   const evidenceList = belief.counter_evidence?.map((e: any) => e.evidence_text).join('\n- ') || 'No evidence yet'
 
   const prompt = `Create a believable, grounded affirmation for someone recovering from narcissistic abuse.
@@ -52,7 +61,7 @@ Create an affirmation that:
 Return ONLY the affirmation text, nothing else.`
 
   try {
-    const affirmation = await geminiAI.chat(prompt, [], 'mind-reset')
+    const affirmation = await geminiAI.chat(prompt, [], 'mind-reset', undefined, { preferredLanguage })
     
     const { data: saved } = await supabase
       .from('belief_affirmations')

@@ -26,7 +26,8 @@ import {
   Briefcase,
   HeartHandshake,
   MessageSquare,
-  FileText
+  FileText,
+  AlertTriangle
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
@@ -43,6 +44,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Journal', href: '/journal', icon: BookOpen },
   { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
+  { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
   { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
   { name: 'NPD Traits', href: '/npd-traits', icon: Target },
   { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },

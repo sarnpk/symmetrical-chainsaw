@@ -180,17 +180,26 @@ export default function RealityTestPage() {
                   </form>
                 </>
               ) : (
-                <div className="text-center py-8">
-                  <div className="text-6xl mb-4">✨</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Session Complete!</h3>
-                  <p className="text-gray-600 mb-6">
-                    You've completed the reality testing session. Great work on challenging this belief.
-                  </p>
-                  <Link href={`/belief-reframe/${params.id}`}>
-                    <button className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700">
-                      Back to Belief
-                    </button>
-                  </Link>
+                <div className="space-y-4">
+                  <div className="text-center py-4">
+                    <div className="text-6xl mb-4">✨</div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Session Complete!</h3>
+                  </div>
+                  
+                  {aiResponse && (
+                    <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                      <h4 className="font-semibold text-purple-900 mb-3">Session Summary</h4>
+                      <p className="text-gray-800 whitespace-pre-line">{aiResponse}</p>
+                    </div>
+                  )}
+
+                  <div className="text-center pt-4">
+                    <Link href={`/belief-reframe/${params.id}`}>
+                      <button className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700">
+                        Update Belief Strength
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>

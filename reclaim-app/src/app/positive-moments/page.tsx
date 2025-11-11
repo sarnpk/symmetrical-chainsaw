@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Plus, Smile, Trash2 } from 'lucide-react'
+import VoiceTextInput from '@/components/VoiceTextInput'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
@@ -16,7 +17,6 @@ export default function PositiveMomentsPage() {
   const [moments, setMoments] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const [momentText, setMomentText] = useState('')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const router = useRouter()
   const supabase = createClient()
@@ -45,28 +45,30 @@ export default function PositiveMomentsPage() {
         .single()
       setProfile(profile)
 
+      if (profile?.subscription_tier === 'foundation') {
+        toast.error('Positive Moments requires Recovery or Empowered tier')
+        router.push('/dashboard')
+        return
+      }
+
       await loadMoments()
       setLoading(false)
     }
     init()
   }, [router, supabase])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!momentText.trim()) return
-
+  const handleSubmit = async (text: string) => {
     const response = await fetch('/api/positive-moments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        moment_text: momentText,
+        moment_text: text,
         tags: selectedTags
       })
     })
 
     if (response.ok) {
       toast.success('Moment saved!')
-      setMomentText('')
       setSelectedTags([])
       setShowForm(false)
       await loadMoments()
@@ -97,6 +99,22 @@ export default function PositiveMomentsPage() {
 
   if (!user || !profile) return null
 
+  if (profile.subscription_tier === 'foundation') {
+    return (
+      <DashboardLayout user={user} profile={profile}>
+        <Card className="text-center py-12">
+          <CardContent>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Recovery Tier Feature</h2>
+            <p className="text-gray-600 mb-6">Positive Moments Journal is available on Recovery and Empowered tiers.</p>
+            <Link href="/subscription">
+              <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700">Upgrade Now</button>
+            </Link>
+          </CardContent>
+        </Card>
+      </DashboardLayout>
+    )
+  }
+
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-6">
@@ -114,63 +132,46 @@ export default function PositiveMomentsPage() {
           </button>
         </div>
 
+        <VoiceTextInput
+          isOpen={showForm}
+          onClose={() => {
+            setShowForm(false)
+            setSelectedTags([])
+          }}
+          onSave={handleSubmit}
+          placeholder="What positive thing happened? (e.g., 'Friend called to check on me', 'Completed a project at work', 'Took care of myself today')"
+          title="Capture a Positive Moment"
+          submitLabel="Save Moment"
+        />
+
         {showForm && (
           <Card className="border-blue-200">
             <CardHeader>
-              <CardTitle>Capture a Positive Moment</CardTitle>
+              <CardTitle>Add Tags (Optional)</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <textarea
-                  value={momentText}
-                  onChange={(e) => setMomentText(e.target.value)}
-                  placeholder="What positive thing happened? (e.g., 'Friend called to check on me', 'Completed a project at work', 'Took care of myself today')"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  rows={3}
-                />
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Tags (optional)</label>
-                  <div className="flex flex-wrap gap-2">
-                    {tags.map(tag => (
-                      <button
-                        key={tag}
-                        type="button"
-                        onClick={() => {
-                          if (selectedTags.includes(tag)) {
-                            setSelectedTags(selectedTags.filter(t => t !== tag))
-                          } else {
-                            setSelectedTags([...selectedTags, tag])
-                          }
-                        }}
-                        className={`px-3 py-1 rounded-full text-sm ${
-                          selectedTags.includes(tag)
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
-                      >
-                        {tag.replace('_', ' ')}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
+                {tags.map(tag => (
                   <button
+                    key={tag}
                     type="button"
-                    onClick={() => setShowForm(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    onClick={() => {
+                      if (selectedTags.includes(tag)) {
+                        setSelectedTags(selectedTags.filter(t => t !== tag))
+                      } else {
+                        setSelectedTags([...selectedTags, tag])
+                      }
+                    }}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      selectedTags.includes(tag)
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
                   >
-                    Cancel
+                    {tag.replace('_', ' ')}
                   </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-                  >
-                    Save Moment
-                  </button>
-                </div>
-              </form>
+                ))}
+              </div>
             </CardContent>
           </Card>
         )}

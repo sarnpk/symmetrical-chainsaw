@@ -36,6 +36,15 @@ export async function POST(request: Request, { params }: { params: { id: string 
     return NextResponse.json({ error: 'Belief not found' }, { status: 404 })
   }
 
+  // Get user's language preference
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('language_preference')
+    .eq('id', user.id)
+    .single()
+
+  const preferredLanguage = profile?.language_preference || 'auto'
+
   const questions = [
     {
       id: 1,
@@ -69,7 +78,24 @@ export async function POST(request: Request, { params }: { params: { id: string 
   }
 
   if (step > 0 && step <= 4 && userAnswer) {
-    const prompt = `You are a trauma-informed therapist guiding a CBT reality testing session for narcissistic abuse recovery.
+    const isLastStep = step === 4
+    const prompt = isLastStep 
+      ? `You are a trauma-informed therapist completing a CBT reality testing session for narcissistic abuse recovery.
+
+BELIEF: "${belief.belief_text}"
+FULL CONVERSATION HISTORY:
+${conversationHistory?.map((msg: any) => `${msg.role.toUpperCase()}: ${msg.content}`).join('\n\n')}
+
+USER'S FINAL ANSWER: "${userAnswer}"
+
+Provide:
+1. Validation of their final answer (1-2 sentences)
+2. A comprehensive summary of insights gained during this session (3-4 sentences)
+3. Suggest a new belief strength rating (1-10) based on their answers and explain why
+4. Encourage them to update their belief strength
+
+Keep it warm, empathetic, and under 150 words.`
+      : `You are a trauma-informed therapist guiding a CBT reality testing session for narcissistic abuse recovery.
 
 BELIEF: "${belief.belief_text}"
 CURRENT QUESTION: ${questions[step - 1].question}
@@ -78,12 +104,11 @@ USER'S ANSWER: "${userAnswer}"
 Provide:
 1. Brief validation of their answer (1 sentence)
 2. A gentle follow-up question or insight to deepen their reflection (1-2 sentences)
-3. If this is step 4, also provide a brief summary of their progress
 
 Keep it warm, empathetic, and under 100 words.`
 
     try {
-      const aiResponse = await geminiAI.chat(prompt, conversationHistory || [], 'mind-reset')
+      const aiResponse = await geminiAI.chat(prompt, conversationHistory || [], 'mind-reset', undefined, { preferredLanguage })
       
       if (!aiResponse || aiResponse.trim().length === 0) {
         throw new Error('Empty AI response')

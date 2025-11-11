@@ -5,7 +5,8 @@ import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Plus, TrendingDown, Brain, Sparkles, Trash2, Image, Mic, FileText } from 'lucide-react'
+import { ArrowLeft, Plus, TrendingDown, Brain, Sparkles, Trash2, Image, Mic, FileText, Edit3 } from 'lucide-react'
+import VoiceTextInput from '@/components/VoiceTextInput'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -27,9 +28,7 @@ export default function BeliefDetailPage() {
   const [belief, setBelief] = useState<Belief | null>(null)
   const [loading, setLoading] = useState(true)
   const [showEvidenceForm, setShowEvidenceForm] = useState(false)
-  const [evidenceText, setEvidenceText] = useState('')
   const [showMemoryForm, setShowMemoryForm] = useState(false)
-  const [memoryText, setMemoryText] = useState('')
   const [memoryAnalysis, setMemoryAnalysis] = useState<any>(null)
   const [analyzingMemories, setAnalyzingMemories] = useState(false)
   const [newStrength, setNewStrength] = useState(5)
@@ -69,19 +68,15 @@ export default function BeliefDetailPage() {
     init()
   }, [params.id, router, supabase])
 
-  const handleAddEvidence = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!evidenceText.trim()) return
-
+  const handleAddEvidence = async (text: string) => {
     const response = await fetch(`/api/belief-reframe/${params.id}/evidence`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ evidence_text: evidenceText })
+      body: JSON.stringify({ evidence_text: text })
     })
 
     if (response.ok) {
       toast.success('Evidence added')
-      setEvidenceText('')
       setShowEvidenceForm(false)
       await loadBelief()
     } else {
@@ -89,19 +84,15 @@ export default function BeliefDetailPage() {
     }
   }
 
-  const handleAddMemory = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!memoryText.trim()) return
-
+  const handleAddMemory = async (text: string) => {
     const response = await fetch(`/api/belief-reframe/${params.id}/origin-memories`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ memory_text: memoryText })
+      body: JSON.stringify({ memory_text: text })
     })
 
     if (response.ok) {
       toast.success('Memory added')
-      setMemoryText('')
       setShowMemoryForm(false)
       await loadBelief()
     } else {
@@ -168,32 +159,14 @@ export default function BeliefDetailPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            {showMemoryForm && (
-              <form onSubmit={handleAddMemory} className="p-4 bg-white rounded-lg border border-red-200 space-y-3">
-                <textarea
-                  value={memoryText}
-                  onChange={(e) => setMemoryText(e.target.value)}
-                  placeholder="Describe when/how this belief was installed... (e.g., 'She told me I was unlovable during argument on Dec 2023')" 
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
-                  rows={3}
-                />
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowMemoryForm(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm"
-                  >
-                    Add Memory
-                  </button>
-                </div>
-              </form>
-            )}
+            <VoiceTextInput
+              isOpen={showMemoryForm}
+              onClose={() => setShowMemoryForm(false)}
+              onSave={handleAddMemory}
+              placeholder="Describe when/how this belief was installed... (e.g., 'She told me I was unlovable during argument on Dec 2023')"
+              title="Add Origin Memory"
+              submitLabel="Add Memory"
+            />
 
             {belief.origin_memories && belief.origin_memories.length > 0 ? (
               <>
@@ -353,32 +326,14 @@ export default function BeliefDetailPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            {showEvidenceForm && (
-              <form onSubmit={handleAddEvidence} className="p-4 bg-gray-50 rounded-lg space-y-3">
-                <textarea
-                  value={evidenceText}
-                  onChange={(e) => setEvidenceText(e.target.value)}
-                  placeholder="Describe evidence that contradicts this belief..."
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                  rows={3}
-                />
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowEvidenceForm(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm"
-                  >
-                    Add Evidence
-                  </button>
-                </div>
-              </form>
-            )}
+            <VoiceTextInput
+              isOpen={showEvidenceForm}
+              onClose={() => setShowEvidenceForm(false)}
+              onSave={handleAddEvidence}
+              placeholder="Describe evidence that contradicts this belief..."
+              title="Add Counter-Evidence"
+              submitLabel="Add Evidence"
+            />
 
             {belief.counter_evidence && belief.counter_evidence.length > 0 ? (
               <div className="space-y-3">
