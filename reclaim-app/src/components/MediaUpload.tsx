@@ -64,7 +64,7 @@ export default function MediaUpload({ onUploadComplete }: MediaUploadProps) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <label className="cursor-pointer">
           <input
             type="file"
@@ -73,9 +73,9 @@ export default function MediaUpload({ onUploadComplete }: MediaUploadProps) {
             onChange={(e) => e.target.files?.[0] && uploadFile(e.target.files[0], 'audio')}
             disabled={uploading || !!audioUrl}
           />
-          <div className={`p-4 border-2 border-dashed rounded-lg text-center ${audioUrl ? 'bg-gray-100 border-gray-300' : 'border-gray-300 hover:border-blue-500'}`}>
+          <div className={`p-4 sm:p-6 border-2 border-dashed rounded-lg text-center ${audioUrl ? 'bg-gray-100 border-gray-300' : 'border-gray-300 hover:border-blue-500'}`}>
             <Mic className="h-6 w-6 mx-auto mb-2 text-gray-600" />
-            <span className="text-xs text-gray-600">{audioUrl ? 'Audio added' : 'Audio'}</span>
+            <span className="text-sm sm:text-xs text-gray-600 font-medium">{audioUrl ? 'Audio added' : 'Upload Audio'}</span>
           </div>
         </label>
 
@@ -87,9 +87,9 @@ export default function MediaUpload({ onUploadComplete }: MediaUploadProps) {
             onChange={(e) => e.target.files?.[0] && uploadFile(e.target.files[0], 'video')}
             disabled={uploading || !!videoUrl}
           />
-          <div className={`p-4 border-2 border-dashed rounded-lg text-center ${videoUrl ? 'bg-gray-100 border-gray-300' : 'border-gray-300 hover:border-blue-500'}`}>
+          <div className={`p-4 sm:p-6 border-2 border-dashed rounded-lg text-center ${videoUrl ? 'bg-gray-100 border-gray-300' : 'border-gray-300 hover:border-blue-500'}`}>
             <Video className="h-6 w-6 mx-auto mb-2 text-gray-600" />
-            <span className="text-xs text-gray-600">{videoUrl ? 'Video added' : 'Video'}</span>
+            <span className="text-sm sm:text-xs text-gray-600 font-medium">{videoUrl ? 'Video added' : 'Upload Video'}</span>
           </div>
         </label>
 
@@ -105,9 +105,9 @@ export default function MediaUpload({ onUploadComplete }: MediaUploadProps) {
             }}
             disabled={uploading}
           />
-          <div className="p-4 border-2 border-dashed rounded-lg text-center border-gray-300 hover:border-blue-500">
+          <div className="p-4 sm:p-6 border-2 border-dashed rounded-lg text-center border-gray-300 hover:border-blue-500">
             <Image className="h-6 w-6 mx-auto mb-2 text-gray-600" />
-            <span className="text-xs text-gray-600">Images ({imageUrls.length})</span>
+            <span className="text-sm sm:text-xs text-gray-600 font-medium">Upload Images ({imageUrls.length})</span>
           </div>
         </label>
       </div>
@@ -120,13 +120,13 @@ export default function MediaUpload({ onUploadComplete }: MediaUploadProps) {
       )}
 
       {imageUrls.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
           {imageUrls.map((url, i) => (
-            <div key={i} className="relative">
-              <img src={url} alt="" className="h-20 w-20 object-cover rounded border" />
+            <div key={i} className="relative aspect-square">
+              <img src={url} alt="" className="w-full h-full object-cover rounded border" />
               <button
                 onClick={() => removeImage(url)}
-                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1.5 hover:bg-red-700 shadow-lg"
               >
                 <X className="h-3 w-3" />
               </button>

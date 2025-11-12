@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, AlertTriangle, Trash2, Brain, Image, Video, Mic, Link as LinkIcon, X, MicOff } from 'lucide-react'
+import { Plus, AlertTriangle, Trash2, Brain, Image, Video, Mic, Link as LinkIcon, X, MicOff, Edit2 } from 'lucide-react'
 import MediaUpload from '@/components/MediaUpload'
 import { useRef } from 'react'
 import { User } from '@supabase/supabase-js'
@@ -25,6 +25,7 @@ export default function ToxicMemoriesPage() {
   const [memoryText, setMemoryText] = useState('')
   const [showTextModal, setShowTextModal] = useState(false)
   const [isListening, setIsListening] = useState(false)
+  const [editingMemory, setEditingMemory] = useState<any>(null)
   const [mediaUrls, setMediaUrls] = useState<{ audio?: string; video?: string; images?: string[] }>({})
   const router = useRouter()
   const supabase = createClient()
@@ -109,8 +110,11 @@ export default function ToxicMemoriesPage() {
   }, [router, supabase])
 
   const handleSubmit = async (text: string) => {
-    const response = await fetch('/api/toxic-memories', {
-      method: 'POST',
+    const url = editingMemory ? `/api/toxic-memories?id=${editingMemory.id}` : '/api/toxic-memories'
+    const method = editingMemory ? 'PUT' : 'POST'
+    
+    const response = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         memory_text: text,
@@ -122,17 +126,30 @@ export default function ToxicMemoriesPage() {
     })
 
     if (response.ok) {
-      toast.success('Memory documented')
+      toast.success(editingMemory ? 'Memory updated' : 'Memory documented')
       setMemoryText('')
       setSelectedTags([])
       setMediaUrls({})
       setShowForm(false)
+      setEditingMemory(null)
       await loadMemories()
     } else {
       const error = await response.json()
       toast.error(`Failed to save memory: ${error.error || 'Unknown error'}`)
       console.error('Save error:', error)
     }
+  }
+
+  const handleEdit = (memory: any) => {
+    setEditingMemory(memory)
+    setMemoryText(memory.memory_text)
+    setSelectedTags(memory.tags || [])
+    setMediaUrls({
+      audio: memory.audio_url,
+      video: memory.video_url,
+      images: memory.image_urls || []
+    })
+    setShowForm(true)
   }
 
   const handleDelete = async (id: string) => {
@@ -176,27 +193,27 @@ export default function ToxicMemoriesPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       {showTextModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-xl font-bold text-gray-900">Describe Memory</h2>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-0 sm:p-4">
+          <div className="bg-white rounded-none sm:rounded-lg w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Describe Memory</h2>
               <button onClick={() => setShowTextModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="flex-1 p-6 overflow-y-auto">
+            <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
               <textarea
                 ref={textareaRef}
                 value={memoryText}
                 onChange={(e) => setMemoryText(e.target.value)}
                 placeholder="Describe the toxic/abusive memory... (e.g., 'She yelled at me for 2 hours because I forgot to text back immediately')"
-                className="w-full h-full min-h-[300px] p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-lg"
+                className="w-full h-full min-h-[250px] sm:min-h-[300px] p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-base sm:text-lg"
               />
             </div>
-            <div className="p-4 border-t bg-gray-50 flex items-center justify-between gap-4">
+            <div className="p-4 border-t bg-gray-50 flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3">
               <button
                 onClick={toggleListening}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                   isListening ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
@@ -213,14 +230,14 @@ export default function ToxicMemoriesPage() {
         </div>
       )}
       <div className="space-y-6">
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Toxic Memory Journal</h1>
-            <p className="text-gray-600 mt-2">Document toxic/abusive memories for processing and healing</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Toxic Memory Journal</h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-2">Quick snapshots of toxic incidents - brief notes with evidence</p>
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center gap-2"
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-2 w-full sm:w-auto whitespace-nowrap"
           >
             <Plus className="h-5 w-5" />
             Add Memory
@@ -230,7 +247,7 @@ export default function ToxicMemoriesPage() {
         {showForm && (
           <Card className="border-red-200">
             <CardHeader>
-              <CardTitle>Document Toxic Memory</CardTitle>
+              <CardTitle>{editingMemory ? 'Edit Memory' : 'Document Toxic Memory'}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
@@ -275,24 +292,25 @@ export default function ToxicMemoriesPage() {
                 </div>
               </div>
 
-              <div className="flex gap-3 justify-end">
+              <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
                 <button
                   onClick={() => {
                     setShowForm(false)
                     setMemoryText('')
                     setSelectedTags([])
                     setMediaUrls({})
+                    setEditingMemory(null)
                   }}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100"
+                  className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => handleSubmit(memoryText)}
                   disabled={!memoryText.trim()}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                  className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
                 >
-                  Save Memory
+                  {editingMemory ? 'Update Memory' : 'Save Memory'}
                 </button>
               </div>
             </CardContent>
@@ -301,27 +319,23 @@ export default function ToxicMemoriesPage() {
 
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
           <CardHeader>
-            <CardTitle className="text-purple-800">🧠 How to Use Toxic Memory Journal</CardTitle>
+            <CardTitle className="text-purple-800">💡 About Toxic Memory Journal</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-purple-900">
-            <div>
-              <strong>1. Document Incidents:</strong> Record toxic/abusive memories with text, audio, video, or images as evidence
+            <p className="font-medium">
+              A quick and short way to capture toxic/abusive incidents as they happen or shortly after. 
+              Think of it as "evidence snapshots" - brief notes with optional media proof.
+            </p>
+            <div className="space-y-2">
+              <div><strong>✓ Quick capture:</strong> Jot down what happened in a few sentences</div>
+              <div><strong>✓ Add evidence:</strong> Attach audio, video, or images as proof</div>
+              <div><strong>✓ AI analysis:</strong> Identify manipulation tactics (gaslighting, DARVO, etc.)</div>
+              <div><strong>✓ Pattern tracking:</strong> See recurring abuse patterns over time</div>
+              <div><strong>✓ Legal/therapeutic use:</strong> Timestamped evidence for professionals</div>
             </div>
-            <div>
-              <strong>2. AI Analysis:</strong> Get AI to identify NPD manipulation tactics (gaslighting, DARVO, triangulation, etc.)
-            </div>
-            <div>
-              <strong>3. Pattern Recognition:</strong> AI finds recurring patterns across your memories
-            </div>
-            <div>
-              <strong>4. Link to Beliefs:</strong> Connect memories to false beliefs they installed (e.g., "I'm not good enough")
-            </div>
-            <div>
-              <strong>5. Emotional Validation:</strong> AI validates your experiences and provides coping strategies
-            </div>
-            <div>
-              <strong>6. Evidence Collection:</strong> Store proof for legal/therapeutic purposes with timestamps
-            </div>
+            <p className="text-xs italic mt-2">
+              Tip: Keep entries brief and factual. For deeper reflection, use your main journal.
+            </p>
           </CardContent>
         </Card>
 
@@ -329,13 +343,13 @@ export default function ToxicMemoriesPage() {
           <Card className="text-center py-12">
             <CardContent>
               <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No memories documented yet</h3>
-              <p className="text-gray-600 mb-6">
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No memories documented yet</h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-6">
                 Document toxic memories to process them and track patterns of abuse
               </p>
               <button
                 onClick={() => setShowForm(true)}
-                className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700"
+                className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 w-full sm:w-auto"
               >
                 Add Your First Memory
               </button>
@@ -346,8 +360,8 @@ export default function ToxicMemoriesPage() {
             {memories.map((memory) => (
               <Card key={memory.id} className="hover:shadow-md transition-shadow border-red-100">
                 <CardContent className="pt-6">
-                  <div className="flex justify-between items-start gap-3">
-                    <div className="flex-1 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                    <div className="flex-1 space-y-3 min-w-0">
                       <p className="text-gray-900">{memory.memory_text}</p>
                       
                       <div className="flex items-center gap-3 flex-wrap">
@@ -439,19 +453,29 @@ export default function ToxicMemoriesPage() {
                             setAnalyzing(false)
                           }}
                           disabled={analyzing}
-                          className="text-purple-600 hover:text-purple-700 text-sm font-medium flex items-center gap-1 disabled:opacity-50"
+                          className="text-purple-600 hover:text-purple-700 text-xs sm:text-sm font-medium flex items-center justify-center gap-1 disabled:opacity-50 w-full sm:w-auto px-3 py-2 border border-purple-200 rounded-lg hover:bg-purple-50"
                         >
                           <Brain className="h-4 w-4" />
                           {analyzing ? 'Analyzing...' : 'AI Analyze Memory'}
                         </button>
                       )}
                     </div>
-                    <button
-                      onClick={() => handleDelete(memory.id)}
-                      className="text-red-600 hover:text-red-700 p-2 hover:bg-red-50 rounded-lg"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    <div className="flex sm:flex-col gap-2 self-start">
+                      <button
+                        onClick={() => handleEdit(memory)}
+                        className="text-blue-600 hover:text-blue-700 p-2 hover:bg-blue-50 rounded-lg"
+                        title="Edit"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(memory.id)}
+                        className="text-red-600 hover:text-red-700 p-2 hover:bg-red-50 rounded-lg"
+                        title="Delete"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -464,9 +488,9 @@ export default function ToxicMemoriesPage() {
             <CardTitle className="text-red-800">💡 Tip</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-red-700">
+            <p className="text-sm sm:text-base text-red-700">
               Documenting toxic memories helps you recognize patterns of abuse and validate your experiences. 
-              This is separate from your regular journal and can be used to identify manipulation tactics.
+              This is separate from your regular journal and can be used to identify manipulation tactics to prevent regret later.
             </p>
           </CardContent>
         </Card>

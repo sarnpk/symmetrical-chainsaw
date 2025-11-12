@@ -7,13 +7,14 @@ import DashboardLayout from '@/components/DashboardLayout'
 import UsageTrackingDashboard from '@/components/UsageTrackingDashboard'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, BookOpen, Brain, BarChart3, Shield, Heart, RefreshCw, AlertTriangle, Smile } from 'lucide-react'
+import { Plus, BookOpen, Brain, BarChart3, Shield, Heart, RefreshCw, AlertTriangle, Smile, Anchor } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
 import RealityAnchorWidget from '@/components/reality-anchor/RealityAnchorWidget'
 import WellnessWidget from '@/components/WellnessWidget'
 import BeliefReframeWidget from '@/components/BeliefReframeWidget'
+import NoContactWidget from '@/components/NoContactWidget'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -185,7 +186,34 @@ export default function DashboardPage() {
               </CardHeader>
             </Card>
           </Link>
+
+          <Link href="/reality-log">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-teal-200">
+              <CardHeader className="text-center">
+                <div className="mx-auto bg-teal-100 p-3 rounded-full w-fit mb-3">
+                  <Anchor className="h-6 w-6 text-teal-600" />
+                </div>
+                <CardTitle className="text-lg">Reality Log</CardTitle>
+                <CardDescription>Ground yourself in truth</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href="/no-contact-anchor">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-green-200">
+              <CardHeader className="text-center">
+                <div className="mx-auto bg-green-100 p-3 rounded-full w-fit mb-3">
+                  <Shield className="h-6 w-6 text-green-600" />
+                </div>
+                <CardTitle className="text-lg">No Contact Anchor</CardTitle>
+                <CardDescription>Stay strong during withdrawal</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
+
+        {/* No Contact Widget */}
+        <NoContactWidget />
 
         {/* Wellness Widget */}
         <WellnessWidget 

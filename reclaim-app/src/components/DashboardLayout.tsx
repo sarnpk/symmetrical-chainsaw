@@ -27,7 +27,9 @@ import {
   HeartHandshake,
   MessageSquare,
   FileText,
-  AlertTriangle
+  AlertTriangle,
+  Anchor,
+  ShieldAlert
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
@@ -43,6 +45,8 @@ interface DashboardLayoutProps {
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Journal', href: '/journal', icon: BookOpen },
+  { name: 'Reality Log', href: '/reality-log', icon: Anchor },
+  { name: 'No Contact Anchor', href: '/no-contact-anchor', icon: ShieldAlert },
   { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
   { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
   { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },

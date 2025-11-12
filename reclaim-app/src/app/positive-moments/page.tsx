@@ -5,29 +5,85 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, Smile, Trash2 } from 'lucide-react'
+import { Plus, Smile, Trash2, Search, Filter, Mic, MicOff } from 'lucide-react'
 import VoiceTextInput from '@/components/VoiceTextInput'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
+import Link from 'next/link'
+import { useRef } from 'react'
 
 export default function PositiveMomentsPage() {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [moments, setMoments] = useState<any[]>([])
+  const [filteredMoments, setFilteredMoments] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [moodRating, setMoodRating] = useState<number | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterTag, setFilterTag] = useState<string | null>(null)
+  const [momentText, setMomentText] = useState('')
+  const [isListening, setIsListening] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+  const recognitionRef = useRef<any>(null)
 
-  const tags = ['achievement', 'kindness_received', 'self_care', 'connection', 'strength']
+  const tags = ['achievement', 'kindness_received', 'self_care', 'connection', 'strength', 'boundary_success', 'progress', 'gratitude', 'joy', 'courage']
 
   const loadMoments = async () => {
     const response = await fetch('/api/positive-moments')
     const data = await response.json()
     setMoments(data.moments || [])
+    setFilteredMoments(data.moments || [])
   }
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition
+      recognitionRef.current = new SpeechRecognition()
+      recognitionRef.current.continuous = true
+      recognitionRef.current.interimResults = true
+
+      recognitionRef.current.onresult = (event: any) => {
+        let transcript = ''
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript
+        }
+        setMomentText(prev => prev + ' ' + transcript)
+      }
+
+      recognitionRef.current.onerror = () => setIsListening(false)
+      recognitionRef.current.onend = () => setIsListening(false)
+    }
+
+    return () => {
+      if (recognitionRef.current) recognitionRef.current.stop()
+    }
+  }, [])
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) return
+    if (isListening) {
+      recognitionRef.current.stop()
+      setIsListening(false)
+    } else {
+      recognitionRef.current.start()
+      setIsListening(true)
+    }
+  }
+
+  useEffect(() => {
+    let filtered = moments
+    if (searchQuery) {
+      filtered = filtered.filter(m => m.moment_text.toLowerCase().includes(searchQuery.toLowerCase()))
+    }
+    if (filterTag) {
+      filtered = filtered.filter(m => m.tags?.includes(filterTag))
+    }
+    setFilteredMoments(filtered)
+  }, [searchQuery, filterTag, moments])
 
   useEffect(() => {
     const init = async () => {
@@ -63,13 +119,15 @@ export default function PositiveMomentsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         moment_text: text,
-        tags: selectedTags
+        tags: selectedTags,
+        mood_rating: moodRating
       })
     })
 
     if (response.ok) {
       toast.success('Moment saved!')
       setSelectedTags([])
+      setMoodRating(null)
       setShowForm(false)
       await loadMoments()
     } else {
@@ -132,51 +190,161 @@ export default function PositiveMomentsPage() {
           </button>
         </div>
 
-        <VoiceTextInput
-          isOpen={showForm}
-          onClose={() => {
-            setShowForm(false)
-            setSelectedTags([])
-          }}
-          onSave={handleSubmit}
-          placeholder="What positive thing happened? (e.g., 'Friend called to check on me', 'Completed a project at work', 'Took care of myself today')"
-          title="Capture a Positive Moment"
-          submitLabel="Save Moment"
-        />
-
         {showForm && (
-          <Card className="border-blue-200">
-            <CardHeader>
-              <CardTitle>Add Tags (Optional)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {tags.map(tag => (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-bold text-gray-900">Capture a Positive Moment</h2>
+                <button
+                  onClick={() => {
+                    setShowForm(false)
+                    setSelectedTags([])
+                    setMoodRating(null)
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-lg"
+                >
+                  <Plus className="h-5 w-5 rotate-45" />
+                </button>
+              </div>
+
+              <div className="flex-1 p-6 overflow-y-auto space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">What positive thing happened?</label>
+                  <textarea
+                    value={momentText}
+                    onChange={(e) => setMomentText(e.target.value)}
+                    placeholder="e.g., 'Friend called to check on me', 'Completed a project at work', 'Took care of myself today'"
+                    className="w-full min-h-[200px] p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-lg"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">How did you feel? (1-10)</label>
+                  <div className="flex gap-2 flex-wrap">
+                    {[1,2,3,4,5,6,7,8,9,10].map(num => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => setMoodRating(num)}
+                        className={`w-10 h-10 rounded-lg font-medium ${
+                          moodRating === num
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Add Tags (Optional)</label>
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map(tag => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => {
+                          if (selectedTags.includes(tag)) {
+                            setSelectedTags(selectedTags.filter(t => t !== tag))
+                          } else {
+                            setSelectedTags([...selectedTags, tag])
+                          }
+                        }}
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          selectedTags.includes(tag)
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      >
+                        {tag.replace('_', ' ')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 border-t bg-gray-50 flex items-center justify-between gap-3">
+                <button
+                  onClick={toggleListening}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium ${
+                    isListening
+                      ? 'bg-red-600 text-white hover:bg-red-700'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {isListening ? <><MicOff className="h-5 w-5" />Stop Recording</> : <><Mic className="h-5 w-5" />Voice Input</>}
+                </button>
+                <div className="flex gap-3">
                   <button
-                    key={tag}
-                    type="button"
                     onClick={() => {
-                      if (selectedTags.includes(tag)) {
-                        setSelectedTags(selectedTags.filter(t => t !== tag))
-                      } else {
-                        setSelectedTags([...selectedTags, tag])
+                      setShowForm(false)
+                      setSelectedTags([])
+                      setMoodRating(null)
+                      setMomentText('')
+                    }}
+                    className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (momentText?.trim()) {
+                        handleSubmit(momentText)
+                        setMomentText('')
                       }
                     }}
-                    className={`px-3 py-1 rounded-full text-sm ${
-                      selectedTags.includes(tag)
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
+                    disabled={!momentText?.trim()}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
                   >
-                    {tag.replace('_', ' ')}
+                    Save Moment
                   </button>
-                ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {moments.length > 0 && (
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <div className="flex gap-3">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search moments..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="relative">
+                  <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <select
+                    value={filterTag || ''}
+                    onChange={(e) => setFilterTag(e.target.value || null)}
+                    className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                  >
+                    <option value="">All Tags</option>
+                    {tags.map(tag => (
+                      <option key={tag} value={tag}>{tag.replace('_', ' ')}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </CardContent>
           </Card>
         )}
 
-        {moments.length === 0 ? (
+        {filteredMoments.length === 0 && moments.length > 0 ? (
+          <Card className="text-center py-12">
+            <CardContent>
+              <p className="text-gray-600">No moments match your search</p>
+            </CardContent>
+          </Card>
+        ) : filteredMoments.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
               <Smile className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -194,16 +362,21 @@ export default function PositiveMomentsPage() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {moments.map((moment) => (
+            {filteredMoments.map((moment) => (
               <Card key={moment.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="pt-6">
                   <div className="flex justify-between items-start gap-3">
                     <div className="flex-1">
                       <p className="text-gray-900">{moment.moment_text}</p>
-                      <div className="flex items-center gap-3 mt-2">
+                      <div className="flex items-center gap-3 mt-2 flex-wrap">
                         <span className="text-sm text-gray-600">
                           {new Date(moment.moment_date).toLocaleDateString()}
                         </span>
+                        {moment.mood_rating && (
+                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+                            Mood: {moment.mood_rating}/10
+                          </span>
+                        )}
                         {moment.tags && moment.tags.length > 0 && (
                           <div className="flex gap-2">
                             {moment.tags.map((tag: string) => (

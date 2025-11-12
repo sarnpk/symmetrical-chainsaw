@@ -25,7 +25,7 @@ interface Message {
 
 // Helper function to decode HTML entities and format text
 function decodeAndFormatText(text: string): string {
-  // Decode HTML entities
+  // Decode HTML entities and remove invalid characters
   const decoded = text
     .replace(/&#39;/g, "'")
     .replace(/&quot;/g, '"')
@@ -33,6 +33,10 @@ function decodeAndFormatText(text: string): string {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&nbsp;/g, ' ')
+    .replace(/[\u0000-\u0008\u000B-\u000C\u000E-\u001F\u007F-\u009F]/g, '') // Remove control characters
+    .replace(/\r\n/g, '\n') // Normalize line breaks
+    .replace(/\r/g, '\n')
+    .trim()
   
   return decoded
 }
@@ -416,14 +420,32 @@ export default function AICoachContent() {
         })
       }
 
-      // Add AI response
+      // Add AI response with typing animation
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: data.response,
+        content: '',
         timestamp: new Date()
       }
       setMessages(prev => [...prev, aiResponse])
+      
+      // Simulate typing effect
+      const fullText = data.response
+      let currentIndex = 0
+      const typingSpeed = 20 // ms per character
+      
+      const typeInterval = setInterval(() => {
+        if (currentIndex < fullText.length) {
+          currentIndex++
+          setMessages(prev => prev.map(msg => 
+            msg.id === aiResponse.id 
+              ? { ...msg, content: fullText.substring(0, currentIndex) }
+              : msg
+          ))
+        } else {
+          clearInterval(typeInterval)
+        }
+      }, typingSpeed)
 
     } catch (error) {
       console.error('AI chat error:', error)
