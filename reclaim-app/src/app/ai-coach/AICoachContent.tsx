@@ -38,17 +38,17 @@ function decodeAndFormatText(text: string): string {
     .replace(/\r\n/g, '\n') // Normalize line breaks
     .replace(/\r/g, '\n')
     .trim()
-  
+
   return decoded
 }
 
 // Helper function to format text with proper line breaks and structure
 function formatAIResponse(text: string): JSX.Element {
   const decoded = decodeAndFormatText(text)
-  
+
   // Split into sections and format
   const sections = decoded.split(/\n\s*\n/).filter(p => p.trim())
-  
+
   return (
     <div className="space-y-3">
       {sections.map((section, index) => {
@@ -57,7 +57,7 @@ function formatAIResponse(text: string): JSX.Element {
           const lines = section.split('\n')
           const items: string[] = []
           let currentItem = ''
-          
+
           lines.forEach(line => {
             if (line.trim().startsWith('*')) {
               if (currentItem) items.push(currentItem.trim())
@@ -67,7 +67,7 @@ function formatAIResponse(text: string): JSX.Element {
             }
           })
           if (currentItem) items.push(currentItem.trim())
-          
+
           return (
             <ul key={index} className="list-disc list-inside space-y-2 ml-2">
               {items.map((item, itemIndex) => {
@@ -76,7 +76,7 @@ function formatAIResponse(text: string): JSX.Element {
                   const parts = item.split(/\*\*(.*?)\*\*/g)
                   return (
                     <li key={itemIndex} className="text-sm leading-relaxed">
-                      {parts.map((part, partIndex) => 
+                      {parts.map((part, partIndex) =>
                         partIndex % 2 === 1 ? (
                           <strong key={partIndex} className="font-semibold">{part}</strong>
                         ) : (
@@ -95,7 +95,7 @@ function formatAIResponse(text: string): JSX.Element {
             </ul>
           )
         }
-        
+
         // Handle numbered lists
         if (/^\d+\./.test(section.trim())) {
           const items = section.split(/\n(?=\d+\.)/).filter(item => item.trim())
@@ -109,13 +109,13 @@ function formatAIResponse(text: string): JSX.Element {
             </ol>
           )
         }
-        
+
         // Handle paragraphs with bold text
         if (section.includes('**')) {
           const parts = section.split(/\*\*(.*?)\*\*/g)
           return (
             <p key={index} className="text-sm leading-relaxed">
-              {parts.map((part, partIndex) => 
+              {parts.map((part, partIndex) =>
                 partIndex % 2 === 1 ? (
                   <strong key={partIndex} className="font-semibold">{part}</strong>
                 ) : (
@@ -125,7 +125,7 @@ function formatAIResponse(text: string): JSX.Element {
             </p>
           )
         }
-        
+
         // Regular paragraph
         return (
           <p key={index} className="text-sm leading-relaxed">
@@ -190,15 +190,11 @@ export default function AICoachContent() {
 
   // Handle scroll events to detect manual scrolling
   const handleScroll = () => {
-    setShouldAutoScroll(checkIfNearBottom())
-  }
-
-  // Only auto-scroll when user is near bottom
-  useEffect(() => {
-    if (shouldAutoScroll) {
-      scrollToBottom('smooth')
+    const isNearBottom = checkIfNearBottom()
+    if (shouldAutoScroll !== isNearBottom) {
+      setShouldAutoScroll(isNearBottom)
     }
-  }, [messages, shouldAutoScroll])
+  }
 
   // Small delay-clear for screen reader announcements
   useEffect(() => {
@@ -361,9 +357,9 @@ export default function AICoachContent() {
     setMessages(prev => [...prev, userMessage])
     setInputMessage('')
     setIsLoading(true)
-    
-    // Enable auto-scroll when user sends message
-    setShouldAutoScroll(true)
+
+    // Scroll to bottom when user sends message
+    setTimeout(() => scrollToBottom('smooth'), 100)
 
     try {
       // Get auth token
@@ -481,23 +477,25 @@ export default function AICoachContent() {
         timestamp: new Date()
       }
       setMessages(prev => [...prev, aiResponse])
-      
-      // Enable auto-scroll for AI response
-      setShouldAutoScroll(true)
-      
+
       // Simulate typing effect with faster speed
       const fullText = data.response
       let currentIndex = 0
       const typingSpeed = 10 // ms per character
-      
+
       const typeInterval = setInterval(() => {
         if (currentIndex < fullText.length) {
           currentIndex += 5 // Type 5 characters at once for faster display
-          setMessages(prev => prev.map(msg => 
-            msg.id === aiResponse.id 
+          setMessages(prev => prev.map(msg =>
+            msg.id === aiResponse.id
               ? { ...msg, content: fullText.substring(0, Math.min(currentIndex, fullText.length)) }
               : msg
           ))
+
+          // Only scroll if user is near bottom
+          if (checkIfNearBottom()) {
+            scrollToBottom('auto')
+          }
         } else {
           clearInterval(typeInterval)
         }
@@ -514,7 +512,7 @@ export default function AICoachContent() {
 
 
   const handleFeedback = (messageId: string, helpful: boolean) => {
-    setMessages(prev => prev.map(msg => 
+    setMessages(prev => prev.map(msg =>
       msg.id === messageId ? { ...msg, helpful } : msg
     ))
   }
@@ -605,9 +603,8 @@ export default function AICoachContent() {
                   <button
                     key={opt.id}
                     onClick={() => setContext(opt.id)}
-                    className={`px-2.5 py-1.5 text-xs rounded-md font-medium transition-colors ${
-                      context === opt.id ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:text-gray-900'
-                    }`}
+                    className={`px-2.5 py-1.5 text-xs rounded-md font-medium transition-colors ${context === opt.id ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:text-gray-900'
+                      }`}
                     aria-pressed={context === opt.id}
                   >
                     {opt.label}
@@ -637,7 +634,7 @@ export default function AICoachContent() {
       </div>
 
       {/* Chat Messages */}
-      <div 
+      <div
         ref={chatContainerRef}
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto bg-white"
@@ -658,97 +655,95 @@ export default function AICoachContent() {
               key={message.id}
               className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'} max-w-full`}
             >
-            {message.type === 'ai' && (
+              {message.type === 'ai' && (
+                <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Bot className="w-4 h-4 text-indigo-600" />
+                </div>
+              )}
+
+              <div className={`max-w-[85%] sm:max-w-2xl ${message.type === 'user' ? 'order-1' : ''} min-w-0`}>
+                <div
+                  className={`px-4 py-3 rounded-2xl ${message.type === 'user'
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-white border border-gray-200 text-gray-900'
+                    }`}
+                >
+                  {message.type === 'ai' ? (
+                    formatAIResponse(message.content)
+                  ) : (
+                    <p className="text-sm leading-relaxed">{message.content}</p>
+                  )}
+                </div>
+
+                <div className={`flex items-center gap-2 mt-2 text-xs text-gray-500 ${message.type === 'user' ? 'justify-end' : 'justify-start'
+                  }`}>
+                  <span>{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+
+                  {message.type === 'ai' && (
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => copyMessage(message.content)}
+                        className="p-1 hover:bg-gray-100 rounded"
+                        title="Copy message"
+                        aria-label="Copy message"
+                      >
+                        <Copy className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => handleFeedback(message.id, true)}
+                        className={`p-1 rounded ${message.helpful === true ? 'bg-green-100 text-green-600' : 'hover:bg-gray-100'}`}
+                        title="Helpful"
+                        aria-label="Mark helpful"
+                      >
+                        <ThumbsUp className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => handleFeedback(message.id, false)}
+                        className={`p-1 rounded ${message.helpful === false ? 'bg-red-100 text-red-600' : 'hover:bg-gray-100'}`}
+                        title="Not helpful"
+                        aria-label="Mark not helpful"
+                      >
+                        <ThumbsDown className="w-3 h-3" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {message.type === 'user' && (
+                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-4 h-4 text-gray-600" />
+                </div>
+              )}
+            </div>
+          ))}
+
+          {isLoading && (
+            <div className="flex gap-3 justify-start">
               <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <Bot className="w-4 h-4 text-indigo-600" />
               </div>
-            )}
-            
-            <div className={`max-w-[85%] sm:max-w-2xl ${message.type === 'user' ? 'order-1' : ''} min-w-0`}> 
-              <div
-                className={`px-4 py-3 rounded-2xl ${
-                  message.type === 'user'
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white border border-gray-200 text-gray-900'
-                }`}
-              >
-                {message.type === 'ai' ? (
-                  formatAIResponse(message.content)
-                ) : (
-                  <p className="text-sm leading-relaxed">{message.content}</p>
-                )}
-              </div>
-              
-              <div className={`flex items-center gap-2 mt-2 text-xs text-gray-500 ${
-                message.type === 'user' ? 'justify-end' : 'justify-start'
-              }`}>
-                <span>{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                
-                {message.type === 'ai' && (
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => copyMessage(message.content)}
-                      className="p-1 hover:bg-gray-100 rounded"
-                      title="Copy message"
-                      aria-label="Copy message"
-                    >
-                      <Copy className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={() => handleFeedback(message.id, true)}
-                      className={`p-1 rounded ${message.helpful === true ? 'bg-green-100 text-green-600' : 'hover:bg-gray-100'}`}
-                      title="Helpful"
-                      aria-label="Mark helpful"
-                    >
-                      <ThumbsUp className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={() => handleFeedback(message.id, false)}
-                      className={`p-1 rounded ${message.helpful === false ? 'bg-red-100 text-red-600' : 'hover:bg-gray-100'}`}
-                      title="Not helpful"
-                      aria-label="Mark not helpful"
-                    >
-                      <ThumbsDown className="w-3 h-3" />
-                    </button>
-                  </div>
-                )}
+              <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
               </div>
             </div>
+          )}
 
-            {message.type === 'user' && (
-              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <User className="w-4 h-4 text-gray-600" />
-              </div>
-            )}
-          </div>
-        ))}
-
-        {isLoading && (
-          <div className="flex gap-3 justify-start">
-            <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Bot className="w-4 h-4 text-indigo-600" />
-            </div>
-            <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
       {/* Scroll to Bottom Button */}
-      {!shouldAutoScroll && (
+      {!shouldAutoScroll && messages.length > 2 && (
         <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10">
           <button
             onClick={() => {
-              setShouldAutoScroll(true)
               scrollToBottom('smooth')
+              setTimeout(() => setShouldAutoScroll(true), 300)
             }}
             className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-medium text-gray-700 hover:text-gray-900"
             aria-label="Scroll to bottom"
@@ -765,20 +760,20 @@ export default function AICoachContent() {
           <div className="max-w-4xl mx-auto">
             <p className="text-sm font-medium text-gray-700 mb-3">Suggested topics to explore:</p>
             <div className="relative">
-            <div className="grid grid-flow-col auto-cols-max grid-rows-2 gap-2 -mx-1 px-1 overflow-x-auto no-scrollbar snap-x snap-mandatory md:overflow-visible md:snap-none sm:mx-0 sm:px-0">
-              {suggestedPrompts.map((prompt, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSendMessage(prompt)}
-                  className="shrink-0 text-left px-3 py-2 bg-white border border-gray-200 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-colors text-xs sm:text-sm snap-start"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-            {/* Edge fade indicators on mobile */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-gray-50 to-transparent sm:hidden" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-gray-50 to-transparent sm:hidden" />
+              <div className="grid grid-flow-col auto-cols-max grid-rows-2 gap-2 -mx-1 px-1 overflow-x-auto no-scrollbar snap-x snap-mandatory md:overflow-visible md:snap-none sm:mx-0 sm:px-0">
+                {suggestedPrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSendMessage(prompt)}
+                    className="shrink-0 text-left px-3 py-2 bg-white border border-gray-200 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-colors text-xs sm:text-sm snap-start"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+              {/* Edge fade indicators on mobile */}
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-gray-50 to-transparent sm:hidden" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-gray-50 to-transparent sm:hidden" />
             </div>
             <div className="mt-2 text-xs text-gray-500 flex items-center gap-1 sm:hidden">
               Swipe to see more
@@ -792,38 +787,38 @@ export default function AICoachContent() {
       <div className="border-t border-gray-200 bg-white p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] max-w-full flex-shrink-0">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-end gap-2 sm:gap-3 max-w-full">
-          <div className="flex-1 min-w-0">
-            <label htmlFor="ai-input" className="sr-only">Message AI Coach</label>
-            <div className="relative">
-              <input
-                id="ai-input"
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Share what's on your mind..."
-                className="w-full rounded-full border border-gray-300 bg-white px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 max-w-full"
-                disabled={isLoading}
-              />
-              <button
-                onClick={() => handleSendMessage()}
-                disabled={!inputMessage.trim() || isLoading}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-indigo-600 p-2 text-white shadow hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Send message"
-              >
-                <Send className="h-4 w-4" />
-              </button>
+            <div className="flex-1 min-w-0">
+              <label htmlFor="ai-input" className="sr-only">Message AI Coach</label>
+              <div className="relative">
+                <input
+                  id="ai-input"
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Share what's on your mind..."
+                  className="w-full rounded-full border border-gray-300 bg-white px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 max-w-full"
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={() => handleSendMessage()}
+                  disabled={!inputMessage.trim() || isLoading}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-indigo-600 p-2 text-white shadow hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Send message"
+                >
+                  <Send className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-          </div>
-          {/* Desktop Send button text */}
-          <button
-            onClick={() => handleSendMessage()}
-            disabled={!inputMessage.trim() || isLoading}
-            className="hidden sm:inline-flex px-5 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors items-center gap-2"
-          >
-            <Send className="w-4 h-4" />
-            Send
-          </button>
+            {/* Desktop Send button text */}
+            <button
+              onClick={() => handleSendMessage()}
+              disabled={!inputMessage.trim() || isLoading}
+              className="hidden sm:inline-flex px-5 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors items-center gap-2"
+            >
+              <Send className="w-4 h-4" />
+              Send
+            </button>
           </div>
 
           <div className="mt-2 text-[11px] sm:text-xs text-gray-500 text-center px-2">
