@@ -479,15 +479,15 @@ export default function AICoachContent() {
       }
       setMessages(prev => [...prev, aiResponse])
 
-      // Simulate typing effect with faster speed
+      // Simulate typing effect like ChatGPT
       const fullText = data.response
       let currentIndex = 0
-      const typingSpeed = 10 // ms per character
+      const typingSpeed = 20 // ms per character (slower for more natural feel)
       let wasNearBottom = checkIfNearBottom()
 
       const typeInterval = setInterval(() => {
         if (currentIndex < fullText.length) {
-          currentIndex += 5 // Type 5 characters at once for faster display
+          currentIndex += 2 // Type 2 characters at once for natural speed
           setMessages(prev => prev.map(msg =>
             msg.id === aiResponse.id
               ? { ...msg, content: fullText.substring(0, Math.min(currentIndex, fullText.length)) }
