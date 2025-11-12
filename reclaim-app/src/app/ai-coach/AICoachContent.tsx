@@ -10,7 +10,8 @@ import {
   ThumbsDown,
   AlertCircle,
   Zap,
-  ChevronRight
+  ChevronRight,
+  ArrowDown
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import toast from 'react-hot-toast'
@@ -172,17 +173,32 @@ export default function AICoachContent() {
   const [threadsCursor, setThreadsCursor] = useState<string | null>(null)
   const [messagesCursor, setMessagesCursor] = useState<string | null>(null)
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    messagesEndRef.current?.scrollIntoView({ behavior })
   }
 
-  // Only auto-scroll when user sends a message or AI starts responding
+  // Check if user is near bottom of chat
+  const checkIfNearBottom = () => {
+    if (!chatContainerRef.current) return true
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current
+    const threshold = 150 // pixels from bottom
+    return scrollHeight - scrollTop - clientHeight < threshold
+  }
+
+  // Handle scroll events to detect manual scrolling
+  const handleScroll = () => {
+    setShouldAutoScroll(checkIfNearBottom())
+  }
+
+  // Only auto-scroll when user is near bottom
   useEffect(() => {
-    const lastMessage = messages[messages.length - 1]
-    if (lastMessage && (lastMessage.type === 'user' || (lastMessage.type === 'ai' && lastMessage.content === ''))) {
-      scrollToBottom()
+    if (shouldAutoScroll) {
+      scrollToBottom('smooth')
     }
-  }, [messages])
+  }, [messages, shouldAutoScroll])
 
   // Small delay-clear for screen reader announcements
   useEffect(() => {
@@ -345,6 +361,9 @@ export default function AICoachContent() {
     setMessages(prev => [...prev, userMessage])
     setInputMessage('')
     setIsLoading(true)
+    
+    // Enable auto-scroll when user sends message
+    setShouldAutoScroll(true)
 
     try {
       // Get auth token
@@ -463,14 +482,17 @@ export default function AICoachContent() {
       }
       setMessages(prev => [...prev, aiResponse])
       
+      // Enable auto-scroll for AI response
+      setShouldAutoScroll(true)
+      
       // Simulate typing effect with faster speed
       const fullText = data.response
       let currentIndex = 0
-      const typingSpeed = 15 // ms per character
+      const typingSpeed = 10 // ms per character
       
       const typeInterval = setInterval(() => {
         if (currentIndex < fullText.length) {
-          currentIndex += 3 // Type 3 characters at once for faster display
+          currentIndex += 5 // Type 5 characters at once for faster display
           setMessages(prev => prev.map(msg => 
             msg.id === aiResponse.id 
               ? { ...msg, content: fullText.substring(0, Math.min(currentIndex, fullText.length)) }
@@ -504,11 +526,11 @@ export default function AICoachContent() {
   }
 
   return (
-    <div className="flex flex-col h-full max-w-full overflow-hidden bg-gray-50">
+    <div className="relative flex flex-col h-screen max-w-full overflow-hidden bg-gray-50">
       {/* SR-only live region for copy feedback */}
       <div className="sr-only" role="status" aria-live="polite">{copyStatus}</div>
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 mb-4 sm:mb-6">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
@@ -527,7 +549,7 @@ export default function AICoachContent() {
       </div>
 
       {/* Threads, Usage Info & Context Selector */}
-      <div className="px-4 sm:px-6 py-3 bg-gray-50 border-b border-gray-200">
+      <div className="px-4 sm:px-6 py-3 bg-gray-50 border-b border-gray-200 flex-shrink-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           {/* Threads selector */}
           <div className="flex items-center gap-2">
@@ -615,22 +637,27 @@ export default function AICoachContent() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-3 sm:space-y-4 max-w-full bg-white">
-        {conversationId && messagesCursor && (
-          <div className="flex justify-center">
-            <button
-              onClick={loadOlderMessages}
-              className="text-xs px-3 py-1.5 border border-gray-300 rounded-full hover:bg-gray-50"
+      <div 
+        ref={chatContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto bg-white"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 space-y-3 sm:space-y-4">
+          {conversationId && messagesCursor && (
+            <div className="flex justify-center">
+              <button
+                onClick={loadOlderMessages}
+                className="text-xs px-3 py-1.5 border border-gray-300 rounded-full hover:bg-gray-50"
+              >
+                Load older messages
+              </button>
+            </div>
+          )}
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'} max-w-full`}
             >
-              Load older messages
-            </button>
-          </div>
-        )}
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'} max-w-full`}
-          >
             {message.type === 'ai' && (
               <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <Bot className="w-4 h-4 text-indigo-600" />
@@ -712,13 +739,32 @@ export default function AICoachContent() {
         )}
         
         <div ref={messagesEndRef} />
+        </div>
       </div>
+
+      {/* Scroll to Bottom Button */}
+      {!shouldAutoScroll && (
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10">
+          <button
+            onClick={() => {
+              setShouldAutoScroll(true)
+              scrollToBottom('smooth')
+            }}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-medium text-gray-700 hover:text-gray-900"
+            aria-label="Scroll to bottom"
+          >
+            <ArrowDown className="w-4 h-4" />
+            <span className="hidden sm:inline">Scroll to bottom</span>
+          </button>
+        </div>
+      )}
 
       {/* Suggested Prompts */}
       {messages.length <= 1 && (
-        <div className="px-4 sm:px-6 py-3 border-t border-gray-200 bg-gray-50 max-w-full">
-          <p className="text-sm font-medium text-gray-700 mb-3">Suggested topics to explore:</p>
-          <div className="relative">
+        <div className="px-4 sm:px-6 py-3 border-t border-gray-200 bg-gray-50 max-w-full flex-shrink-0">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-sm font-medium text-gray-700 mb-3">Suggested topics to explore:</p>
+            <div className="relative">
             <div className="grid grid-flow-col auto-cols-max grid-rows-2 gap-2 -mx-1 px-1 overflow-x-auto no-scrollbar snap-x snap-mandatory md:overflow-visible md:snap-none sm:mx-0 sm:px-0">
               {suggestedPrompts.map((prompt, index) => (
                 <button
@@ -733,17 +779,19 @@ export default function AICoachContent() {
             {/* Edge fade indicators on mobile */}
             <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-gray-50 to-transparent sm:hidden" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-gray-50 to-transparent sm:hidden" />
-          </div>
-          <div className="mt-2 text-xs text-gray-500 flex items-center gap-1 sm:hidden">
-            Swipe to see more
-            <ChevronRight className="h-3 w-3" />
+            </div>
+            <div className="mt-2 text-xs text-gray-500 flex items-center gap-1 sm:hidden">
+              Swipe to see more
+              <ChevronRight className="h-3 w-3" />
+            </div>
           </div>
         </div>
       )}
 
       {/* Input Area */}
-      <div className="sticky bottom-0 border-t border-gray-200 bg-white p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] max-w-full">
-        <div className="flex items-end gap-2 sm:gap-3 max-w-full">
+      <div className="border-t border-gray-200 bg-white p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] max-w-full flex-shrink-0">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-end gap-2 sm:gap-3 max-w-full">
           <div className="flex-1 min-w-0">
             <label htmlFor="ai-input" className="sr-only">Message AI Coach</label>
             <div className="relative">
@@ -776,10 +824,11 @@ export default function AICoachContent() {
             <Send className="w-4 h-4" />
             Send
           </button>
-        </div>
+          </div>
 
-        <div className="mt-2 text-[11px] sm:text-xs text-gray-500 text-center px-2">
-          This AI is trained to support abuse survivors. In crisis? Call 1-800-799-7233 (National Domestic Violence Hotline)
+          <div className="mt-2 text-[11px] sm:text-xs text-gray-500 text-center px-2">
+            This AI is trained to support abuse survivors. In crisis? Call 1-800-799-7233 (National Domestic Violence Hotline)
+          </div>
         </div>
       </div>
     </div>
