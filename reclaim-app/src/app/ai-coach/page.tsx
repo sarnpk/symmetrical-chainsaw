@@ -54,14 +54,7 @@ export default function AICoachPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <div className="h-[calc(100vh-120px)] flex flex-col">
-        <div className="flex items-center justify-end mb-3 px-4">
-          <Link href="/ai-coach/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
-        </div>
-        <div className="flex-1 min-h-0">
-          <AICoachContent />
-        </div>
-      </div>
+      <AICoachContent />
     </DashboardLayout>
   )
 }

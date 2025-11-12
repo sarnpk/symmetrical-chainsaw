@@ -173,27 +173,26 @@ export default function AICoachContent() {
   const [threadsCursor, setThreadsCursor] = useState<string | null>(null)
   const [messagesCursor, setMessagesCursor] = useState<string | null>(null)
 
-  const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
+  const [showScrollButton, setShowScrollButton] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
-    messagesEndRef.current?.scrollIntoView({ behavior })
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+    }
   }
 
   // Check if user is near bottom of chat
   const checkIfNearBottom = () => {
     if (!chatContainerRef.current) return true
     const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current
-    const threshold = 150 // pixels from bottom
+    const threshold = 100
     return scrollHeight - scrollTop - clientHeight < threshold
   }
 
-  // Handle scroll events to detect manual scrolling
+  // Handle scroll events to show/hide scroll button
   const handleScroll = () => {
-    const isNearBottom = checkIfNearBottom()
-    if (shouldAutoScroll !== isNearBottom) {
-      setShouldAutoScroll(isNearBottom)
-    }
+    setShowScrollButton(!checkIfNearBottom())
   }
 
   // Small delay-clear for screen reader announcements
@@ -358,8 +357,10 @@ export default function AICoachContent() {
     setInputMessage('')
     setIsLoading(true)
 
-    // Scroll to bottom when user sends message
-    setTimeout(() => scrollToBottom('smooth'), 100)
+    // Scroll to bottom after message is added
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => scrollToBottom('smooth'))
+    })
 
     try {
       // Get auth token
@@ -482,6 +483,7 @@ export default function AICoachContent() {
       const fullText = data.response
       let currentIndex = 0
       const typingSpeed = 10 // ms per character
+      let wasNearBottom = checkIfNearBottom()
 
       const typeInterval = setInterval(() => {
         if (currentIndex < fullText.length) {
@@ -492,9 +494,9 @@ export default function AICoachContent() {
               : msg
           ))
 
-          // Only scroll if user is near bottom
-          if (checkIfNearBottom()) {
-            scrollToBottom('auto')
+          // Only auto-scroll if user was at bottom when typing started
+          if (wasNearBottom && chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
           }
         } else {
           clearInterval(typeInterval)
@@ -524,11 +526,11 @@ export default function AICoachContent() {
   }
 
   return (
-    <div className="relative flex flex-col h-screen max-w-full overflow-hidden bg-gray-50">
+    <div className="fixed inset-0 lg:left-64 flex flex-col bg-gray-50">
       {/* SR-only live region for copy feedback */}
       <div className="sr-only" role="status" aria-live="polite">{copyStatus}</div>
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 shrink-0 mt-16 lg:mt-0">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
@@ -547,7 +549,7 @@ export default function AICoachContent() {
       </div>
 
       {/* Threads, Usage Info & Context Selector */}
-      <div className="px-4 sm:px-6 py-3 bg-gray-50 border-b border-gray-200 flex-shrink-0">
+      <div className="px-4 sm:px-6 py-3 bg-gray-50 border-b border-gray-200 shrink-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           {/* Threads selector */}
           <div className="flex items-center gap-2">
@@ -633,11 +635,11 @@ export default function AICoachContent() {
         </div>
       </div>
 
-      {/* Chat Messages */}
+      {/* Chat Messages - Single scroll container */}
       <div
         ref={chatContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto bg-white"
+        className="flex-1 overflow-y-auto overflow-x-hidden bg-white"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 space-y-3 sm:space-y-4">
           {conversationId && messagesCursor && (
@@ -738,13 +740,10 @@ export default function AICoachContent() {
       </div>
 
       {/* Scroll to Bottom Button */}
-      {!shouldAutoScroll && messages.length > 2 && (
-        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10">
+      {showScrollButton && messages.length > 2 && (
+        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50">
           <button
-            onClick={() => {
-              scrollToBottom('smooth')
-              setTimeout(() => setShouldAutoScroll(true), 300)
-            }}
+            onClick={() => scrollToBottom('smooth')}
             className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-medium text-gray-700 hover:text-gray-900"
             aria-label="Scroll to bottom"
           >
@@ -756,16 +755,16 @@ export default function AICoachContent() {
 
       {/* Suggested Prompts */}
       {messages.length <= 1 && (
-        <div className="px-4 sm:px-6 py-3 border-t border-gray-200 bg-gray-50 max-w-full flex-shrink-0">
+        <div className="px-4 sm:px-6 py-3 border-t border-gray-200 bg-gray-50 shrink-0">
           <div className="max-w-4xl mx-auto">
             <p className="text-sm font-medium text-gray-700 mb-3">Suggested topics to explore:</p>
-            <div className="relative">
-              <div className="grid grid-flow-col auto-cols-max grid-rows-2 gap-2 -mx-1 px-1 overflow-x-auto no-scrollbar snap-x snap-mandatory md:overflow-visible md:snap-none sm:mx-0 sm:px-0">
+            <div className="relative overflow-hidden">
+              <div className="flex flex-wrap gap-2 sm:grid sm:grid-flow-col sm:auto-cols-max sm:grid-rows-2 -mx-1 px-1 sm:overflow-x-auto sm:no-scrollbar sm:snap-x sm:snap-mandatory md:overflow-visible md:snap-none sm:mx-0 sm:px-0">
                 {suggestedPrompts.map((prompt, index) => (
                   <button
                     key={index}
                     onClick={() => handleSendMessage(prompt)}
-                    className="shrink-0 text-left px-3 py-2 bg-white border border-gray-200 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-colors text-xs sm:text-sm snap-start"
+                    className="shrink-0 text-left px-3 py-2 bg-white border border-gray-200 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-colors text-xs sm:text-sm sm:snap-start whitespace-nowrap"
                   >
                     {prompt}
                   </button>
@@ -784,7 +783,7 @@ export default function AICoachContent() {
       )}
 
       {/* Input Area */}
-      <div className="border-t border-gray-200 bg-white p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] max-w-full flex-shrink-0">
+      <div className="border-t border-gray-200 bg-white p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] shrink-0">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-end gap-2 sm:gap-3 max-w-full">
             <div className="flex-1 min-w-0">
