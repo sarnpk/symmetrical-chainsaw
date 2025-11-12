@@ -11,7 +11,8 @@ import {
   AlertCircle,
   Zap,
   ChevronRight,
-  ArrowDown
+  ArrowDown,
+  Trash2
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import toast from 'react-hot-toast'
@@ -330,6 +331,37 @@ export default function AICoachContent() {
     setMessagesCursor(null)
   }
 
+  const handleDeleteThread = async (threadId: string) => {
+    if (!confirm('Are you sure you want to delete this conversation? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) return
+
+      const res = await fetch(`/api/ai/threads/${threadId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${session.access_token}` }
+      })
+
+      if (res.ok) {
+        toast.success('Conversation deleted')
+        setThreads(prev => prev.filter(t => t.id !== threadId))
+        
+        // If we deleted the current conversation, start a new one
+        if (conversationId === threadId) {
+          handleNewChat()
+        }
+      } else {
+        toast.error('Failed to delete conversation')
+      }
+    } catch (error) {
+      console.error('Failed to delete thread:', error)
+      toast.error('Failed to delete conversation')
+    }
+  }
+
   // Fetch with timeout helper
   const fetchWithTimeout = async (input: RequestInfo | URL, init: RequestInit, timeoutMs: number) => {
     const controller = new AbortController()
@@ -568,9 +600,20 @@ export default function AICoachContent() {
             <button
               onClick={handleNewChat}
               className="text-xs px-2 py-1 rounded-md border border-gray-300 hover:bg-gray-100"
+              title="Start new conversation"
             >
               New chat
             </button>
+            {conversationId && (
+              <button
+                onClick={() => handleDeleteThread(conversationId)}
+                className="text-xs p-2 rounded-md border border-red-300 text-red-600 hover:bg-red-50"
+                title="Delete current conversation"
+                aria-label="Delete conversation"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
           {/* Usage Info */}
           {usageInfo && (
