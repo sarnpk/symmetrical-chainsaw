@@ -504,7 +504,7 @@ export default function AICoachContent() {
   }
 
   return (
-    <div className="flex flex-col h-full max-w-full overflow-x-hidden">
+    <div className="flex flex-col h-full max-w-full overflow-hidden bg-gray-50">
       {/* SR-only live region for copy feedback */}
       <div className="sr-only" role="status" aria-live="polite">{copyStatus}</div>
       {/* Header */}
@@ -615,7 +615,7 @@ export default function AICoachContent() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 space-y-3 sm:space-y-4 mb-4 sm:mb-6 max-w-full">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-3 sm:space-y-4 max-w-full bg-white">
         {conversationId && messagesCursor && (
           <div className="flex justify-center">
             <button
