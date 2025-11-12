@@ -45,31 +45,61 @@ function decodeAndFormatText(text: string): string {
 function formatAIResponse(text: string): JSX.Element {
   const decoded = decodeAndFormatText(text)
   
-  // Split into paragraphs and format
-  const paragraphs = decoded.split(/\n\s*\n/).filter(p => p.trim())
+  // Split into sections and format
+  const sections = decoded.split(/\n\s*\n/).filter(p => p.trim())
   
   return (
     <div className="space-y-3">
-      {paragraphs.map((paragraph, index) => {
-        // Check if it's a list item
-        if (paragraph.includes('* ')) {
-          const items = paragraph.split('* ').filter(item => item.trim())
+      {sections.map((section, index) => {
+        // Handle bullet points with asterisks
+        if (section.includes('\n*') || section.startsWith('*')) {
+          const lines = section.split('\n')
+          const items: string[] = []
+          let currentItem = ''
+          
+          lines.forEach(line => {
+            if (line.trim().startsWith('*')) {
+              if (currentItem) items.push(currentItem.trim())
+              currentItem = line.replace(/^\s*\*\s*/, '')
+            } else if (currentItem) {
+              currentItem += ' ' + line.trim()
+            }
+          })
+          if (currentItem) items.push(currentItem.trim())
+          
           return (
-            <ul key={index} className="list-disc list-inside space-y-1 ml-2">
-              {items.map((item, itemIndex) => (
-                <li key={itemIndex} className="text-sm leading-relaxed">
-                  {item.trim()}
-                </li>
-              ))}
+            <ul key={index} className="list-disc list-inside space-y-2 ml-2">
+              {items.map((item, itemIndex) => {
+                // Handle bold text in list items
+                if (item.includes('**')) {
+                  const parts = item.split(/\*\*(.*?)\*\*/g)
+                  return (
+                    <li key={itemIndex} className="text-sm leading-relaxed">
+                      {parts.map((part, partIndex) => 
+                        partIndex % 2 === 1 ? (
+                          <strong key={partIndex} className="font-semibold">{part}</strong>
+                        ) : (
+                          part
+                        )
+                      )}
+                    </li>
+                  )
+                }
+                return (
+                  <li key={itemIndex} className="text-sm leading-relaxed">
+                    {item}
+                  </li>
+                )
+              })}
             </ul>
           )
         }
         
-        // Check if it's a numbered list
-        if (/^\d+\./.test(paragraph.trim())) {
-          const items = paragraph.split(/\n(?=\d+\.)/).filter(item => item.trim())
+        // Handle numbered lists
+        if (/^\d+\./.test(section.trim())) {
+          const items = section.split(/\n(?=\d+\.)/).filter(item => item.trim())
           return (
-            <ol key={index} className="list-decimal list-inside space-y-1 ml-2">
+            <ol key={index} className="list-decimal list-inside space-y-2 ml-2">
               {items.map((item, itemIndex) => (
                 <li key={itemIndex} className="text-sm leading-relaxed">
                   {item.replace(/^\d+\.\s*/, '').trim()}
@@ -79,9 +109,9 @@ function formatAIResponse(text: string): JSX.Element {
           )
         }
         
-        // Check if it contains bold text markers
-        if (paragraph.includes('**')) {
-          const parts = paragraph.split(/\*\*(.*?)\*\*/g)
+        // Handle paragraphs with bold text
+        if (section.includes('**')) {
+          const parts = section.split(/\*\*(.*?)\*\*/g)
           return (
             <p key={index} className="text-sm leading-relaxed">
               {parts.map((part, partIndex) => 
@@ -98,7 +128,7 @@ function formatAIResponse(text: string): JSX.Element {
         // Regular paragraph
         return (
           <p key={index} className="text-sm leading-relaxed">
-            {paragraph.trim()}
+            {section.trim()}
           </p>
         )
       })}
@@ -146,8 +176,12 @@ export default function AICoachContent() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  // Only auto-scroll when user sends a message or AI starts responding
   useEffect(() => {
-    scrollToBottom()
+    const lastMessage = messages[messages.length - 1]
+    if (lastMessage && (lastMessage.type === 'user' || (lastMessage.type === 'ai' && lastMessage.content === ''))) {
+      scrollToBottom()
+    }
   }, [messages])
 
   // Small delay-clear for screen reader announcements
@@ -429,17 +463,17 @@ export default function AICoachContent() {
       }
       setMessages(prev => [...prev, aiResponse])
       
-      // Simulate typing effect
+      // Simulate typing effect with faster speed
       const fullText = data.response
       let currentIndex = 0
-      const typingSpeed = 20 // ms per character
+      const typingSpeed = 15 // ms per character
       
       const typeInterval = setInterval(() => {
         if (currentIndex < fullText.length) {
-          currentIndex++
+          currentIndex += 3 // Type 3 characters at once for faster display
           setMessages(prev => prev.map(msg => 
             msg.id === aiResponse.id 
-              ? { ...msg, content: fullText.substring(0, currentIndex) }
+              ? { ...msg, content: fullText.substring(0, Math.min(currentIndex, fullText.length)) }
               : msg
           ))
         } else {
