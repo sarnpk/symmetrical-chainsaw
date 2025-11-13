@@ -7,7 +7,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Sparkles, Copy, Check, Upload, Mic, Trash2, X } from 'lucide-react';
+import { Sparkles, Copy, Check, Upload, Mic, Trash2, X, HelpCircle } from 'lucide-react';
 
 export default function ManipulationDecoderPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -28,6 +28,7 @@ export default function ManipulationDecoderPage() {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('auto');
   const [speakers, setSpeakers] = useState<any[]>([]);
   const [showConversationModal, setShowConversationModal] = useState(false);
+  const [conversationContext, setConversationContext] = useState<string>('');
   const router = useRouter();
   const supabase = createClient();
 
@@ -73,7 +74,10 @@ export default function ManipulationDecoderPage() {
       const res = await fetch('/api/manipulation-decoder/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message_text: message })
+        body: JSON.stringify({ 
+          message_text: message,
+          context: conversationContext || undefined
+        })
       });
       const data = await res.json();
       if (data.fallback) {
@@ -117,7 +121,6 @@ export default function ManipulationDecoderPage() {
       formData.append('audio', audioFile);
       formData.append('language', selectedLanguage);
       
-      // Start transcription
       const response = await fetch('/api/manipulation-decoder/transcribe', {
         method: 'POST',
         body: formData
@@ -131,13 +134,12 @@ export default function ManipulationDecoderPage() {
         return;
       }
 
-      // Poll for results
       const jobId = data.jobId;
       let attempts = 0;
-      const maxAttempts = 180; // 6 minutes for longer files
+      const maxAttempts = 180;
 
       while (attempts < maxAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         const pollResponse = await fetch('/api/manipulation-decoder/transcribe-poll', {
           method: 'POST',
@@ -176,7 +178,6 @@ export default function ManipulationDecoderPage() {
     if (!confirm('Are you sure you want to delete this analysis?')) return;
     
     try {
-      // Get auth token
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
         alert('Please log in to delete')
@@ -214,7 +215,16 @@ export default function ManipulationDecoderPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-2">Manipulation Decoder</h1>
+        <div className="flex items-center gap-3 mb-2">
+          <h1 className="text-3xl font-bold">Manipulation Decoder</h1>
+          <button
+            onClick={() => window.open('/docs/MANIPULATION_DECODER_USER_GUIDE.html', '_blank')}
+            className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            title="View Manipulation Decoder User Guide"
+          >
+            <HelpCircle className="h-5 w-5" />
+          </button>
+        </div>
         <p className="text-gray-600 mb-8">Paste a message or conversation. We will identify the manipulation tactics.</p>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -238,7 +248,6 @@ export default function ManipulationDecoderPage() {
                   )}
                 </div>
                 
-                {/* Language Selector */}
                 <div className="mb-3">
                   <label className="text-xs text-gray-600 block mb-1">Language (optional)</label>
                   <select
@@ -323,6 +332,22 @@ export default function ManipulationDecoderPage() {
                 </label>
               </div>
 
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Conversation Context (Optional)
+                </label>
+                <textarea
+                  value={conversationContext}
+                  onChange={(e) => setConversationContext(e.target.value)}
+                  placeholder="Provide context about this conversation (e.g., 'This is from my ex-partner after I asked for space' or 'Discussion about custody arrangements'). This helps AI provide more accurate analysis."
+                  className="w-full border rounded p-2 text-sm"
+                  rows={3}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Adding context helps the AI understand the relationship dynamics and provide better insights.
+                </p>
+              </div>
+
               <div className="flex gap-2">
                 <button
                   onClick={handleAnalyze}
@@ -400,6 +425,44 @@ export default function ManipulationDecoderPage() {
                     </div>
                   </div>
                 </div>
+                
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded p-4 border border-blue-200">
+                  <h4 className="font-semibold text-sm mb-3 text-gray-900">💡 Recommended Next Steps</h4>
+                  
+                  <div className="mb-3 p-3 bg-white rounded border-l-4 border-blue-500">
+                    <p className="text-sm text-gray-700">
+                      {emotionalImpact === 'severe' || aiAnalysis.tactics?.some((t: string) => t.toLowerCase().includes('gaslighting') || t.toLowerCase().includes('threat')) ? 
+                        '🚨 This appears to be a significant incident. Consider documenting it as a Toxic Memory for evidence and pattern tracking.' :
+                        aiAnalysis.tactics?.some((t: string) => t.toLowerCase().includes('gaslighting') || t.toLowerCase().includes('reality')) ?
+                        '⚓ Gaslighting detected. Adding this to Reality Anchor can help you stay grounded in facts.' :
+                        isMyFault ?
+                        '🧠 You mentioned feeling at fault. This might be a good time to examine related false beliefs.' :
+                        '📝 Consider documenting this manipulation pattern to build awareness and evidence.'
+                      }
+                    </p>
+                  </div>
+                  
+                  <div className="flex gap-2 flex-wrap">
+                    <Link
+                      href="/toxic-memories/new"
+                      className="px-3 py-2 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 flex items-center gap-1 transition-colors"
+                    >
+                      📝 Document as Toxic Memory
+                    </Link>
+                    <Link
+                      href="/reality-log/new"
+                      className="px-3 py-2 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 flex items-center gap-1 transition-colors"
+                    >
+                      ⚓ Add to Reality Anchor
+                    </Link>
+                    <Link
+                      href="/belief-reframe"
+                      className="px-3 py-2 bg-purple-100 text-purple-700 rounded text-sm hover:bg-purple-200 flex items-center gap-1 transition-colors"
+                    >
+                      🧠 Challenge Related Beliefs
+                    </Link>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -424,9 +487,38 @@ export default function ManipulationDecoderPage() {
                         )}
                       </div>
                     ))}
+                    
+                    <div className="bg-gradient-to-r from-amber-50 to-red-50 rounded p-4 border border-amber-200 mt-4">
+                      <h4 className="font-semibold text-sm mb-2 text-gray-900">📋 Document This Pattern</h4>
+                      <div className="flex gap-2 flex-wrap">
+                        <Link
+                          href="/toxic-memories/new"
+                          className="px-3 py-2 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition-colors"
+                        >
+                          📝 Save as Toxic Memory
+                        </Link>
+                        <Link
+                          href="/reality-log/new"
+                          className="px-3 py-2 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 transition-colors"
+                        >
+                          ⚓ Log in Reality Anchor
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 ) : (
-                  <p className="text-gray-600">No obvious manipulation tactics detected. Trust your gut if something feels off.</p>
+                  <div>
+                    <p className="text-gray-600 mb-4">No obvious manipulation tactics detected. Trust your gut if something feels off.</p>
+                    <div className="bg-blue-50 rounded p-3 border border-blue-200">
+                      <p className="text-sm text-blue-800 mb-2">💡 Even without clear patterns, documenting your concerns can be valuable:</p>
+                      <Link
+                        href="/reality-log/new"
+                        className="inline-block px-3 py-2 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 transition-colors"
+                      >
+                        ⚓ Document Gut Feeling
+                      </Link>
+                    </div>
+                  </div>
                 )}
               </div>
             )}
@@ -469,7 +561,6 @@ export default function ManipulationDecoderPage() {
         </div>
       </div>
 
-      {/* Conversation Modal */}
       {showConversationModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">

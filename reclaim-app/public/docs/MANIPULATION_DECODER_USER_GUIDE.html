@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manipulation Decoder - User Guide | Reclaim</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.2em; opacity: 0.9; }
+        .content { padding: 40px; }
+        .section { margin-bottom: 40px; }
+        .section h2 { 
+            color: #f59e0b;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #f59e0b;
+            padding-bottom: 10px;
+        }
+        .section h3 { 
+            color: #d97706;
+            font-size: 1.3em;
+            margin: 20px 0 10px;
+        }
+        .feature-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .warning-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .step {
+            background: #f9fafb;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .step-number {
+            display: inline-block;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        ul { margin-left: 20px; margin-top: 10px; }
+        li { margin: 8px 0; }
+        .emoji { font-size: 1.5em; margin-right: 10px; }
+        .cta {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            border-radius: 8px;
+        }
+        .cta h3 { margin-bottom: 15px; }
+        .cta button {
+            background: white;
+            color: #f59e0b;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cta button:hover { transform: scale(1.05); }
+        .tactic-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .tactic-card h4 {
+            color: #1e293b;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .ai-feature {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .ai-feature h4 {
+            color: #0c4a6e;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .response-box {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .cta { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Manipulation Decoder</h1>
+            <p>Identify Manipulation Tactics in Messages & Conversations</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Foundation Tier Feature</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>🎯 What Is Manipulation Decoder?</h2>
+                <p>Manipulation Decoder is an AI-powered tool that analyzes text messages, emails, voicemails, and conversations to identify manipulation tactics used by narcissists and abusers. It provides both pattern matching and advanced AI analysis to help you recognize gaslighting, emotional manipulation, and other toxic communication patterns.</p>
+                
+                <div class="info-box">
+                    <strong>🧠 The Science:</strong> Narcissists use predictable manipulation tactics. By identifying these patterns, you can protect yourself from emotional manipulation and respond more effectively to toxic communication.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔧 How It Works</h2>
+                
+                <div class="tactic-card">
+                    <h4>
+                        <span class="emoji">📝</span>Text Analysis
+                    </h4>
+                    <p>Paste any message, email, or conversation into the analyzer:</p>
+                    <ul>
+                        <li>Text messages and WhatsApp conversations</li>
+                        <li>Emails and written communications</li>
+                        <li>Social media messages and comments</li>
+                        <li>Letters or written notes</li>
+                    </ul>
+                </div>
+
+                <div class="tactic-card">
+                    <h4>
+                        <span class="emoji">🎤</span>Audio Transcription
+                    </h4>
+                    <p>Upload audio files for automatic transcription and analysis:</p>
+                    <ul>
+                        <li>Voicemails and voice messages</li>
+                        <li>Phone call recordings</li>
+                        <li>Video call audio</li>
+                        <li>Multi-language support with auto-detection</li>
+                        <li>Speaker identification and sentiment analysis</li>
+                    </ul>
+                </div>
+
+                <div class="tactic-card">
+                    <h4>
+                        <span class="emoji">🔍</span>Dual Analysis System
+                    </h4>
+                    <p>Two analysis methods for comprehensive insights:</p>
+                    <ul>
+                        <li><strong>Basic Analysis:</strong> Pattern matching against known manipulation tactics</li>
+                        <li><strong>AI Analysis:</strong> Advanced AI evaluation with context understanding</li>
+                        <li>Emotional impact assessment</li>
+                        <li>Hidden agenda identification</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🤖 AI Analysis Features</h2>
+                
+                <div class="ai-feature">
+                    <h4>
+                        <span class="emoji">🎭</span>Manipulation Tactic Detection
+                    </h4>
+                    <p>Identifies specific manipulation techniques being used:</p>
+                    <ul>
+                        <li>Gaslighting and reality distortion</li>
+                        <li>Guilt-tripping and emotional blackmail</li>
+                        <li>Love bombing and future faking</li>
+                        <li>Triangulation and comparison tactics</li>
+                        <li>Silent treatment and withholding</li>
+                        <li>Projection and blame-shifting</li>
+                    </ul>
+                </div>
+
+                <div class="ai-feature">
+                    <h4>
+                        <span class="emoji">🎣</span>Emotional Hook Analysis
+                    </h4>
+                    <p>Reveals how the manipulator is trying to trigger you:</p>
+                    <ul>
+                        <li>Fear-based manipulation</li>
+                        <li>Guilt and shame triggers</li>
+                        <li>Hope and false promises</li>
+                        <li>Anger and frustration baiting</li>
+                        <li>Sympathy and pity plays</li>
+                    </ul>
+                </div>
+
+                <div class="ai-feature">
+                    <h4>
+                        <span class="emoji">🎯</span>Hidden Agenda Detection
+                    </h4>
+                    <p>Uncovers what the manipulator really wants:</p>
+                    <ul>
+                        <li>Control and dominance</li>
+                        <li>Attention and narcissistic supply</li>
+                        <li>Financial or material gain</li>
+                        <li>Avoiding consequences</li>
+                        <li>Maintaining power dynamics</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🚀 Getting Started</h2>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Prepare Your Content</strong>
+                    <p>Gather the message, email, or audio file you want to analyze. For best results:</p>
+                    <ul>
+                        <li>Include the full conversation context when possible</li>
+                        <li>Don't edit or clean up the original message</li>
+                        <li>For audio: ensure clear recording quality</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Choose Your Input Method</strong>
+                    <p>Select how you want to input the content:</p>
+                    <ul>
+                        <li><strong>Text:</strong> Copy and paste directly into the text area</li>
+                        <li><strong>Audio:</strong> Upload audio file for automatic transcription</li>
+                        <li>Select language if not English (or use auto-detect)</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Add Context Information</strong>
+                    <p>Provide additional context for better analysis:</p>
+                    <ul>
+                        <li><strong>Emotional Impact:</strong> Rate how the message affected you</li>
+                        <li><strong>Self-Blame:</strong> Check if you feel it's your fault</li>
+                        <li><strong>Conversation Context:</strong> Describe the relationship and situation</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Run Analysis</strong>
+                    <p>Choose your analysis type:</p>
+                    <ul>
+                        <li><strong>Basic Analysis:</strong> Quick pattern matching</li>
+                        <li><strong>AI Analysis:</strong> Comprehensive evaluation with Grey Rock responses</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Review Results & Take Action</strong>
+                    <p>Use the analysis results and smart suggestions:</p>
+                    <ul>
+                        <li>Read the manipulation tactics and emotional hooks identified</li>
+                        <li>Review the smart suggestion based on your specific situation</li>
+                        <li>Copy suggested Grey Rock responses for immediate use</li>
+                        <li>Click action buttons to continue your healing workflow</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <strong>Continue Your Healing Journey</strong>
+                    <p>Use the integrated workflow to build comprehensive documentation:</p>
+                    <ul>
+                        <li><strong>Document as Toxic Memory:</strong> Build evidence and track patterns</li>
+                        <li><strong>Add to Reality Anchor:</strong> Stay grounded in objective facts</li>
+                        <li><strong>Challenge Related Beliefs:</strong> Address false beliefs triggered by manipulation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🛡️ Grey Rock Response System</h2>
+                
+                <div class="response-box">
+                    <h3>What is Grey Rock?</h3>
+                    <p>Grey Rock is a technique where you become as boring and unresponsive as a grey rock, giving the manipulator no emotional reaction to feed on.</p>
+                    
+                    <h4 style="margin-top: 15px;">AI-Generated Responses:</h4>
+                    <ul>
+                        <li>Contextually appropriate for the specific manipulation</li>
+                        <li>Emotionally neutral and non-reactive</li>
+                        <li>Click-to-copy for easy use</li>
+                        <li>Multiple options to choose from</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 15px;">Example Grey Rock Responses:</h4>
+                    <ul>
+                        <li>"I understand your perspective."</li>
+                        <li>"I'll consider that."</li>
+                        <li>"Noted."</li>
+                        <li>"I need time to think about this."</li>
+                        <li>"That's your opinion."</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📊 Analysis History</h2>
+                
+                <div class="feature-box">
+                    <h3>Track Patterns Over Time</h3>
+                    <p>Your analysis history helps you:</p>
+                    <ul>
+                        <li>Identify recurring manipulation tactics</li>
+                        <li>See escalation patterns</li>
+                        <li>Build evidence for legal proceedings</li>
+                        <li>Validate your experiences</li>
+                        <li>Share with therapists or support groups</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <h3>Privacy & Security</h3>
+                    <p>Your analysis data is:</p>
+                    <ul>
+                        <li>Encrypted and stored securely</li>
+                        <li>Only accessible to you</li>
+                        <li>Deletable at any time</li>
+                        <li>Never shared with third parties</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔗 Smart Integration Workflow</h2>
+                
+                <div class="ai-feature">
+                    <h4>
+                        <span class="emoji">💡</span>Smart Suggestions System
+                    </h4>
+                    <p>After analysis, you'll receive personalized recommendations:</p>
+                    <ul>
+                        <li><strong>Severe Impact/Threats:</strong> "🚨 This appears to be a significant incident. Consider documenting it as a Toxic Memory..."</li>
+                        <li><strong>Gaslighting Detected:</strong> "⚓ Gaslighting detected. Adding this to Reality Anchor can help you stay grounded..."</li>
+                        <li><strong>Self-Blame Indicated:</strong> "🧠 You mentioned feeling at fault. This might be a good time to examine related false beliefs..."</li>
+                        <li><strong>General Cases:</strong> "📝 Consider documenting this manipulation pattern to build awareness and evidence."</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 One-Click Action Buttons</h3>
+                    <p>Seamlessly continue your healing journey with integrated action buttons:</p>
+                    <ul>
+                        <li><strong>📝 Document as Toxic Memory:</strong> Pre-fills form with manipulation tactics, emotional impact, and message content</li>
+                        <li><strong>⚓ Add to Reality Anchor:</strong> Creates objective log entry with identified patterns and your response</li>
+                        <li><strong>🧠 Challenge Related Beliefs:</strong> Links to Belief Reframe with context about manipulation tactics detected</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>🔄 Complete Workflow Integration</h3>
+                    <p>Build comprehensive documentation across all Reclaim features:</p>
+                    <ul>
+                        <li><strong>Pattern Recognition:</strong> Track manipulation tactics across multiple incidents</li>
+                        <li><strong>Evidence Building:</strong> Create timeline of abuse with specific tactics documented</li>
+                        <li><strong>Reality Anchoring:</strong> Counter gaslighting with objective fact logging</li>
+                        <li><strong>Belief Healing:</strong> Address false beliefs installed through manipulation</li>
+                        <li><strong>Response Strategy:</strong> Use Grey Rock responses and track their effectiveness</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 Best Practices</h2>
+                
+                <div class="feature-box">
+                    <h3>🎯 When to Use Manipulation Decoder</h3>
+                    <ul>
+                        <li>After receiving confusing or upsetting messages</li>
+                        <li>When you feel like you're "going crazy"</li>
+                        <li>Before responding to provocative communication</li>
+                        <li>When building evidence for legal proceedings</li>
+                        <li>To validate your gut feelings about manipulation</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <h3>📝 Maximizing Integration Benefits</h3>
+                    <ul>
+                        <li><strong>Follow Smart Suggestions:</strong> Trust the AI recommendations for next steps</li>
+                        <li><strong>Use Action Buttons:</strong> Don't skip the integration workflow - it builds powerful documentation</li>
+                        <li><strong>Complete the Circle:</strong> Analysis → Documentation → Reality Anchoring → Belief Work</li>
+                        <li><strong>Track Patterns:</strong> Use multiple features together to see the bigger picture</li>
+                        <li><strong>Build Evidence:</strong> Each analysis adds to your comprehensive abuse documentation</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <h3>🛡️ Using Grey Rock Effectively</h3>
+                    <ul>
+                        <li>Stay emotionally neutral when responding</li>
+                        <li>Don't explain or justify your boundaries</li>
+                        <li>Avoid giving personal information</li>
+                        <li>Keep responses brief and factual</li>
+                        <li>Don't take the bait for arguments</li>
+                        <li><strong>Document Results:</strong> Use Reality Anchor to track how Grey Rock responses affect the manipulator</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚠️ Important Considerations</h2>
+                
+                <div class="warning-box">
+                    <h3>🚨 Safety First</h3>
+                    <p>Always prioritize your safety:</p>
+                    <ul>
+                        <li>If you're in immediate danger, contact emergency services</li>
+                        <li>Grey Rock may escalate abuse in some situations</li>
+                        <li>Consider your safety before implementing any response strategy</li>
+                        <li>Consult with domestic violence professionals when needed</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h3>🩺 Professional Support</h3>
+                    <p>Manipulation Decoder is a tool, not therapy:</p>
+                    <ul>
+                        <li>Seek professional help for trauma processing</li>
+                        <li>Share analysis results with your therapist</li>
+                        <li>Use insights to support, not replace, professional treatment</li>
+                        <li>Consider legal consultation for serious abuse cases</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎉 Success Indicators</h2>
+                <p>You'll know the integrated Manipulation Decoder workflow is helping when you:</p>
+                <ul>
+                    <li><strong>Recognition:</strong> Recognize manipulation tactics in real-time</li>
+                    <li><strong>Clarity:</strong> Feel less confused after difficult conversations</li>
+                    <li><strong>Response:</strong> Respond more calmly using Grey Rock techniques</li>
+                    <li><strong>Documentation:</strong> Build comprehensive evidence across multiple features</li>
+                    <li><strong>Patterns:</strong> See manipulation patterns clearly in your Toxic Memories</li>
+                    <li><strong>Grounding:</strong> Stay anchored in reality despite gaslighting attempts</li>
+                    <li><strong>Beliefs:</strong> Challenge false beliefs with evidence of manipulation</li>
+                    <li><strong>Confidence:</strong> Trust your perceptions and gut feelings</li>
+                    <li><strong>Empowerment:</strong> Feel more in control of toxic interactions</li>
+                    <li><strong>Workflow:</strong> Seamlessly move between analysis, documentation, and healing</li>
+                </ul>
+            </div>
+
+            <div class="cta">
+                <h3>🔍 Ready to Decode & Document?</h3>
+                <p>Start analyzing manipulation, get smart suggestions, and build comprehensive healing documentation with our integrated workflow.</p>
+                <button onclick="window.close()">Begin Analysis</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -11,10 +11,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'AI service not configured' }, { status: 500 });
   }
 
-  const { message_text } = await request.json();
+  const { message_text, context } = await request.json();
 
   // Fetch NPD traits for context
   const { data: traits } = await supabase.from('npd_traits').select('*');
+
+  const contextSection = context ? `
+
+**Conversation Context**: ${context}
+
+Use this context to better understand the relationship dynamics and provide more accurate analysis.` : '';
 
   const prompt = `You are an expert in narcissistic abuse patterns and manipulation tactics. Analyze this message from a narcissistic ex-partner and provide:
 
@@ -22,6 +28,7 @@ export async function POST(request: Request) {
 2. **Emotional Hooks**: What emotional buttons are they trying to push?
 3. **Hidden Agenda**: What do they really want from this interaction?
 4. **Grey Rock Response**: Provide 2-3 brief, neutral response options that don't give them emotional fuel
+${contextSection}
 
 Message to analyze:
 "${message_text}"
