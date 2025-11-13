@@ -7,7 +7,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Sparkles, Copy, Check, Upload, Mic, Trash2 } from 'lucide-react';
+import { Sparkles, Copy, Check, Upload, Mic, Trash2, X } from 'lucide-react';
 
 export default function ManipulationDecoderPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -25,6 +25,9 @@ export default function ManipulationDecoderPage() {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [transcribing, setTranscribing] = useState(false);
   const [transcriptionResult, setTranscriptionResult] = useState<string>('');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('auto');
+  const [speakers, setSpeakers] = useState<any[]>([]);
+  const [showConversationModal, setShowConversationModal] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -108,21 +111,59 @@ export default function ManipulationDecoderPage() {
     if (!audioFile) return;
     
     setTranscribing(true);
+    setSpeakers([]);
     try {
       const formData = new FormData();
       formData.append('audio', audioFile);
+      formData.append('language', selectedLanguage);
       
+      // Start transcription
       const response = await fetch('/api/manipulation-decoder/transcribe', {
         method: 'POST',
         body: formData
       });
       
       const data = await response.json();
-      if (data.success) {
-        setTranscriptionResult(data.transcription);
-        setMessage(data.transcription);
-      } else {
-        alert('Transcription failed: ' + data.error);
+      
+      if (!data.success || !data.jobId) {
+        alert('Failed to start transcription: ' + (data.error || 'Unknown error'));
+        setTranscribing(false);
+        return;
+      }
+
+      // Poll for results
+      const jobId = data.jobId;
+      let attempts = 0;
+      const maxAttempts = 180; // 6 minutes for longer files
+
+      while (attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+
+        const pollResponse = await fetch('/api/manipulation-decoder/transcribe-poll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jobId })
+        });
+
+        const pollData = await pollResponse.json();
+
+        if (pollData.status === 'done' && pollData.transcription) {
+          setTranscriptionResult(pollData.transcription);
+          setMessage(pollData.transcription);
+          setSpeakers(pollData.speakers || []);
+          break;
+        }
+
+        if (pollData.status === 'error') {
+          alert('Transcription failed: ' + (pollData.error || 'Unknown error'));
+          break;
+        }
+
+        attempts++;
+      }
+
+      if (attempts >= maxAttempts) {
+        alert('Transcription timeout - please try a shorter file');
       }
     } catch (error) {
       console.error('Transcription error:', error);
@@ -135,8 +176,18 @@ export default function ManipulationDecoderPage() {
     if (!confirm('Are you sure you want to delete this analysis?')) return;
     
     try {
+      // Get auth token
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        alert('Please log in to delete')
+        return
+      }
+
       const response = await fetch(`/api/manipulation-decoder/${itemId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
       });
       
       if (response.ok) {
@@ -172,10 +223,46 @@ export default function ManipulationDecoderPage() {
               <h2 className="text-xl font-semibold mb-4">Analyze Message</h2>
               
               <div className="mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Mic className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium">Audio Upload</span>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Mic className="h-4 w-4 text-gray-500" />
+                    <span className="text-sm font-medium">Audio Upload</span>
+                  </div>
+                  {speakers.length > 0 && (
+                    <button
+                      onClick={() => setShowConversationModal(true)}
+                      className="text-xs px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full hover:bg-indigo-200"
+                    >
+                      View Conversation
+                    </button>
+                  )}
                 </div>
+                
+                {/* Language Selector */}
+                <div className="mb-3">
+                  <label className="text-xs text-gray-600 block mb-1">Language (optional)</label>
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value)}
+                    className="w-full text-sm border border-gray-300 rounded px-2 py-1"
+                  >
+                    <option value="auto">Auto-detect</option>
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="it">Italian</option>
+                    <option value="pt">Portuguese</option>
+                    <option value="ru">Russian</option>
+                    <option value="zh">Chinese</option>
+                    <option value="ja">Japanese</option>
+                    <option value="ko">Korean</option>
+                    <option value="ar">Arabic</option>
+                    <option value="hi">Hindi</option>
+                    <option value="ur">Urdu</option>
+                  </select>
+                </div>
+
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                   <input
                     type="file"
@@ -381,6 +468,59 @@ export default function ManipulationDecoderPage() {
           </div>
         </div>
       </div>
+
+      {/* Conversation Modal */}
+      {showConversationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Conversation Analysis</h3>
+              <button
+                onClick={() => setShowConversationModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto flex-1">
+              {speakers.length > 0 ? (
+                <div className="space-y-4">
+                  {speakers.map((speaker, index) => (
+                    <div key={index} className="border-l-4 border-indigo-500 pl-4 py-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold text-indigo-600">
+                          {speaker.speaker}
+                        </span>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          speaker.sentiment === 'positive' ? 'bg-green-100 text-green-700' :
+                          speaker.sentiment === 'negative' ? 'bg-red-100 text-red-700' :
+                          'bg-gray-100 text-gray-700'
+                        }`}>
+                          {speaker.sentiment}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {speaker.start?.toFixed(1)}s - {speaker.end?.toFixed(1)}s
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-700">{speaker.text}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center">No speaker data available</p>
+              )}
+            </div>
+            <div className="p-4 border-t flex justify-end">
+              <button
+                onClick={() => setShowConversationModal(false)}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

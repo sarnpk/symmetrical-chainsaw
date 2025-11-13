@@ -96,8 +96,8 @@ export default function WellnessPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
-        <div className="flex items-center justify-end pt-4 sm:pt-6 -mb-2">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div className="flex items-center justify-end">
           <Link href="/wellness/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
         </div>
         {/* Header */}

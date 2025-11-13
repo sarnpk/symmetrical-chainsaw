@@ -45,7 +45,7 @@ interface DashboardLayoutProps {
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Journal', href: '/journal', icon: BookOpen },
-  { name: 'Reality Log', href: '/reality-log', icon: Anchor },
+  { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
   { name: 'No Contact Anchor', href: '/no-contact-anchor', icon: ShieldAlert },
   { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
   { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
@@ -181,8 +181,10 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
         <MobileNavbar onMenuClick={() => setSidebarOpen(true)} />
 
         {/* Page content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-full overflow-x-hidden">
-          {children}
+        <main className="flex-1 max-w-full overflow-x-hidden">
+          <div className="p-4 sm:p-6 lg:p-8 pt-24 lg:pt-12">
+            {children}
+          </div>
         </main>
       </div>
     </div>

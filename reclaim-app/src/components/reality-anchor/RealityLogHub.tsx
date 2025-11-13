@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
-import { Plus, Edit, Trash2 } from 'lucide-react'
+import { Plus, Edit, Trash2, HelpCircle } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 
 interface RealityLogEntry {
@@ -99,7 +99,16 @@ export default function RealityLogHub({ user }: RealityLogHubProps) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Reality Log</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-bold">Reality Anchor</h1>
+          <button
+            onClick={() => window.open('/docs/REALITY_ANCHOR_USER_GUIDE.html', '_blank')}
+            className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            title="View Reality Anchor User Guide"
+          >
+            <HelpCircle className="h-5 w-5" />
+          </button>
+        </div>
         <Link
           href="/reality-log/new"
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-indigo-700 transition-colors"
@@ -147,47 +156,54 @@ export default function RealityLogHub({ user }: RealityLogHubProps) {
       ) : (
         <div className="space-y-4">
           {entries.map((entry) => (
-            <Card key={entry.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="pt-6">
-                <div className="flex justify-between items-start gap-4">
-                  <div className="flex-1">
-                    <div className="text-sm text-gray-500">
-                      {new Date(entry.date).toLocaleDateString('en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </div>
-                    <div className="font-semibold text-gray-900 mt-1">{entry.event}</div>
-                    <div className="text-gray-700 mt-2 text-sm">{entry.fact}</div>
-                    <div className="mt-3 flex items-center gap-2 flex-wrap">
-                      <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full font-medium">
-                        {entry.npd_trait}
-                      </span>
-                      {entry.is_consistent && (
-                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
-                          ✓ Consistent
+            <Link key={entry.id} href={`/reality-log/${entry.id}`}>
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-500">
+                        {new Date(entry.date).toLocaleDateString('en-US', {
+                          weekday: 'short',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </div>
+                      <div className="font-semibold text-gray-900 mt-1">{entry.event}</div>
+                      <div className="text-gray-700 mt-2 text-sm">{entry.fact}</div>
+                      <div className="mt-3 flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full font-medium">
+                          {entry.npd_trait}
                         </span>
-                      )}
+                        {entry.is_consistent && (
+                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+                            ✓ Consistent
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/reality-log/${entry.id}/edit`}
+                        className="p-2 hover:bg-gray-100 rounded transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Edit className="h-4 w-4 text-gray-600" />
+                      </Link>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          handleDelete(entry.id)
+                        }}
+                        className="p-2 hover:bg-red-100 rounded transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </button>
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Link
-                      href={`/reality-log/${entry.id}`}
-                      className="p-2 hover:bg-gray-100 rounded transition-colors"
-                    >
-                      <Edit className="h-4 w-4 text-gray-600" />
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(entry.id)}
-                      className="p-2 hover:bg-red-100 rounded transition-colors"
-                    >
-                      <Trash2 className="h-4 w-4 text-red-600" />
-                    </button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       )}

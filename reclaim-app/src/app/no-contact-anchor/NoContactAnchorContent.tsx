@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Shield, Plus, Trash2, AlertTriangle, TrendingDown, Calendar } from 'lucide-react'
+import { Shield, Plus, Trash2, AlertTriangle, TrendingDown, Calendar, HelpCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface ToxicMemory {
@@ -138,10 +138,19 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
     <div className="bg-gray-50">
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
-            <Shield className="h-8 w-8 text-red-600" />
-            No Contact Anchor
-          </h1>
+          <div className="flex items-center justify-center gap-3">
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <Shield className="h-8 w-8 text-red-600" />
+              No Contact Anchor
+            </h1>
+            <button
+              onClick={() => window.open('/docs/REALITY_ANCHOR_USER_GUIDE.html', '_blank')}
+              className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title="View Reality Anchor User Guide"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </button>
+          </div>
           <p className="text-gray-600 mt-2">Stay strong during withdrawal</p>
         </div>
 

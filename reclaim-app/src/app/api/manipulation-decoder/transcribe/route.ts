@@ -13,6 +13,7 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const audioFile = formData.get('audio') as File;
+    const language = formData.get('language') as string || 'auto';
 
     if (!audioFile || audioFile.size === 0) {
       return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
@@ -22,8 +23,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid file type. Please upload an audio file.' }, { status: 400 });
     }
 
-    if (audioFile.size > 10 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File too large. Maximum size is 10MB for quick transcription.' }, { status: 400 });
+    if (audioFile.size > 50 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File too large. Maximum size is 50MB.' }, { status: 400 });
     }
 
     // Upload directly to Gladia
@@ -42,69 +43,40 @@ export async function POST(request: Request) {
 
     const { audio_url } = await uploadResponse.json();
 
-    // Start transcription
+    // Start transcription with diarization and sentiment
     const transcriptionResponse = await fetch('https://api.gladia.io/v2/transcription', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-gladia-key': process.env.GLADIA_API_KEY,
       },
-      body: JSON.stringify({ audio_url }),
+      body: JSON.stringify({ 
+        audio_url,
+        language: language === 'auto' ? undefined : language,
+        diarization: true,
+        diarization_config: {
+          number_of_speakers: 2,
+          min_speakers: 1,
+          max_speakers: 5,
+        },
+        sentiment_analysis: true,
+      }),
     });
 
     if (!transcriptionResponse.ok) {
       throw new Error('Transcription start failed');
     }
 
-    const { id: jobId } = await transcriptionResponse.json();
+    const transcriptionData = await transcriptionResponse.json();
+    const jobId = transcriptionData.id || transcriptionData.result_url;
 
-    // Extended poll (max 60 seconds)
-    for (let i = 0; i < 12; i++) {
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      
-      try {
-        const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
-          headers: { 'x-gladia-key': process.env.GLADIA_API_KEY },
-        });
-
-        if (statusResponse.ok) {
-          const result = await statusResponse.json();
-          
-          // Extract transcription
-          let transcription = null;
-          if (result?.transcription?.full_transcript) {
-            transcription = result.transcription.full_transcript.trim();
-          } else if (result?.transcription?.utterances?.length > 0) {
-            transcription = result.transcription.utterances
-              .map((u: any) => u.text || '')
-              .join(' ')
-              .trim();
-          } else if (result?.prediction?.[0]?.transcription) {
-            transcription = result.prediction[0].transcription.trim();
-          }
-
-          if (transcription) {
-            return NextResponse.json({
-              success: true,
-              transcription,
-              language: result.transcription?.languages?.[0] || result.prediction?.[0]?.language || 'en'
-            });
-          }
-
-          if (result.status === 'error') {
-            throw new Error(result.error || 'Transcription failed');
-          }
-        }
-      } catch (pollError) {
-        console.error(`Poll attempt ${i + 1} failed:`, pollError);
-        // Continue polling on individual poll errors
-      }
-    }
-
+    // Return job ID immediately - client will poll
     return NextResponse.json({
-      success: false,
-      error: 'Audio transcription is taking longer than expected. Please try typing the text instead or use a shorter audio clip.'
-    }, { status: 408 });
+      success: true,
+      jobId: jobId,
+      polling: true,
+      message: 'Transcription started. Please wait...'
+    });
 
   } catch (error: any) {
     return NextResponse.json({ 

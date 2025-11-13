@@ -193,8 +193,8 @@ export default function DashboardPage() {
                 <div className="mx-auto bg-teal-100 p-3 rounded-full w-fit mb-3">
                   <Anchor className="h-6 w-6 text-teal-600" />
                 </div>
-                <CardTitle className="text-lg">Reality Log</CardTitle>
-                <CardDescription>Ground yourself in truth</CardDescription>
+                <CardTitle className="text-lg">Reality Anchor</CardTitle>
+                <CardDescription>Daily grounding routine</CardDescription>
               </CardHeader>
             </Card>
           </Link>

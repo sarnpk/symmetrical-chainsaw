@@ -1,12 +1,6 @@
 [build]
-  base = "reclaim-app"
-  command = "next build"
-  publish = ".next"
+  command = "cd reclaim-app && npm install && npm run build"
+  publish = "reclaim-app/.next"
 
-# Use the official Next.js runtime/plugin on Netlify
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-# Node version for build environment
-[build.environment]
-  NODE_VERSION = "20"

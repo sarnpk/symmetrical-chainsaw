@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, RefreshCw, TrendingDown, CheckCircle, Edit, Trash2 } from 'lucide-react'
+import { Plus, RefreshCw, TrendingDown, CheckCircle, Edit, Trash2, HelpCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
@@ -93,9 +93,18 @@ export default function BeliefReframePage() {
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-8">
         <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Belief Reframe Journey</h1>
-            <p className="text-gray-600 mt-2">Challenge false beliefs installed by abuse</p>
+          <div className="flex items-center gap-3">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Belief Reframe Journey</h1>
+              <p className="text-gray-600 mt-2">Challenge false beliefs installed by abuse</p>
+            </div>
+            <button
+              onClick={() => window.open('/docs/BELIEF_REFRAME_USER_GUIDE.html', '_blank')}
+              className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title="View Belief Reframe User Guide"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </button>
           </div>
           <Link href="/belief-reframe/new">
             <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2">
