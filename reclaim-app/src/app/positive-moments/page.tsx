@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, Smile, Trash2, Search, Filter, Mic, MicOff } from 'lucide-react'
+import { Plus, Smile, Trash2, Search, Filter, Mic, MicOff, HelpCircle } from 'lucide-react'
 import VoiceTextInput from '@/components/VoiceTextInput'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -26,17 +26,23 @@ export default function PositiveMomentsPage() {
   const [filterTag, setFilterTag] = useState<string | null>(null)
   const [momentText, setMomentText] = useState('')
   const [isListening, setIsListening] = useState(false)
+  const [entryType, setEntryType] = useState<'moment' | 'gratitude' | 'both'>('moment')
+  const [gratitudeCategory, setGratitudeCategory] = useState<string>('')
+  const [streakData, setStreakData] = useState<any>(null)
+  const [showGratitudePrompts, setShowGratitudePrompts] = useState(false)
   const router = useRouter()
   const supabase = createClient()
   const recognitionRef = useRef<any>(null)
 
   const tags = ['achievement', 'kindness_received', 'self_care', 'connection', 'strength', 'boundary_success', 'progress', 'gratitude', 'joy', 'courage']
+  const gratitudeCategories = ['people', 'experiences', 'personal_growth', 'simple_pleasures', 'opportunities', 'health', 'relationships', 'accomplishments']
 
   const loadMoments = async () => {
     const response = await fetch('/api/positive-moments')
     const data = await response.json()
     setMoments(data.moments || [])
     setFilteredMoments(data.moments || [])
+    setStreakData(data.streak || null)
   }
 
   useEffect(() => {
@@ -177,18 +183,51 @@ export default function PositiveMomentsPage() {
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-6">
         <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Positive Moments Journal</h1>
-            <p className="text-gray-600 mt-2">Capture good moments to build counter-evidence</p>
+          <div className="flex items-center gap-3">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Positive Moments & Gratitude</h1>
+              <p className="text-gray-600 mt-2">Capture good moments and daily gratitude to build counter-evidence</p>
+            </div>
+            <button
+              onClick={() => window.open('/docs/GRATITUDE_MOMENTS_USER_GUIDE.html', '_blank')}
+              className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title="View Gratitude & Moments User Guide"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </button>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
-          >
-            <Plus className="h-5 w-5" />
-            Add Moment
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { setEntryType('gratitude'); setShowForm(true); }}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
+            >
+              <Plus className="h-5 w-5" />
+              Daily Gratitude
+            </button>
+            <button
+              onClick={() => { setEntryType('moment'); setShowForm(true); }}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+            >
+              <Plus className="h-5 w-5" />
+              Add Moment
+            </button>
+          </div>
         </div>
+
+        {streakData && (
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-green-800">🔥 Gratitude Streak</h3>
+                <p className="text-green-700">Keep the momentum going!</p>
+              </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-green-600">{streakData.current_streak || 0}</div>
+                <div className="text-sm text-green-600">Current • Best: {streakData.longest_streak || 0}</div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {showForm && (
           <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -209,13 +248,77 @@ export default function PositiveMomentsPage() {
 
               <div className="flex-1 p-6 overflow-y-auto space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">What positive thing happened?</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Entry Type</label>
+                  <div className="flex gap-2 mb-4">
+                    {[{id: 'moment', label: 'Positive Moment'}, {id: 'gratitude', label: 'Gratitude'}, {id: 'both', label: 'Both'}].map(type => (
+                      <button
+                        key={type.id}
+                        type="button"
+                        onClick={() => setEntryType(type.id as any)}
+                        className={`px-4 py-2 rounded-lg font-medium ${
+                          entryType === type.id
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        {type.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {entryType === 'gratitude' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Gratitude Category</label>
+                    <select
+                      value={gratitudeCategory}
+                      onChange={(e) => setGratitudeCategory(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select category (optional)</option>
+                      {gratitudeCategories.map(cat => (
+                        <option key={cat} value={cat}>{cat.replace('_', ' ')}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {entryType === 'gratitude' ? 'What are you grateful for?' : 'What positive thing happened?'}
+                  </label>
                   <textarea
                     value={momentText}
                     onChange={(e) => setMomentText(e.target.value)}
-                    placeholder="e.g., 'Friend called to check on me', 'Completed a project at work', 'Took care of myself today'"
+                    placeholder={entryType === 'gratitude' 
+                      ? "e.g., 'I'm grateful for my friend's support today', 'Thankful for my health', 'Appreciate having a safe home'"
+                      : "e.g., 'Friend called to check on me', 'Completed a project at work', 'Took care of myself today'"
+                    }
                     className="w-full min-h-[200px] p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-lg"
                   />
+                  {entryType === 'gratitude' && (
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowGratitudePrompts(!showGratitudePrompts)}
+                        className="text-sm text-blue-600 hover:text-blue-700"
+                      >
+                        {showGratitudePrompts ? 'Hide' : 'Show'} gratitude prompts
+                      </button>
+                      {showGratitudePrompts && (
+                        <div className="mt-2 p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
+                          <p className="font-medium mb-2">Try these prompts:</p>
+                          <ul className="space-y-1 text-xs">
+                            <li>• Someone who made me smile today...</li>
+                            <li>• A simple pleasure I enjoyed...</li>
+                            <li>• Something about my body I appreciate...</li>
+                            <li>• A challenge that helped me grow...</li>
+                            <li>• A moment of peace I experienced...</li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -298,7 +401,7 @@ export default function PositiveMomentsPage() {
                     disabled={!momentText?.trim()}
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
                   >
-                    Save Moment
+                    {entryType === 'gratitude' ? 'Save Gratitude' : 'Save Moment'}
                   </button>
                 </div>
               </div>
@@ -372,6 +475,21 @@ export default function PositiveMomentsPage() {
                         <span className="text-sm text-gray-600">
                           {new Date(moment.moment_date).toLocaleDateString()}
                         </span>
+                        {moment.entry_type && (
+                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            moment.entry_type === 'gratitude' ? 'bg-green-100 text-green-700' :
+                            moment.entry_type === 'both' ? 'bg-purple-100 text-purple-700' :
+                            'bg-blue-100 text-blue-700'
+                          }`}>
+                            {moment.entry_type === 'gratitude' ? '🙏 Gratitude' :
+                             moment.entry_type === 'both' ? '✨ Both' : '💫 Moment'}
+                          </span>
+                        )}
+                        {moment.gratitude_category && (
+                          <span className="px-2 py-1 bg-amber-100 text-amber-700 text-xs rounded-full">
+                            {moment.gratitude_category.replace('_', ' ')}
+                          </span>
+                        )}
                         {moment.mood_rating && (
                           <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
                             Mood: {moment.mood_rating}/10
@@ -404,17 +522,29 @@ export default function PositiveMomentsPage() {
           </div>
         )}
 
-        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-          <CardHeader>
-            <CardTitle className="text-blue-800">💡 Tip</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-blue-700">
-              These positive moments will be used by AI to find counter-evidence against your false beliefs. 
-              The more you capture, the stronger your evidence becomes!
-            </p>
-          </CardContent>
-        </Card>
+        <div className="grid md:grid-cols-2 gap-4">
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+            <CardHeader>
+              <CardTitle className="text-blue-800">💡 Positive Moments</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-blue-700">
+                Capture achievements, kind gestures, and positive experiences to build counter-evidence against false beliefs.
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+            <CardHeader>
+              <CardTitle className="text-green-800">🙏 Daily Gratitude</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-green-700">
+                Practice daily gratitude to shift focus from trauma to appreciation. Build a streak to strengthen your healing routine!
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </DashboardLayout>
   )

@@ -36,7 +36,14 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ moments })
+  // Get gratitude streak data
+  const { data: streak } = await supabase
+    .from('gratitude_streaks')
+    .select('*')
+    .eq('user_id', user.id)
+    .single()
+
+  return NextResponse.json({ moments, streak })
 }
 
 export async function POST(request: Request) {
@@ -48,7 +55,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  const { moment_text, moment_date, tags, mood_rating } = body
+  const { moment_text, moment_date, tags, mood_rating, entry_type, gratitude_category, is_daily_gratitude } = body
 
   const { data: moment, error } = await supabase
     .from('positive_moments')
@@ -57,7 +64,10 @@ export async function POST(request: Request) {
       moment_text,
       moment_date: moment_date || new Date().toISOString().split('T')[0],
       tags,
-      mood_rating
+      mood_rating,
+      entry_type: entry_type || 'moment',
+      gratitude_category,
+      is_daily_gratitude: is_daily_gratitude || false
     })
     .select()
     .single()

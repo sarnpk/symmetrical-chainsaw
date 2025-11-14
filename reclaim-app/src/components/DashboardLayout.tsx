@@ -47,7 +47,7 @@ const navigation = [
   { name: 'Journal', href: '/journal', icon: BookOpen },
   { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
   { name: 'No Contact Anchor', href: '/no-contact-anchor', icon: ShieldAlert },
-  { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
+  { name: 'Gratitude & Moments', href: '/positive-moments', icon: Heart },
   { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
   { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
   { name: 'NPD Traits', href: '/npd-traits', icon: Target },

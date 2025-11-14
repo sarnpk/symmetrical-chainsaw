@@ -115,15 +115,9 @@ export default function VoiceTextInput({
             }`}
           >
             {isListening ? (
-              <>
-                <MicOff className="h-5 w-5" />
-                Stop Recording
-              </>
+              <MicOff className="h-5 w-5" />
             ) : (
-              <>
-                <Mic className="h-5 w-5" />
-                Voice Input
-              </>
+              <Mic className="h-5 w-5" />
             )}
           </button>
 
