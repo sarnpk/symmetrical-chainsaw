@@ -7,7 +7,7 @@ import DashboardLayout from '@/components/DashboardLayout'
 import UsageTrackingDashboard from '@/components/UsageTrackingDashboard'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, BookOpen, Brain, BarChart3, Shield, Heart, RefreshCw, AlertTriangle, Smile, Anchor } from 'lucide-react'
+import { Plus, BookOpen, Brain, BarChart3, Shield, Heart, RefreshCw, AlertTriangle, Smile, Anchor, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
@@ -15,6 +15,7 @@ import RealityAnchorWidget from '@/components/reality-anchor/RealityAnchorWidget
 import WellnessWidget from '@/components/WellnessWidget'
 import BeliefReframeWidget from '@/components/BeliefReframeWidget'
 import NoContactWidget from '@/components/NoContactWidget'
+import StonewallWidget from '@/components/stonewalling/StonewallWidget'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -210,10 +211,37 @@ export default function DashboardPage() {
               </CardHeader>
             </Card>
           </Link>
+
+          <Link href="/biff-assistant">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-indigo-200">
+              <CardHeader className="text-center">
+                <div className="mx-auto bg-indigo-100 p-3 rounded-full w-fit mb-3">
+                  <MessageSquare className="h-6 w-6 text-indigo-600" />
+                </div>
+                <CardTitle className="text-lg">BIFF Assistant</CardTitle>
+                <CardDescription>Co-parent communication tool</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href="/stonewalling/panic">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-red-200">
+              <CardHeader className="text-center">
+                <div className="mx-auto bg-red-100 p-3 rounded-full w-fit mb-3">
+                  <Shield className="h-6 w-6 text-red-600" />
+                </div>
+                <CardTitle className="text-lg">Stonewalling Help</CardTitle>
+                <CardDescription>Emergency guidance</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
 
         {/* No Contact Widget */}
         <NoContactWidget />
+
+        {/* Stonewalling Widget */}
+        <StonewallWidget />
 
         {/* Wellness Widget */}
         <WellnessWidget 

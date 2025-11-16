@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stonewalling Tracker - User Guide</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #764ba2;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+        }
+        .feature-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #764ba2;
+        }
+        .example {
+            background: #fff9e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .warning {
+            background: #ffe6e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .tip {
+            background: #e6f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #1890ff;
+        }
+        .panic-button {
+            background: #dc3545;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Stonewalling Tracker - Complete Guide</h1>
+        
+        <p><strong>Stonewalling</strong> is a communication shutdown tactic where someone refuses to engage, withdraws emotionally, or gives the silent treatment. This feature helps you recognize patterns, protect your wellbeing, and respond effectively.</p>
+
+        <div class="feature-box">
+            <h3>🚨 Real-Time Panic Button</h3>
+            <p>When you're being stonewalled RIGHT NOW, click the panic button for immediate AI-powered guidance.</p>
+            <a href="/stonewalling/panic" class="panic-button" style="text-decoration: none;">🚨 Try Panic Button Now</a>
+            <p><em>Located at bottom-right of every page in the app</em></p>
+        </div>
+
+        <h2>📊 What Gets Tracked</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Data Point</th>
+                    <th>Why It Matters</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Shutdown Type</strong></td>
+                    <td>Identifies their specific tactic</td>
+                    <td>Silent treatment, physical withdrawal, topic avoidance</td>
+                </tr>
+                <tr>
+                    <td><strong>Duration</strong></td>
+                    <td>Tracks escalation patterns</td>
+                    <td>30 minutes, 2 hours, 3 days</td>
+                </tr>
+                <tr>
+                    <td><strong>Trigger Context</strong></td>
+                    <td>Reveals what topics cause shutdown</td>
+                    <td>"Asked about finances", "Mentioned therapy"</td>
+                </tr>
+                <tr>
+                    <td><strong>Emotional Impact</strong></td>
+                    <td>Documents toll on your wellbeing</td>
+                    <td>Before: 7/10 → After: 3/10</td>
+                </tr>
+                <tr>
+                    <td><strong>Your Response</strong></td>
+                    <td>Learns what works/doesn't work</td>
+                    <td>Gave space, asked questions, left situation</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>💡 Real-World Examples</h2>
+
+        <div class="example">
+            <h3>Example 1: Silent Treatment After Boundary</h3>
+            <p><strong>Situation:</strong> You told your partner you need one evening per week for self-care.</p>
+            <p><strong>Their Response:</strong> Complete silence for 48 hours. Won't make eye contact. Leaves room when you enter.</p>
+            <p><strong>What to Log:</strong></p>
+            <ul>
+                <li>Type: Silent Treatment</li>
+                <li>Duration: 2,880 minutes (48 hours)</li>
+                <li>Trigger: "Set boundary about needing personal time"</li>
+                <li>Emotional State: 8/10 → 2/10</li>
+                <li>Impact Level: 9/10</li>
+                <li>What You Needed: "Acknowledgment that my needs matter"</li>
+            </ul>
+        </div>
+
+        <div class="example">
+            <h3>Example 2: Topic Avoidance Pattern</h3>
+            <p><strong>Situation:</strong> Every time you bring up co-parenting schedule, they change subject or walk away.</p>
+            <p><strong>Pattern Over 3 Weeks:</strong></p>
+            <ul>
+                <li>Week 1: Asked about summer schedule → Left to "take a call"</li>
+                <li>Week 2: Mentioned kids' therapy → Started scrolling phone</li>
+                <li>Week 3: Brought up school expenses → "I don't want to talk about this"</li>
+            </ul>
+            <p><strong>AI Insight:</strong> "100% avoidance rate on child-related topics. Suggests control tactic to avoid accountability."</p>
+        </div>
+
+        <div class="example">
+            <h3>Example 3: Emotional Unavailability</h3>
+            <p><strong>Situation:</strong> You share that your parent is sick and you're worried.</p>
+            <p><strong>Their Response:</strong> Blank stare. "Okay." Returns to watching TV.</p>
+            <p><strong>What to Log:</strong></p>
+            <ul>
+                <li>Type: Emotional Unavailability</li>
+                <li>Duration: Ongoing (no reconnection)</li>
+                <li>Trigger: "Shared vulnerable feelings about family"</li>
+                <li>What You Needed: "Comfort, empathy, or even just acknowledgment"</li>
+                <li>What Happened: "Complete emotional shutdown"</li>
+            </ul>
+        </div>
+
+        <h2>🎯 How to Use the Tracker</h2>
+
+        <div class="tip">
+            <h3>Step 1: Log Incidents in Real-Time</h3>
+            <p>When stonewalling happens, log it immediately or as soon as safe. Fresh details = better pattern recognition.</p>
+        </div>
+
+        <div class="tip">
+            <h3>Step 2: Use the Panic Button</h3>
+            <p>During active stonewalling, click the panic button for:</p>
+            <ul>
+                <li>✅ Immediate actions to take</li>
+                <li>✅ What to say (and NOT say)</li>
+                <li>✅ Self-care strategies</li>
+                <li>✅ Exit strategies if needed</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <h3>Step 3: Review Patterns Weekly</h3>
+            <p>Check your dashboard to see:</p>
+            <ul>
+                <li>Frequency trends (increasing/stable/decreasing)</li>
+                <li>Common triggers</li>
+                <li>Most effective responses</li>
+                <li>Emotional toll over time</li>
+            </ul>
+        </div>
+
+        <h2>📈 Understanding Your Dashboard</h2>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div>Total Incidents</div>
+                <small>Last 30 days</small>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">45m</div>
+                <div>Avg Duration</div>
+                <small>Getting longer</small>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">75%</div>
+                <div>Silent Treatment</div>
+                <small>Most common type</small>
+            </div>
+        </div>
+
+        <h2>🤖 AI-Powered Insights</h2>
+
+        <div class="feature-box">
+            <h3>Pattern Recognition</h3>
+            <p>After 5+ incidents, AI analyzes:</p>
+            <ul>
+                <li><strong>Trigger Patterns:</strong> "80% of incidents occur when you assert boundaries"</li>
+                <li><strong>Escalation Risk:</strong> "Duration increasing 20% per week - HIGH RISK"</li>
+                <li><strong>Effectiveness:</strong> "Leaving situation has 90% better outcome than waiting it out"</li>
+            </ul>
+        </div>
+
+        <div class="feature-box">
+            <h3>Predictive Analysis</h3>
+            <p>AI predicts stonewalling likelihood based on:</p>
+            <ul>
+                <li>Topic you're about to discuss</li>
+                <li>Time of day</li>
+                <li>Recent conflict frequency</li>
+                <li>Their stress level</li>
+            </ul>
+            <p><strong>Example:</strong> "85% likelihood of stonewalling if you discuss finances on Sunday evening"</p>
+        </div>
+
+        <h2>⚠️ Red Flags to Watch</h2>
+
+        <div class="warning">
+            <h3>Escalation Warning Signs</h3>
+            <ul>
+                <li>🚩 Duration increasing over time</li>
+                <li>🚩 Happening more frequently (weekly → daily)</li>
+                <li>🚩 Expanding to more topics</li>
+                <li>🚩 Physical withdrawal becoming more extreme</li>
+                <li>🚩 Your emotional state consistently dropping below 3/10</li>
+                <li>🚩 Zero successful reconnections</li>
+            </ul>
+            <p><strong>If you see 3+ red flags:</strong> Consider this a pattern of emotional abuse. Consult with a therapist or domestic violence advocate.</p>
+        </div>
+
+        <h2>💪 Response Strategies That Work</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Strategy</th>
+                    <th>When to Use</th>
+                    <th>Success Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Give Space</strong></td>
+                    <td>Early in shutdown (first 15 min)</td>
+                    <td>65%</td>
+                </tr>
+                <tr>
+                    <td><strong>State Need & Leave</strong></td>
+                    <td>After 30+ minutes of silence</td>
+                    <td>80%</td>
+                </tr>
+                <tr>
+                    <td><strong>Grey Rock</strong></td>
+                    <td>Chronic stonewaller</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td><strong>Document & Exit</strong></td>
+                    <td>Escalating or unsafe</td>
+                    <td>90%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>📱 Quick Access</h2>
+
+        <div class="feature-box">
+            <h3>Dashboard Widget</h3>
+            <p>See at-a-glance stats on your main dashboard:</p>
+            <ul>
+                <li>Total incidents this month</li>
+                <li>Average duration</li>
+                <li>Trend indicator (improving/stable/worsening)</li>
+                <li>Quick log button</li>
+            </ul>
+        </div>
+
+        <h2>🎓 Understanding Stonewalling</h2>
+
+        <p><strong>Why narcissists stonewall:</strong></p>
+        <ul>
+            <li>Control tactic - forces you to chase them</li>
+            <li>Punishment for asserting yourself</li>
+            <li>Avoids accountability</li>
+            <li>Creates anxiety and self-doubt</li>
+            <li>Maintains power imbalance</li>
+        </ul>
+
+        <p><strong>Impact on you:</strong></p>
+        <ul>
+            <li>Emotional exhaustion</li>
+            <li>Self-blame ("What did I do wrong?")</li>
+            <li>Walking on eggshells</li>
+            <li>Suppressing your needs</li>
+            <li>Chronic anxiety</li>
+        </ul>
+
+        <div class="tip">
+            <h3>💡 Remember</h3>
+            <p><strong>Stonewalling is emotional abuse.</strong> You deserve to be heard. Your needs matter. This tool helps you see the pattern clearly and respond from a place of strength, not desperation.</p>
+        </div>
+
+        <h2>🔗 Related Features</h2>
+        <ul>
+            <li><strong>BIFF Communication:</strong> Craft responses that don't feed the cycle</li>
+            <li><strong>Grey Rock Method:</strong> Strategic disengagement techniques</li>
+            <li><strong>Empathy Audit:</strong> Document their lack of empathy</li>
+            <li><strong>Reality Anchor:</strong> Ground yourself in truth when gaslighting follows stonewalling</li>
+        </ul>
+
+        <hr style="margin: 40px 0;">
+
+        <p style="text-align: center; color: #666;">
+            <strong>Need immediate support?</strong><br>
+            National Domestic Violence Hotline: 1-800-799-7233<br>
+            <em>You are not alone. You are not overreacting. Your feelings are valid.</em>
+        </p>
+    </div>
+</body>
+</html>

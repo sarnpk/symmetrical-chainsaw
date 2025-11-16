@@ -43,99 +43,130 @@ function decodeAndFormatText(text: string): string {
   return decoded
 }
 
+// Helper function to render text with bold formatting
+function renderTextWithBold(text: string): JSX.Element[] {
+  const parts = text.split(/\*\*(.*?)\*\*/g)
+  return parts.map((part, partIndex) =>
+    partIndex % 2 === 1 ? (
+      <strong key={partIndex} className="font-semibold">{part}</strong>
+    ) : (
+      <React.Fragment key={partIndex}>{part}</React.Fragment>
+    )
+  )
+}
+
 // Helper function to format text with proper line breaks and structure
 function formatAIResponse(text: string): JSX.Element {
   const decoded = decodeAndFormatText(text)
+  const lines = decoded.split('\n')
+  const elements: JSX.Element[] = []
+  let i = 0
 
-  // Split into sections and format
-  const sections = decoded.split(/\n\s*\n/).filter(p => p.trim())
+  while (i < lines.length) {
+    const line = lines[i].trim()
 
-  return (
-    <div className="space-y-3">
-      {sections.map((section, index) => {
-        // Handle bullet points with asterisks
-        if (section.includes('\n*') || section.startsWith('*')) {
-          const lines = section.split('\n')
-          const items: string[] = []
-          let currentItem = ''
+    // Skip empty lines
+    if (!line) {
+      i++
+      continue
+    }
 
-          lines.forEach(line => {
-            if (line.trim().startsWith('*')) {
-              if (currentItem) items.push(currentItem.trim())
-              currentItem = line.replace(/^\s*\*\s*/, '')
-            } else if (currentItem) {
-              currentItem += ' ' + line.trim()
-            }
-          })
-          if (currentItem) items.push(currentItem.trim())
-
-          return (
-            <ul key={index} className="list-disc list-inside space-y-2 ml-2">
-              {items.map((item, itemIndex) => {
-                // Handle bold text in list items
-                if (item.includes('**')) {
-                  const parts = item.split(/\*\*(.*?)\*\*/g)
-                  return (
-                    <li key={itemIndex} className="text-sm leading-relaxed">
-                      {parts.map((part, partIndex) =>
-                        partIndex % 2 === 1 ? (
-                          <strong key={partIndex} className="font-semibold">{part}</strong>
-                        ) : (
-                          part
-                        )
-                      )}
-                    </li>
-                  )
-                }
-                return (
-                  <li key={itemIndex} className="text-sm leading-relaxed">
-                    {item}
-                  </li>
-                )
-              })}
-            </ul>
-          )
+    // Handle bullet points (lines starting with *)
+    if (line.startsWith('*')) {
+      const bulletItems: string[] = []
+      
+      // Collect all consecutive bullet items
+      while (i < lines.length) {
+        const currentLine = lines[i].trim()
+        if (!currentLine) {
+          i++
+          continue
         }
-
-        // Handle numbered lists
-        if (/^\d+\./.test(section.trim())) {
-          const items = section.split(/\n(?=\d+\.)/).filter(item => item.trim())
-          return (
-            <ol key={index} className="list-decimal list-inside space-y-2 ml-2">
-              {items.map((item, itemIndex) => (
-                <li key={itemIndex} className="text-sm leading-relaxed">
-                  {item.replace(/^\d+\.\s*/, '').trim()}
-                </li>
-              ))}
-            </ol>
-          )
+        if (currentLine.startsWith('*')) {
+          bulletItems.push(currentLine.replace(/^\*\s*/, ''))
+          i++
+        } else {
+          break
         }
+      }
 
-        // Handle paragraphs with bold text
-        if (section.includes('**')) {
-          const parts = section.split(/\*\*(.*?)\*\*/g)
-          return (
-            <p key={index} className="text-sm leading-relaxed">
-              {parts.map((part, partIndex) =>
-                partIndex % 2 === 1 ? (
-                  <strong key={partIndex} className="font-semibold">{part}</strong>
-                ) : (
-                  part
-                )
-              )}
-            </p>
-          )
+      elements.push(
+        <ul key={`ul-${elements.length}`} className="list-disc list-inside space-y-2 ml-2 my-3">
+          {bulletItems.map((item, idx) => (
+            <li key={idx} className="text-sm leading-relaxed">
+              {renderTextWithBold(item)}
+            </li>
+          ))}
+        </ul>
+      )
+      continue
+    }
+
+    // Handle numbered lists
+    if (/^\d+\./.test(line)) {
+      const numberedItems: string[] = []
+      
+      // Collect all consecutive numbered items
+      while (i < lines.length) {
+        const currentLine = lines[i].trim()
+        if (!currentLine) {
+          i++
+          continue
         }
+        if (/^\d+\./.test(currentLine)) {
+          numberedItems.push(currentLine.replace(/^\d+\.\s*/, ''))
+          i++
+        } else {
+          break
+        }
+      }
 
-        // Regular paragraph
-        return (
-          <p key={index} className="text-sm leading-relaxed">
-            {section.trim()}
-          </p>
-        )
-      })}
-    </div>
-  )
+      elements.push(
+        <ol key={`ol-${elements.length}`} className="list-decimal list-inside space-y-2 ml-2 my-3">
+          {numberedItems.map((item, idx) => (
+            <li key={idx} className="text-sm leading-relaxed">
+              {renderTextWithBold(item)}
+            </li>
+          ))}
+        </ol>
+      )
+      continue
+    }
+
+    // Handle headings (lines with **text** as the only content)
+    if (/^\*\*[^*]+\*\*:?$/.test(line)) {
+      const headingText = line.replace(/\*\*/g, '').replace(/:$/, '')
+      elements.push(
+        <h3 key={`h-${elements.length}`} className="font-semibold text-base mt-4 mb-2">
+          {headingText}
+        </h3>
+      )
+      i++
+      continue
+    }
+
+    // Handle regular paragraphs (collect multi-line paragraphs)
+    let paragraph = line
+    i++
+    
+    // Continue collecting lines until we hit an empty line or special formatting
+    while (i < lines.length) {
+      const nextLine = lines[i].trim()
+      if (!nextLine || nextLine.startsWith('*') || /^\d+\./.test(nextLine) || /^\*\*[^*]+\*\*:?$/.test(nextLine)) {
+        break
+      }
+      paragraph += ' ' + nextLine
+      i++
+    }
+
+    elements.push(
+      <p key={`p-${elements.length}`} className="text-sm leading-relaxed my-2">
+        {renderTextWithBold(paragraph)}
+      </p>
+    )
+  }
+
+  return <div className="space-y-1">{elements}</div>
 }
 
 interface UsageInfo {

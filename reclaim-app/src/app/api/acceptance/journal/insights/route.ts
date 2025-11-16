@@ -2,7 +2,8 @@ import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const supabase = await createServerSupabase();
+  try {
+    const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -31,6 +32,10 @@ Provide a therapeutic response in ${language} with:
 Keep response supportive, professional, and focused on acceptance rather than change.`;
 
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error('Gemini API key not configured');
+    }
+
     const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + process.env.GEMINI_API_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -40,13 +45,20 @@ Keep response supportive, professional, and focused on acceptance rather than ch
       })
     });
 
+    if (!response.ok) {
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
     const data = await response.json();
     const insight = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Unable to generate insights at this time.';
 
     return NextResponse.json({ insight });
   } catch (error) {
-    return NextResponse.json({
-      insight: `Your acceptance level of ${acceptance_level}/10 shows you're on a healing journey. ${daily_struggle ? 'The struggles you faced today are part of the process.' : ''} Remember that acceptance comes in waves - be gentle with yourself.`
-    });
+    console.error('AI insights error:', error);
+    throw error;
+  }
+  } catch (err) {
+    console.error('Insights API error:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

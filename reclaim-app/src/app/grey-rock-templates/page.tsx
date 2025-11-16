@@ -6,7 +6,8 @@ import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Copy, Check, Search, Sparkles, X } from 'lucide-react';
+import { Copy, Check, Search, Sparkles, X, HelpCircle } from 'lucide-react';
+import Link from 'next/link';
 
 interface Template {
   id: string;
@@ -92,7 +93,15 @@ export default function GreyRockTemplatesPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-2">Grey Rock Templates</h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-3xl font-bold">Grey Rock Templates</h1>
+          <Link href="/docs/GREY_ROCK_USER_GUIDE.html" target="_blank">
+            <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+              <HelpCircle className="h-5 w-5" />
+              <span className="font-medium">Guide</span>
+            </button>
+          </Link>
+        </div>
         <p className="text-gray-600 mb-8">Copy/paste responses for real-world communication. Keep it brief, boring, and neutral.</p>
 
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">

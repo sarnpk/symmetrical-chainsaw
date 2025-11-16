@@ -40,6 +40,10 @@ export default function AcceptancePage() {
   const [voiceInputField, setVoiceInputField] = useState('');
   const [aiInsight, setAiInsight] = useState<string | null>(null);
   const [loadingInsight, setLoadingInsight] = useState(false);
+  const [activeTab, setActiveTab] = useState('modules');
+  const [recentEntries, setRecentEntries] = useState<any[]>([]);
+  const [insightForEntry, setInsightForEntry] = useState<string | null>(null);
+  const [loadingInsightFor, setLoadingInsightFor] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -56,9 +60,8 @@ export default function AcceptancePage() {
       setProfile(profile);
       setLoading(false);
       
-      fetch('/api/acceptance').then(r => r.json()).then(setProgress);
       loadTodayJournal();
-      loadMilestones();
+      loadRecentEntries();
     };
     init();
   }, [router, supabase]);
@@ -104,22 +107,59 @@ export default function AcceptancePage() {
     }
   };
 
-  const loadMilestones = async () => {
-    const response = await fetch('/api/acceptance/milestones');
+  const loadRecentEntries = async () => {
+    const response = await fetch('/api/acceptance/journal');
     if (response.ok) {
       const data = await response.json();
-      setMilestones(data || []);
+      setRecentEntries(data || []);
     }
   };
+
+  const deleteEntry = async (entryId: string) => {
+    if (!confirm('Delete this journal entry?')) return;
+    const response = await fetch(`/api/acceptance/journal/${entryId}`, { method: 'DELETE' });
+    if (response.ok) {
+      loadRecentEntries();
+      loadTodayJournal();
+    }
+  };
+
+  const getInsights = async (entry: any) => {
+    setLoadingInsightFor(entry.id);
+    try {
+      const response = await fetch('/api/acceptance/journal/insights', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          acceptance_level: entry.acceptance_level,
+          daily_struggle: entry.daily_struggle,
+          hope_triggers: entry.hope_triggers,
+          reality_anchors: entry.reality_anchors,
+          emotional_state: entry.emotional_state
+        })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setInsightForEntry(data.insight);
+      }
+    } catch (error) {
+      console.error('Failed to get insights:', error);
+    }
+    setLoadingInsightFor(null);
+  };
+
+
 
   const saveJournalEntry = async () => {
     const entry = {
       acceptance_level: acceptanceLevel,
-      daily_struggle: dailyStruggle,
-      hope_triggers: hopeTriggersText ? [hopeTriggersText] : [],
-      reality_anchors: realityAnchorsText ? [realityAnchorsText] : [],
-      emotional_state: emotionalState
+      daily_struggle: dailyStruggle || null,
+      hope_triggers: hopeTriggersText ? [hopeTriggersText] : null,
+      reality_anchors: realityAnchorsText ? [realityAnchorsText] : null,
+      emotional_state: emotionalState || null
     };
+
+    console.log('Saving entry:', entry);
 
     const response = await fetch('/api/acceptance/journal', {
       method: 'POST',
@@ -128,20 +168,10 @@ export default function AcceptancePage() {
     });
 
     if (response.ok) {
-      // Get AI insights
-      setLoadingInsight(true);
-      try {
-        const insightResponse = await fetch('/api/acceptance/journal/insights', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(entry)
-        });
-        const insightData = await insightResponse.json();
-        setAiInsight(insightData.insight);
-      } catch (error) {
-        console.error('Failed to get AI insights:', error);
-      }
-      setLoadingInsight(false);
+      const result = await response.json();
+      console.log('Journal saved:', result);
+      
+
       
       setShowJournal(false);
       setAcceptanceLevel(5);
@@ -150,6 +180,10 @@ export default function AcceptancePage() {
       setRealityAnchorsText('');
       setEmotionalState('');
       loadTodayJournal();
+      loadRecentEntries();
+    } else {
+      const error = await response.text();
+      console.error('Failed to save journal:', error);
     }
   };
 
@@ -192,6 +226,7 @@ export default function AcceptancePage() {
               <Award className="h-4 w-4" />
               Milestones
             </button>
+
           </div>
         </div>
 
@@ -270,11 +305,11 @@ export default function AcceptancePage() {
                       }}
                       className="w-full p-3 border rounded-lg text-sm resize-none md:block hidden"
                       rows={2}
-                      placeholder="Brief note about what made acceptance difficult..."
+                      placeholder="e.g., Saw them being kind to someone and wondered if they've changed"
                     />
                     <div className="flex gap-2 md:hidden">
                       <div className="flex-1 p-3 border rounded-lg text-sm text-gray-700 bg-gray-50">
-                        {dailyStruggle || 'Brief note about what made acceptance difficult...'}
+                        {dailyStruggle || 'e.g., Saw them being kind to someone and wondered if they\'ve changed'}
                       </div>
                       <button
                         onClick={() => {
@@ -299,11 +334,11 @@ export default function AcceptancePage() {
                           setShowVoiceInput(true);
                         }}
                         className="w-full p-3 border rounded-lg text-sm md:block hidden"
-                        placeholder="What sparked false hope?"
+                        placeholder="e.g., They sent an apology text that seemed genuine"
                       />
                       <div className="flex gap-2 md:hidden">
                         <div className="flex-1 p-3 border rounded-lg text-sm text-gray-700 bg-gray-50">
-                          {hopeTriggersText || 'What sparked false hope?'}
+                          {hopeTriggersText || 'e.g., They sent an apology text that seemed genuine'}
                         </div>
                         <button
                           onClick={() => {
@@ -326,11 +361,11 @@ export default function AcceptancePage() {
                           setShowVoiceInput(true);
                         }}
                         className="w-full p-3 border rounded-lg text-sm md:block hidden"
-                        placeholder="What grounded you?"
+                        placeholder="e.g., This is the 8th apology in 3 years, same pattern"
                       />
                       <div className="flex gap-2 md:hidden">
                         <div className="flex-1 p-3 border rounded-lg text-sm text-gray-700 bg-gray-50">
-                          {realityAnchorsText || 'What grounded you?'}
+                          {realityAnchorsText || 'e.g., This is the 8th apology in 3 years, same pattern'}
                         </div>
                         <button
                           onClick={() => {
@@ -390,82 +425,86 @@ export default function AcceptancePage() {
           </div>
         )}
 
-        {/* Milestones Modal */}
-        {showMilestones && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 overflow-y-auto">
-            <div className="bg-white rounded-lg w-full max-w-lg my-4">
-              <div className="p-4">
-                <h2 className="text-xl font-bold mb-4">Acceptance Milestones</h2>
-                
-                <div className="space-y-3">
-                  {[
-                    { id: 'mask_clarity', title: 'I see the mask clearly', desc: 'Understanding the false persona' },
-                    { id: 'grief_acceptance', title: 'I\'m mourning an illusion', desc: 'Accepting what you\'re really grieving' },
-                    { id: 'hope_detachment', title: 'I no longer expect change', desc: 'Releasing false hope' },
-                    { id: 'reality_integration', title: 'NPD is permanent', desc: 'Full acceptance of the diagnosis' },
-                    { id: 'peace_achievement', title: 'I feel at peace with reality', desc: 'Emotional acceptance achieved' }
-                  ].map(milestone => {
-                    const achieved = milestones.some(m => m.milestone_type === milestone.id);
-                    return (
-                      <div key={milestone.id} className={`p-4 rounded-lg border ${
-                        achieved ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
-                      }`}>
-                        <div className="flex items-center gap-3">
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                            achieved ? 'bg-green-600 text-white' : 'bg-gray-300'
-                          }`}>
-                            {achieved ? '✓' : ''}
-                          </div>
-                          <div>
-                            <h4 className="font-medium">{milestone.title}</h4>
-                            <p className="text-sm text-gray-600">{milestone.desc}</p>
-                          </div>
+
+
+
+
+        {/* Tabs */}
+        <div className="bg-white rounded-lg border mb-6">
+          <div className="flex border-b">
+            <button
+              onClick={() => setActiveTab('modules')}
+              className={`px-4 py-3 text-sm font-medium ${activeTab === 'modules' ? 'border-b-2 border-amber-600 text-amber-600' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+              Acceptance Modules
+            </button>
+            <button
+              onClick={() => setActiveTab('journal')}
+              className={`px-4 py-3 text-sm font-medium ${activeTab === 'journal' ? 'border-b-2 border-amber-600 text-amber-600' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+              Journal Entries
+            </button>
+          </div>
+          
+          {activeTab === 'journal' && (
+            <div className="p-4">
+              <h3 className="text-lg font-semibold mb-3">Recent Check-ins</h3>
+              <div className="space-y-3">
+                {recentEntries.length > 0 ? (
+                  recentEntries.slice(0, 5).map((entry) => (
+                    <div key={entry.id} className="p-3 bg-gray-50 rounded border">
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="text-sm text-gray-600">{new Date(entry.entry_date).toLocaleDateString()}</div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => getInsights(entry)}
+                            disabled={loadingInsightFor === entry.id}
+                            className="text-purple-600 hover:text-purple-700 text-xs flex items-center gap-1"
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            {loadingInsightFor === entry.id ? 'Loading...' : 'AI Insights'}
+                          </button>
+                          <button
+                            onClick={() => deleteEntry(entry.id)}
+                            className="text-red-500 hover:text-red-700 text-xs"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => setShowMilestones(false)}
-                  className="w-full mt-6 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
-                >
-                  Close
-                </button>
+                      <div className="text-sm"><strong>Acceptance Level:</strong> {entry.acceptance_level}/10</div>
+                      {entry.daily_struggle && <div className="text-sm mt-1"><strong>Struggle:</strong> {entry.daily_struggle}</div>}
+                      {entry.emotional_state && <div className="text-sm mt-1"><strong>Feeling:</strong> {entry.emotional_state}</div>}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-sm">No journal entries yet</p>
+                )}
               </div>
+              
+              {insightForEntry && (
+                <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-purple-600" />
+                      <h4 className="text-sm font-semibold text-purple-800">AI Therapeutic Insights</h4>
+                    </div>
+                    <button
+                      onClick={() => setInsightForEntry(null)}
+                      className="text-purple-600 hover:text-purple-700 text-xs"
+                    >
+                      Close
+                    </button>
+                  </div>
+                  <div className="text-sm text-purple-700 whitespace-pre-wrap">{insightForEntry}</div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
-
-        {/* AI Insights */}
-        {aiInsight && (
-          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="h-5 w-5 text-purple-600" />
-              <h3 className="text-lg font-semibold text-purple-800">AI Insights</h3>
-            </div>
-            <div className="text-sm text-purple-700 whitespace-pre-wrap">{aiInsight}</div>
-          </div>
-        )}
-        
-        {loadingInsight && (
-          <div className="bg-gray-50 border rounded-lg p-4 mb-6">
-            <div className="flex items-center gap-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600"></div>
-              <span className="text-sm text-gray-600">Generating insights...</span>
-            </div>
-          </div>
-        )}
-
-        {/* Recent Journal Entries */}
-        <div className="bg-white rounded-lg p-4 border mb-6">
-          <h2 className="text-lg font-semibold mb-3">Recent Check-ins</h2>
-          <div className="space-y-3">
-            <p className="text-gray-500 text-sm">Your recent acceptance check-ins will appear here</p>
-          </div>
+          )}
         </div>
 
-        <div className="space-y-4">
+        {activeTab === 'modules' && (
+          <div className="space-y-4">
           {modules.map(module => (
             <div key={module.id} className="border rounded-lg p-4 bg-white">
               <div className="space-y-3">
@@ -605,7 +644,47 @@ export default function AcceptancePage() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
+
+        {/* Milestones Modal */}
+        {showMilestones && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 overflow-y-auto">
+            <div className="bg-white rounded-lg w-full max-w-lg my-4">
+              <div className="p-4">
+                <h2 className="text-xl font-bold mb-4">Acceptance Milestones</h2>
+                <p className="text-sm text-gray-600 mb-4">Track your progress in accepting the reality of NPD</p>
+                
+                <div className="space-y-3">
+                  {[
+                    { id: 'mask_clarity', title: 'I see the mask clearly', desc: 'Understanding the false persona' },
+                    { id: 'grief_acceptance', title: "I'm mourning an illusion", desc: "Accepting what you're really grieving" },
+                    { id: 'hope_detachment', title: 'I no longer expect change', desc: 'Releasing false hope' },
+                    { id: 'reality_integration', title: 'NPD is permanent', desc: 'Full acceptance of the diagnosis' },
+                    { id: 'peace_achievement', title: 'I feel at peace with reality', desc: 'Emotional acceptance achieved' }
+                  ].map(milestone => (
+                    <div key={milestone.id} className="p-4 rounded-lg border bg-gray-50 border-gray-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center bg-gray-300"></div>
+                        <div>
+                          <h4 className="font-medium">{milestone.title}</h4>
+                          <p className="text-sm text-gray-600">{milestone.desc}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setShowMilestones(false)}
+                  className="w-full mt-6 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Acceptance Tips */}
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">

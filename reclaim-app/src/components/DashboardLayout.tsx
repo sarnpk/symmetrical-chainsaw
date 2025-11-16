@@ -47,6 +47,7 @@ const navigation = [
   { name: 'Journal', href: '/journal', icon: BookOpen },
   { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
   { name: 'No Contact Anchor', href: '/no-contact-anchor', icon: ShieldAlert },
+  { name: 'BIFF Assistant', href: '/biff-assistant', icon: MessageSquare },
   { name: 'Gratitude & Moments', href: '/positive-moments', icon: Heart },
   { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
   { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
@@ -56,6 +57,8 @@ const navigation = [
   { name: 'Acceptance', href: '/acceptance', icon: CheckCircle },
   { name: 'Role Reframing', href: '/role-reframing', icon: Briefcase },
   { name: 'Empathy Audit', href: '/empathy-audit', icon: HeartHandshake },
+  { name: 'Stonewalling', href: '/stonewalling', icon: Shield },
+  { name: 'Reactive Abuse', href: '/reactive-abuse', icon: RotateCcw },
   { name: 'AI Coach', href: '/ai-coach', icon: Brain },
   { name: 'Patterns', href: '/patterns', icon: BarChart3 },
   { name: 'Usage', href: '/usage', icon: PieChart },
@@ -141,13 +144,13 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
               <div className="flex-shrink-0">
                 <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
                   <span className="text-indigo-600 font-medium text-sm">
-                    {profile?.display_name?.[0] || user.email?.[0] || 'U'}
+                    {profile?.display_name?.[0] || user?.email?.[0] || 'U'}
                   </span>
                 </div>
               </div>
               <div className="ml-3 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
-                  {profile?.display_name || 'User'}
+                  {profile?.display_name || user?.email?.split('@')[0] || 'User'}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
                   {profile?.subscription_tier || 'foundation'}

@@ -6,7 +6,8 @@ import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Sparkles, AlertCircle, CheckCircle } from 'lucide-react';
+import { Sparkles, AlertCircle, CheckCircle, HelpCircle } from 'lucide-react';
+import Link from 'next/link';
 
 const commonAreas = [
   'School events/activities',
@@ -50,7 +51,7 @@ export default function RoleReframingPage() {
       setProfile(profile);
       setLoading(false);
       
-      fetch('/api/role-reframing').then(r => r.json()).then(setBoundaries);
+      fetch('/api/role-reframing').then(r => r.json()).then(data => setBoundaries(Array.isArray(data) ? data : []));
     };
     init();
   }, [router, supabase]);
@@ -66,14 +67,14 @@ export default function RoleReframingPage() {
       })
     });
     
-    fetch('/api/role-reframing').then(r => r.json()).then(setBoundaries);
+    fetch('/api/role-reframing').then(r => r.json()).then(data => setBoundaries(Array.isArray(data) ? data : []));
     setCustomArea('');
     setNotes('');
   };
 
   const handleDelete = async (id: string) => {
     await fetch(`/api/role-reframing?id=${id}`, { method: 'DELETE' });
-    fetch('/api/role-reframing').then(r => r.json()).then(setBoundaries);
+    fetch('/api/role-reframing').then(r => r.json()).then(data => setBoundaries(Array.isArray(data) ? data : []));
   };
 
   const myResponsibilities = boundaries.filter(b => b.my_responsibility);
@@ -88,7 +89,15 @@ export default function RoleReframingPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-2">Role Reframing</h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-3xl font-bold">Role Reframing</h1>
+          <Link href="/docs/ROLE_REFRAMING_USER_GUIDE.html" target="_blank">
+            <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+              <HelpCircle className="h-5 w-5" />
+              <span className="font-medium">Guide</span>
+            </button>
+          </Link>
+        </div>
         <p className="text-gray-600 mb-8">You're not her spouse anymore. You're a project manager handling a difficult counterpart.</p>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
