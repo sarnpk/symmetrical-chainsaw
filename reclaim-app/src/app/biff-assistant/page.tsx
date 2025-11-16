@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
-import { HelpCircle, Sparkles, AlertTriangle, Trash2, Maximize2, Crown } from 'lucide-react';
+import { HelpCircle, Sparkles, AlertTriangle, Trash2, Maximize2, Crown, ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import VoiceTextInput from '@/components/VoiceTextInput';
@@ -24,6 +24,7 @@ export default function BIFFAssistant() {
   const [coparentName, setCoparentName] = useState('');
   const [showVoiceInput, setShowVoiceInput] = useState(false);
   const [userTier, setUserTier] = useState<string>('foundation');
+  const [showInfo, setShowInfo] = useState(false);
   const router = useRouter();
 
   const supabase = createClient();
@@ -212,6 +213,22 @@ export default function BIFFAssistant() {
               </button>
             </Link>
           </div>
+        </div>
+
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-indigo-200 rounded-lg shadow p-4">
+          <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
+            <h2 className="font-semibold text-indigo-800">💡 What is BIFF?</h2>
+            {showInfo ? <ChevronUp className="h-5 w-5 text-indigo-600" /> : <ChevronDown className="h-5 w-5 text-indigo-600" />}
+          </div>
+          {showInfo && (
+            <div className="mt-3 space-y-2 text-sm text-indigo-900">
+              <p><strong>Brief:</strong> Keep it short - 2-5 sentences max</p>
+              <p><strong>Informative:</strong> Stick to facts, no emotions</p>
+              <p><strong>Friendly:</strong> Neutral tone, not hostile</p>
+              <p><strong>Firm:</strong> Clear boundaries, no JADE (Justify, Argue, Defend, Explain)</p>
+              <p className="text-xs italic mt-2">Tip: Wait 24 hours before sending to avoid emotional responses</p>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">

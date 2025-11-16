@@ -16,6 +16,7 @@ import WellnessWidget from '@/components/WellnessWidget'
 import BeliefReframeWidget from '@/components/BeliefReframeWidget'
 import NoContactWidget from '@/components/NoContactWidget'
 import StonewallWidget from '@/components/stonewalling/StonewallWidget'
+import CognitiveDissonanceWidget from '@/components/CognitiveDissonanceWidget'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -251,6 +252,9 @@ export default function DashboardPage() {
 
         {/* Belief Reframe Widget */}
         <BeliefReframeWidget userId={user.id} />
+
+        {/* Cognitive Dissonance Alerts */}
+        <CognitiveDissonanceWidget />
         
         {/* Professional Support Widget */}
         <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">

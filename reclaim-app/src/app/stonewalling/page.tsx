@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Shield, Clock, AlertCircle, Trash2, Download, BarChart3, Plus, Edit2, HelpCircle } from 'lucide-react'
+import { Shield, Clock, AlertCircle, Trash2, Download, BarChart3, Plus, Edit2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react'
 import Link from 'next/link'
 import PatternDashboard from '@/components/stonewalling/PatternDashboard'
 import { User } from '@supabase/supabase-js'
@@ -33,6 +33,7 @@ export default function StonewallPage() {
   const [durationValue, setDurationValue] = useState('')
   const [durationUnit, setDurationUnit] = useState('minutes')
   const [filterType, setFilterType] = useState<string>('all')
+  const [showInfo, setShowInfo] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -359,18 +360,23 @@ export default function StonewallPage() {
         )}
 
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
-          <CardHeader>
-            <CardTitle className="text-purple-800">💡 What is Stonewalling?</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-purple-900">
-            <p>Emotional shutdown where someone refuses to communicate, creating a wall of silence.</p>
-            <div className="space-y-1">
-              <div><strong>✓ Silent treatment:</strong> Ignoring you completely</div>
-              <div><strong>✓ Physical withdrawal:</strong> Leaving the room or situation</div>
-              <div><strong>✓ Topic avoidance:</strong> Refusing to discuss certain subjects</div>
-              <div><strong>✓ Track patterns:</strong> See what triggers shutdowns</div>
+          <CardHeader className="cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-purple-800">💡 What is Stonewalling?</CardTitle>
+              {showInfo ? <ChevronUp className="h-5 w-5 text-purple-600" /> : <ChevronDown className="h-5 w-5 text-purple-600" />}
             </div>
-          </CardContent>
+          </CardHeader>
+          {showInfo && (
+            <CardContent className="space-y-2 text-sm text-purple-900">
+              <p>Emotional shutdown where someone refuses to communicate, creating a wall of silence.</p>
+              <div className="space-y-1">
+                <div><strong>✓ Silent treatment:</strong> Ignoring you completely</div>
+                <div><strong>✓ Physical withdrawal:</strong> Leaving the room or situation</div>
+                <div><strong>✓ Topic avoidance:</strong> Refusing to discuss certain subjects</div>
+                <div><strong>✓ Track patterns:</strong> See what triggers shutdowns</div>
+              </div>
+            </CardContent>
+          )}
         </Card>
 
         {incidents.length > 0 && (

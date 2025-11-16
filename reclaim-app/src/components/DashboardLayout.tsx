@@ -57,6 +57,7 @@ const navigation = [
   { name: 'Acceptance', href: '/acceptance', icon: CheckCircle },
   { name: 'Role Reframing', href: '/role-reframing', icon: Briefcase },
   { name: 'Empathy Audit', href: '/empathy-audit', icon: HeartHandshake },
+  { name: 'Gaslighting', href: '/gaslighting-tracker', icon: AlertTriangle },
   { name: 'Stonewalling', href: '/stonewalling', icon: Shield },
   { name: 'Reactive Abuse', href: '/reactive-abuse', icon: RotateCcw },
   { name: 'AI Coach', href: '/ai-coach', icon: Brain },

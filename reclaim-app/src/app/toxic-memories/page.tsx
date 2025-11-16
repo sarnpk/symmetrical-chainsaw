@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, AlertTriangle, Trash2, Brain, Image, Video, Mic, Link as LinkIcon, X, MicOff, Edit2 } from 'lucide-react'
+import { Plus, AlertTriangle, Trash2, Brain, Image, Video, Mic, Link as LinkIcon, X, MicOff, Edit2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react'
 import MediaUpload from '@/components/MediaUpload'
 import { useRef } from 'react'
 import { User } from '@supabase/supabase-js'
@@ -27,6 +27,7 @@ export default function ToxicMemoriesPage() {
   const [isListening, setIsListening] = useState(false)
   const [editingMemory, setEditingMemory] = useState<any>(null)
   const [mediaUrls, setMediaUrls] = useState<{ audio?: string; video?: string; images?: string[] }>({})
+  const [showInfo, setShowInfo] = useState(false)
   const router = useRouter()
   const supabase = createClient()
   const recognitionRef = useRef<any>(null)
@@ -231,9 +232,21 @@ export default function ToxicMemoriesPage() {
       )}
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Toxic Memory Journal</h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-2">Quick snapshots of toxic incidents - brief notes with evidence</p>
+          <div className="flex items-center gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Toxic Memory Journal</h1>
+                <Link 
+                  href="/docs/TOXIC_MEMORY_JOURNAL_GUIDE.html"
+                  target="_blank"
+                  className="text-red-600 hover:text-red-700"
+                  title="View User Guide"
+                >
+                  <HelpCircle className="h-6 w-6" />
+                </Link>
+              </div>
+              <p className="text-sm sm:text-base text-gray-600 mt-2">Quick snapshots of toxic incidents - brief notes with evidence</p>
+            </div>
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
@@ -318,25 +331,30 @@ export default function ToxicMemoriesPage() {
         )}
 
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
-          <CardHeader>
-            <CardTitle className="text-purple-800">💡 About Toxic Memory Journal</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-purple-900">
-            <p className="font-medium">
-              A quick and short way to capture toxic/abusive incidents as they happen or shortly after. 
-              Think of it as "evidence snapshots" - brief notes with optional media proof.
-            </p>
-            <div className="space-y-2">
-              <div><strong>✓ Quick capture:</strong> Jot down what happened in a few sentences</div>
-              <div><strong>✓ Add evidence:</strong> Attach audio, video, or images as proof</div>
-              <div><strong>✓ AI analysis:</strong> Identify manipulation tactics (gaslighting, DARVO, etc.)</div>
-              <div><strong>✓ Pattern tracking:</strong> See recurring abuse patterns over time</div>
-              <div><strong>✓ Legal/therapeutic use:</strong> Timestamped evidence for professionals</div>
+          <CardHeader className="cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-purple-800">💡 About Toxic Memory Journal</CardTitle>
+              {showInfo ? <ChevronUp className="h-5 w-5 text-purple-600" /> : <ChevronDown className="h-5 w-5 text-purple-600" />}
             </div>
-            <p className="text-xs italic mt-2">
-              Tip: Keep entries brief and factual. For deeper reflection, use your main journal.
-            </p>
-          </CardContent>
+          </CardHeader>
+          {showInfo && (
+            <CardContent className="space-y-3 text-sm text-purple-900">
+              <p className="font-medium">
+                A quick and short way to capture toxic/abusive incidents as they happen or shortly after. 
+                Think of it as "evidence snapshots" - brief notes with optional media proof.
+              </p>
+              <div className="space-y-2">
+                <div><strong>✓ Quick capture:</strong> Jot down what happened in a few sentences</div>
+                <div><strong>✓ Add evidence:</strong> Attach audio, video, or images as proof</div>
+                <div><strong>✓ AI analysis:</strong> Identify manipulation tactics (gaslighting, DARVO, etc.)</div>
+                <div><strong>✓ Pattern tracking:</strong> See recurring abuse patterns over time</div>
+                <div><strong>✓ Legal/therapeutic use:</strong> Timestamped evidence for professionals</div>
+              </div>
+              <p className="text-xs italic mt-2">
+                Tip: Keep entries brief and factual. For deeper reflection, use your main journal.
+              </p>
+            </CardContent>
+          )}
         </Card>
 
         {memories.length === 0 ? (

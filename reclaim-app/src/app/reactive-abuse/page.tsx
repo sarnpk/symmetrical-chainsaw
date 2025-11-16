@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, RotateCcw, AlertCircle, Trash2, Edit2, HelpCircle, Download } from 'lucide-react'
+import { Plus, RotateCcw, AlertCircle, Trash2, Edit2, HelpCircle, Download, ChevronDown, ChevronUp } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
@@ -19,6 +19,7 @@ export default function ReactiveAbusePage() {
   const [showForm, setShowForm] = useState(false)
   const [editingIncident, setEditingIncident] = useState<any>(null)
   const [filterType, setFilterType] = useState<string>('all')
+  const [showInfo, setShowInfo] = useState(false)
   const [formData, setFormData] = useState({
     what_you_addressed: '',
     your_approach: '',
@@ -415,17 +416,22 @@ export default function ReactiveAbusePage() {
         )}
 
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
-          <CardHeader>
-            <CardTitle className="text-purple-800">💡 What is Reactive Abuse?</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-purple-900">
-            <p>When you try to address a concern and they flip it around, making YOU the problem instead.</p>
-            <div className="space-y-1">
-              <div><strong>✓ DARVO:</strong> Deny, Attack, Reverse Victim & Offender</div>
-              <div><strong>✓ Track patterns:</strong> Topics you can't discuss without being blamed</div>
-              <div><strong>✓ Reality check:</strong> See how often you apologize for their behavior</div>
+          <CardHeader className="cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-purple-800">💡 What is Reactive Abuse?</CardTitle>
+              {showInfo ? <ChevronUp className="h-5 w-5 text-purple-600" /> : <ChevronDown className="h-5 w-5 text-purple-600" />}
             </div>
-          </CardContent>
+          </CardHeader>
+          {showInfo && (
+            <CardContent className="space-y-2 text-sm text-purple-900">
+              <p>When you try to address a concern and they flip it around, making YOU the problem instead.</p>
+              <div className="space-y-1">
+                <div><strong>✓ DARVO:</strong> Deny, Attack, Reverse Victim & Offender</div>
+                <div><strong>✓ Track patterns:</strong> Topics you can't discuss without being blamed</div>
+                <div><strong>✓ Reality check:</strong> See how often you apologize for their behavior</div>
+              </div>
+            </CardContent>
+          )}
         </Card>
 
         {filteredIncidents.length === 0 && incidents.length === 0 ? (
