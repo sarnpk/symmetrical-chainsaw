@@ -210,32 +210,32 @@ export default function FreeAssessmentPage() {
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        <div className="text-center mb-12">
+        <section className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Free Relationship Health Check
+            Free Relationship Health Assessment
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Quick assessment to evaluate your relationship dynamics
+            Take our evidence-based relationship health check to identify potential concerns and get personalized insights for healthier relationships
           </p>
-        </div>
+        </section>
 
         {/* Assessment Card */}
         <div className="max-w-2xl mx-auto">
           {/* Info Banner */}
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+          <aside className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8" role="complementary">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
                 <Info className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-blue-900 mb-2">About This Assessment</h3>
+                <h2 className="font-semibold text-blue-900 mb-2">About This Relationship Health Assessment</h2>
                 <p className="text-blue-800 leading-relaxed">
-                  This tool helps evaluate relationship dynamics and identify areas that may need attention. 
-                  It's not a substitute for professional counseling but can guide you toward appropriate resources.
+                  This evidence-based tool evaluates communication, safety, boundaries, respect, and support in relationships. 
+                  Used by thousands to identify unhealthy patterns and access appropriate resources. Not a substitute for professional counseling.
                 </p>
               </div>
             </div>
-          </div>
+          </aside>
 
           {/* Progress Section */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
@@ -262,10 +262,10 @@ export default function FreeAssessmentPage() {
             </div>
 
             {/* Question Content */}
-            <div className="p-8">
-              <h3 className="text-2xl font-semibold text-gray-900 mb-8 leading-relaxed">
+            <section className="p-8">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-8 leading-relaxed">
                 {question.question}
-              </h3>
+              </h2>
               
               <div className="space-y-4">
                 {[
@@ -323,11 +323,11 @@ export default function FreeAssessmentPage() {
           </div>
 
           {/* Footer */}
-          <div className="text-center mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
+          <footer className="text-center mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
             <p className="text-purple-700">
-              Powered by <span className="font-bold">Reclaim</span> - Your journey to healthier relationships starts here
+              Powered by <span className="font-bold">Reclaim</span> - Trusted by thousands for relationship health and abuse recovery
             </p>
-          </div>
+          </footer>
         </div>
       </main>
     </div>

@@ -3,6 +3,32 @@ import { createClient } from '@/lib/supabase'
 import AuthButton from '@/components/AuthButton'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Shield, BookOpen, Brain, BarChart3, Heart, Lock } from 'lucide-react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Reclaim - Recovery Platform for Narcissistic Abuse Survivors | Free Relationship Health Check',
+  description: 'AI-powered recovery platform for narcissistic abuse survivors. Free relationship health assessment, BIFF communication tools, gaslighting tracker, and trauma-informed support in 70+ languages.',
+  keywords: 'narcissistic abuse recovery, relationship health assessment, gaslighting tracker, BIFF communication, trauma recovery, emotional abuse support, toxic relationship help',
+  openGraph: {
+    title: 'Reclaim - Your Journey to Recovery Starts Here',
+    description: 'Secure platform for narcissistic abuse survivors with AI-powered tools, free relationship assessment, and multilingual support.',
+    type: 'website',
+    url: 'https://reclaim.app',
+    images: [{
+      url: '/logo.png',
+      width: 1200,
+      height: 630,
+      alt: 'Reclaim Recovery Platform'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Reclaim - Recovery Platform for Abuse Survivors',
+    description: 'Free relationship health check and AI-powered recovery tools for narcissistic abuse survivors.',
+  },
+  robots: 'index, follow',
+  canonical: 'https://reclaim.app'
+}
 
 export default async function HomePage() {
   const supabase = createClient()
@@ -33,8 +59,7 @@ export default async function HomePage() {
             Your Journey to <span className="text-indigo-600">Recovery</span> Starts Here
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            A secure, private platform designed specifically for survivors of narcissistic abuse. 
-            AI-powered cognitive dissonance detection, BIFF communication tools, gaslighting evidence tracking, and multilingual support in 70+ languages.
+            The #1 recovery platform for narcissistic abuse survivors. Get your free relationship health assessment, AI-powered tools for healing, and evidence-based support in 70+ languages. Start your recovery journey today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <AuthButton variant="primary" />
@@ -52,7 +77,7 @@ export default async function HomePage() {
       <section className="py-16 px-4">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Powerful Tools for Your Recovery
+            Evidence-Based Recovery Tools for Narcissistic Abuse Survivors
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="hover:shadow-lg transition-shadow border-amber-200">
@@ -216,7 +241,7 @@ export default async function HomePage() {
       <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Choose Your Recovery Plan
+            Affordable Recovery Plans - Start Free Today
           </h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Foundation */}
