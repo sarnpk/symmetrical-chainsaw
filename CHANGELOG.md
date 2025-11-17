@@ -4,7 +4,7 @@ All notable changes to the Reclaim app will be documented in this file.
 
 ## [Unreleased] - 2025-01-XX
 
-### Added - Cognitive Dissonance Alerts & Reactive Abuse Journal
+### Added - Cognitive Dissonance Alerts, BIFF Enhancements & Landing Page Updates
 
 #### 🧠 Cognitive Dissonance Alert System
 - **New Feature**: AI-powered detection of conflicting beliefs across all journals
@@ -21,6 +21,42 @@ All notable changes to the Reclaim app will be documented in this file.
 - API endpoints: `/api/cognitive-dissonance/detect`, `/api/cognitive-dissonance/alerts`
 - Component: `CognitiveDissonanceWidget.tsx`
 - Page: `/cognitive-dissonance`
+
+#### 💬 BIFF Assistant - Radical Non-Engagement Enhancements
+- **Rebranded**: Now explicitly labeled as "Radical Non-Engagement Tool"
+- **Engagement Metrics Dashboard**: Monthly success tracking showing:
+  - Disengagement success rate (% of non-reactive responses)
+  - JADE avoidance count (Justify, Argue, Defend, Explain)
+  - Average response time in hours
+  - High BIFF scores (7+ out of 10)
+- **Response Time Tracking**: 
+  - Captures timestamp when message received
+  - Shows elapsed time since message
+  - Displays ✅ when 24+ hours passed
+  - Celebrates delayed responses as wins
+- **Educational Content**: Explains BIFF = Radical Non-Engagement in practice
+- **Database Enhancements**:
+  - Added `response_time_hours` to track delay
+  - Added `avoided_engagement` boolean flag
+  - Added `engagement_notes` for user reflections
+  - New `biff_engagement_metrics` table for monthly aggregates
+- API endpoint: `/api/biff-assistant/metrics`
+- Migration: `20250904_biff_engagement_tracking.sql`
+
+#### 🎨 Landing Page Updates
+- Added 6 new feature cards with "NEW" badges:
+  - Cognitive Dissonance Alerts (amber)
+  - BIFF Assistant / Radical Non-Engagement (indigo)
+  - Gaslighting Truth Journal (red)
+  - Reactive Abuse Tracker (purple)
+  - Stonewalling Journal (gray)
+  - No Contact Anchor (green)
+- Updated hero section to highlight:
+  - AI-powered cognitive dissonance detection
+  - BIFF communication tools
+  - Gaslighting evidence tracking
+  - 70+ language support
+- Color-coded feature cards for visual distinction
 
 ### Added - Reactive Abuse Journal & Stonewalling Improvements
 
@@ -81,11 +117,12 @@ All notable changes to the Reclaim app will be documented in this file.
 - All "Log" terminology changed to "Journal" for consistency
 
 ### Technical Details
-- API routes: `/api/reactive-abuse/export`
-- Database migrations: `20250832_reactive_abuse_tracker.sql`
-- Help guides: `REACTIVE_ABUSE_GUIDE.html`
-- Components: Inline forms with state management
+- API routes: `/api/reactive-abuse/export`, `/api/biff-assistant/metrics`, `/api/cognitive-dissonance/detect`, `/api/cognitive-dissonance/alerts`
+- Database migrations: `20250832_reactive_abuse_tracker.sql`, `20250903_cognitive_dissonance_alerts.sql`, `20250904_biff_engagement_tracking.sql`
+- Help guides: `REACTIVE_ABUSE_GUIDE.html`, `BIFF_ASSISTANT_USER_GUIDE.html`
+- Components: Inline forms with state management, `CognitiveDissonanceWidget.tsx`
 - Icons: lucide-react for consistent iconography
+- AI: Gemini Pro for conflict detection and BIFF analysis
 
 ---
 

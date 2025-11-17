@@ -25,6 +25,8 @@ export default function BIFFAssistant() {
   const [showVoiceInput, setShowVoiceInput] = useState(false);
   const [userTier, setUserTier] = useState<string>('foundation');
   const [showInfo, setShowInfo] = useState(false);
+  const [metrics, setMetrics] = useState<any>(null);
+  const [messageTimestamp, setMessageTimestamp] = useState<Date | null>(null);
   const router = useRouter();
 
   const supabase = createClient();
@@ -33,9 +35,16 @@ export default function BIFFAssistant() {
     checkAccess();
     loadTemplates();
     loadCommunications();
+    loadMetrics();
     const savedName = localStorage.getItem('biff_coparent_name');
     if (savedName) setCoparentName(savedName);
   }, [filterCategory, filterScore]);
+
+  const loadMetrics = async () => {
+    const res = await fetch('/api/biff-assistant/metrics');
+    const data = await res.json();
+    setMetrics(data);
+  };
 
   const checkAccess = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -160,6 +169,8 @@ export default function BIFFAssistant() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    const responseTime = messageTimestamp ? Math.round((new Date().getTime() - messageTimestamp.getTime()) / (1000 * 60 * 60)) : null;
+
     await supabase.from('coparent_communications').insert({
       user_id: user.id,
       direction: 'outgoing',
@@ -169,13 +180,17 @@ export default function BIFFAssistant() {
       biff_score: biffScore,
       jade_detected: jadeWarning,
       cooling_off_used: showCoolingOff,
+      response_time_hours: responseTime,
+      avoided_engagement: !jadeWarning && biffScore >= 7,
       sent_at: new Date().toISOString()
     });
 
     setIncomingMessage('');
     setDraftResponse('');
     setShowCoolingOff(false);
+    setMessageTimestamp(null);
     loadCommunications();
+    loadMetrics();
   };
 
   if (userTier === 'foundation') {
@@ -205,6 +220,7 @@ export default function BIFFAssistant() {
             <div>
               <h1 className="text-2xl font-bold mb-2">BIFF Communication Assistant</h1>
               <p className="text-gray-600 text-sm">Brief • Informative • Friendly • Firm</p>
+              <p className="text-indigo-600 text-xs font-medium mt-1">Radical Non-Engagement Tool</p>
             </div>
             <Link href="/docs/BIFF_ASSISTANT_USER_GUIDE.html" target="_blank">
               <button className="flex items-center gap-2 px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
@@ -217,19 +233,47 @@ export default function BIFFAssistant() {
 
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-indigo-200 rounded-lg shadow p-4">
           <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
-            <h2 className="font-semibold text-indigo-800">💡 What is BIFF?</h2>
+            <h2 className="font-semibold text-indigo-800">💡 What is BIFF & Radical Non-Engagement?</h2>
             {showInfo ? <ChevronUp className="h-5 w-5 text-indigo-600" /> : <ChevronDown className="h-5 w-5 text-indigo-600" />}
           </div>
           {showInfo && (
             <div className="mt-3 space-y-2 text-sm text-indigo-900">
+              <p className="font-semibold">BIFF Method:</p>
               <p><strong>Brief:</strong> Keep it short - 2-5 sentences max</p>
               <p><strong>Informative:</strong> Stick to facts, no emotions</p>
               <p><strong>Friendly:</strong> Neutral tone, not hostile</p>
               <p><strong>Firm:</strong> Clear boundaries, no JADE (Justify, Argue, Defend, Explain)</p>
-              <p className="text-xs italic mt-2">Tip: Wait 24 hours before sending to avoid emotional responses</p>
+              <p className="font-semibold mt-3">Radical Non-Engagement:</p>
+              <p>Accept they won't change, refuse to engage emotionally. BIFF = Radical Non-Engagement in practice.</p>
+              <p className="text-xs italic mt-2">Tip: Wait 24+ hours before sending to avoid emotional responses</p>
             </div>
           )}
         </div>
+
+        {metrics && metrics.total_communications > 0 && (
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 rounded-lg shadow p-6">
+            <h2 className="font-semibold text-green-800 mb-4">📊 This Month's Success Metrics</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">{metrics.success_rate}%</div>
+                <div className="text-xs text-green-700">Disengagement Rate</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">{metrics.jade_avoided}/{metrics.total_communications}</div>
+                <div className="text-xs text-green-700">JADE Avoided</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">{metrics.avg_response_time_hours}h</div>
+                <div className="text-xs text-green-700">Avg Response Time</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">{metrics.high_biff_scores}/{metrics.total_communications}</div>
+                <div className="text-xs text-green-700">High BIFF Scores</div>
+              </div>
+            </div>
+            <p className="text-xs text-green-600 text-center mt-3">🎉 Every successful disengagement is a victory!</p>
+          </div>
+        )}
 
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="font-semibold mb-4">Quick Templates</h2>
@@ -262,11 +306,17 @@ export default function BIFFAssistant() {
             <label className="block text-sm font-medium mb-2">Their Message (optional)</label>
             <textarea
               value={incomingMessage}
-              onChange={(e) => setIncomingMessage(e.target.value)}
+              onChange={(e) => {
+                setIncomingMessage(e.target.value);
+                if (e.target.value && !messageTimestamp) setMessageTimestamp(new Date());
+              }}
               className="w-full p-3 border rounded"
               rows={3}
               placeholder='Example: "You never let me see the kids! This is YOUR fault. I deserve more time and you know it. Stop being so controlling and difficult. The kids are suffering because of YOU."'
             />
+            {messageTimestamp && (
+              <p className="text-xs text-gray-500 mt-1">Message received: {messageTimestamp.toLocaleString()}</p>
+            )}
           </div>
 
           {incomingMessage && (
@@ -367,8 +417,14 @@ export default function BIFFAssistant() {
               checked={showCoolingOff}
               onChange={(e) => setShowCoolingOff(e.target.checked)}
             />
-            Wait 24hrs before sending (recommended)
+            Wait 24hrs before sending (recommended for non-engagement)
           </label>
+          {messageTimestamp && (
+            <p className="text-xs text-gray-600">
+              Time elapsed: {Math.round((new Date().getTime() - messageTimestamp.getTime()) / (1000 * 60 * 60))} hours
+              {Math.round((new Date().getTime() - messageTimestamp.getTime()) / (1000 * 60 * 60)) >= 24 && ' ✅'}
+            </p>
+          )}
 
           <div className="flex gap-3">
             <button

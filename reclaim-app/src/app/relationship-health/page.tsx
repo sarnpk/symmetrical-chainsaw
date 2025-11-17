@@ -4,14 +4,13 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
+import RelationshipHealthAssessment from '@/components/RelationshipHealthAssessment'
 import { User } from '@supabase/supabase-js'
-import { Profile, JournalEntry } from '@/lib/supabase'
-import DashboardV2 from './DashboardV2'
+import { Profile } from '@/lib/supabase'
 
-export default function DashboardPage() {
+export default function RelationshipHealthPage() {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [recentEntries, setRecentEntries] = useState<JournalEntry[]>([])
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const supabase = createClient()
@@ -27,42 +26,14 @@ export default function DashboardPage() {
       
       setUser(user)
       
-      // Get or create user profile
-      let { data: profile } = await supabase
+      // Get user profile
+      const { data: profile } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single()
       
-      if (!profile) {
-        // Create profile if it doesn't exist
-        const { data: newProfile, error } = await supabase
-          .from('profiles')
-          .insert({
-            id: user.id,
-            email: user.email!,
-            display_name: user.email?.split('@')[0],
-            subscription_tier: 'foundation',
-          })
-          .select()
-          .single()
-        
-        if (!error) {
-          profile = newProfile
-        }
-      }
-      
       setProfile(profile)
-      
-      // Get recent entries
-      const { data: entries } = await supabase
-        .from('journal_entries')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(3)
-      
-      setRecentEntries(entries || [])
       setLoading(false)
     }
 
@@ -83,7 +54,16 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <DashboardV2 user={user} profile={profile} recentEntries={recentEntries} />
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Relationship Health Assessment</h1>
+          <p className="text-gray-600 mt-2">
+            Evaluate your relationship dynamics and identify areas for growth or concern.
+          </p>
+        </div>
+        
+        <RelationshipHealthAssessment />
+      </div>
     </DashboardLayout>
   )
 }

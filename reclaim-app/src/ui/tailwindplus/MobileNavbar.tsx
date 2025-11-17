@@ -39,7 +39,7 @@ export default function MobileNavbar({ onMenuClick }: MobileNavbarProps) {
               </div>
 
               <div className="flex items-center">
-                <Shield className="h-6 w-6 text-indigo-600" />
+                <img src="/logo.png" alt="Reclaim" className="h-6 w-6" />
                 <span className="ml-2 text-base font-semibold text-gray-900">Reclaim</span>
               </div>
 

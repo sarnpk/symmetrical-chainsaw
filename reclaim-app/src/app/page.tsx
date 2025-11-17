@@ -19,7 +19,7 @@ export default async function HomePage() {
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <Shield className="h-8 w-8 text-indigo-600" />
+            <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
             <span className="text-xl font-bold text-gray-900">Reclaim</span>
           </div>
           <AuthButton />
@@ -34,10 +34,13 @@ export default async function HomePage() {
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             A secure, private platform designed specifically for survivors of narcissistic abuse. 
-            Build emotional boundaries with Reality Anchor routines, get multilingual AI support, and heal at your own pace.
+            AI-powered cognitive dissonance detection, BIFF communication tools, gaslighting evidence tracking, and multilingual support in 70+ languages.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <AuthButton variant="primary" />
+            <a href="/free-assessment" className="px-8 py-3 bg-pink-600 text-white rounded-lg font-medium hover:bg-pink-700 transition-colors inline-block">
+              Free Relationship Check
+            </a>
             <a href="/learn-more" className="px-8 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors inline-block">
               Learn More
             </a>
@@ -87,6 +90,71 @@ export default async function HomePage() {
                 <CardTitle>Positive Moments Journal</CardTitle>
                 <CardDescription>
                   Capture good experiences to build counter-evidence against false beliefs and track your healing progress
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-amber-200">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Brain className="h-8 w-8 text-amber-600" />
+                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-medium">NEW</span>
+                </div>
+                <CardTitle>Cognitive Dissonance Alerts</CardTitle>
+                <CardDescription>
+                  AI detects conflicting beliefs across journals and helps resolve them with side-by-side comparisons
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-indigo-200">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="h-8 w-8 text-indigo-600" />
+                  <span className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full font-medium">NEW</span>
+                </div>
+                <CardTitle>BIFF Assistant (Radical Non-Engagement)</CardTitle>
+                <CardDescription>
+                  Master Brief, Informative, Friendly, Firm communication with JADE detection and success metrics
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-red-200">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="h-8 w-8 text-red-600" />
+                  <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">NEW</span>
+                </div>
+                <CardTitle>Gaslighting Truth Journal</CardTitle>
+                <CardDescription>
+                  Document their lies vs reality with evidence (audio/video/images) and AI contradiction detection
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-purple-200">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="h-8 w-8 text-purple-600" />
+                  <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full font-medium">NEW</span>
+                </div>
+                <CardTitle>Reactive Abuse Tracker</CardTitle>
+                <CardDescription>
+                  Track DARVO patterns when your concerns get turned against you with export reports
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-gray-200">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="h-8 w-8 text-gray-600" />
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full font-medium">NEW</span>
+                </div>
+                <CardTitle>Stonewalling Journal</CardTitle>
+                <CardDescription>
+                  Document silent treatment, withdrawal, and emotional unavailability with pattern tracking
                 </CardDescription>
               </CardHeader>
             </Card>
