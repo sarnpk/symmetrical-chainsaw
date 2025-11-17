@@ -51,9 +51,7 @@ export default function FreeAssessmentPage() {
     const overallScore = Math.round((totalScore / maxScore) * 100)
     const riskLevel = overallScore >= 70 ? 'low' : overallScore >= 40 ? 'moderate' : 'high'
 
-    // AI insights only for signed-up users
     setResults({ overallScore, riskLevel })
-    
     setIsComplete(true)
   }
 
@@ -67,7 +65,6 @@ export default function FreeAssessmentPage() {
   if (isComplete && results) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50">
-        {/* Header */}
         <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
@@ -87,10 +84,8 @@ export default function FreeAssessmentPage() {
           </div>
         </header>
 
-        {/* Results Content */}
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-            {/* Results Header */}
             <div className={`px-8 py-8 text-white bg-gradient-to-r ${
               results.riskLevel === 'low' ? 'from-green-500 to-emerald-600' :
               results.riskLevel === 'moderate' ? 'from-yellow-500 to-orange-500' :
@@ -107,7 +102,6 @@ export default function FreeAssessmentPage() {
             </div>
 
             <div className="p-8 space-y-8">
-              {/* Progress Bar */}
               <div className="w-full bg-gray-200 rounded-full h-4">
                 <div 
                   className={`h-4 rounded-full transition-all duration-1000 ${
@@ -119,7 +113,6 @@ export default function FreeAssessmentPage() {
                 />
               </div>
 
-              {/* AI Insights Preview */}
               <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border-2 border-indigo-200 p-6">
                 <div className="text-center space-y-4">
                   <div className="flex items-center justify-center gap-3">
@@ -135,7 +128,6 @@ export default function FreeAssessmentPage() {
                 </div>
               </div>
 
-              {/* Safety Alert */}
               {results.riskLevel !== 'low' && (
                 <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
                   <div className="flex items-start gap-4">
@@ -150,7 +142,6 @@ export default function FreeAssessmentPage() {
                 </div>
               )}
 
-              {/* CTA Section */}
               <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-8 text-white text-center">
                 <h3 className="text-2xl font-bold mb-4">Ready to Take Action?</h3>
                 <p className="text-lg mb-6 opacity-90">
@@ -187,7 +178,6 @@ export default function FreeAssessmentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50">
-      {/* Header */}
       <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -207,9 +197,7 @@ export default function FreeAssessmentPage() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section */}
         <section className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             Free Relationship Health Assessment
@@ -219,9 +207,7 @@ export default function FreeAssessmentPage() {
           </p>
         </section>
 
-        {/* Assessment Card */}
         <div className="max-w-2xl mx-auto">
-          {/* Info Banner */}
           <aside className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8" role="complementary">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
@@ -237,9 +223,7 @@ export default function FreeAssessmentPage() {
             </div>
           </aside>
 
-          {/* Progress Section */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-            {/* Progress Header */}
             <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-6 text-white">
               <div className="flex items-center gap-3 mb-4">
                 <Heart className="h-7 w-7" />
@@ -261,7 +245,6 @@ export default function FreeAssessmentPage() {
               </div>
             </div>
 
-            {/* Question Content */}
             <section className="p-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-8 leading-relaxed">
                 {question.question}
@@ -292,9 +275,8 @@ export default function FreeAssessmentPage() {
                   </button>
                 ))}
               </div>
-            </div>
+            </section>
 
-            {/* Navigation */}
             <div className="bg-gray-50 px-8 py-6 flex justify-between items-center">
               <button
                 onClick={() => setCurrentQuestion(prev => prev - 1)}
@@ -322,7 +304,6 @@ export default function FreeAssessmentPage() {
             </div>
           </div>
 
-          {/* Footer */}
           <footer className="text-center mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
             <p className="text-purple-700">
               Powered by <span className="font-bold">Reclaim</span> - Trusted by thousands for relationship health and abuse recovery
