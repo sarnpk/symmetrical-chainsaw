@@ -30,7 +30,12 @@ import {
   AlertTriangle,
   Anchor,
   ShieldAlert,
-  Bot
+  Bot,
+  ChevronDown,
+  ChevronRight,
+  Plus,
+  Wind,
+  Sparkles
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
@@ -43,40 +48,90 @@ interface DashboardLayoutProps {
   profile: Profile | null
 }
 
-const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'Journal', href: '/journal', icon: BookOpen },
-  { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
-  { name: 'No Contact Anchor', href: '/no-contact-anchor', icon: ShieldAlert },
-  { name: 'BIFF Assistant', href: '/biff-assistant', icon: MessageSquare },
-  { name: 'Gratitude & Moments', href: '/positive-moments', icon: Heart },
-  { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
-  { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
-  { name: 'NPD Traits', href: '/npd-traits', icon: Target },
-  { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
-  { name: 'Narcissist Detector', href: '/narcissist-detector', icon: AlertTriangle },
-  { name: 'Narcissist Simulator', href: '/narcissist-simulator', icon: Bot },
-  { name: 'Grey Rock Templates', href: '/grey-rock-templates', icon: FileText },
-  { name: 'Acceptance', href: '/acceptance', icon: CheckCircle },
-  { name: 'Role Reframing', href: '/role-reframing', icon: Briefcase },
-  { name: 'Empathy Audit', href: '/empathy-audit', icon: HeartHandshake },
-  { name: 'Gaslighting', href: '/gaslighting-tracker', icon: AlertTriangle },
-  { name: 'Stonewalling', href: '/stonewalling', icon: Shield },
-  { name: 'Reactive Abuse', href: '/reactive-abuse', icon: RotateCcw },
-  { name: 'Letting Go', href: '/letting-go', icon: Heart },
-  { name: 'AI Coach', href: '/ai-coach', icon: Brain },
-  { name: 'Patterns', href: '/patterns', icon: BarChart3 },
-  { name: 'Usage', href: '/usage', icon: PieChart },
-  { name: 'Subscription', href: '/subscription', icon: Crown },
-  { name: 'Wellness', href: '/wellness', icon: HeartPulse },
-  { name: 'Healing', href: '/healing', icon: Heart },
-  { name: 'Community', href: '/community', icon: Users },
+const navigationGroups = [
+  {
+    name: 'Main',
+    items: [
+      { name: 'Dashboard', href: '/dashboard', icon: Home },
+    ]
+  },
+  {
+    name: 'Essentials',
+    items: [
+      { name: 'Journal', href: '/journal', icon: BookOpen },
+      { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
+      { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
+      { name: 'Letting Go', href: '/letting-go', icon: Wind },
+      { name: 'Patterns', href: '/patterns', icon: BarChart3 },
+    ]
+  },
+  {
+    name: 'Protection',
+    items: [
+      { name: 'Grey Rock Templates', href: '/grey-rock-templates', icon: FileText },
+      { name: 'Grey Rock Practice', href: '/grey-rock', icon: MessageSquare },
+      { name: 'BIFF Assistant', href: '/biff-assistant', icon: MessageSquare },
+      { name: 'Stonewalling', href: '/stonewalling', icon: Shield },
+      { name: 'Reactive Abuse', href: '/reactive-abuse', icon: RotateCcw },
+    ]
+  },
+  {
+    name: 'Wellness',
+    items: [
+      { name: 'Wellness', href: '/wellness', icon: HeartPulse },
+      { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle },
+      { name: 'Healing', href: '/healing', icon: Sparkles },
+      { name: 'Mind Reset', href: '/mind-reset', icon: Brain },
+      { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
+      { name: 'Affirmations', href: '/affirmations', icon: Sparkles },
+      { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
+      { name: 'No Contact Anchor', href: '/no-contact-anchor', icon: ShieldAlert },
+      { name: 'Acceptance', href: '/acceptance', icon: CheckCircle },
+      { name: 'Role Reframing', href: '/role-reframing', icon: Briefcase },
+    ]
+  },
+  {
+    name: 'Analysis',
+    items: [
+      { name: 'Narcissist Detector', href: '/narcissist-detector', icon: AlertTriangle },
+      { name: 'Narcissist Simulator', href: '/narcissist-simulator', icon: Bot },
+      { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
+      { name: 'Relationship Health', href: '/relationship-health', icon: Heart },
+      { name: 'NPD Traits', href: '/npd-traits', icon: Target },
+      { name: 'Gaslighting', href: '/gaslighting-tracker', icon: AlertTriangle },
+      { name: 'Empathy Audit', href: '/empathy-audit', icon: HeartHandshake },
+    ]
+  },
+  {
+    name: 'Support',
+    items: [
+      { name: 'AI Coach', href: '/ai-coach', icon: Brain },
+      { name: 'Safety Plan', href: '/safety-plan', icon: Shield },
+      { name: 'Community', href: '/community', icon: Users },
+    ]
+  },
+  {
+    name: 'Settings',
+    items: [
+      { name: 'Usage', href: '/usage', icon: PieChart },
+      { name: 'Subscription', href: '/subscription', icon: Crown },
+    ]
+  },
 ]
 
 export default function DashboardLayout({ children, user, profile }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['Main', 'Essentials', 'Wellness'])
   const pathname = usePathname()
   const supabase = createClient()
+
+  const toggleGroup = (groupName: string) => {
+    setExpandedGroups(prev => 
+      prev.includes(groupName) 
+        ? prev.filter(g => g !== groupName)
+        : [...prev, groupName]
+    )
+  }
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()
@@ -118,29 +173,54 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
           </div>
 
           <nav className="mt-4 px-4 flex-1 overflow-y-auto">
-            <ul className="space-y-2">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+            <div className="space-y-1">
+              {navigationGroups.map((group) => {
+                const isExpanded = expandedGroups.includes(group.name)
+                const hasActiveItem = group.items.some(item => 
+                  pathname === item.href || pathname.startsWith(item.href + '/')
+                )
+                
                 return (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className={`
-                        flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors
-                        ${isActive 
-                          ? 'bg-indigo-100 text-indigo-700 border-r-2 border-indigo-700' 
-                          : 'text-gray-700 hover:bg-gray-100'
-                        }
-                      `}
-                      onClick={() => setSidebarOpen(false)}
-                    >
-                      <item.icon className="mr-3 h-5 w-5" />
-                      {item.name}
-                    </Link>
-                  </li>
+                  <div key={group.name}>
+                    {group.name !== 'Main' && (
+                      <button
+                        onClick={() => toggleGroup(group.name)}
+                        className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700"
+                      >
+                        <span>{group.name}</span>
+                        {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                      </button>
+                    )}
+                    
+                    {(group.name === 'Main' || isExpanded) && (
+                      <ul className="space-y-1 mb-2">
+                        {group.items.map((item) => {
+                          const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+                          return (
+                            <li key={item.name}>
+                              <Link
+                                href={item.href}
+                                className={`
+                                  flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
+                                  ${isActive 
+                                    ? 'bg-indigo-100 text-indigo-700' 
+                                    : 'text-gray-700 hover:bg-gray-100'
+                                  }
+                                `}
+                                onClick={() => setSidebarOpen(false)}
+                              >
+                                <item.icon className="mr-3 h-4 w-4" />
+                                {item.name}
+                              </Link>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    )}
+                  </div>
                 )
               })}
-            </ul>
+            </div>
           </nav>
 
           {/* User info and settings */}

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import PatternsContent from './PatternsContent'
+import { HelpCircle } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -54,12 +55,7 @@ export default function PatternsPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <div className="pt-4 sm:pt-6">
-        <div className="flex items-center justify-end mb-3">
-          <Link href="/patterns/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
-        </div>
-        <PatternsContent />
-      </div>
+      <PatternsContent />
     </DashboardLayout>
   )
 }

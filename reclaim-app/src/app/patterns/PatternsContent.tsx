@@ -9,8 +9,10 @@ import {
   AlertTriangle,
   Clock,
   Download,
-  Lock
+  Lock,
+  HelpCircle
 } from 'lucide-react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import { exportPatternsPdf } from '@/lib/exportPatternsPdf'
 import toast from 'react-hot-toast'
@@ -278,10 +280,17 @@ export default function PatternsContent() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <BarChart3 className="h-8 w-8 text-indigo-600" />
-            Pattern Analysis
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-gray-900">Pattern Analysis</h1>
+            <Link 
+              href="/docs/PATTERNS_GUIDE.html"
+              target="_blank"
+              className="text-indigo-600 hover:text-indigo-700"
+              title="View User Guide"
+            >
+              <HelpCircle className="h-6 w-6" />
+            </Link>
+          </div>
           <p className="text-gray-600 mt-2">
             Identify patterns in your experiences to better understand and prepare for situations
           </p>

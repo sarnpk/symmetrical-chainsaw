@@ -271,18 +271,33 @@ export default function RelationshipHealthAssessment() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Info Card - Moved to top */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <Info className="h-5 w-5 text-blue-600 mt-0.5" />
-            <div className="text-sm text-blue-800">
-              <p className="font-medium mb-1">About This Assessment</p>
-              <p>This tool helps evaluate relationship dynamics and identify areas that may need attention. It's not a substitute for professional counseling but can guide you toward appropriate resources.</p>
+      {/* Info Card - Redesigned */}
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg p-6">
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0">
+            <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+              <Info className="h-6 w-6 text-indigo-600" />
             </div>
           </div>
-        </CardContent>
-      </Card>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-indigo-900 mb-3">About This Assessment</h3>
+            <div className="space-y-2 text-sm text-indigo-800">
+              <p className="leading-relaxed">
+                This tool helps evaluate relationship dynamics and identify areas that may need attention.
+              </p>
+              <p className="leading-relaxed">
+                <strong className="font-medium">Important:</strong> This is not a substitute for professional counseling, but it can guide you toward appropriate resources and help you understand your relationship patterns.
+              </p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-indigo-200">
+              <div className="flex items-center gap-2 text-xs text-indigo-700">
+                <Shield className="h-4 w-4" />
+                <span>Your responses are private and confidential</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <Card>
         <CardHeader>
