@@ -154,7 +154,15 @@ export default function SignInButton({ variant = 'secondary', className }: SignI
           </div>
         </form>
 
-        <div className="mt-4 text-center">
+        <div className="mt-4 text-center space-y-2">
+          <p className="text-sm text-gray-600">
+            <a
+              href="/forgot-password"
+              className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+            >
+              Forgot your password?
+            </a>
+          </p>
           <p className="text-sm text-gray-600">
             Don't have an account?{' '}
             <button

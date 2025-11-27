@@ -43,7 +43,16 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Reclaim" />
       </head>
-      <body className={`${inter.className} antialiased bg-gray-50 min-h-screen`}>
+      <body className={`${inter.className} antialiased bg-gray-50 min-h-screen preload`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('load', function() {
+                document.body.classList.remove('preload');
+              });
+            `,
+          }}
+        />
         <main className="min-h-screen">
           {children}
         </main>

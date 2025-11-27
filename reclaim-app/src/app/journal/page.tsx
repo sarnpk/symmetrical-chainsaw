@@ -141,6 +141,10 @@ export default function JournalPage() {
     setDraftFilter('all')
   }
 
+  const handleDeleteEntry = (entryId: string) => {
+    setEntries(prev => prev.filter(entry => entry.id !== entryId))
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -191,7 +195,8 @@ export default function JournalPage() {
               <JournalEntryCard 
                 key={entry.id} 
                 entry={entry} 
-                viewMode={viewMode} 
+                viewMode={viewMode}
+                onDelete={handleDeleteEntry}
               />
             ))}
           </div>

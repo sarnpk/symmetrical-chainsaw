@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
@@ -108,6 +108,7 @@ const navigationGroups = [
       { name: 'AI Coach', href: '/ai-coach', icon: Brain },
       { name: 'Safety Plan', href: '/safety-plan', icon: Shield },
       { name: 'Community', href: '/community', icon: Users },
+      { name: 'Feedback', href: '/feedback', icon: MessageSquare },
     ]
   },
   {
@@ -121,9 +122,21 @@ const navigationGroups = [
 
 export default function DashboardLayout({ children, user, profile }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['Main', 'Essentials', 'Wellness'])
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['Main', 'Essentials'])
   const pathname = usePathname()
   const supabase = createClient()
+
+  // Auto-expand groups containing active page
+  useEffect(() => {
+    if (!pathname) return
+    
+    const activeGroup = navigationGroups.find(group => 
+      group.items.some(item => pathname === item.href || pathname.startsWith(item.href + '/'))
+    )
+    if (activeGroup && !expandedGroups.includes(activeGroup.name)) {
+      setExpandedGroups(prev => [...prev, activeGroup.name])
+    }
+  }, [pathname])
 
   const toggleGroup = (groupName: string) => {
     setExpandedGroups(prev => 
@@ -201,7 +214,7 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
                               <Link
                                 href={item.href}
                                 className={`
-                                  flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
+                                  flex items-center px-3 py-2 text-nav rounded-lg transition-colors
                                   ${isActive 
                                     ? 'bg-indigo-100 text-indigo-700' 
                                     : 'text-gray-700 hover:bg-gray-100'
@@ -234,10 +247,10 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
                 </div>
               </div>
               <div className="ml-3 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
+                <p className="text-base font-medium text-gray-900 truncate">
                   {profile?.display_name || user?.email?.split('@')[0] || 'User'}
                 </p>
-                <p className="text-xs text-gray-500 truncate">
+                <p className="text-sm text-gray-500 truncate">
                   {profile?.subscription_tier || 'foundation'}
                 </p>
               </div>
@@ -246,14 +259,14 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
             <div className="space-y-2">
               <Link
                 href="/account"
-                className="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 w-full"
+                className="flex items-center px-3 py-2 text-nav text-gray-700 rounded-md hover:bg-gray-100 w-full"
               >
                 <Users className="mr-3 h-4 w-4" />
                 Account
               </Link>
               <button
                 onClick={handleSignOut}
-                className="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 w-full"
+                className="flex items-center px-3 py-2 text-nav text-gray-700 rounded-md hover:bg-gray-100 w-full"
               >
                 <LogOut className="mr-3 h-4 w-4" />
                 Sign Out

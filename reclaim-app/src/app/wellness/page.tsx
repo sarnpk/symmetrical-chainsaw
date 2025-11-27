@@ -22,12 +22,21 @@ import {
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 
+interface SubscriptionPlan {
+  plan_tier: string
+  display_name: string
+  description: string
+  price_monthly: number
+  price_yearly: number
+}
+
 export default function WellnessPage() {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [dailyAffirmation, setDailyAffirmation] = useState('')
   const [affirmationIndex, setAffirmationIndex] = useState<number>(0)
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([])
 
   const router = useRouter()
   const supabase = createClient()
@@ -69,11 +78,35 @@ export default function WellnessPage() {
       
       setProfile(profile)
       
-      // Set daily affirmation index based on date (deterministic initial)
-      const today = new Date().toDateString()
-      const idx = today.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % affirmations.length
+      // Get affirmation index from localStorage or use date-based default
+      const storedIndex = localStorage.getItem('affirmationIndex')
+      let idx: number
+      
+      if (storedIndex !== null) {
+        idx = parseInt(storedIndex, 10)
+        // Ensure index is valid
+        if (idx < 0 || idx >= affirmations.length) {
+          idx = 0
+        }
+      } else {
+        // First time - use date-based index
+        const today = new Date().toDateString()
+        idx = today.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % affirmations.length
+      }
+      
       setAffirmationIndex(idx)
       setDailyAffirmation(affirmations[idx])
+      
+      // Fetch subscription plans
+      try {
+        const response = await fetch('/api/subscription-plans')
+        const data = await response.json()
+        if (data.plans) {
+          setPlans(data.plans)
+        }
+      } catch (error) {
+        console.error('Failed to fetch plans:', error)
+      }
       
       setLoading(false)
     }
@@ -94,6 +127,10 @@ export default function WellnessPage() {
   }
 
   const subscriptionTier = profile.subscription_tier || 'foundation'
+  
+  const getPlanData = (tier: string) => {
+    return plans.find(p => p.plan_tier === tier)
+  }
 
   return (
     <DashboardLayout user={user} profile={profile}>
@@ -126,6 +163,7 @@ export default function WellnessPage() {
                   const next = (affirmationIndex + 1) % affirmations.length
                   setAffirmationIndex(next)
                   setDailyAffirmation(affirmations[next])
+                  localStorage.setItem('affirmationIndex', next.toString())
                 }}
                 className="inline-flex items-center gap-1.5 rounded-md border border-purple-200 bg-white/70 px-2.5 py-1 text-xs font-medium text-purple-700 hover:bg-white shadow-sm"
                 aria-label="Shuffle affirmation"
@@ -311,7 +349,7 @@ export default function WellnessPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <h4 className="font-medium text-purple-900 mb-2">Recovery Plan ($9.99/month)</h4>
+                  <h4 className="font-medium text-purple-900 mb-2">{getPlanData('recovery')?.display_name || 'Recovery'} (${getPlanData('recovery')?.price_monthly || 15}/month)</h4>
                   <ul className="text-sm text-purple-700 space-y-1">
                     <li>• Daily mood check-ins</li>
                     <li>• Personal coping strategies library</li>
@@ -320,7 +358,7 @@ export default function WellnessPage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-medium text-purple-900 mb-2">Empowerment Plan ($19.99/month)</h4>
+                  <h4 className="font-medium text-purple-900 mb-2">{getPlanData('empowerment')?.display_name || 'Empowered'} (${getPlanData('empowerment')?.price_monthly || 24.99}/month)</h4>
                   <ul className="text-sm text-purple-700 space-y-1">
                     <li>• All Recovery features</li>
                     <li>• Unlimited AI coaching</li>

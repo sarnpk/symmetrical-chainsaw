@@ -145,18 +145,18 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex-1">
             <div className="text-base font-semibold text-green-900 mb-2">💼 Need Professional Support?</div>
-            <p className="text-sm text-green-800">Connect with trauma-informed therapists and family law attorneys</p>
+            <p className="text-body text-green-800">Connect with trauma-informed therapists and family law attorneys</p>
           </div>
           <div className="flex gap-3 flex-shrink-0">
             <button
               onClick={() => window.open('https://www.psychology-today.com/us/therapists', '_blank')}
-              className="px-5 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors shadow-sm"
+              className="px-5 py-2.5 bg-green-600 text-white rounded-lg text-button hover:bg-green-700 transition-colors shadow-sm"
             >
               Find Therapist
             </button>
             <button
               onClick={() => window.open('https://www.avvo.com/find-a-lawyer', '_blank')}
-              className="px-5 py-2.5 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors shadow-sm"
+              className="px-5 py-2.5 bg-amber-600 text-white rounded-lg text-button hover:bg-amber-700 transition-colors shadow-sm"
             >
               Legal Help
             </button>
@@ -273,7 +273,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="text-base font-semibold text-red-900 mb-2">🚨 Safety First</div>
-                  <p className="text-sm text-red-800">
+                  <p className="text-body text-red-800">
                     In immediate danger? Call <span className="font-bold">911</span> or National Domestic Violence Hotline: <span className="font-bold">1-800-799-7233</span>
                   </p>
                 </div>

@@ -224,31 +224,34 @@ export default function UsagePage() {
               <div>
                 <h4 className="font-medium text-gray-900 mb-2">Foundation (Free)</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• 5 AI interactions/month</li>
-                  <li>• 5 audio transcriptions/month</li>
-                  <li>• Basic journal features</li>
+                  <li>• 150 AI interactions/month</li>
+                  <li>• No audio transcription</li>
+                  <li>• 90 journal entries/month</li>
+                  <li>• Basic features only</li>
                   <li>• Community support</li>
                 </ul>
               </div>
               
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Recovery ($9.99/month)</h4>
+                <h4 className="font-medium text-gray-900 mb-2">Recovery ($15.00/month)</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• 100 AI interactions/month</li>
-                  <li>• 30 audio transcriptions/month</li>
-                  <li>• Enhanced emotional tracking</li>
-                  <li>• Pattern analysis</li>
+                  <li>• 750 AI interactions/month</li>
+                  <li>• 60 minutes transcription/month</li>
+                  <li>• 450 journal entries/month</li>
+                  <li>• Recovery tools (Grey Rock, BIFF, etc.)</li>
+                  <li>• Pattern analysis (300/month)</li>
                   <li>• Priority support</li>
                 </ul>
               </div>
               
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Empowerment ($19.99/month)</h4>
+                <h4 className="font-medium text-gray-900 mb-2">Empowerment ($24.99/month)</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>• Unlimited AI interactions</li>
-                  <li>• Unlimited audio transcriptions</li>
-                  <li>• Complete evidence documentation</li>
-                  <li>• Advanced pattern analysis</li>
+                  <li>• 300 minutes transcription/month</li>
+                  <li>• Unlimited journal entries</li>
+                  <li>• All recovery + advanced tools</li>
+                  <li>• Unlimited pattern analysis</li>
                   <li>• Premium support</li>
                 </ul>
               </div>

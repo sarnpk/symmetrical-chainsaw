@@ -7,6 +7,7 @@ import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { ArrowLeft } from 'lucide-react'
 
 export default function NewRealityLogPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -55,6 +56,13 @@ export default function NewRealityLogPage() {
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-6">
         <div>
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </button>
           <h1 className="text-3xl font-bold text-gray-900">New Reality Anchor Entry</h1>
           <p className="text-gray-600 mt-2">Document facts about what happened</p>
         </div>

@@ -368,13 +368,22 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
           )}
 
           {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-          >
-            {loading ? 'Saving...' : 'Save Entry'}
-          </button>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            >
+              {loading ? 'Saving...' : 'Save Entry'}
+            </button>
+          </div>
         </form>
       </CardContent>
     </Card>

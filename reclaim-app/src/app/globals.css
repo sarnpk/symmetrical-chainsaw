@@ -1,7 +1,333 @@
 @import "tailwindcss";
 
-/* Custom mobile styles for journal form */
+/* ============================================
+   HIGH PRIORITY UI IMPROVEMENTS - WEB 5.0
+   ============================================ */
+
+@layer base {
+  /* 1. STANDARDIZED TYPOGRAPHY HIERARCHY */
+  body {
+    @apply text-gray-700 leading-relaxed;
+    font-size: 17px; /* Increased from 16px for better readability */
+  }
+
+  h1 {
+    @apply text-3xl font-bold text-gray-900 leading-tight;
+  }
+
+  h2 {
+    @apply text-xl font-semibold text-gray-900 leading-snug;
+  }
+
+  h3 {
+    @apply text-lg font-medium text-gray-900 leading-normal;
+  }
+
+  /* Better body text contrast */
+  p {
+    @apply text-gray-700 leading-relaxed;
+    font-size: 16px; /* Explicit size for paragraphs */
+  }
+
+  /* Better link styles */
+  a:not(.no-underline) {
+    @apply text-indigo-600 hover:text-indigo-700 underline-offset-2 transition-colors duration-150;
+  }
+
+  /* 2. FOCUS STATES FOR ACCESSIBILITY */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none ring-2 ring-indigo-500 ring-offset-2;
+  }
+
+  /* 3. RESPONSIVE TEXT SIZING */
+  @media (max-width: 640px) {
+    h1 {
+      @apply text-2xl;
+    }
+    h2 {
+      @apply text-lg;
+    }
+  }
+}
+
 @layer components {
+  /* STANDARDIZED BUTTON STYLES */
+  .btn-primary {
+    @apply px-4 py-2 bg-indigo-600 text-white rounded-lg;
+    @apply hover:bg-indigo-700 active:scale-95;
+    @apply focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply transition-all duration-150;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg;
+    @apply hover:bg-gray-50 active:scale-95;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply transition-all duration-150;
+  }
+
+  /* STANDARDIZED CARD STYLES */
+  .card-standard {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+
+  /* BETTER TEXT CONTRAST AND SIZING */
+  .text-body {
+    @apply text-gray-700 leading-relaxed;
+    font-size: 16px; /* Larger than default text-sm */
+  }
+
+  .text-muted {
+    @apply text-gray-600 leading-normal;
+    font-size: 15px; /* Larger than text-sm for better readability */
+  }
+
+  /* Improved button text sizes */
+  .text-button {
+    font-size: 15px; /* Larger than text-sm for buttons */
+    font-weight: 500;
+  }
+
+  /* Better navigation text */
+  .text-nav {
+    font-size: 15px; /* Improved from text-sm */
+    font-weight: 500;
+  }
+
+  /* Card content text */
+  .text-card {
+    font-size: 15px; /* Better than text-sm for card content */
+    line-height: 1.5;
+  }
+
+  /* ============================================
+     MEDIUM PRIORITY UI IMPROVEMENTS
+     ============================================ */
+
+  /* 5. SKELETON LOADERS (Replace Spinners) */
+  .skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  .skeleton-text {
+    @apply h-4 bg-gray-200 rounded;
+  }
+
+  .skeleton-title {
+    @apply h-6 bg-gray-200 rounded w-3/4;
+  }
+
+  .skeleton-avatar {
+    @apply h-12 w-12 bg-gray-200 rounded-full;
+  }
+
+  .skeleton-card {
+    @apply animate-pulse space-y-4 p-6 bg-white rounded-lg border border-gray-200;
+  }
+
+  /* 6. EMPTY STATES */
+  .empty-state {
+    @apply text-center py-12 px-6;
+  }
+
+  .empty-state-icon {
+    @apply h-16 w-16 text-gray-300 mx-auto mb-4;
+  }
+
+  .empty-state-title {
+    @apply text-lg font-medium text-gray-900 mb-2;
+  }
+
+  .empty-state-description {
+    @apply text-gray-600 mb-6 max-w-sm mx-auto;
+  }
+
+  /* 7. STANDARDIZED SPACING */
+  .section-spacing {
+    @apply space-y-6;
+  }
+
+  .section-spacing-lg {
+    @apply space-y-8;
+  }
+
+  .card-spacing {
+    @apply p-6 space-y-4;
+  }
+
+  .card-spacing-sm {
+    @apply p-4 space-y-3;
+  }
+
+  /* Responsive card padding */
+  .card-responsive {
+    @apply p-4 sm:p-6;
+  }
+
+  /* 8. MICRO-INTERACTIONS */
+  .interactive-scale {
+    @apply transition-transform duration-150 active:scale-95;
+  }
+
+  .interactive-lift {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .interactive-glow {
+    @apply transition-all duration-200 hover:shadow-indigo-200 hover:shadow-lg;
+  }
+
+  /* Button ripple effect */
+  .btn-ripple {
+    @apply relative overflow-hidden;
+  }
+
+  .btn-ripple::after {
+    content: '';
+    @apply absolute inset-0 bg-white opacity-0;
+    @apply transition-opacity duration-300;
+  }
+
+  .btn-ripple:active::after {
+    @apply opacity-20;
+  }
+
+  /* Smooth fade-in animation */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Slide-up animation */
+  .slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ============================================
+     FINAL POLISH - LOW PRIORITY
+     ============================================ */
+
+  /* 9. PAGE LOAD ANIMATIONS - Auto-apply to main content */
+  main > div {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  /* Staggered animation for lists */
+  .stagger-children > * {
+    animation: slideUp 0.4s ease-out;
+    animation-fill-mode: both;
+  }
+
+  .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+  .stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+  .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+  .stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+  .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+
+  /* 11. GLASSMORPHISM EFFECTS */
+  .glass {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-gray-900/10 backdrop-blur-lg border border-gray-700/20;
+  }
+
+  .glass-modal {
+    @apply bg-white/95 backdrop-blur-xl border border-gray-200/50 shadow-2xl;
+  }
+
+  /* 18. 3D CARD EFFECTS */
+  .card-3d {
+    @apply transition-all duration-300;
+    box-shadow: 
+      0 1px 3px rgba(0,0,0,0.12),
+      0 1px 2px rgba(0,0,0,0.24);
+  }
+
+  .card-3d:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 14px 28px rgba(0,0,0,0.15),
+      0 10px 10px rgba(0,0,0,0.12);
+  }
+
+  /* 17. ANIMATED GRADIENTS */
+  .gradient-animate {
+    background: linear-gradient(
+      -45deg,
+      #667eea 0%,
+      #764ba2 25%,
+      #f093fb 50%,
+      #4facfe 75%,
+      #667eea 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Subtle gradient for hero sections */
+  .gradient-subtle {
+    background: linear-gradient(
+      135deg,
+      #667eea 0%,
+      #764ba2 100%
+    );
+  }
+
+  /* BONUS: Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* BONUS: Better selection colors */
+  ::selection {
+    @apply bg-indigo-100 text-indigo-900;
+  }
+
+  /* BONUS: Smooth transitions for theme changes */
+  * {
+    @apply transition-colors duration-200;
+  }
+
+  /* Disable transitions on page load */
+  .preload * {
+    transition: none !important;
+  }
+
+  /* Custom mobile styles for journal form */
   /* Mobile slider styles */
   .slider {
     -webkit-appearance: none;

@@ -49,6 +49,7 @@ export default async function HomePage() {
             <span className="text-xl font-bold text-gray-900">Reclaim</span>
           </div>
           <div className="flex items-center gap-3">
+            <a href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block">Blog</a>
             <a href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block">FAQ</a>
             <SignInButton variant="secondary" />
             <AuthButton variant="primary" />
@@ -485,6 +486,7 @@ export default async function HomePage() {
           
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500 border-t pt-6">
+            <a href="/blog" className="hover:text-indigo-600 transition-colors">Blog</a>
             <a href="/faq" className="hover:text-indigo-600 transition-colors">FAQ</a>
             <a href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-indigo-600 transition-colors">Terms of Service</a>
