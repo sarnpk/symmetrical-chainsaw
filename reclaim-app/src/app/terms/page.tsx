@@ -64,13 +64,31 @@ export default function TermsOfService() {
 
           <h2>5. Content and Intellectual Property</h2>
           
-          <h3>5.1 Your Content</h3>
+          <h3>5.1 Your Content - You Own It, We Protect It</h3>
           <ul>
-            <li>You retain ownership of all content you create</li>
-            <li>You grant us license to process your content to provide services</li>
+            <li><strong>You retain full ownership</strong> of all content you create (journals, logs, conversations)</li>
+            <li>You grant us a limited license to process your content ONLY to provide services to you</li>
+            <li><strong>We DO NOT use your content to train AI models or for any other purpose</strong></li>
             <li>You are responsible for the accuracy of your content</li>
-            <li>You may delete your content at any time</li>
+            <li>You may delete your content at any time - it's permanently removed within 30 days</li>
           </ul>
+
+          <div className="bg-purple-50 border-2 border-purple-600 p-6 rounded-lg my-6">
+            <h3 className="text-purple-900 font-bold text-lg mb-3">🛡️ YOUR DATA RIGHTS - CRYSTAL CLEAR</h3>
+            <p className="text-purple-800 mb-3">
+              We believe abuse survivors deserve absolute clarity about their data:
+            </p>
+            <ul className="text-purple-800 space-y-2">
+              <li><strong>✓ You own your data</strong> - We're just the secure storage</li>
+              <li><strong>✓ We process it only to serve you</strong> - AI analysis, pattern detection, etc.</li>
+              <li><strong>✓ We NEVER train AI models on your personal content</strong></li>
+              <li><strong>✓ We NEVER sell, license, or share your data</strong></li>
+              <li><strong>✓ You can export or delete everything anytime</strong></li>
+            </ul>
+            <p className="text-purple-800 mt-3 font-semibold">
+              Your healing journey is private. Your data stays yours.
+            </p>
+          </div>
 
           <h3>5.2 Our Content</h3>
           <ul>

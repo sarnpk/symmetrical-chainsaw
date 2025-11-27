@@ -10,6 +10,10 @@ import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
 import CognitiveDissonanceWidget from '@/components/CognitiveDissonanceWidget'
 import NoContactWidget from '@/components/NoContactWidget'
+import NarcissistDetectorWidget from '@/components/NarcissistDetectorWidget'
+import NarcissistSimulatorWidget from '@/components/NarcissistSimulatorWidget'
+import CrisisReframeWidget from '@/components/CrisisReframeWidget'
+import MoodCheckIn from '@/components/MoodCheckIn'
 
 interface DashboardV2Props {
   user: User
@@ -28,20 +32,33 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
   }, [])
 
   const loadStats = async () => {
-    const [streakRes, entriesRes, healthRes] = await Promise.all([
-      fetch('/api/reality-anchor/streaks/morning_intention'),
-      supabase.from('journal_entries').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
-      fetch('/api/relationship-health')
-    ])
+    try {
+      const [streakRes, entriesRes, healthRes] = await Promise.all([
+        fetch('/api/reality-anchor/streaks/morning_intention').catch(() => null),
+        supabase.from('journal_entries').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
+        fetch('/api/relationship-health').catch(() => null)
+      ])
 
-    const streakData = await streakRes.json()
-    const healthData = await healthRes.json()
+      let streakData = { current_streak: 0 }
+      let healthData = { score: 50 }
 
-    setStats({
-      streak: streakData.current_streak || 0,
-      entries: entriesRes.count || 0,
-      relationshipHealth: healthData.score || 50
-    })
+      if (streakRes && streakRes.ok) {
+        streakData = await streakRes.json()
+      }
+
+      if (healthRes && healthRes.ok) {
+        healthData = await healthRes.json()
+      }
+
+      setStats({
+        streak: streakData.current_streak || 0,
+        entries: entriesRes.count || 0,
+        relationshipHealth: healthData.score || 50
+      })
+    } catch (error) {
+      console.error('Error loading stats:', error)
+      setStats({ streak: 0, entries: 0, relationshipHealth: 50 })
+    }
   }
 
   const categories = [
@@ -51,7 +68,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
       items: [
         { name: 'New Entry', href: '/journal/new', icon: Plus, color: 'indigo', featured: true },
         { name: 'Journal', href: '/journal', icon: BookOpen, color: 'blue' },
-        { name: 'Reality Log', href: '/reality-log', icon: Anchor, color: 'teal' },
+        { name: 'Reality Anchor', href: '/reality-log', icon: Anchor, color: 'teal' },
         { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle, color: 'red' }
       ]
     },
@@ -69,6 +86,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
       id: 'recovery',
       name: '🧠 Recovery',
       items: [
+        { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle, color: 'red', featured: true },
         { name: 'Belief Reframe', href: '/belief-reframe', icon: Brain, color: 'green', featured: true },
         { name: 'Positive Moments', href: '/positive-moments', icon: Heart, color: 'pink' },
         { name: 'No Contact Anchor', href: '/no-contact-anchor', icon: Shield, color: 'emerald' }
@@ -78,7 +96,10 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
       id: 'analysis',
       name: '🎯 Analysis',
       items: [
-        { name: 'Relationship Health', href: '/relationship-health', icon: Heart, color: 'pink', featured: true },
+        { name: 'Narcissist Detector', href: '/narcissist-detector', icon: AlertTriangle, color: 'red', featured: true },
+        { name: 'Narcissist Simulator', href: '/narcissist-simulator', icon: Target, color: 'purple', featured: true },
+        { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare, color: 'green' },
+        { name: 'Relationship Health', href: '/relationship-health', icon: Heart, color: 'pink' },
         { name: 'NPD Traits', href: '/npd-traits', icon: Target, color: 'orange' },
         { name: 'Gaslighting', href: '/gaslighting-tracker', icon: AlertTriangle, color: 'red' },
         { name: 'Empathy Audit', href: '/empathy-audit', icon: HeartHandshake, color: 'blue' }
@@ -129,11 +150,23 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
         </div>
       </div>
 
+      {/* Crisis Reframe - Priority Widget */}
+      <CrisisReframeWidget />
+
+      {/* Mood Check-In */}
+      <MoodCheckIn userId={user.id} subscriptionTier={profile.subscription_tier as 'foundation' | 'recovery' | 'empowerment'} />
+
       {/* Cognitive Dissonance Alerts */}
       <CognitiveDissonanceWidget />
 
       {/* No Contact Widget */}
       <NoContactWidget />
+
+      {/* Narcissist Features */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <NarcissistDetectorWidget />
+        <NarcissistSimulatorWidget />
+      </div>
 
       {/* Quick Actions - Featured Tools */}
       <div>

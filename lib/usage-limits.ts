@@ -1,7 +1,7 @@
 // Centralized usage limits for AI and storage
 export const AI_LIMITS = {
-  foundation: 10, // free tier: 10 AI calls per month
-  recovery: 100,
+  foundation: 5, // free tier: 5 AI calls per month
+  recovery: 200, // recovery tier: 200 AI calls per month
   empowerment: -1, // unlimited
 } as const
 

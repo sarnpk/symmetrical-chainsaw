@@ -11,6 +11,23 @@ export default function PrivacyPolicy() {
             Reclaim ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform designed for survivors of narcissistic abuse.
           </p>
 
+          <div className="bg-green-50 border-2 border-green-600 p-6 rounded-lg my-6">
+            <h3 className="text-green-900 font-bold text-lg mb-3">🔒 WE DO NOT USE YOUR PERSONAL DATA FOR AI TRAINING</h3>
+            <p className="text-green-800 mb-3">
+              <strong>Your privacy is absolute.</strong> We want to be crystal clear about what we DO NOT do with your data:
+            </p>
+            <ul className="text-green-800 space-y-2">
+              <li><strong>✗ We DO NOT</strong> use your journal entries to train AI models</li>
+              <li><strong>✗ We DO NOT</strong> use your conversations to improve language models</li>
+              <li><strong>✗ We DO NOT</strong> share your personal stories with third-party AI companies</li>
+              <li><strong>✗ We DO NOT</strong> feed your documentation into machine learning systems</li>
+              <li><strong>✗ We DO NOT</strong> sell or license your data to anyone for any purpose</li>
+            </ul>
+            <p className="text-green-800 mt-3">
+              When we process your content with AI (like analyzing manipulation patterns), it happens in real-time and is never stored or used for training. Your data is yours alone.
+            </p>
+          </div>
+
           <h2>2. Information We Collect</h2>
           
           <h3>2.1 Personal Information</h3>
@@ -49,9 +66,9 @@ export default function PrivacyPolicy() {
 
           <h3>3.2 Platform Improvement</h3>
           <ul>
-            <li>Improve AI model accuracy and trauma-informed responses</li>
-            <li>Enhance pattern recognition algorithms</li>
-            <li>Develop new features based on usage patterns</li>
+            <li>Improve AI model accuracy and trauma-informed responses using only aggregated, anonymized data</li>
+            <li>Enhance pattern recognition algorithms using statistical analysis (not individual data)</li>
+            <li>Develop new features based on usage patterns (anonymized metrics only)</li>
             <li>Optimize app performance and user experience</li>
           </ul>
 
@@ -87,14 +104,22 @@ export default function PrivacyPolicy() {
             <li>AI conversation content</li>
             <li>Safety plans or emergency contacts</li>
             <li>Any content that could identify you or your situation</li>
+            <li><strong>We DO NOT use your data to train AI models or sell it to third parties</strong></li>
           </ul>
 
-          <h3>5.2 Limited Sharing</h3>
+          <h3>5.2 Limited Sharing (With Strict Privacy Controls)</h3>
           <ul>
-            <li><strong>Service Providers:</strong> Encrypted data with Supabase (hosting), Google AI (anonymized for processing)</li>
-            <li><strong>Legal Requirements:</strong> Only when required by law or to protect safety</li>
-            <li><strong>Aggregated Data:</strong> Anonymous usage statistics for research (no personal identification)</li>
+            <li><strong>Service Providers:</strong> Encrypted data with Supabase (hosting). Google AI processes your requests in real-time but does NOT store or train on your data per our contract</li>
+            <li><strong>Legal Requirements:</strong> Only when required by court order or to prevent imminent harm</li>
+            <li><strong>Aggregated Data:</strong> Anonymous usage statistics only (e.g., "50% of users use journaling feature") with zero personal identification</li>
           </ul>
+
+          <div className="bg-blue-50 border border-blue-300 p-4 rounded-lg my-4">
+            <p className="text-blue-900 font-semibold">How AI Processing Works:</p>
+            <p className="text-blue-800 text-sm mt-2">
+              When you use AI features, your content is sent to Google AI for real-time processing only. We have contractual agreements ensuring your data is NOT used for training their models. The AI generates a response and immediately discards your input. Nothing is retained by Google.
+            </p>
+          </div>
 
           <h2>6. Your Rights (GDPR & CCPA)</h2>
           

@@ -35,6 +35,13 @@ export interface Profile {
   updated_at: string
   is_active: boolean
   timezone: string
+  first_name?: string
+  last_name?: string
+  abuser_gender?: string
+  has_children?: boolean
+  children_ages?: number[]
+  custody_arrangement?: string
+  preferred_language?: string
 }
 
 export interface JournalEntry {

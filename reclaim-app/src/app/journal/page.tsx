@@ -154,9 +154,6 @@ export default function JournalPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-4 sm:space-y-6">
-        <div className="flex items-center justify-end pt-4 sm:pt-6 -mb-2">
-          <Link href="/journal/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
-        </div>
         {/* Header */}
         <JournalHeader 
           entriesCount={entries.length}

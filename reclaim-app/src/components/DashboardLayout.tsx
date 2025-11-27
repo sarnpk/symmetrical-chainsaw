@@ -29,7 +29,8 @@ import {
   FileText,
   AlertTriangle,
   Anchor,
-  ShieldAlert
+  ShieldAlert,
+  Bot
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
@@ -53,6 +54,8 @@ const navigation = [
   { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
   { name: 'NPD Traits', href: '/npd-traits', icon: Target },
   { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
+  { name: 'Narcissist Detector', href: '/narcissist-detector', icon: AlertTriangle },
+  { name: 'Narcissist Simulator', href: '/narcissist-simulator', icon: Bot },
   { name: 'Grey Rock Templates', href: '/grey-rock-templates', icon: FileText },
   { name: 'Acceptance', href: '/acceptance', icon: CheckCircle },
   { name: 'Role Reframing', href: '/role-reframing', icon: Briefcase },
@@ -60,6 +63,7 @@ const navigation = [
   { name: 'Gaslighting', href: '/gaslighting-tracker', icon: AlertTriangle },
   { name: 'Stonewalling', href: '/stonewalling', icon: Shield },
   { name: 'Reactive Abuse', href: '/reactive-abuse', icon: RotateCcw },
+  { name: 'Letting Go', href: '/letting-go', icon: Heart },
   { name: 'AI Coach', href: '/ai-coach', icon: Brain },
   { name: 'Patterns', href: '/patterns', icon: BarChart3 },
   { name: 'Usage', href: '/usage', icon: PieChart },

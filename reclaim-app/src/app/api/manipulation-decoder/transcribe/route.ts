@@ -1,7 +1,14 @@
 import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
+import { checkAndRecordAIUsage } from '@/lib/usage-tracking';
 
 export async function POST(request: Request) {
+  // Check usage and authenticate
+  const usageCheck = await checkAndRecordAIUsage('audio_transcription');
+  if ('error' in usageCheck) {
+    return NextResponse.json({ error: usageCheck.error }, { status: usageCheck.status });
+  }
+
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

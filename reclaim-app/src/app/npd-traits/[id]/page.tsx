@@ -247,7 +247,7 @@ export default function TraitDetailPage() {
               <AICopingInsights 
                 text={personalNote}
                 onActionSelect={(action) => {
-                  if (action === 'Start Reality Log entry') {
+                  if (action === 'Start Reality Anchor entry') {
                     window.open('/reality-log/new', '_blank')
                   } else if (action === 'Talk to AI Coach') {
                     window.open('/ai-coach', '_blank')

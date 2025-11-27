@@ -150,14 +150,14 @@ export default function RealityAnchorWidget({ userId }: RealityAnchorWidgetProps
           </div>
         )}
 
-        {/* Reality Log Stats */}
+        {/* Reality Anchor Stats */}
         <div className="flex items-center justify-between p-3 bg-white rounded-lg">
           <div className="flex items-center gap-3">
             <div className="bg-blue-100 p-2 rounded-full">
               <FileText className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Reality Log</p>
+              <p className="text-sm font-medium text-gray-900">Reality Anchor</p>
               <p className="text-xs text-gray-600">
                 {logStats.weekCount} {logStats.weekCount === 1 ? 'entry' : 'entries'} this week
               </p>

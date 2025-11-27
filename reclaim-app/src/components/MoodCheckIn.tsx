@@ -12,13 +12,17 @@ import {
   Calendar,
   Smile,
   Frown,
-  Meh
+  Meh,
+  Trash2
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface MoodCheckInProps {
   userId: string
   subscriptionTier: 'foundation' | 'recovery' | 'empowerment'
+  maxEntries?: number // Limit entries shown in Today's Mood Journey
+  compact?: boolean // Compact mode for dashboard
+  showJourney?: boolean // Show Today's Mood Journey and AI Suggestions
 }
 
 interface MoodEntry {
@@ -30,7 +34,14 @@ interface MoodEntry {
   created_at?: string
 }
 
-export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInProps) {
+interface AISuggestion {
+  type: 'tool' | 'insight' | 'warning'
+  title: string
+  message: string
+  action?: { label: string; href: string }
+}
+
+export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10, compact = false, showJourney = true }: MoodCheckInProps) {
   const [moodRating, setMoodRating] = useState(5)
   const [energyLevel, setEnergyLevel] = useState(5)
   const [anxietyLevel, setAnxietyLevel] = useState(5)
@@ -42,6 +53,8 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
   const [dragMood, setDragMood] = useState(false)
   const [dragEnergy, setDragEnergy] = useState(false)
   const [dragAnxiety, setDragAnxiety] = useState(false)
+  const [todayEntries, setTodayEntries] = useState<MoodEntry[]>([])
+  const [aiSuggestions, setAiSuggestions] = useState<AISuggestion[]>([])
 
   const supabase = createClient()
 
@@ -50,11 +63,112 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
 
   useEffect(() => {
     if (hasAccess) {
-      loadTodayEntry()
-      loadRecentEntries()
+      loadData()
+    } else {
+      setLoading(false)
     }
-    setLoading(false)
   }, [userId, hasAccess])
+
+  const loadData = async () => {
+    await Promise.all([
+      loadTodayEntry(),
+      loadRecentEntries(),
+      loadTodayEntries()
+    ])
+    setLoading(false)
+  }
+
+  const loadTodayEntries = async () => {
+    try {
+      const today = new Date().toISOString().split('T')[0]
+      const { data, error } = await supabase
+        .from('mood_check_ins')
+        .select('*')
+        .eq('user_id', userId)
+        .gte('created_at', `${today}T00:00:00`)
+        .lt('created_at', `${today}T23:59:59`)
+        .order('created_at', { ascending: true })
+
+      if (data && !error) {
+        setTodayEntries(data)
+        generateAISuggestions(data)
+      }
+    } catch (error) {
+      console.error('Failed to load today entries:', error)
+    }
+  }
+
+  const generateAISuggestions = (entries: MoodEntry[]) => {
+    const suggestions: AISuggestion[] = []
+    
+    if (entries.length === 0) return
+    
+    const latest = entries[entries.length - 1]
+    const avgMood = entries.reduce((sum, e) => sum + e.mood_rating, 0) / entries.length
+    const avgAnxiety = entries.reduce((sum, e) => sum + e.anxiety_level, 0) / entries.length
+    const avgEnergy = entries.reduce((sum, e) => sum + e.energy_level, 0) / entries.length
+
+    // Low mood suggestion
+    if (latest.mood_rating <= 3) {
+      suggestions.push({
+        type: 'tool',
+        title: 'Mood is Low',
+        message: 'Your mood is low right now. Try a quick reframe exercise to shift perspective.',
+        action: { label: 'Crisis Reframe Tool', href: '/crisis-reframe' }
+      })
+    }
+
+    // High anxiety suggestion
+    if (latest.anxiety_level >= 8) {
+      suggestions.push({
+        type: 'tool',
+        title: 'High Anxiety Detected',
+        message: 'Your anxiety is high. Try breathing exercises or grounding techniques.',
+        action: { label: 'Mind Reset (Breathing)', href: '/mind-reset' }
+      })
+    }
+
+    // Low energy suggestion
+    if (latest.energy_level <= 3) {
+      suggestions.push({
+        type: 'tool',
+        title: 'Low Energy',
+        message: 'Energy is low. Consider a coping strategy or gentle movement.',
+        action: { label: 'Coping Strategies', href: '/wellness#coping-strategies' }
+      })
+    }
+
+    // Pattern insight
+    if (entries.length >= 3) {
+      const moodTrend = entries[entries.length - 1].mood_rating - entries[0].mood_rating
+      if (moodTrend >= 3) {
+        suggestions.push({
+          type: 'insight',
+          title: 'Mood Improving',
+          message: `Your mood has improved by ${moodTrend} points today. Keep doing what you're doing!`,
+        })
+      } else if (moodTrend <= -3) {
+        suggestions.push({
+          type: 'warning',
+          title: 'Mood Declining',
+          message: `Your mood has dropped ${Math.abs(moodTrend)} points today. Consider reaching out for support.`,
+          action: { label: 'View Resources', href: '/wellness' }
+        })
+      }
+    }
+
+    // Crisis warning
+    if (avgMood <= 3 && avgAnxiety >= 7) {
+      suggestions.push({
+        type: 'warning',
+        title: 'Difficult Day',
+        message: 'This seems like a particularly hard day. Please consider reaching out to your support system or crisis resources.',
+        action: { label: 'Crisis Resources', href: '/wellness' }
+      })
+    }
+
+    setAiSuggestions(suggestions)
+  }
 
   const loadTodayEntry = async () => {
     try {
@@ -65,14 +179,11 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
         .eq('user_id', userId)
         .gte('created_at', `${today}T00:00:00`)
         .lt('created_at', `${today}T23:59:59`)
-        .single()
+        .order('created_at', { ascending: false })
 
-      if (data && !error) {
-        setTodayEntry(data)
-        setMoodRating(data.mood_rating)
-        setEnergyLevel(data.energy_level)
-        setAnxietyLevel(data.anxiety_level)
-        setNotes(data.notes || '')
+      if (data && !error && data.length > 0) {
+        setTodayEntry(data[0])
+        // Don't pre-fill - let user enter fresh data for new check-in
       }
     } catch (error) {
       // No entry for today, which is fine
@@ -132,29 +243,29 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
         notes: notes.trim() || null
       }
 
-      if (todayEntry) {
-        // Update existing entry
-        const { error } = await supabase
-          .from('mood_check_ins')
-          .update(entryData)
-          .eq('id', todayEntry.id)
+      // Always create new entry (multiple per day)
+      const { data, error } = await supabase
+        .from('mood_check_ins')
+        .insert(entryData)
+        .select()
+        .single()
 
-        if (error) throw error
-        toast.success('Mood check-in updated!')
-      } else {
-        // Create new entry
-        const { data, error } = await supabase
-          .from('mood_check_ins')
-          .insert(entryData)
-          .select()
-          .single()
+      if (error) throw error
+      setTodayEntry(data)
+      toast.success('Mood check-in saved!')
+      
+      // Reset form for next check-in
+      setMoodRating(5)
+      setEnergyLevel(5)
+      setAnxietyLevel(5)
+      setNotes('')
 
-        if (error) throw error
-        setTodayEntry(data)
-        toast.success('Mood check-in saved!')
-      }
-
-      await loadRecentEntries()
+      // Reload all data
+      await Promise.all([
+        loadTodayEntry(),
+        loadRecentEntries(),
+        loadTodayEntries()
+      ])
     } catch (error) {
       console.error('Failed to save mood check-in:', error)
       toast.error('Failed to save mood check-in')
@@ -167,6 +278,24 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
     if (rating <= 3) return <Frown className="h-5 w-5 text-red-500" />
     if (rating <= 7) return <Meh className="h-5 w-5 text-yellow-500" />
     return <Smile className="h-5 w-5 text-green-500" />
+  }
+
+  const handleDelete = async (entryId: string) => {
+    if (!confirm('Delete this mood check-in?')) return
+
+    try {
+      const { error } = await supabase
+        .from('mood_check_ins')
+        .delete()
+        .eq('id', entryId)
+
+      if (error) throw error
+      toast.success('Check-in deleted')
+      await loadData()
+    } catch (error) {
+      console.error('Failed to delete:', error)
+      toast.error('Failed to delete check-in')
+    }
   }
 
   const getRatingColor = (rating: number, type: 'mood' | 'energy' | 'anxiety') => {
@@ -244,11 +373,11 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Heart className="h-5 w-5 text-pink-500" />
-            Daily Mood Check-In
-            {todayEntry && <span className="text-sm text-green-600 font-normal">✓ Completed</span>}
+            Mood Check-In
+            {todayEntries.length > 0 && <span className="text-sm text-green-600 font-normal">({todayEntries.length} today)</span>}
           </CardTitle>
           <CardDescription>
-            {todayEntry ? 'Update your mood check-in for today' : 'How are you feeling today?'}
+            How are you feeling right now? Check in multiple times throughout the day.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -452,13 +581,120 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
             className="w-full px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
             <Save className="h-4 w-4" />
-            {saving ? 'Saving...' : (todayEntry ? 'Update Check-in' : 'Save Check-in')}
+            {saving ? 'Saving...' : 'Save Check-in'}
           </button>
         </CardContent>
       </Card>
 
+      {/* AI Suggestions */}
+      {showJourney && aiSuggestions.length > 0 && (
+        <Card className="border-indigo-200 bg-indigo-50">
+          <CardHeader>
+            <CardTitle className="text-indigo-900 text-base">💡 Suggestions for You</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {aiSuggestions.map((suggestion, idx) => (
+              <div key={idx} className={`p-3 rounded-lg border ${
+                suggestion.type === 'warning' ? 'bg-red-50 border-red-200' :
+                suggestion.type === 'insight' ? 'bg-green-50 border-green-200' :
+                'bg-blue-50 border-blue-200'
+              }`}>
+                <div className={`font-semibold text-sm mb-1 ${
+                  suggestion.type === 'warning' ? 'text-red-900' :
+                  suggestion.type === 'insight' ? 'text-green-900' :
+                  'text-blue-900'
+                }`}>{suggestion.title}</div>
+                <div className={`text-sm mb-2 ${
+                  suggestion.type === 'warning' ? 'text-red-800' :
+                  suggestion.type === 'insight' ? 'text-green-800' :
+                  'text-blue-800'
+                }`}>{suggestion.message}</div>
+                {suggestion.action && (
+                  <a
+                    href={suggestion.action.href}
+                    className={`inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded ${
+                      suggestion.type === 'warning' ? 'bg-red-600 text-white hover:bg-red-700' :
+                      suggestion.type === 'insight' ? 'bg-green-600 text-white hover:bg-green-700' :
+                      'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
+                  >
+                    {suggestion.action.label} →
+                  </a>
+                )}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Today's Chart */}
+      {showJourney && todayEntries.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-indigo-500" />
+              Today's Mood Journey {todayEntries.length > maxEntries && `(showing last ${maxEntries})`}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {todayEntries.slice(-maxEntries).map((entry, idx) => {
+                const time = new Date(entry.created_at!).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+                return (
+                  <div key={entry.id} className="flex items-center gap-3">
+                    <div className="text-xs text-gray-500 w-16">{time}</div>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600 w-12">Mood</span>
+                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${getRatingColor(entry.mood_rating, 'mood')}`}
+                            style={{ width: `${entry.mood_rating * 10}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-medium w-6">{entry.mood_rating}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600 w-12">Energy</span>
+                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${getRatingColor(entry.energy_level, 'energy')}`}
+                            style={{ width: `${entry.energy_level * 10}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-medium w-6">{entry.energy_level}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600 w-12">Anxiety</span>
+                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${getRatingColor(entry.anxiety_level, 'anxiety')}`}
+                            style={{ width: `${entry.anxiety_level * 10}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-medium w-6">{entry.anxiety_level}</span>
+                      </div>
+                      {entry.notes && (
+                        <div className="text-xs text-gray-600 italic mt-1">"{entry.notes}"</div>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => handleDelete(entry.id!)}
+                      className="ml-2 p-1 text-red-500 hover:bg-red-50 rounded transition-colors"
+                      title="Delete this check-in"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Recent Entries */}
-      {recentEntries.length > 0 && (
+      {!compact && recentEntries.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -468,7 +704,7 @@ export default function MoodCheckIn({ userId, subscriptionTier }: MoodCheckInPro
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {recentEntries.slice(0, 5).map((entry) => (
+              {recentEntries.slice(0, 7).map((entry) => (
                 <div key={entry.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                   <div className="flex items-center gap-3">
                     <Calendar className="h-4 w-4 text-gray-400" />

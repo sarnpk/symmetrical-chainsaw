@@ -400,6 +400,152 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
     }
   }
 
+  const generatePDF = () => {
+    const docs = importantDocsInput.split(',').map(s => s.trim()).filter(Boolean)
+    
+    let content = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Safety Plan</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+    h1 { color: #dc2626; border-bottom: 3px solid #dc2626; padding-bottom: 10px; }
+    h2 { color: #1f2937; margin-top: 30px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
+    h3 { color: #374151; margin-top: 20px; }
+    .section { margin-bottom: 30px; page-break-inside: avoid; }
+    .resource { background: #fef2f2; border: 1px solid #fecaca; padding: 15px; margin: 10px 0; border-radius: 8px; }
+    .contact { background: #f9fafb; border: 1px solid #e5e7eb; padding: 15px; margin: 10px 0; border-radius: 8px; }
+    .location { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; margin: 10px 0; border-radius: 8px; }
+    ul { margin: 10px 0; padding-left: 20px; }
+    li { margin: 5px 0; }
+    .phone { font-family: monospace; font-weight: bold; color: #2563eb; }
+    .label { font-weight: bold; color: #4b5563; }
+    .step { background: #f3f4f6; padding: 10px; margin: 5px 0; border-left: 4px solid #6366f1; }
+  </style>
+</head>
+<body>
+  <h1>🛡️ Safety Plan</h1>
+  <p><em>Generated: ${new Date().toLocaleString()}</em></p>
+  
+  <div class="section">
+    <h2>🚨 Crisis Resources</h2>
+    ${emergencyResources.map(r => `
+      <div class="resource">
+        <h3>${r.name}</h3>
+        <p class="phone">${r.phone}</p>
+        <p>${r.description}</p>
+        ${r.website ? `<p>Website: ${r.website}</p>` : ''}
+      </div>
+    `).join('')}
+  </div>
+
+  ${emergencyContacts.length > 0 ? `
+  <div class="section">
+    <h2>📞 Emergency Contacts</h2>
+    ${emergencyContacts.map(c => `
+      <div class="contact">
+        <h3>${c.name}</h3>
+        <p class="phone">${c.phone}</p>
+        <p><span class="label">Relationship:</span> ${c.relationship}</p>
+        <p><span class="label">Available:</span> ${c.available_times}</p>
+      </div>
+    `).join('')}
+  </div>
+  ` : ''}
+
+  ${safeLocations.length > 0 ? `
+  <div class="section">
+    <h2>📍 Safe Locations</h2>
+    ${safeLocations.map(l => `
+      <div class="location">
+        <h3>${l.name}</h3>
+        <p><span class="label">Address:</span> ${l.address}</p>
+        <p><span class="label">Contact:</span> ${l.contact_person} • ${l.phone}</p>
+        ${l.notes ? `<p><span class="label">Notes:</span> ${l.notes}</p>` : ''}
+      </div>
+    `).join('')}
+  </div>
+  ` : ''}
+
+  ${docs.length > 0 ? `
+  <div class="section">
+    <h2>📄 Important Documents</h2>
+    <ul>
+      ${docs.map(d => `<li>${d}</li>`).join('')}
+    </ul>
+  </div>
+  ` : ''}
+
+  ${(financialResources.emergency_fund || financialResources.trusted_contact?.name || (financialResources.accounts && financialResources.accounts.length > 0)) ? `
+  <div class="section">
+    <h2>💰 Financial Resources</h2>
+    ${financialResources.emergency_fund ? `<p><span class="label">Emergency Fund:</span> $${financialResources.emergency_fund}</p>` : ''}
+    ${financialResources.trusted_contact?.name ? `
+      <p><span class="label">Trusted Contact:</span> ${financialResources.trusted_contact.name}
+      ${financialResources.trusted_contact.phone ? ` • ${financialResources.trusted_contact.phone}` : ''}</p>
+    ` : ''}
+    ${financialResources.accounts && financialResources.accounts.length > 0 ? `
+      <h3>Accounts</h3>
+      <ul>
+        ${financialResources.accounts.map(a => `<li>${a.institution} • ****${a.last4}</li>`).join('')}
+      </ul>
+    ` : ''}
+    ${financialResources.notes ? `<p><span class="label">Notes:</span> ${financialResources.notes}</p>` : ''}
+  </div>
+  ` : ''}
+
+  ${(escapePlan.code_word || escapePlan.safe_bag_location || (escapePlan.steps && escapePlan.steps.length > 0)) ? `
+  <div class="section">
+    <h2>🚪 Escape Plan</h2>
+    ${escapePlan.code_word ? `<p><span class="label">Code Word:</span> ${escapePlan.code_word}</p>` : ''}
+    ${escapePlan.safe_bag_location ? `<p><span class="label">Safe Bag Location:</span> ${escapePlan.safe_bag_location}</p>` : ''}
+    ${escapePlan.steps && escapePlan.steps.length > 0 ? `
+      <h3>Steps</h3>
+      ${escapePlan.steps.map((s, i) => `<div class="step">${i + 1}. ${s}</div>`).join('')}
+    ` : ''}
+  </div>
+  ` : ''}
+
+  ${professionalSupport.length > 0 ? `
+  <div class="section">
+    <h2>👥 Professional Support</h2>
+    ${professionalSupport.map(ps => `
+      <div class="contact">
+        <h3>${ps.role || 'Support'} — ${ps.name}</h3>
+        ${ps.organization ? `<p><span class="label">Organization:</span> ${ps.organization}</p>` : ''}
+        ${ps.phone ? `<p class="phone">${ps.phone}</p>` : ''}
+        ${ps.email ? `<p>${ps.email}</p>` : ''}
+        ${ps.notes ? `<p><span class="label">Notes:</span> ${ps.notes}</p>` : ''}
+      </div>
+    `).join('')}
+  </div>
+  ` : ''}
+
+  <div class="section">
+    <h2>📅 Review Information</h2>
+    <p><span class="label">Last Reviewed:</span> ${lastReviewed ? new Date(lastReviewed).toLocaleString() : 'Never'}</p>
+    <p><span class="label">Review Frequency:</span> Every ${reviewFrequencyDays} days</p>
+  </div>
+
+  <p style="margin-top: 40px; text-align: center; color: #6b7280; font-size: 12px;">
+    Keep this document in a secure location. Update regularly.
+  </p>
+</body>
+</html>
+    `
+
+    const blob = new Blob([content], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `safety-plan-${new Date().toISOString().split('T')[0]}.html`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success('Safety plan exported! Open the file and use your browser to print as PDF.')
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -411,13 +557,13 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
         <p className="text-gray-600 max-w-3xl mx-auto">
           Essential safety resources and contacts for crisis situations. Keep this information easily accessible.
         </p>
-        <div className="mt-4 flex items-center justify-center gap-3 no-print">
+        <div className="mt-4 flex items-center justify-center gap-3">
           <button
-            onClick={() => window.print()}
+            onClick={generatePDF}
             className="px-4 py-2 rounded-lg border border-gray-300 text-gray-800 hover:bg-gray-100"
-            aria-label="Print or export this safety plan as PDF"
+            aria-label="Export this safety plan as PDF"
           >
-            Print / Export PDF
+            Export PDF
           </button>
         </div>
       </div>
@@ -425,13 +571,33 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
       {/* Print styles */}
       <style jsx global>{`
         @media print {
+          /* Hide everything except safety plan content */
           body { background: #fff !important; }
+          nav, header, footer, aside { display: none !important; }
           .no-print { display: none !important; }
           button { display: none !important; }
-          .shadow-sm { box-shadow: none !important; }
-          .bg-red-50 { background: #fff !important; }
+          
+          /* Hide navigation, sidebar, and UI elements */
+          [class*="sidebar"] { display: none !important; }
+          [class*="nav"] { display: none !important; }
+          [class*="menu"] { display: none !important; }
+          [role="navigation"] { display: none !important; }
+          
+          /* Clean up styling for print */
+          .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; }
+          .bg-red-50, .bg-blue-50, .bg-green-50, .bg-amber-50, .bg-yellow-50, .bg-indigo-50 { 
+            background: #fff !important; 
+          }
           .border { border-color: #ddd !important; }
           a[href^="#"] { display: none !important; }
+          
+          /* Ensure content takes full width */
+          .max-w-6xl, .max-w-4xl, .max-w-3xl { max-width: 100% !important; }
+          .container { max-width: 100% !important; padding: 0 !important; }
+          
+          /* Page breaks */
+          .space-y-8 > div { page-break-inside: avoid; }
+          h1, h2, h3 { page-break-after: avoid; }
         }
       `}</style>
 

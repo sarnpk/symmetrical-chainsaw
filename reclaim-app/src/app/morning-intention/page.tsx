@@ -279,7 +279,7 @@ export default function MorningIntentionPage() {
             href="/reality-log"
             className="flex-1 px-4 py-3 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors text-center font-medium"
           >
-            Reality Log
+            Reality Anchor
           </Link>
         </div>
       </div>

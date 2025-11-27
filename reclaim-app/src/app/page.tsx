@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import AuthButton from '@/components/AuthButton'
+import SignInButton from '@/components/SignInButton'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Shield, BookOpen, Brain, BarChart3, Heart, Lock } from 'lucide-react'
 import { Metadata } from 'next'
@@ -26,8 +27,7 @@ export const metadata: Metadata = {
     title: 'Reclaim - Recovery Platform for Abuse Survivors',
     description: 'Free relationship health check and AI-powered recovery tools for narcissistic abuse survivors.',
   },
-  robots: 'index, follow',
-  canonical: 'https://reclaim.app'
+  robots: 'index, follow'
 }
 
 export default async function HomePage() {
@@ -48,7 +48,11 @@ export default async function HomePage() {
             <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
             <span className="text-xl font-bold text-gray-900">Reclaim</span>
           </div>
-          <AuthButton />
+          <div className="flex items-center gap-3">
+            <a href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block">FAQ</a>
+            <SignInButton variant="secondary" />
+            <AuthButton variant="primary" />
+          </div>
         </div>
       </header>
 
@@ -62,13 +66,156 @@ export default async function HomePage() {
             The #1 recovery platform for narcissistic abuse survivors. Get your free relationship health assessment, AI-powered tools for healing, and evidence-based support in 70+ languages. Start your recovery journey today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <AuthButton variant="primary" />
+            <a href="/free-narcissist-test" className="px-8 py-3 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition-colors inline-block text-lg shadow-lg">
+              🔍 Free Narcissist Test
+            </a>
             <a href="/free-assessment" className="px-8 py-3 bg-pink-600 text-white rounded-lg font-medium hover:bg-pink-700 transition-colors inline-block">
               Free Relationship Check
             </a>
-            <a href="/learn-more" className="px-8 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors inline-block">
-              Learn More
-            </a>
+            <AuthButton variant="primary" />
+          </div>
+          <p className="text-sm text-gray-500 mt-4">
+            ✨ New: AI analyzes text to identify narcissist type in 60 seconds - No signup required
+          </p>
+        </div>
+      </section>
+
+      {/* NEW: Featured Tools Section */}
+      <section className="py-16 px-4 bg-gradient-to-br from-red-50 to-purple-50">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">
+            🚀 Powerful New AI Tools
+          </h2>
+          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Revolutionary features that use expert psychology and AI to help you regain control, understand patterns, and practice responses
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+            {/* Crisis Reframe */}
+            <Card className="hover:shadow-2xl transition-all border-red-300 bg-gradient-to-br from-red-50 to-orange-50">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="h-10 w-10 text-red-600" />
+                  <span className="bg-red-600 text-white text-xs px-3 py-1 rounded-full font-bold">🚨 NEW</span>
+                </div>
+                <CardTitle className="text-2xl text-red-900">Crisis Reframe</CardTitle>
+                <CardDescription className="text-base text-red-800">
+                  <strong>Immediate panic intervention</strong> when you're in crisis
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-700 mb-4">
+                  AI-powered emergency tool that restores your sense of control during panic situations using:
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-600 font-bold">•</span>
+                    <span><strong>Powerful metaphors</strong> that challenge your thinking ("Would you stay in a crashing car?")</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-600 font-bold">•</span>
+                    <span><strong>Expert psychological techniques</strong> (STOP, 5-4-3-2-1 grounding, 24-hour rule)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-600 font-bold">•</span>
+                    <span><strong>Hope-building narratives</strong> that paint your positive future</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-600 font-bold">•</span>
+                    <span><strong>Specific coping strategies</strong> to pass through hard times successfully</span>
+                  </li>
+                </ul>
+                <div className="mt-4 p-3 bg-red-100 rounded-lg">
+                  <p className="text-xs text-red-900 font-medium">
+                    Perfect for: Discard, rage, silent treatment, hoovering, or any crisis moment
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Narcissist Detector */}
+            <Card className="hover:shadow-2xl transition-all border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="h-10 w-10 text-purple-600" />
+                  <span className="bg-purple-600 text-white text-xs px-3 py-1 rounded-full font-bold">🔍 NEW</span>
+                </div>
+                <CardTitle className="text-2xl text-purple-900">Narcissist Detector</CardTitle>
+                <CardDescription className="text-base text-purple-800">
+                  <strong>AI analyzes behavior</strong> to identify narcissist patterns
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-700 mb-4">
+                  Paste a message or describe behavior, and AI identifies:
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600 font-bold">•</span>
+                    <span><strong>Narcissist type</strong> (Overt, Covert, Malignant, Vulnerable, Communal, Somatic)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600 font-bold">•</span>
+                    <span><strong>12 manipulation traits</strong> (gaslighting, love-bombing, hoovering, triangulation, etc.)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600 font-bold">•</span>
+                    <span><strong>Severity score</strong> and risk assessment</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600 font-bold">•</span>
+                    <span><strong>Recommended responses</strong> and protection strategies</span>
+                  </li>
+                </ul>
+                <div className="mt-4 p-3 bg-purple-100 rounded-lg">
+                  <p className="text-xs text-purple-900 font-medium">
+                    Perfect for: Understanding patterns, validating your experience, planning responses
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Narcissist Simulator */}
+            <Card className="hover:shadow-2xl transition-all border-indigo-300 bg-gradient-to-br from-indigo-50 to-blue-50">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Brain className="h-10 w-10 text-indigo-600" />
+                  <span className="bg-indigo-600 text-white text-xs px-3 py-1 rounded-full font-bold">🎯 NEW</span>
+                </div>
+                <CardTitle className="text-2xl text-indigo-900">Narcissist Simulator</CardTitle>
+                <CardDescription className="text-base text-indigo-800">
+                  <strong>Practice responses</strong> in a safe environment
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-700 mb-4">
+                  AI simulates narcissist behavior so you can practice:
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 font-bold">•</span>
+                    <span><strong>Grey Rock technique</strong> - boring, non-reactive responses</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 font-bold">•</span>
+                    <span><strong>BIFF communication</strong> - Brief, Informative, Friendly, Firm</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 font-bold">•</span>
+                    <span><strong>Boundary setting</strong> without JADE (Justify, Argue, Defend, Explain)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 font-bold">•</span>
+                    <span><strong>AI predicts their next move</strong> and provides real-time feedback</span>
+                  </li>
+                </ul>
+                <div className="mt-4 p-3 bg-indigo-100 rounded-lg">
+                  <p className="text-xs text-indigo-900 font-medium">
+                    Perfect for: Preparing for interactions, building confidence, testing strategies
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -77,7 +224,7 @@ export default async function HomePage() {
       <section className="py-16 px-4">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Evidence-Based Recovery Tools for Narcissistic Abuse Survivors
+            Complete Evidence-Based Recovery Toolkit
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="hover:shadow-lg transition-shadow border-amber-200">
@@ -338,6 +485,7 @@ export default async function HomePage() {
           
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500 border-t pt-6">
+            <a href="/faq" className="hover:text-indigo-600 transition-colors">FAQ</a>
             <a href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-indigo-600 transition-colors">Terms of Service</a>
             <a href="/cookies" className="hover:text-indigo-600 transition-colors">Cookie Policy</a>

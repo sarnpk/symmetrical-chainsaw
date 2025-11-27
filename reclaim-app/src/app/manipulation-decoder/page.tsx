@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
 import { Sparkles, Copy, Check, Upload, Mic, Trash2, X, HelpCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function ManipulationDecoderPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -29,6 +30,8 @@ export default function ManipulationDecoderPage() {
   const [speakers, setSpeakers] = useState<any[]>([]);
   const [showConversationModal, setShowConversationModal] = useState(false);
   const [conversationContext, setConversationContext] = useState<string>('');
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [selectedHistoryItem, setSelectedHistoryItem] = useState<any>(null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -85,6 +88,8 @@ export default function ManipulationDecoderPage() {
       } else {
         setAiAnalysis(data);
       }
+      // Refresh history after AI analysis
+      fetch('/api/manipulation-decoder').then(r => r.json()).then(data => setHistory(Array.isArray(data) ? data : []));
     } catch (error) {
       console.error('AI analysis failed:', error);
       setAiAnalysis({
@@ -214,6 +219,183 @@ export default function ManipulationDecoderPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
+      {/* History Analysis Modal */}
+      {showHistoryModal && selectedHistoryItem && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowHistoryModal(false)}>
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Analysis Details</h2>
+                <p className="text-sm text-gray-500">
+                  {new Date(selectedHistoryItem.created_at).toLocaleString()}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowHistoryModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              {/* Message Text */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-600 mb-2">Analyzed Message</h3>
+                <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <p className="text-sm text-gray-700 whitespace-pre-wrap">{selectedHistoryItem.message_text}</p>
+                </div>
+              </div>
+
+              {/* Emotional Impact & Is My Fault */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-600 mb-2">Emotional Impact</h3>
+                  <div className={`inline-block px-4 py-2 rounded-lg font-semibold ${
+                    selectedHistoryItem.emotional_impact === 'severe' ? 'bg-red-100 text-red-800' :
+                    selectedHistoryItem.emotional_impact === 'moderate' ? 'bg-yellow-100 text-yellow-800' :
+                    selectedHistoryItem.emotional_impact === 'mild' ? 'bg-green-100 text-green-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {selectedHistoryItem.emotional_impact || 'Not specified'}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-gray-600 mb-2">Blamed Yourself?</h3>
+                  <div className={`inline-block px-4 py-2 rounded-lg font-semibold ${
+                    selectedHistoryItem.is_my_fault ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                  }`}>
+                    {selectedHistoryItem.is_my_fault ? 'Yes' : 'No'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Identified Tactics */}
+              {selectedHistoryItem.identified_tactics && selectedHistoryItem.identified_tactics.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-600 mb-3">Identified Manipulation Tactics</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {getIdentifiedTraits(selectedHistoryItem.identified_tactics).map((trait: any) => (
+                      <span key={trait.id} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
+                        {trait.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* AI Analysis - if available */}
+              {selectedHistoryItem.notes && (() => {
+                try {
+                  const notesData = JSON.parse(selectedHistoryItem.notes)
+                  if (notesData.ai_analysis) {
+                    return (
+                      <div className="space-y-4">
+                        <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Sparkles className="h-4 w-4 text-purple-600" />
+                            <span className="text-sm font-semibold text-purple-900">AI Analysis</span>
+                          </div>
+                        </div>
+
+                        {/* AI Tactics */}
+                        {notesData.tactics && notesData.tactics.length > 0 && (
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600 mb-2">AI-Identified Tactics</h3>
+                            <div className="flex flex-wrap gap-2">
+                              {notesData.tactics.map((tactic: string, idx: number) => (
+                                <span key={idx} className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
+                                  {tactic}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Emotional Hooks */}
+                        {notesData.emotional_hooks && notesData.emotional_hooks.length > 0 && (
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600 mb-2">Emotional Hooks</h3>
+                            <div className="space-y-2">
+                              {notesData.emotional_hooks.map((hook: string, idx: number) => (
+                                <div key={idx} className="p-2 bg-orange-50 rounded border border-orange-200 text-sm text-orange-900">
+                                  {hook}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Hidden Agenda */}
+                        {notesData.hidden_agenda && (
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600 mb-2">Hidden Agenda</h3>
+                            <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                              <p className="text-sm text-red-900">{notesData.hidden_agenda}</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Explanation */}
+                        {notesData.explanation && (
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600 mb-2">Explanation</h3>
+                            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                              <p className="text-sm text-blue-900">{notesData.explanation}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  }
+                } catch (e) {
+                  return null
+                }
+                return null
+              })()}
+
+              {/* Notes */}
+              {selectedHistoryItem.notes && !selectedHistoryItem.notes.includes('ai_analysis') && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-600 mb-2">Notes</h3>
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <p className="text-sm text-gray-700">{selectedHistoryItem.notes}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-4 border-t">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(selectedHistoryItem.message_text)
+                    toast.success('Message copied to clipboard')
+                  }}
+                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center justify-center gap-2"
+                >
+                  <Copy className="w-4 h-4" />
+                  Copy Message
+                </button>
+                <button
+                  onClick={async () => {
+                    if (confirm('Delete this analysis?')) {
+                      await handleDeleteHistoryItem(selectedHistoryItem.id)
+                      setShowHistoryModal(false)
+                    }
+                  }}
+                  className="flex-1 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 flex items-center justify-center gap-2"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto p-6">
         <div className="flex items-center gap-3 mb-2">
           <h1 className="text-3xl font-bold">Manipulation Decoder</h1>
@@ -444,7 +626,7 @@ export default function ManipulationDecoderPage() {
                   
                   <div className="flex gap-2 flex-wrap">
                     <Link
-                      href="/toxic-memories/new"
+                      href="/toxic-memories?new=true"
                       className="px-3 py-2 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 flex items-center gap-1 transition-colors"
                     >
                       📝 Document as Toxic Memory
@@ -456,7 +638,7 @@ export default function ManipulationDecoderPage() {
                       ⚓ Add to Reality Anchor
                     </Link>
                     <Link
-                      href="/belief-reframe"
+                      href="/belief-reframe/new"
                       className="px-3 py-2 bg-purple-100 text-purple-700 rounded text-sm hover:bg-purple-200 flex items-center gap-1 transition-colors"
                     >
                       🧠 Challenge Related Beliefs
@@ -492,7 +674,7 @@ export default function ManipulationDecoderPage() {
                       <h4 className="font-semibold text-sm mb-2 text-gray-900">📋 Document This Pattern</h4>
                       <div className="flex gap-2 flex-wrap">
                         <Link
-                          href="/toxic-memories/new"
+                          href="/toxic-memories?new=true"
                           className="px-3 py-2 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition-colors"
                         >
                           📝 Save as Toxic Memory
@@ -532,27 +714,38 @@ export default function ManipulationDecoderPage() {
             ) : (
               <div className="space-y-3 max-h-[600px] overflow-y-auto">
                 {history.map((item: any) => (
-                  <div key={item.id} className="p-4 border rounded hover:bg-gray-50">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="text-sm text-gray-500">
-                        {new Date(item.created_at).toLocaleDateString()}
+                  <div key={item.id} className="relative group">
+                    <button
+                      onClick={() => {
+                        setSelectedHistoryItem(item)
+                        setShowHistoryModal(true)
+                      }}
+                      className="w-full text-left p-4 border rounded hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex justify-between items-start mb-2 pr-8">
+                        <div className="text-sm text-gray-500">
+                          {new Date(item.created_at).toLocaleDateString()}
+                        </div>
                       </div>
-                      <button
-                        onClick={() => handleDeleteHistoryItem(item.id)}
-                        className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
-                        title="Delete analysis"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                    <div className="text-sm mb-2 line-clamp-2">{item.message_text}</div>
-                    <div className="flex gap-2 flex-wrap">
-                      {getIdentifiedTraits(item.identified_tactics).map((trait: any) => (
-                        <span key={trait.id} className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">
-                          {trait.name}
-                        </span>
-                      ))}
-                    </div>
+                      <div className="text-sm mb-2 line-clamp-2">{item.message_text}</div>
+                      <div className="flex gap-2 flex-wrap">
+                        {getIdentifiedTraits(item.identified_tactics).map((trait: any) => (
+                          <span key={trait.id} className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">
+                            {trait.name}
+                          </span>
+                        ))}
+                      </div>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDeleteHistoryItem(item.id)
+                      }}
+                      className="absolute top-2 right-2 p-1.5 bg-red-100 text-red-600 rounded hover:bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
                   </div>
                 ))}
               </div>

@@ -13,7 +13,8 @@ import {
   Sparkles,
   Play,
   Pause,
-  Volume2
+  Volume2,
+  HelpCircle
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
@@ -438,12 +439,19 @@ export default function MindResetContent() {
   return (
     <div className="space-y-6">
     {/* Header */}
-    <div className="text-center">
-      <h1 className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-3 mb-4">
-        <Brain className="h-8 w-8 text-indigo-600" />
-        Mind Reset
-      </h1>
-      <p className="text-gray-600 max-w-3xl mx-auto">
+    <div>
+      <div className="flex items-center gap-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mind Reset</h1>
+        <Link 
+          href="/docs/MIND_RESET_GUIDE.html"
+          target="_blank"
+          className="text-indigo-600 hover:text-indigo-700"
+          title="View User Guide"
+        >
+          <HelpCircle className="h-6 w-6" />
+        </Link>
+      </div>
+      <p className="text-gray-600 text-sm sm:text-base mt-2">
         Reframe negative thought patterns, practice positive affirmations, and use breathing exercises to reset your mindset.
       </p>
     </div>

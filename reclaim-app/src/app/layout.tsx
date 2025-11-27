@@ -15,11 +15,6 @@ export const metadata: Metadata = {
   title: "Reclaim - Recovery Platform",
   description: "A secure digital recovery tool for survivors of narcissistic abuse",
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Reclaim",
-  },
   formatDetection: {
     telephone: false,
   },
@@ -44,6 +39,9 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
         <meta name="theme-color" content="#6366f1" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Reclaim" />
       </head>
       <body className={`${inter.className} antialiased bg-gray-50 min-h-screen`}>
         <main className="min-h-screen">

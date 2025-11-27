@@ -134,7 +134,7 @@ export default function RealityLogEntryPage() {
             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700"
           >
             <ArrowLeft className="h-5 w-5" />
-            Back to Reality Log
+            Back to Reality Anchor
           </Link>
           <div className="flex gap-2">
             <Link

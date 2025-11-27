@@ -12,7 +12,7 @@ interface AuthButtonProps {
 }
 
 export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
-  const [isSignUp, setIsSignUp] = useState(false)
+  const [isSignUp, setIsSignUp] = useState(variant === 'primary')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -344,10 +344,13 @@ export default function AuthButton({ variant = 'secondary' }: AuthButtonProps) {
     <>
       {showForm && typeof window !== 'undefined' && createPortal(Modal, document.body)}
       <button
-        onClick={() => setShowForm(true)}
+        onClick={() => {
+          setIsSignUp(variant === 'primary')
+          setShowForm(true)
+        }}
         className={variant === 'primary' ? primaryClasses : secondaryClasses}
       >
-        <LogIn className="h-4 w-4" />
+        {variant === 'primary' ? <UserPlus className="h-4 w-4" /> : <LogIn className="h-4 w-4" />}
         Get Started
       </button>
     </>

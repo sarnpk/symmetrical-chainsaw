@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
-import DashboardV2 from './DashboardV2'
+import DashboardV3 from './DashboardV3'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -83,7 +83,7 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <DashboardV2 user={user} profile={profile} recentEntries={recentEntries} />
+      <DashboardV3 user={user} profile={profile} recentEntries={recentEntries} />
     </DashboardLayout>
   )
 }

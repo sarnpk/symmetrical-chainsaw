@@ -102,6 +102,21 @@ const faqData: FAQItem[] = [
   },
   {
     category: 'safety',
+    question: "Do you use my personal data to train AI models?",
+    answer: "NO. We want to be crystal clear: We DO NOT use your journal entries, conversations, or any personal content to train AI models. We DO NOT sell or share your data with third parties. When AI processes your content (like analyzing manipulation patterns), it happens in real-time and your data is immediately discarded by the AI provider. Your healing journey is private and stays private."
+  },
+  {
+    category: 'safety',
+    question: "What happens to my data when I use AI features?",
+    answer: "When you use AI features, your content is sent to Google AI for real-time processing only. We have strict contractual agreements ensuring your data is NOT used to train their models. The AI generates a response and immediately discards your input - nothing is retained. We never store your content with third-party AI providers."
+  },
+  {
+    category: 'safety',
+    question: "Can you guarantee my data won't be used for AI training?",
+    answer: "Yes. This is legally binding in our Terms of Service and Privacy Policy. We have contractual agreements with all AI providers (Google AI) that explicitly prohibit using customer data for model training. If we ever change this policy, we will notify you 90 days in advance and give you the option to export and delete all your data before any changes take effect."
+  },
+  {
+    category: 'safety',
     question: "What if I'm in immediate danger?",
     answer: "If you're in immediate danger, call emergency services (911, 999, etc.). Our Safety Plan feature (free unlimited) helps you prepare for dangerous situations, but it's not a substitute for professional help. We provide crisis hotline numbers and emergency resources within the app."
   },
@@ -355,17 +370,12 @@ export default function FAQPage() {
               Our support team understands the unique challenges of narcissistic abuse recovery.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <AuthButton />
               <a
-                href="/contact"
-                className="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
-              >
-                Contact Support
-              </a>
-              <a
-                href="/learn-more"
+                href="mailto:support@reclaim.app"
                 className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
               >
-                Learn About Narcissistic Abuse
+                Contact Support
               </a>
             </div>
           </div>

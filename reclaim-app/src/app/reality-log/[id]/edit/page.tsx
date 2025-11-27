@@ -146,7 +146,7 @@ export default function EditRealityLogEntryPage() {
               <ArrowLeft className="h-5 w-5 text-gray-600" />
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Edit Reality Log Entry</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Edit Reality Anchor Entry</h1>
               <p className="text-gray-600 mt-1">Update your documented experience</p>
             </div>
           </div>

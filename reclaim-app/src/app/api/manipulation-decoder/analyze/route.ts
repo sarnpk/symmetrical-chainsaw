@@ -1,8 +1,15 @@
 import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
 import { geminiAI } from '@/lib/gemini-ai';
+import { checkAndRecordAIUsage } from '@/lib/usage-tracking';
 
 export async function POST(request: Request) {
+  // Check usage and authenticate
+  const usageCheck = await checkAndRecordAIUsage('message_analysis');
+  if ('error' in usageCheck) {
+    return NextResponse.json({ error: usageCheck.error }, { status: usageCheck.status });
+  }
+
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -51,6 +58,59 @@ Format your response as JSON:
 
     if (!analysis) {
       return NextResponse.json({ error: 'Failed to parse AI response' }, { status: 500 });
+    }
+
+    // Save AI analysis to database
+    try {
+      console.log('Saving AI manipulation analysis to database')
+      
+      // Map tactics to trait IDs if possible
+      const identifiedTactics: string[] = [];
+      if (analysis.tactics && Array.isArray(analysis.tactics)) {
+        for (const tacticName of analysis.tactics) {
+          const matchingTrait = traits?.find(t => 
+            t.name.toLowerCase().includes(tacticName.toLowerCase()) ||
+            tacticName.toLowerCase().includes(t.name.toLowerCase())
+          );
+          if (matchingTrait) {
+            identifiedTactics.push(matchingTrait.id);
+          }
+        }
+      }
+
+      const insertData = {
+        user_id: user.id,
+        message_text: message_text || '',
+        identified_tactics: identifiedTactics,
+        emotional_impact: 'moderate', // Default since AI doesn't specify
+        is_my_fault: false,
+        notes: JSON.stringify({
+          ai_analysis: true,
+          tactics: analysis.tactics,
+          emotional_hooks: analysis.emotional_hooks,
+          hidden_agenda: analysis.hidden_agenda,
+          explanation: analysis.explanation,
+          context: context || null
+        })
+      };
+
+      console.log('Saving AI analysis:', insertData);
+
+      const { data: savedData, error: saveError } = await supabase
+        .from('manipulation_analysis')
+        .insert(insertData)
+        .select()
+        .single();
+
+      if (saveError) {
+        console.error('Failed to save AI analysis to database:', saveError);
+        // Don't fail the request, just log the error
+      } else {
+        console.log('AI analysis saved successfully:', savedData);
+      }
+    } catch (saveError) {
+      console.error('Error saving AI analysis:', saveError);
+      // Don't fail the request, just log the error
     }
 
     return NextResponse.json(analysis);

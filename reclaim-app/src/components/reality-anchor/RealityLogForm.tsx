@@ -259,7 +259,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Add Reality Log Entry</CardTitle>
+        <CardTitle>Add Reality Anchor Entry</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">

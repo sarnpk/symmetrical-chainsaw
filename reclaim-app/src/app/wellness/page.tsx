@@ -16,7 +16,8 @@ import {
   Shield,
   Sun,
   Shuffle,
-  Brain
+  Brain,
+  HelpCircle
 } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -97,14 +98,19 @@ export default function WellnessPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-6xl mx-auto space-y-6">
-        <div className="flex items-center justify-end">
-          <Link href="/wellness/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
-        </div>
         {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Wellness Dashboard</h1>
-          <p className="text-gray-600">Your daily space for healing, growth, and self-care</p>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Wellness Dashboard</h1>
+          <Link 
+            href="/docs/WELLNESS_GUIDE.html"
+            target="_blank"
+            className="text-indigo-600 hover:text-indigo-700"
+            title="View User Guide"
+          >
+            <HelpCircle className="h-6 w-6" />
+          </Link>
         </div>
+        <p className="text-gray-600 text-sm sm:text-base">Your daily space for healing, growth, and self-care</p>
 
         {/* Daily Affirmation */}
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 rounded-xl shadow-sm">
@@ -147,13 +153,13 @@ export default function WellnessPage() {
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3 md:mb-5">
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="pt-6 pb-4 px-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-pink-100 rounded-full">
                   <Heart className="h-5 w-5 text-pink-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Wellness Journey</p>
+                  <p className="text-sm text-gray-600 mb-1">Wellness Journey</p>
                   <p className="font-semibold text-gray-900">Day by day</p>
                 </div>
               </div>
@@ -161,13 +167,13 @@ export default function WellnessPage() {
           </Card>
 
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="pt-6 pb-4 px-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-100 rounded-full">
                   <TrendingUp className="h-5 w-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Progress</p>
+                  <p className="text-sm text-gray-600 mb-1">Progress</p>
                   <p className="font-semibold text-gray-900">Growing stronger</p>
                 </div>
               </div>
@@ -175,13 +181,13 @@ export default function WellnessPage() {
           </Card>
 
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="pt-6 pb-4 px-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-full">
                   <Shield className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Support</p>
+                  <p className="text-sm text-gray-600 mb-1">Support</p>
                   <p className="font-semibold text-gray-900">Always here</p>
                 </div>
               </div>

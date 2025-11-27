@@ -12,7 +12,9 @@ import {
   Zap,
   ChevronRight,
   ArrowDown,
-  Trash2
+  Trash2,
+  Volume2,
+  VolumeX
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import toast from 'react-hot-toast'
@@ -43,16 +45,36 @@ function decodeAndFormatText(text: string): string {
   return decoded
 }
 
-// Helper function to render text with bold formatting
-function renderTextWithBold(text: string): JSX.Element[] {
-  const parts = text.split(/\*\*(.*?)\*\*/g)
-  return parts.map((part, partIndex) =>
+// Helper function to render text with markdown formatting
+function renderMarkdownText(text: string): JSX.Element[] {
+  // Handle bold text (**text**)
+  let parts = text.split(/\*\*(.*?)\*\*/g)
+  let elements = parts.map((part, partIndex) =>
     partIndex % 2 === 1 ? (
-      <strong key={partIndex} className="font-semibold">{part}</strong>
+      <strong key={`bold-${partIndex}`} className="font-semibold text-gray-900">{part}</strong>
     ) : (
-      <React.Fragment key={partIndex}>{part}</React.Fragment>
+      <React.Fragment key={`text-${partIndex}`}>{part}</React.Fragment>
     )
   )
+  
+  // Handle italic text (*text*)
+  return elements.map((element, index) => {
+    if (typeof element === 'object' && element.type === React.Fragment) {
+      const text = element.props.children
+      if (typeof text === 'string') {
+        const italicParts = text.split(/\*(.*?)\*/g)
+        const italicElements = italicParts.map((part, partIndex) =>
+          partIndex % 2 === 1 ? (
+            <em key={`italic-${index}-${partIndex}`} className="italic">{part}</em>
+          ) : (
+            <React.Fragment key={`text-${index}-${partIndex}`}>{part}</React.Fragment>
+          )
+        )
+        return <React.Fragment key={`processed-${index}`}>{italicElements}</React.Fragment>
+      }
+    }
+    return element
+  })
 }
 
 // Helper function to format text with proper line breaks and structure
@@ -94,7 +116,7 @@ function formatAIResponse(text: string): JSX.Element {
         <ul key={`ul-${elements.length}`} className="list-disc list-inside space-y-2 ml-2 my-3">
           {bulletItems.map((item, idx) => (
             <li key={idx} className="text-sm leading-relaxed">
-              {renderTextWithBold(item)}
+              {renderMarkdownText(item)}
             </li>
           ))}
         </ul>
@@ -125,7 +147,7 @@ function formatAIResponse(text: string): JSX.Element {
         <ol key={`ol-${elements.length}`} className="list-decimal list-inside space-y-2 ml-2 my-3">
           {numberedItems.map((item, idx) => (
             <li key={idx} className="text-sm leading-relaxed">
-              {renderTextWithBold(item)}
+              {renderMarkdownText(item)}
             </li>
           ))}
         </ol>
@@ -161,7 +183,7 @@ function formatAIResponse(text: string): JSX.Element {
 
     elements.push(
       <p key={`p-${elements.length}`} className="text-sm leading-relaxed my-2">
-        {renderTextWithBold(paragraph)}
+        {renderMarkdownText(paragraph)}
       </p>
     )
   }
@@ -174,6 +196,8 @@ interface UsageInfo {
   monthly_limit: number
   remaining: number
 }
+
+type ResponseLength = 'concise' | 'balanced' | 'detailed'
 
 const suggestedPrompts = [
   "I'm feeling confused about whether my experience was really abuse",
@@ -197,6 +221,8 @@ export default function AICoachContent() {
   const [isLoading, setIsLoading] = useState(false)
   const [usageInfo, setUsageInfo] = useState<UsageInfo | null>(null)
   const [context, setContext] = useState<'general' | 'crisis' | 'pattern-analysis' | 'mind-reset' | 'grey-rock'>('general')
+  const [responseLength, setResponseLength] = useState<ResponseLength>('balanced')
+  const [showLengthPrompt, setShowLengthPrompt] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
   const [copyStatus, setCopyStatus] = useState('')
@@ -207,6 +233,10 @@ export default function AICoachContent() {
 
   const [showScrollButton, setShowScrollButton] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
+  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null)
+  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null)
+  const [autoReadEnabled, setAutoReadEnabled] = useState(false)
+  const [userHasScrolled, setUserHasScrolled] = useState(false)
 
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
     if (chatContainerRef.current) {
@@ -218,13 +248,18 @@ export default function AICoachContent() {
   const checkIfNearBottom = () => {
     if (!chatContainerRef.current) return true
     const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current
-    const threshold = 100
-    return scrollHeight - scrollTop - clientHeight < threshold
+    const threshold = 150 // Increased threshold for better detection
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight
+    return distanceFromBottom < threshold
   }
 
   // Handle scroll events to show/hide scroll button
   const handleScroll = () => {
     setShowScrollButton(!checkIfNearBottom())
+    // Detect if user manually scrolled during AI response generation
+    if (isLoading) {
+      setUserHasScrolled(true)
+    }
   }
 
   // Small delay-clear for screen reader announcements
@@ -448,6 +483,7 @@ export default function AICoachContent() {
         message: messageToSend,
         context,
         conversationHistory,
+        responseLength,
         ...(conversationId ? { conversation_id: conversationId } : {})
       }
 
@@ -546,7 +582,10 @@ export default function AICoachContent() {
       const fullText = data.response
       let currentIndex = 0
       const typingSpeed = 20 // ms per character (slower for more natural feel)
-      let wasNearBottom = checkIfNearBottom()
+      let shouldAutoScroll = checkIfNearBottom() // Initial check
+      
+      // Reset user scroll detection for this new message
+      setUserHasScrolled(false)
 
       const typeInterval = setInterval(() => {
         if (currentIndex < fullText.length) {
@@ -557,12 +596,28 @@ export default function AICoachContent() {
               : msg
           ))
 
-          // Only auto-scroll if user was at bottom when typing started
-          if (wasNearBottom && chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+          // Only auto-scroll if:
+          // 1. We initially decided to auto-scroll
+          // 2. User hasn't manually scrolled during typing
+          // 3. User is still near the bottom
+          if (shouldAutoScroll && !userHasScrolled && chatContainerRef.current) {
+            const isStillNearBottom = checkIfNearBottom()
+            if (isStillNearBottom) {
+              chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+            } else {
+              // User has scrolled up, stop auto-scrolling
+              shouldAutoScroll = false
+            }
           }
         } else {
           clearInterval(typeInterval)
+          
+          // Auto-read the response if enabled
+          if (autoReadEnabled) {
+            setTimeout(() => {
+              speakMessage(aiResponse.id, fullText)
+            }, 500) // Small delay after typing completes
+          }
         }
       }, typingSpeed)
 
@@ -588,122 +643,219 @@ export default function AICoachContent() {
     toast.success('Copied to clipboard')
   }
 
+  // Text-to-speech functions
+  const speakMessage = (messageId: string, content: string) => {
+    // Stop any currently playing speech
+    if (speechSynthesisRef.current) {
+      window.speechSynthesis.cancel()
+    }
+
+    // Clean the content for better speech (remove markdown formatting)
+    const cleanContent = content
+      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold formatting
+      .replace(/\*(.*?)\*/g, '$1') // Remove italic formatting
+      .replace(/#{1,6}\s/g, '') // Remove heading markers
+      .replace(/\n+/g, '. ') // Replace line breaks with pauses
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim()
+
+    const utterance = new SpeechSynthesisUtterance(cleanContent)
+    
+    // Configure speech settings
+    utterance.rate = 0.9 // Slightly slower for better comprehension
+    utterance.pitch = 1.0
+    utterance.volume = 0.8
+
+    // Try to use a more natural voice if available
+    const voices = window.speechSynthesis.getVoices()
+    const preferredVoice = voices.find(voice => 
+      voice.lang.startsWith('en') && 
+      (voice.name.includes('Natural') || voice.name.includes('Enhanced') || voice.name.includes('Premium'))
+    ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0]
+    
+    if (preferredVoice) {
+      utterance.voice = preferredVoice
+    }
+
+    // Event handlers
+    utterance.onstart = () => {
+      setSpeakingMessageId(messageId)
+    }
+
+    utterance.onend = () => {
+      setSpeakingMessageId(null)
+      speechSynthesisRef.current = null
+    }
+
+    utterance.onerror = () => {
+      setSpeakingMessageId(null)
+      speechSynthesisRef.current = null
+      toast.error('Speech synthesis failed')
+    }
+
+    speechSynthesisRef.current = utterance
+    window.speechSynthesis.speak(utterance)
+    toast.success('Reading message aloud')
+  }
+
+  const stopSpeaking = () => {
+    if (speechSynthesisRef.current) {
+      window.speechSynthesis.cancel()
+      setSpeakingMessageId(null)
+      speechSynthesisRef.current = null
+      toast.success('Stopped reading')
+    }
+  }
+
+  // Clean up speech synthesis on component unmount
+  useEffect(() => {
+    return () => {
+      if (speechSynthesisRef.current) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [])
+
+  // Keyboard shortcut to read the latest AI message (Ctrl/Cmd + R)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'r' && !e.shiftKey) {
+        e.preventDefault()
+        
+        // Find the latest AI message
+        const latestAIMessage = [...messages].reverse().find(msg => msg.type === 'ai' && msg.content.trim())
+        
+        if (latestAIMessage) {
+          if (speakingMessageId === latestAIMessage.id) {
+            stopSpeaking()
+          } else {
+            speakMessage(latestAIMessage.id, latestAIMessage.content)
+          }
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [messages, speakingMessageId])
+
   return (
     <div className="fixed inset-0 lg:left-64 flex flex-col bg-gray-50">
       {/* SR-only live region for copy feedback */}
       <div className="sr-only" role="status" aria-live="polite">{copyStatus}</div>
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 shrink-0 mt-16 lg:mt-0">
+      {/* Compact Mobile Header */}
+      <div className="bg-white border-b border-gray-200 px-3 py-2 shrink-0 mt-16 lg:mt-0">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <Bot className="h-6 w-6 sm:h-7 sm:w-7 text-indigo-600" />
-              AI Coach
-              <span className="ml-1 inline-flex items-center gap-1 text-xs font-medium text-green-700">
-                <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                <span>Online</span>
-              </span>
-            </h1>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">
-              Your personal AI companion trained in narcissistic abuse recovery
-            </p>
+          <div className="flex items-center gap-2 min-w-0">
+            <Bot className="h-5 w-5 text-indigo-600 flex-shrink-0" />
+            <div className="min-w-0">
+              <h1 className="text-lg font-bold text-gray-900 flex items-center gap-1">
+                AI Coach
+                <span className="inline-flex items-center gap-1 text-xs font-medium text-green-700">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                  <span className="hidden sm:inline">Online</span>
+                </span>
+              </h1>
+            </div>
+          </div>
+          
+          {/* Mobile Controls */}
+          <div className="flex items-center gap-1">
+            {/* Auto-read toggle - mobile */}
+            <label className="flex items-center cursor-pointer" title="Auto-read responses">
+              <input
+                type="checkbox"
+                checked={autoReadEnabled}
+                onChange={(e) => setAutoReadEnabled(e.target.checked)}
+                className="sr-only"
+              />
+              <Volume2 className={`w-4 h-4 ${autoReadEnabled ? 'text-indigo-600' : 'text-gray-400'}`} />
+            </label>
+            
+            {/* Usage indicator - mobile */}
+            {usageInfo && (
+              <div className="flex items-center gap-1 text-xs text-gray-600">
+                <Zap className="h-3 w-3 text-indigo-600" />
+                <span className="hidden sm:inline">
+                  {usageInfo.monthly_limit === -1 ? '∞' : `${usageInfo.remaining}/${usageInfo.monthly_limit}`}
+                </span>
+                <span className="sm:hidden">{usageInfo.remaining}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Threads, Usage Info & Context Selector */}
-      <div className="px-4 sm:px-6 py-3 bg-gray-50 border-b border-gray-200 shrink-0">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          {/* Threads selector */}
-          <div className="flex items-center gap-2">
-            <label htmlFor="thread-select" className="text-sm text-gray-600">Thread:</label>
+      {/* Compact Toolbar */}
+      <div className="bg-gray-50 border-b border-gray-200 px-3 py-2 shrink-0">
+        <div className="flex items-center justify-between gap-2 overflow-x-auto">
+          {/* Thread selector - compact */}
+          <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
             <select
-              id="thread-select"
               value={conversationId || ''}
               onChange={(e) => e.target.value ? handleSelectThread(e.target.value) : undefined}
-              className="text-sm border border-gray-300 rounded-md px-2 py-1 bg-white"
+              className="text-xs border border-gray-300 rounded px-2 py-1 bg-white min-w-0 max-w-[120px] truncate"
             >
-              <option value="" disabled>Select a thread</option>
+              <option value="" disabled>Thread</option>
               {threads.map(t => (
-                <option key={t.id} value={t.id}>{t.title || 'Conversation'}</option>
+                <option key={t.id} value={t.id}>{(t.title || 'Conversation').slice(0, 20)}</option>
               ))}
             </select>
+            
             <button
               onClick={handleNewChat}
-              className="text-xs px-2 py-1 rounded-md border border-gray-300 hover:bg-gray-100"
-              title="Start new conversation"
+              className="text-xs px-2 py-1 rounded border border-gray-300 hover:bg-gray-100 flex-shrink-0"
+              title="New chat"
             >
-              New chat
+              New
             </button>
+            
             {conversationId && (
               <button
                 onClick={() => handleDeleteThread(conversationId)}
-                className="text-xs p-2 rounded-md border border-red-300 text-red-600 hover:bg-red-50"
-                title="Delete current conversation"
-                aria-label="Delete conversation"
+                className="text-xs p-1 rounded border border-red-300 text-red-600 hover:bg-red-50 flex-shrink-0"
+                title="Delete"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-3 h-3" />
               </button>
             )}
           </div>
-          {/* Usage Info */}
-          {usageInfo && (
-            <div className="flex items-center gap-2 text-sm">
-              <Zap className="h-4 w-4 text-indigo-600" />
-              <span className="text-gray-600">
-                {usageInfo.monthly_limit === -1
-                  ? 'Unlimited AI interactions'
-                  : `${usageInfo.remaining}/${usageInfo.monthly_limit} interactions remaining`
-                }
-              </span>
-              {usageInfo.subscription_tier === 'foundation' && (
-                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
-                  Free Plan
-                </span>
-              )}
-            </div>
-          )}
 
-          {/* Context Selector */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 hidden sm:inline">Mode:</span>
+          {/* Response controls - compact */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Length selector */}
+            <select
+              value={responseLength}
+              onChange={(e) => setResponseLength(e.target.value as ResponseLength)}
+              className="text-xs border border-gray-300 rounded px-2 py-1 bg-white"
+              title="Response length"
+            >
+              <option value="concise">Brief</option>
+              <option value="balanced">Balanced</option>
+              <option value="detailed">Detailed</option>
+            </select>
 
-            {/* Mobile segmented control */}
-            <div className="sm:hidden">
-              <div className="inline-flex items-center rounded-lg border border-gray-200 bg-white p-1 shadow-sm">
-                {([
-                  { id: 'general', label: 'General' },
-                  { id: 'crisis', label: 'Crisis' },
-                  { id: 'pattern-analysis', label: 'Patterns' },
-                ] as const).map(opt => (
-                  <button
-                    key={opt.id}
-                    onClick={() => setContext(opt.id)}
-                    className={`px-2.5 py-1.5 text-xs rounded-md font-medium transition-colors ${context === opt.id ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:text-gray-900'
-                      }`}
-                    aria-pressed={context === opt.id}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Desktop select */}
-            <div className="hidden sm:block">
-              <label htmlFor="ai-mode" className="sr-only">Mode</label>
-              <select
-                id="ai-mode"
-                value={context}
-                onChange={(e) => setContext(e.target.value as any)}
-                className="text-sm border border-gray-300 rounded-md px-2 py-1 bg-white"
-              >
-                <option value="general">General Support</option>
-                <option value="crisis">Crisis Mode</option>
-                <option value="pattern-analysis">Pattern Analysis</option>
-                <option value="mind-reset">Mind Reset</option>
-                <option value="grey-rock">Grey Rock Technique</option>
-              </select>
+            {/* Mode selector - mobile segmented */}
+            <div className="flex rounded border border-gray-300 bg-white overflow-hidden">
+              {([
+                { id: 'general', label: 'General', short: 'Gen' },
+                { id: 'crisis', label: 'Crisis', short: 'SOS' },
+                { id: 'pattern-analysis', label: 'Patterns', short: 'Pat' },
+              ] as const).map(opt => (
+                <button
+                  key={opt.id}
+                  onClick={() => setContext(opt.id)}
+                  className={`px-2 py-1 text-xs font-medium transition-colors ${
+                    context === opt.id 
+                      ? 'bg-indigo-100 text-indigo-700' 
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                  title={opt.label}
+                >
+                  <span className="hidden sm:inline">{opt.label}</span>
+                  <span className="sm:hidden">{opt.short}</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -715,33 +867,33 @@ export default function AICoachContent() {
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto overflow-x-hidden bg-white"
       >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 space-y-3 sm:space-y-4">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 py-3 space-y-2 sm:space-y-4">
           {conversationId && messagesCursor && (
-            <div className="flex justify-center">
+            <div className="flex justify-center py-2">
               <button
                 onClick={loadOlderMessages}
-                className="text-xs px-3 py-1.5 border border-gray-300 rounded-full hover:bg-gray-50"
+                className="text-xs px-3 py-1.5 border border-gray-300 rounded-full hover:bg-gray-50 bg-white"
               >
-                Load older messages
+                Load older
               </button>
             </div>
           )}
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'} max-w-full`}
+              className={`flex gap-2 sm:gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'} max-w-full`}
             >
               {message.type === 'ai' && (
-                <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Bot className="w-4 h-4 text-indigo-600" />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <Bot className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-600" />
                 </div>
               )}
 
-              <div className={`max-w-[85%] sm:max-w-2xl ${message.type === 'user' ? 'order-1' : ''} min-w-0`}>
+              <div className={`max-w-[90%] sm:max-w-[85%] lg:max-w-2xl ${message.type === 'user' ? 'order-1' : ''} min-w-0`}>
                 <div
-                  className={`px-4 py-3 rounded-2xl ${message.type === 'user'
+                  className={`px-3 py-2 sm:px-4 sm:py-3 rounded-2xl ${message.type === 'user'
                       ? 'bg-indigo-600 text-white'
-                      : 'bg-white border border-gray-200 text-gray-900'
+                      : 'bg-white border border-gray-200 text-gray-900 shadow-sm'
                     }`}
                 >
                   {message.type === 'ai' ? (
@@ -751,35 +903,49 @@ export default function AICoachContent() {
                   )}
                 </div>
 
-                <div className={`flex items-center gap-2 mt-2 text-xs text-gray-500 ${message.type === 'user' ? 'justify-end' : 'justify-start'
+                <div className={`flex items-center gap-1 mt-1 text-xs text-gray-500 ${message.type === 'user' ? 'justify-end' : 'justify-start'
                   }`}>
-                  <span>{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span className="text-[10px] sm:text-xs">{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
 
                   {message.type === 'ai' && (
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-0.5 ml-1">
                       <button
                         onClick={() => copyMessage(message.content)}
-                        className="p-1 hover:bg-gray-100 rounded"
-                        title="Copy message"
-                        aria-label="Copy message"
+                        className="p-1 hover:bg-gray-100 rounded-sm"
+                        title="Copy"
                       >
-                        <Copy className="w-3 h-3" />
+                        <Copy className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       </button>
+                      {speakingMessageId === message.id ? (
+                        <button
+                          onClick={stopSpeaking}
+                          className="p-1 hover:bg-gray-100 rounded-sm bg-blue-100 text-blue-600"
+                          title="Stop"
+                        >
+                          <VolumeX className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => speakMessage(message.id, message.content)}
+                          className="p-1 hover:bg-gray-100 rounded-sm"
+                          title="Read"
+                        >
+                          <Volume2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                        </button>
+                      )}
                       <button
                         onClick={() => handleFeedback(message.id, true)}
-                        className={`p-1 rounded ${message.helpful === true ? 'bg-green-100 text-green-600' : 'hover:bg-gray-100'}`}
-                        title="Helpful"
-                        aria-label="Mark helpful"
+                        className={`p-1 rounded-sm ${message.helpful === true ? 'bg-green-100 text-green-600' : 'hover:bg-gray-100'}`}
+                        title="👍"
                       >
-                        <ThumbsUp className="w-3 h-3" />
+                        <ThumbsUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       </button>
                       <button
                         onClick={() => handleFeedback(message.id, false)}
-                        className={`p-1 rounded ${message.helpful === false ? 'bg-red-100 text-red-600' : 'hover:bg-gray-100'}`}
-                        title="Not helpful"
-                        aria-label="Mark not helpful"
+                        className={`p-1 rounded-sm ${message.helpful === false ? 'bg-red-100 text-red-600' : 'hover:bg-gray-100'}`}
+                        title="👎"
                       >
-                        <ThumbsDown className="w-3 h-3" />
+                        <ThumbsDown className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       </button>
                     </div>
                   )}
@@ -787,23 +953,23 @@ export default function AICoachContent() {
               </div>
 
               {message.type === 'user' && (
-                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <User className="w-4 h-4 text-gray-600" />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <User className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
                 </div>
               )}
             </div>
           ))}
 
           {isLoading && (
-            <div className="flex gap-3 justify-start">
-              <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <Bot className="w-4 h-4 text-indigo-600" />
+            <div className="flex gap-2 sm:gap-3 justify-start">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <Bot className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-600" />
               </div>
-              <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
+              <div className="bg-white border border-gray-200 rounded-2xl px-3 py-2 sm:px-4 sm:py-3 shadow-sm">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </div>
             </div>
@@ -815,42 +981,103 @@ export default function AICoachContent() {
 
       {/* Scroll to Bottom Button */}
       {showScrollButton && messages.length > 2 && (
-        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50">
+        <div className="fixed bottom-20 sm:bottom-32 right-4 z-50">
           <button
             onClick={() => scrollToBottom('smooth')}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-medium text-gray-700 hover:text-gray-900"
+            className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white border border-gray-300 rounded-full shadow-lg hover:shadow-xl transition-shadow text-gray-700 hover:text-gray-900"
             aria-label="Scroll to bottom"
           >
-            <ArrowDown className="w-4 h-4" />
-            <span className="hidden sm:inline">Scroll to bottom</span>
+            <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
+          {isLoading && userHasScrolled && (
+            <div className="absolute -top-8 right-0 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+              Auto-scroll paused
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Response Length Preference Prompt */}
+      {messages.length <= 1 && showLengthPrompt && (
+        <div className="px-3 sm:px-6 py-2 sm:py-3 border-t border-gray-200 bg-blue-50 shrink-0">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-2">
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-blue-900 mb-2">
+                  Response length preference?
+                </p>
+                <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
+                  <button
+                    onClick={() => {
+                      setResponseLength('concise')
+                      setShowLengthPrompt(false)
+                      toast.success('Preference saved: Brief responses')
+                    }}
+                    className="px-2 py-1.5 sm:px-3 sm:py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm text-left"
+                  >
+                    <strong>Brief</strong> - Quick answers
+                  </button>
+                  <button
+                    onClick={() => {
+                      setResponseLength('balanced')
+                      setShowLengthPrompt(false)
+                      toast.success('Preference saved: Balanced responses')
+                    }}
+                    className="px-2 py-1.5 sm:px-3 sm:py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm text-left"
+                  >
+                    <strong>Balanced</strong> - Moderate detail ⭐
+                  </button>
+                  <button
+                    onClick={() => {
+                      setResponseLength('detailed')
+                      setShowLengthPrompt(false)
+                      toast.success('Preference saved: Detailed responses')
+                    }}
+                    className="px-2 py-1.5 sm:px-3 sm:py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm text-left"
+                  >
+                    <strong>Detailed</strong> - Full explanations
+                  </button>
+                </div>
+                <p className="text-xs text-blue-700 mt-1 hidden sm:block">
+                  Change anytime in toolbar above
+                </p>
+              </div>
+              <button
+                onClick={() => setShowLengthPrompt(false)}
+                className="text-blue-400 hover:text-blue-600 p-1 flex-shrink-0"
+                aria-label="Dismiss"
+              >
+                ×
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Suggested Prompts */}
       {messages.length <= 1 && (
-        <div className="px-4 sm:px-6 py-3 border-t border-gray-200 bg-gray-50 shrink-0">
+        <div className="px-3 sm:px-6 py-2 sm:py-3 border-t border-gray-200 bg-gray-50 shrink-0">
           <div className="max-w-4xl mx-auto">
-            <p className="text-sm font-medium text-gray-700 mb-3">Suggested topics to explore:</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-700 mb-2">Quick topics:</p>
             <div className="relative overflow-hidden">
-              <div className="flex flex-wrap gap-2 sm:grid sm:grid-flow-col sm:auto-cols-max sm:grid-rows-2 -mx-1 px-1 sm:overflow-x-auto sm:no-scrollbar sm:snap-x sm:snap-mandatory md:overflow-visible md:snap-none sm:mx-0 sm:px-0">
+              <div className="flex gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap sm:overflow-visible">
                 {suggestedPrompts.map((prompt, index) => (
                   <button
                     key={index}
                     onClick={() => handleSendMessage(prompt)}
-                    className="shrink-0 text-left px-3 py-2 bg-white border border-gray-200 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-colors text-xs sm:text-sm sm:snap-start whitespace-nowrap"
+                    className="flex-shrink-0 text-left px-2.5 py-1.5 sm:px-3 sm:py-2 bg-white border border-gray-200 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-colors text-xs sm:text-sm whitespace-nowrap max-w-[200px] sm:max-w-none truncate sm:whitespace-normal"
+                    title={prompt}
                   >
-                    {prompt}
+                    {prompt.length > 30 ? `${prompt.slice(0, 30)}...` : prompt}
                   </button>
                 ))}
               </div>
-              {/* Edge fade indicators on mobile */}
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-gray-50 to-transparent sm:hidden" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-gray-50 to-transparent sm:hidden" />
-            </div>
-            <div className="mt-2 text-xs text-gray-500 flex items-center gap-1 sm:hidden">
-              Swipe to see more
-              <ChevronRight className="h-3 w-3" />
+              {/* Mobile scroll indicator */}
+              <div className="mt-1 text-xs text-gray-500 flex items-center gap-1 sm:hidden">
+                <ChevronRight className="h-2.5 w-2.5" />
+                Swipe for more
+              </div>
             </div>
           </div>
         </div>
@@ -859,7 +1086,7 @@ export default function AICoachContent() {
       {/* Input Area */}
       <div className="border-t border-gray-200 bg-white p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] shrink-0">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-end gap-2 sm:gap-3 max-w-full">
+          <div className="flex items-end gap-2 max-w-full">
             <div className="flex-1 min-w-0">
               <label htmlFor="ai-input" className="sr-only">Message AI Coach</label>
               <div className="relative">
@@ -870,32 +1097,33 @@ export default function AICoachContent() {
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Share what's on your mind..."
-                  className="w-full rounded-full border border-gray-300 bg-white px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 max-w-full"
+                  className="w-full rounded-full border border-gray-300 bg-white px-3 py-2.5 sm:px-4 sm:py-3 pr-10 sm:pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
                   disabled={isLoading}
                 />
                 <button
                   onClick={() => handleSendMessage()}
                   disabled={!inputMessage.trim() || isLoading}
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-indigo-600 p-2 text-white shadow hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute right-1 sm:right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-indigo-600 p-1.5 sm:p-2 text-white shadow hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Send message"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-3 w-3 sm:h-4 sm:w-4" />
                 </button>
               </div>
             </div>
-            {/* Desktop Send button text */}
+            {/* Desktop Send button */}
             <button
               onClick={() => handleSendMessage()}
               disabled={!inputMessage.trim() || isLoading}
-              className="hidden sm:inline-flex px-5 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors items-center gap-2"
+              className="hidden sm:inline-flex px-4 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors items-center gap-2 text-sm"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3.5 h-3.5" />
               Send
             </button>
           </div>
 
-          <div className="mt-2 text-[11px] sm:text-xs text-gray-500 text-center px-2">
-            This AI is trained to support abuse survivors. In crisis? Call 1-800-799-7233 (National Domestic Violence Hotline)
+          <div className="mt-2 text-[10px] sm:text-xs text-gray-500 text-center px-1">
+            <div className="leading-tight">Crisis? Call 1-800-799-7233 (National DV Hotline)</div>
+            <div className="mt-0.5 hidden sm:block text-[10px]">Press Ctrl+R (Cmd+R) to read/stop latest response</div>
           </div>
         </div>
       </div>

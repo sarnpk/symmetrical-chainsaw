@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, Plus, List, Grid } from 'lucide-react'
+import { BookOpen, Plus, List, Grid, HelpCircle } from 'lucide-react'
 
 interface JournalHeaderProps {
   entriesCount: number
@@ -14,10 +14,20 @@ export default function JournalHeader({ entriesCount, viewMode, onViewModeChange
     <div className="space-y-4">
       {/* Title Section */}
       <div className="text-center sm:text-left">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center justify-center sm:justify-start gap-2">
-          <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600" />
-          Your Experiences
-        </h1>
+        <div className="flex items-center justify-center sm:justify-start gap-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600" />
+            Document Your Experiences
+          </h1>
+          <Link 
+            href="/docs/JOURNAL_GUIDE.html"
+            target="_blank"
+            className="text-indigo-600 hover:text-indigo-700"
+            title="View User Guide"
+          >
+            <HelpCircle className="h-6 w-6" />
+          </Link>
+        </div>
         <p className="text-gray-600 mt-1 text-sm sm:text-base">
           {entriesCount} {entriesCount === 1 ? 'experience' : 'experiences'}
         </p>

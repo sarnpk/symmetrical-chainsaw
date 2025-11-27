@@ -8,6 +8,7 @@ import DashboardLayout from '@/components/DashboardLayout'
 import MindResetContent from './MindResetContent'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
+import { HelpCircle } from 'lucide-react'
 
 export default function MindResetPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -54,15 +55,14 @@ export default function MindResetPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <div className="pt-4 sm:pt-6">
-        <div className="flex items-center justify-between mb-3">
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
           <Link 
             href="/wellness" 
             className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
           >
             ← Back to Wellness
           </Link>
-          <Link href="/mind-reset/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
         </div>
         <MindResetContent />
       </div>

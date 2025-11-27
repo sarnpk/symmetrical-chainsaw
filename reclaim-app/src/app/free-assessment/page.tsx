@@ -208,21 +208,6 @@ export default function FreeAssessmentPage() {
         </section>
 
         <div className="max-w-2xl mx-auto">
-          <aside className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8" role="complementary">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <Info className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <h2 className="font-semibold text-blue-900 mb-2">About This Relationship Health Assessment</h2>
-                <p className="text-blue-800 leading-relaxed">
-                  This evidence-based tool evaluates communication, safety, boundaries, respect, and support in relationships. 
-                  Used by thousands to identify unhealthy patterns and access appropriate resources. Not a substitute for professional counseling.
-                </p>
-              </div>
-            </div>
-          </aside>
-
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-6 text-white">
               <div className="flex items-center gap-3 mb-4">

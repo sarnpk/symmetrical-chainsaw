@@ -76,5 +76,110 @@ export const copingTemplates: CopingTemplate[] = [
     category: 'emotional',
     effectiveness_rating: 3,
     tags: ['connection', 'support']
+  },
+  {
+    strategy_name: 'Cold Water on Face',
+    description: 'Splash cold water on your face or hold ice cubes. Activates the dive reflex to calm panic.',
+    category: 'physical',
+    effectiveness_rating: 5,
+    tags: ['panic', 'emergency']
+  },
+  {
+    strategy_name: 'Butterfly Hug',
+    description: 'Cross arms over chest, tap alternating shoulders slowly. Bilateral stimulation for trauma.',
+    category: 'grounding',
+    effectiveness_rating: 4,
+    tags: ['trauma', 'emdr']
+  },
+  {
+    strategy_name: 'Safe Place Visualization',
+    description: 'Close eyes. Picture a safe place (real or imagined). Notice colors, sounds, feelings.',
+    category: 'grounding',
+    effectiveness_rating: 4,
+    tags: ['visualization', 'safety']
+  },
+  {
+    strategy_name: 'Dance to One Song',
+    description: 'Put on a favorite song and move your body however feels good. Release stuck energy.',
+    category: 'physical',
+    effectiveness_rating: 4,
+    tags: ['energy', 'release']
+  },
+  {
+    strategy_name: 'Journaling Brain Dump',
+    description: 'Write everything in your head for 5 minutes. No editing, no judgment. Just dump it out.',
+    category: 'creative',
+    effectiveness_rating: 4,
+    tags: ['processing', 'release']
+  },
+  {
+    strategy_name: 'Humming or Singing',
+    description: 'Hum or sing for 2 minutes. Vibrations stimulate vagus nerve and calm nervous system.',
+    category: 'breathing',
+    effectiveness_rating: 3,
+    tags: ['vagus', 'calm']
+  },
+  {
+    strategy_name: 'Weighted Blanket or Pressure',
+    description: 'Use weighted blanket or hug a pillow tightly. Deep pressure calms the nervous system.',
+    category: 'physical',
+    effectiveness_rating: 4,
+    tags: ['sensory', 'calm']
+  },
+  {
+    strategy_name: 'Affirmation Repetition',
+    description: 'Choose one affirmation. Say it out loud 10 times while looking in a mirror.',
+    category: 'emotional',
+    effectiveness_rating: 3,
+    tags: ['self-worth', 'affirmation']
+  },
+  {
+    strategy_name: 'Stretch for 3 Minutes',
+    description: 'Gentle stretches: neck rolls, shoulder shrugs, forward fold. Breathe into tight spots.',
+    category: 'physical',
+    effectiveness_rating: 3,
+    tags: ['tension', 'body']
+  },
+  {
+    strategy_name: 'Watch Comfort Content',
+    description: 'Watch 10 minutes of a comfort show or funny videos. Give yourself permission to zone out.',
+    category: 'other',
+    effectiveness_rating: 2,
+    tags: ['distraction', 'rest']
+  },
+  {
+    strategy_name: 'Scent Grounding',
+    description: 'Smell something strong: coffee, essential oil, perfume. Describe the scent in detail.',
+    category: 'grounding',
+    effectiveness_rating: 3,
+    tags: ['sensory', 'grounding']
+  },
+  {
+    strategy_name: 'Body Scan Meditation',
+    description: 'Lie down. Notice each body part from toes to head. No judgment, just awareness.',
+    category: 'grounding',
+    effectiveness_rating: 4,
+    tags: ['mindfulness', 'body']
+  },
+  {
+    strategy_name: 'Cry It Out',
+    description: 'Give yourself 10 minutes to cry. Set a timer. Let it all out, then wash your face.',
+    category: 'emotional',
+    effectiveness_rating: 4,
+    tags: ['release', 'grief']
+  },
+  {
+    strategy_name: 'Puzzle or Game',
+    description: 'Do a crossword, sudoku, or mobile game for 10 minutes. Engage your logical brain.',
+    category: 'other',
+    effectiveness_rating: 3,
+    tags: ['distraction', 'focus']
+  },
+  {
+    strategy_name: 'Pet Therapy',
+    description: 'Spend 5 minutes with a pet (yours or someone else\'s). Pet, play, or just sit together.',
+    category: 'emotional',
+    effectiveness_rating: 5,
+    tags: ['connection', 'calm']
   }
 ]

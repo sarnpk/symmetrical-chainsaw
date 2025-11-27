@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import DashboardLayout from '@/components/DashboardLayout'
 import AffirmationCard from '@/components/reality-anchor/AffirmationCard'
 import { User } from '@supabase/supabase-js'

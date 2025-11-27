@@ -100,7 +100,7 @@ function analyzeText(text: string): AIInsight {
   if (urgencyLevel === 'crisis') {
     suggestedActions.push('Contact crisis hotline', 'Reach out to trusted friend', 'Use Safety Plan')
   } else if (detectedTactics.includes('gaslighting')) {
-    suggestedActions.push('Start Reality Log entry', 'Talk to AI Coach', 'Review Grey Rock techniques')
+    suggestedActions.push('Start Reality Anchor entry', 'Talk to AI Coach', 'Review Grey Rock techniques')
   } else {
     suggestedActions.push('Continue journaling', 'Practice Mind Reset', 'Review coping strategies')
   }
