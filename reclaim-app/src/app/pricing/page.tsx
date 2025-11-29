@@ -118,12 +118,13 @@ export default function PricingPage() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
+            <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
             <span className="text-xl font-bold text-gray-900">Reclaim</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-4">
-            <Link href="/blog" className="text-sm text-indigo-600 hover:underline">Blog</Link>
-            <Link href="/" className="text-sm text-indigo-600 hover:underline">Home</Link>
+            <Link href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors">Blog</Link>
+            <Link href="/pricing" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</Link>
           </div>
         </div>
       </header>
@@ -178,18 +179,7 @@ export default function PricingPage() {
                     </div>
                     <CardDescription className="text-base">{getPlanData('foundation')?.description || 'Basic access for getting started'}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 text-sm">
-                      <li>✓ Journal: up to 3 new titles per day</li>
-                      <li>✓ AI Coach: up to 5 chats per day</li>
-                      <li>✓ Patterns: 1 pattern check per day</li>
-                      <li>✓ Mind Reset: 1 exercise per day</li>
-                      <li>✓ Safety Plan & Boundary Builder: full access</li>
-                      <li>✗ Audio transcription not included</li>
-                      <li>✓ 100 MB secure file storage</li>
-                      <li>✓ Community access & usage visible in the app</li>
-                    </ul>
-                  </CardContent>
+                  <CardContent />
                 </Card>
 
                 {/* Recovery (Popular) */}
@@ -211,19 +201,7 @@ export default function PricingPage() {
                     </div>
                     <CardDescription className="text-base">{getPlanData('recovery')?.description || 'AI-powered recovery tools'}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 text-sm">
-                      <li>✓ Journal: plenty of new entries each day</li>
-                      <li>✓ AI Coach: frequent daily chats</li>
-                      <li>✓ Patterns: multiple checks per day</li>
-                      <li>✓ Mind Reset: several exercises per day</li>
-                      <li>✓ Safety Plan & Boundary Builder: full access</li>
-                      <li>✓ 60 minutes of audio transcription each month</li>
-                      <li>✓ 10 GB secure file storage</li>
-                      <li>✓ Priority email support & faster answers</li>
-                      <li>✓ Access to new features as they launch</li>
-                    </ul>
-                  </CardContent>
+                  <CardContent />
                 </Card>
 
                 {/* Empowered */}
@@ -242,19 +220,7 @@ export default function PricingPage() {
                     </div>
                     <CardDescription className="text-base">{getPlanData('empowerment')?.description || 'Complete recovery suite'}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 text-sm">
-                      <li>✓ Journal: create freely every day</li>
-                      <li>✓ AI Coach: long, ongoing conversations</li>
-                      <li>✓ Patterns: "unlimited" checks (fair use)</li>
-                      <li>✓ Mind Reset: many exercises daily</li>
-                      <li>✓ Safety Plan & Boundary Builder: full access</li>
-                      <li>✓ 300 minutes of audio transcription each month</li>
-                      <li>✓ 100 GB secure file storage</li>
-                      <li>✓ 24/7 chat support & priority queue</li>
-                      <li>✓ Custom pattern templates & early beta access</li>
-                    </ul>
-                  </CardContent>
+                  <CardContent />
                 </Card>
               </>
             )}

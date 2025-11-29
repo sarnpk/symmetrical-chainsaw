@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 import AuthButton from '@/components/AuthButton'
 import SignInButton from '@/components/SignInButton'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const supabase = createClient()
+  const supabase = await createServerSupabaseClient()
   
   const { data: { user } } = await supabase.auth.getUser()
 

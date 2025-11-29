@@ -46,7 +46,10 @@ export default function GreyRockTemplatesPage() {
       setProfile(profile);
       setLoading(false);
       
-      fetch('/api/grey-rock-templates').then(r => r.json()).then(setTemplates);
+      fetch('/api/grey-rock-templates')
+        .then(r => r.ok ? r.json() : [])
+        .then(data => setTemplates(data || []))
+        .catch(() => setTemplates([]));
     };
     init();
   }, [router, supabase]);

@@ -121,6 +121,8 @@ export default function AdminDashboard() {
   const [socialLinks, setSocialLinks] = useState<any[]>([])
   const [editingSocial, setEditingSocial] = useState<any>(null)
   const [newSocial, setNewSocial] = useState({ platform: '', url: '', icon: 'link', sort_order: 0 })
+  const [newsletters, setNewsletters] = useState<any[]>([])
+  const [newsletterFilter, setNewsletterFilter] = useState('')
 
   const deleteRedeemCode = async (codeId: string, codeName: string) => {
     if (!confirm(`Delete code ${codeName}? This action cannot be undone.`)) return
@@ -151,21 +153,19 @@ export default function AdminDashboard() {
 
   const loadBlogData = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) return
-
       const [postsRes, categoriesRes, tagsRes, socialRes] = await Promise.all([
-        fetch('/api/admin/blog', {
-          headers: { 'Authorization': `Bearer ${session.access_token}` }
-        }),
+        supabase.from('blog_posts').select('*, category:blog_categories(id, name, slug), tags:blog_post_tags(tag:blog_tags(id, name, slug))').order('created_at', { ascending: false }),
         supabase.from('blog_categories').select('*').order('sort_order'),
         supabase.from('blog_tags').select('*').order('name'),
         supabase.from('social_media_links').select('*').order('sort_order')
       ])
 
-      if (postsRes.ok) {
-        const { posts } = await postsRes.json()
-        setBlogPosts(posts || [])
+      if (postsRes.data) {
+        const transformedPosts = postsRes.data.map(post => ({
+          ...post,
+          tags: post.tags?.map((t: any) => t.tag) || []
+        }))
+        setBlogPosts(transformedPosts)
       }
       if (categoriesRes.data) setCategories(categoriesRes.data)
       if (tagsRes.data) setTags(tagsRes.data)
@@ -306,6 +306,32 @@ export default function AdminDashboard() {
     }
   }
 
+  const loadNewsletters = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('newsletter_subscriptions')
+        .select('*')
+        .order('subscribed_at', { ascending: false })
+      
+      if (error) throw error
+      setNewsletters(data || [])
+    } catch (error) {
+      console.error('Failed to load newsletters:', error)
+    }
+  }
+
+  const deleteNewsletter = async (id: string) => {
+    if (!confirm('Delete this subscription?')) return
+    try {
+      const { error } = await supabase.from('newsletter_subscriptions').delete().eq('id', id)
+      if (error) throw error
+      toast.success('Subscription deleted')
+      loadNewsletters()
+    } catch (error) {
+      toast.error('Failed to delete subscription')
+    }
+  }
+
   const createRedeemCode = async () => {
     try {
       const codeData = {
@@ -331,6 +357,7 @@ export default function AdminDashboard() {
     loadData()
     loadRedeemCodes()
     loadBlogData()
+    loadNewsletters()
   }, [])
 
   const loadData = async () => {
@@ -546,6 +573,7 @@ export default function AdminDashboard() {
             { id: 'payments', name: 'Payments', icon: CreditCard },
             { id: 'redeem-codes', name: 'Redeem Codes', icon: DollarSign },
             { id: 'blog', name: 'Blog', icon: FileText },
+            { id: 'newsletter', name: 'Newsletter', icon: MessageSquare },
             { id: 'feedback', name: 'Feedback', icon: MessageSquare },
             { id: 'plans', name: 'Plans', icon: Shield },
             { id: 'features', name: 'Features', icon: Edit }
@@ -1423,6 +1451,77 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {activeTab === 'newsletter' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Newsletter Subscriptions</CardTitle>
+            <div className="flex gap-4 mt-4">
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search by email..."
+                  value={newsletterFilter}
+                  onChange={(e) => setNewsletterFilter(e.target.value)}
+                  className="border rounded px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="text-sm text-gray-600 flex items-center">
+                Total: {newsletters.filter(n => n.status === 'active').length} active subscribers
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              {newsletters.filter(n => n.email.toLowerCase().includes(newsletterFilter.toLowerCase())).length === 0 ? (
+                <div className="text-center py-8">
+                  <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">No newsletter subscriptions yet</p>
+                </div>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-2">Email</th>
+                      <th className="text-left p-2">Status</th>
+                      <th className="text-left p-2">Source</th>
+                      <th className="text-left p-2">Subscribed</th>
+                      <th className="text-left p-2">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {newsletters
+                      .filter(n => n.email.toLowerCase().includes(newsletterFilter.toLowerCase()))
+                      .map(sub => (
+                      <tr key={sub.id} className="border-b hover:bg-gray-50">
+                        <td className="p-2">{sub.email}</td>
+                        <td className="p-2">
+                          <span className={`px-2 py-1 rounded text-xs ${
+                            sub.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {sub.status}
+                          </span>
+                        </td>
+                        <td className="p-2">{sub.source}</td>
+                        <td className="p-2 text-xs">{new Date(sub.subscribed_at).toLocaleDateString()}</td>
+                        <td className="p-2">
+                          <button
+                            onClick={() => deleteNewsletter(sub.id)}
+                            className="text-red-600 hover:text-red-800 p-1"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {activeTab === 'features' && (

@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export async function GET() {
   try {
-    const supabase = createClient()
+    const supabase = await createServerSupabaseClient()
     
     const { data: posts, error } = await supabase
       .from('blog_posts')

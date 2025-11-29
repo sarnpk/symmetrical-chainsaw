@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 export async function POST(request: NextRequest) {
   try {
     const { code } = await request.json()
-    const supabase = createClient()
+    const supabase = await createServerSupabaseClient()
 
     // Get user session
     const { data: { session } } = await supabase.auth.getSession()
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Code parameter required' }, { status: 400 })
     }
 
-    const supabase = createClient()
+    const supabase = await createServerSupabaseClient()
 
     // Get user session
     const { data: { session } } = await supabase.auth.getSession()
