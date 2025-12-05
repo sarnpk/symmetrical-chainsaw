@@ -18,8 +18,10 @@ import {
   Globe,
   Plus,
   Search,
-  AlertTriangle
+  AlertTriangle,
+  Mail
 } from 'lucide-react'
+import ChatPanel from './ChatPanel'
 
 interface CommunityPost {
   id: string
@@ -130,6 +132,7 @@ export default function CommunityContent() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [startingChat, setStartingChat] = useState<string | null>(null)
 
   // Load posts from API with simple search support and transform to view model
   const fetchPosts = async (opts?: { append?: boolean }) => {
@@ -313,6 +316,27 @@ export default function CommunityContent() {
     }
   }
 
+  const startChat = async (authorId: string) => {
+    if (!authorId || authorId === currentUserId) return
+    setStartingChat(authorId)
+    try {
+      const res = await fetch('/api/community/conversations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ other_user_id: authorId })
+      })
+      if (!res.ok) {
+        const j = await res.json()
+        throw new Error(j.error || 'Cannot start chat')
+      }
+      toast.success('Chat opened')
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to start chat')
+    } finally {
+      setStartingChat(null)
+    }
+  }
+
   const tabs = [
     { id: 'posts', name: 'Community Posts', icon: MessageCircle },
     { id: 'groups', name: 'Support Groups', icon: Users },
@@ -399,6 +423,16 @@ export default function CommunityContent() {
                 <Link href={`/community/posts/${post.id}`} className="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
                   Read more
                 </Link>
+                {currentUserId && post.author_id && post.author_id !== currentUserId && !post.isAnonymous && (
+                  <button
+                    onClick={() => startChat(post.author_id!)}
+                    disabled={startingChat === post.author_id}
+                    className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1 disabled:opacity-50"
+                  >
+                    <Mail className="h-3 w-3" />
+                    Message
+                  </button>
+                )}
                 {currentUserId && post.author_id === currentUserId && (
                   <button onClick={() => deletePost(post.id)} className="text-red-600 hover:text-red-700 text-sm font-medium">
                     Delete
@@ -736,6 +770,9 @@ export default function CommunityContent() {
           </DialogPanel>
         </div>
       </Dialog>
+
+      {/* Chat Panel */}
+      {currentUserId && <ChatPanel currentUserId={currentUserId} />}
     </div>
   )
 }

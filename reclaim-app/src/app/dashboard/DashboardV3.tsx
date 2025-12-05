@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, BookOpen, Brain, Shield, Heart, Anchor, MessageSquare, AlertTriangle, Target, FileText, RotateCcw, HeartHandshake, Flame, TrendingUp, ChevronDown, ChevronUp, Sparkles, Wind, Smile, X, Users } from 'lucide-react'
+import { Plus, BookOpen, Brain, Shield, Heart, Anchor, MessageSquare, AlertTriangle, Target, FileText, RotateCcw, HeartHandshake, Flame, TrendingUp, ChevronDown, ChevronUp, Sparkles, Wind, Smile, X, Users, Waves } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
@@ -72,6 +72,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
         { name: 'Reality Anchor', href: '/reality-log', icon: Anchor, color: 'teal' },
         { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle, color: 'red' },
         { name: 'Letting Go', href: '/letting-go', icon: Wind, color: 'sky', featured: true, priority: 6 },
+        { name: 'Urge Surfing', href: '/urge-surfing', icon: Waves, color: 'blue', featured: true, priority: 7 },
         { name: 'Patterns', href: '/patterns', icon: TrendingUp, color: 'indigo' }
       ]
     },

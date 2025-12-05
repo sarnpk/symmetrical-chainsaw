@@ -332,6 +332,19 @@ export default async function HomePage() {
               </CardHeader>
             </Card>
 
+            <Card className="hover:shadow-lg transition-shadow border-blue-200">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Heart className="h-8 w-8 text-blue-600" />
+                  <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">🌊 NEW</span>
+                </div>
+                <CardTitle>Urge Surfing</CardTitle>
+                <CardDescription>
+                  Ride the wave of urges without giving in—voice-guided scripts, streak tracking, and community support
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
             <Card className="hover:shadow-lg transition-shadow border-purple-200">
               <CardHeader>
                 <Brain className="h-8 w-8 text-purple-600 mb-2" />

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import CommentsSection from './CommentsSection'
-import { createServerSupabase } from '@/lib/supabase-server'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 import DashboardLayout from '@/components/DashboardLayout'
 import type { Profile } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function PostDetailPage({ params }: PostDetailPageProps) {
   const id = params.id
-  const supabase = await createServerSupabase()
+  const supabase = await createServerSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     redirect('/')
