@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabase } from '@/lib/supabase-server'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 // GET /api/community/likes?post_id=<uuid>
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { searchParams } = new URL(req.url)
     const postId = searchParams.get('post_id')
     if (!postId) return NextResponse.json({ error: 'post_id is required' }, { status: 400 })
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
     if (countErr) {
       console.error('Count likes error:', countErr)
-      return NextResponse.json({ error: 'Failed to load likes' }, { status: 500 })
+      return NextResponse.json({ error: 'Failed to load likes', details: countErr.message }, { status: 500 })
     }
 
     // Whether current user liked
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     if (user) {
       const { data: likeRow, error: likedErr } = await supabase
         .from('community_likes')
-        .select('id')
+        .select('post_id')
         .eq('post_id', postId)
         .eq('user_id', user.id)
         .maybeSingle()
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
 // POST /api/community/likes  body: { post_id: string }
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { data: authRes } = await supabase.auth.getUser()
     const user = authRes?.user
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
 // DELETE /api/community/likes  body: { post_id: string }
 export async function DELETE(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { data: authRes } = await supabase.auth.getUser()
     const user = authRes?.user
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

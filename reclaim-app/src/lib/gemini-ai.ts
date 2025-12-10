@@ -285,4 +285,8 @@ export const DEFAULT_PAID_TIER_MODEL = 'gemini-2.5-flash-lite'
 
 export const geminiAI = new GeminiAI(process.env.GOOGLE_AI_API_KEY || '')
 
+export async function generateAIResponse(prompt: string, context?: string): Promise<string> {
+  return geminiAI.chat(prompt, [], context as any)
+}
+
 export type { PatternAnalysisResult, MindResetResult }

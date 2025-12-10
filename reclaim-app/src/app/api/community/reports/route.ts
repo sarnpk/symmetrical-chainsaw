@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabase } from '@/lib/supabase-server'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 // POST /api/community/reports
 // body: { target_type: 'post'|'comment'|'user', target_id: string, reason: string }
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { data: authRes } = await supabase.auth.getUser()
     const user = authRes?.user
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

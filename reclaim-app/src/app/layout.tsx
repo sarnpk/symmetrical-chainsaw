@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from 'react-hot-toast'
 import AppVersion from "../components/AppVersion"
 import CookieBanner from "../components/CookieBanner"
+import CrisisToolkitWidget from "../components/CrisisToolkitWidget"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -56,6 +57,7 @@ export default function RootLayout({
         <main className="min-h-screen">
           {children}
         </main>
+        <CrisisToolkitWidget />
         <AppVersion />
         <CookieBanner />
         <Toaster 

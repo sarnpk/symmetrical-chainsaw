@@ -1,6 +1,10 @@
 -- Community Chat Feature - Direct Messages Only (MVP)
 -- Restricted DMs with mutual interaction requirement
 
+-- Add chat enabled preference to profiles
+alter table public.profiles
+  add column if not exists chat_enabled boolean not null default true;
+
 -- Conversations (direct messages between two users)
 create table if not exists public.community_conversations (
   id uuid primary key default gen_random_uuid(),
@@ -51,16 +55,20 @@ alter table public.community_messages enable row level security;
 alter table public.community_blocks enable row level security;
 
 -- Blocks policies
+drop policy if exists "blocks_select_own" on public.community_blocks;
 create policy "blocks_select_own" on public.community_blocks
 for select using (blocker_id = auth.uid());
 
+drop policy if exists "blocks_insert_own" on public.community_blocks;
 create policy "blocks_insert_own" on public.community_blocks
 for insert with check (blocker_id = auth.uid());
 
+drop policy if exists "blocks_delete_own" on public.community_blocks;
 create policy "blocks_delete_own" on public.community_blocks
 for delete using (blocker_id = auth.uid());
 
 -- Conversations policies
+drop policy if exists "conversations_select_participant" on public.community_conversations;
 create policy "conversations_select_participant" on public.community_conversations
 for select using (
   exists(
@@ -69,14 +77,17 @@ for select using (
   )
 );
 
+drop policy if exists "participants_select_own" on public.community_conversation_participants;
 create policy "participants_select_own" on public.community_conversation_participants
 for select using (user_id = auth.uid() or conversation_id in (
   select conversation_id from public.community_conversation_participants where user_id = auth.uid()
 ));
 
+drop policy if exists "participants_insert_own" on public.community_conversation_participants;
 create policy "participants_insert_own" on public.community_conversation_participants
 for insert with check (user_id = auth.uid());
 
+drop policy if exists "messages_select_participant" on public.community_messages;
 create policy "messages_select_participant" on public.community_messages
 for select using (
   exists(
@@ -85,6 +96,7 @@ for select using (
   )
 );
 
+drop policy if exists "messages_insert_participant" on public.community_messages;
 create policy "messages_insert_participant" on public.community_messages
 for insert with check (
   sender_id = auth.uid() and
@@ -94,7 +106,7 @@ for insert with check (
   )
 );
 
--- Check if user can DM another user (mutual interaction required)
+-- Check if user can DM another user (both have chat enabled AND mutual interaction)
 create or replace function public.can_dm_user(other_user_id uuid)
 returns boolean
 language plpgsql
@@ -104,10 +116,25 @@ declare
   current_user_id uuid;
   is_blocked boolean;
   has_interaction boolean;
+  current_chat_enabled boolean;
+  other_chat_enabled boolean;
 begin
   current_user_id := auth.uid();
   
   if current_user_id is null or current_user_id = other_user_id then
+    return false;
+  end if;
+  
+  -- Check if both users have chat enabled
+  select chat_enabled into current_chat_enabled
+  from public.profiles
+  where id = current_user_id;
+  
+  select chat_enabled into other_chat_enabled
+  from public.profiles
+  where id = other_user_id;
+  
+  if not current_chat_enabled or not other_chat_enabled then
     return false;
   end if;
   

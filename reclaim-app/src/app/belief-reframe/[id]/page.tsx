@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Plus, TrendingDown, Brain, Sparkles, Trash2, Image, Mic, FileText, Edit3 } from 'lucide-react'
+import { ArrowLeft, Plus, TrendingDown, Brain, Sparkles, Trash2, Image, Mic, FileText, Edit3, Printer } from 'lucide-react'
 import VoiceTextInput from '@/components/VoiceTextInput'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
@@ -33,6 +33,14 @@ export default function BeliefDetailPage() {
   const [analyzingMemories, setAnalyzingMemories] = useState(false)
   const [newStrength, setNewStrength] = useState(5)
   const [showStrengthUpdate, setShowStrengthUpdate] = useState(false)
+  const [aiHope, setAiHope] = useState<any>(null)
+  const [generatingHope, setGeneratingHope] = useState(false)
+  const [aiActionPlan, setAiActionPlan] = useState<any>(null)
+  const [generatingPlan, setGeneratingPlan] = useState(false)
+  const [recoveryStory, setRecoveryStory] = useState<any>(null)
+  const [generatingStory, setGeneratingStory] = useState(false)
+  const [empoweringAnalogy, setEmpoweringAnalogy] = useState<any>(null)
+  const [generatingAnalogy, setGeneratingAnalogy] = useState(false)
   const router = useRouter()
   const params = useParams()
   const supabase = createClient()
@@ -132,10 +140,19 @@ export default function BeliefDetailPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-4xl mx-auto space-y-6">
-        <Link href="/belief-reframe" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Beliefs
-        </Link>
+        <div className="flex justify-between items-center print:hidden">
+          <Link href="/belief-reframe" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Beliefs
+          </Link>
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+          >
+            <Printer className="h-4 w-4" />
+            Print/Save
+          </button>
+        </div>
 
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{belief.belief_text}</h1>
@@ -406,6 +423,254 @@ export default function BeliefDetailPage() {
                 Generate Affirmation
               </button>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-blue-800 flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                AI Realistic Hope
+              </CardTitle>
+              <button
+                onClick={async () => {
+                  setGeneratingHope(true)
+                  const res = await fetch(`/api/belief-reframe/${params.id}/ai-hope`, { method: 'POST' })
+                  if (res.ok) {
+                    const data = await res.json()
+                    setAiHope(data.hope)
+                    toast.success('Hope generated!')
+                  } else {
+                    toast.error('Failed to generate')
+                  }
+                  setGeneratingHope(false)
+                }}
+                disabled={generatingHope}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 text-sm flex items-center gap-2"
+              >
+                <Brain className="h-4 w-4" />
+                {generatingHope ? 'Generating...' : 'Generate Hope'}
+              </button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {aiHope ? (
+              <>
+                <p className="text-blue-700 font-medium mb-4">
+                  Personalized hope for your situation:
+                </p>
+                <div className="space-y-3">
+                  {aiHope.hope_statements?.map((statement: string, i: number) => (
+                    <div key={i} className="p-4 bg-white rounded-lg border-l-4 border-blue-500">
+                      <p className="text-gray-900">✨ {statement}</p>
+                    </div>
+                  ))}
+                </div>
+                {aiHope.recovery_insight && (
+                  <div className="p-4 bg-blue-100 rounded-lg mt-4">
+                    <p className="text-sm font-semibold text-blue-900 mb-1">Recovery Insight:</p>
+                    <p className="text-blue-800">{aiHope.recovery_insight}</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-blue-700 mb-4">
+                  Get AI-generated realistic hope statements personalized to your belief.
+                </p>
+                <p className="text-sm text-blue-600">
+                  Click "Generate Hope" above to start.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-purple-800 flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Empowering Analogy
+              </CardTitle>
+              <button
+                onClick={async () => {
+                  setGeneratingAnalogy(true)
+                  const res = await fetch(`/api/belief-reframe/${params.id}/ai-analogy`, { method: 'POST' })
+                  if (res.ok) {
+                    const data = await res.json()
+                    setEmpoweringAnalogy(data.analogy)
+                    toast.success('Analogy generated!')
+                  } else {
+                    toast.error('Failed to generate')
+                  }
+                  setGeneratingAnalogy(false)
+                }}
+                disabled={generatingAnalogy}
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50 text-sm flex items-center gap-2"
+              >
+                <Brain className="h-4 w-4" />
+                {generatingAnalogy ? 'Generating...' : 'Generate Analogy'}
+              </button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {empoweringAnalogy ? (
+              <div className="space-y-4">
+                <div className="p-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg border-2 border-purple-300">
+                  <h3 className="text-2xl font-bold text-purple-900 mb-4">{empoweringAnalogy.title}</h3>
+                  <p className="text-lg text-gray-900 leading-relaxed whitespace-pre-line">{empoweringAnalogy.analogy}</p>
+                </div>
+                {empoweringAnalogy.core_message && (
+                  <div className="p-4 bg-purple-100 rounded-lg border-l-4 border-purple-600">
+                    <p className="text-purple-900 font-semibold">💪 {empoweringAnalogy.core_message}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-purple-700 mb-4">
+                  Get a powerful, personalized analogy that reminds you of your strength and control.
+                </p>
+                <p className="text-sm text-purple-600">
+                  You are in control right now.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-green-800 flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Recovery Story
+              </CardTitle>
+              <button
+                onClick={async () => {
+                  setGeneratingStory(true)
+                  const res = await fetch(`/api/belief-reframe/${params.id}/ai-recovery-story`, { method: 'POST' })
+                  if (res.ok) {
+                    const data = await res.json()
+                    setRecoveryStory(data.recovery)
+                    toast.success('Story generated!')
+                  } else {
+                    toast.error('Failed to generate')
+                  }
+                  setGeneratingStory(false)
+                }}
+                disabled={generatingStory}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 text-sm flex items-center gap-2"
+              >
+                <Brain className="h-4 w-4" />
+                {generatingStory ? 'Generating...' : 'Generate Story'}
+              </button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {recoveryStory ? (
+              <div className="space-y-4">
+                <div className="p-4 bg-white rounded-lg border-l-4 border-green-500">
+                  <p className="text-gray-900 leading-relaxed whitespace-pre-line">{recoveryStory.story}</p>
+                </div>
+                {recoveryStory.statistic && (
+                  <div className="p-3 bg-green-100 rounded-lg">
+                    <p className="text-sm font-semibold text-green-900 mb-1">📊 You're Not Alone:</p>
+                    <p className="text-green-800">{recoveryStory.statistic}</p>
+                  </div>
+                )}
+                {recoveryStory.key_takeaway && (
+                  <div className="p-3 bg-emerald-100 rounded-lg">
+                    <p className="text-sm font-semibold text-emerald-900 mb-1">💡 Key Takeaway:</p>
+                    <p className="text-emerald-800 font-medium">{recoveryStory.key_takeaway}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-green-700 mb-4">
+                  Read an inspiring recovery story from someone who overcame a similar belief.
+                </p>
+                <p className="text-sm text-green-600">
+                  Millions have recovered. You can too.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-amber-800 flex items-center gap-2">
+                <Edit3 className="h-5 w-5" />
+                AI Action Plan
+              </CardTitle>
+              <button
+                onClick={async () => {
+                  setGeneratingPlan(true)
+                  const res = await fetch(`/api/belief-reframe/${params.id}/ai-action-plan`, { method: 'POST' })
+                  if (res.ok) {
+                    const data = await res.json()
+                    setAiActionPlan(data.plan)
+                    toast.success('Action plan generated!')
+                  } else {
+                    toast.error('Failed to generate')
+                  }
+                  setGeneratingPlan(false)
+                }}
+                disabled={generatingPlan}
+                className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 disabled:opacity-50 text-sm flex items-center gap-2"
+              >
+                <Brain className="h-4 w-4" />
+                {generatingPlan ? 'Generating...' : 'Generate Plan'}
+              </button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {aiActionPlan ? (
+              <>
+                {aiActionPlan.priority_action && (
+                  <div className="p-4 bg-red-100 border-l-4 border-red-500 rounded-lg">
+                    <p className="text-sm font-semibold text-red-900 mb-1">🚨 Priority Action:</p>
+                    <p className="text-red-800 font-medium">{aiActionPlan.priority_action}</p>
+                  </div>
+                )}
+                <div className="p-4 bg-white rounded-lg border border-amber-200">
+                  <h4 className="font-semibold text-amber-900 mb-3">📝 Action Steps for Today:</h4>
+                  <ul className="space-y-2">
+                    {aiActionPlan.action_steps?.map((step: string, i: number) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="text-amber-600 font-bold">{i + 1}.</span>
+                        <span className="text-gray-900">{step}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="p-4 bg-white rounded-lg border border-amber-200">
+                  <h4 className="font-semibold text-amber-900 mb-3">🤝 Support Resources:</h4>
+                  <ul className="space-y-2">
+                    {aiActionPlan.support_resources?.map((resource: string, i: number) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="text-amber-600">•</span>
+                        <span className="text-gray-900">{resource}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-amber-700 mb-4">
+                  Get AI-generated action steps and support resources personalized to your situation.
+                </p>
+                <p className="text-sm text-amber-600">
+                  Click "Generate Plan" above to start.
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 

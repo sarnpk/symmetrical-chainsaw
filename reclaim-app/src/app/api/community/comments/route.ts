@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabase } from '@/lib/supabase-server'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 // GET /api/community/comments?post_id=<uuid>&limit=50&cursor=<created_at_iso>
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { searchParams } = new URL(req.url)
     const postId = searchParams.get('post_id')
     if (!postId) {
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
         .eq('post_id', postId)
       if (countErr) {
         console.error('Count comments error:', countErr)
-        return NextResponse.json({ error: 'Failed to count comments' }, { status: 500 })
+        return NextResponse.json({ error: 'Failed to count comments', details: countErr.message }, { status: 500 })
       }
       return NextResponse.json({ count: count ?? 0 })
     }
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
 // body: { post_id: string, content: string, parent_comment_id?: string }
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { data: authRes } = await supabase.auth.getUser()
     const user = authRes?.user
     if (!user) {
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
 // body: { id: string, content: string }
 export async function PATCH(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { data: authRes } = await supabase.auth.getUser()
     const user = authRes?.user
     if (!user) {
@@ -127,7 +127,7 @@ export async function PATCH(req: NextRequest) {
 // DELETE /api/community/comments?id=<uuid>
 export async function DELETE(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { data: authRes } = await supabase.auth.getUser()
     const user = authRes?.user
     if (!user) {

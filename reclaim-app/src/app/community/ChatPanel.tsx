@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { MessageCircle, Send, X, AlertCircle } from 'lucide-react'
+import { MessageCircle, Send, X, AlertCircle, Settings, Shield } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { createClient } from '@/lib/supabase'
 
@@ -26,6 +26,13 @@ export default function ChatPanel({ currentUserId }: { currentUserId: string }) 
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
+  const [anonymousMode, setAnonymousMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('chat_anonymous') === 'true'
+    }
+    return false
+  })
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
@@ -33,40 +40,47 @@ export default function ChatPanel({ currentUserId }: { currentUserId: string }) 
     if (open) loadConversations()
   }, [open])
 
+  // Listen for chat open events from Message button
+  useEffect(() => {
+    const handleChatOpen = () => {
+      setOpen(true)
+      // Reload conversations after a brief delay
+      setTimeout(() => loadConversations(), 500)
+    }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('chat:open', handleChatOpen as EventListener)
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('chat:open', handleChatOpen as EventListener)
+      }
+    }
+  }, [])
+
   useEffect(() => {
     if (activeConv) {
       loadMessages(activeConv)
-      const channel = supabase
-        .channel(`messages:${activeConv}`)
-        .on('postgres_changes', {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'community_messages',
-          filter: `conversation_id=eq.${activeConv}`
-        }, (payload) => {
-          const msg = payload.new as any
-          setMessages(prev => [...prev, {
-            id: msg.id,
-            content: msg.content,
-            sender_id: msg.sender_id,
-            created_at: msg.created_at,
-            is_mine: msg.sender_id === currentUserId
-          }])
-        })
-        .subscribe()
-      return () => { supabase.removeChannel(channel) }
+      // Poll for new messages every 2 seconds
+      const interval = setInterval(() => {
+        loadMessages(activeConv)
+      }, 2000)
+      return () => clearInterval(interval)
     }
-  }, [activeConv, currentUserId])
+  }, [activeConv])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
   const loadConversations = async () => {
-    const res = await fetch('/api/community/conversations')
-    if (res.ok) {
-      const json = await res.json()
-      setConversations(json.items || [])
+    try {
+      const res = await fetch('/api/community/conversations')
+      if (res.ok) {
+        const json = await res.json()
+        setConversations(json.items || [])
+      }
+    } catch (e) {
+      console.error('Failed to load conversations', e)
     }
   }
 
@@ -105,6 +119,15 @@ export default function ChatPanel({ currentUserId }: { currentUserId: string }) 
     }
   }
 
+  const toggleAnonymous = () => {
+    const newValue = !anonymousMode
+    setAnonymousMode(newValue)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('chat_anonymous', String(newValue))
+    }
+    toast.success(newValue ? 'Anonymous mode enabled' : 'Anonymous mode disabled')
+  }
+
   if (!open) {
     return (
       <button
@@ -119,13 +142,52 @@ export default function ChatPanel({ currentUserId }: { currentUserId: string }) 
   return (
     <div className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col z-50">
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-indigo-600 text-white rounded-t-lg">
-        <h3 className="font-semibold">Messages</h3>
-        <button onClick={() => { setOpen(false); setActiveConv(null) }} className="hover:bg-indigo-700 p-1 rounded">
-          <X className="h-5 w-5" />
-        </button>
+        <h3 className="font-semibold flex items-center gap-2">
+          Messages
+          {anonymousMode && <Shield className="h-4 w-4" title="Anonymous mode" />}
+        </h3>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setShowSettings(!showSettings)} className="hover:bg-indigo-700 p-1 rounded">
+            <Settings className="h-5 w-5" />
+          </button>
+          <button onClick={() => { setOpen(false); setActiveConv(null); setShowSettings(false) }} className="hover:bg-indigo-700 p-1 rounded">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
-      {!activeConv ? (
+      {showSettings ? (
+        <div className="flex-1 p-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Chat Settings</h3>
+          <div className="space-y-4">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Shield className="h-5 w-5 text-indigo-600" />
+                    <h4 className="font-medium text-gray-900">Anonymous Mode</h4>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    When enabled, your identity is hidden in conversations. Other users will see you as "Anonymous".
+                  </p>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Note: This is for your privacy. Messages are still stored securely.
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer ml-4">
+                  <input
+                    type="checkbox"
+                    checked={anonymousMode}
+                    onChange={toggleAnonymous}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : !activeConv ? (
         <div className="flex-1 overflow-y-auto">
           {conversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-500 text-sm p-4 text-center">

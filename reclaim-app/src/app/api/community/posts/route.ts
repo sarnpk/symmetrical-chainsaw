@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabase } from '@/lib/supabase-server'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 // GET /api/community/posts?limit=20&cursor=<created_at_iso>&category=<text>&q=<search>
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { searchParams } = new URL(req.url)
 
     const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 50)
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
 // body: { title: string, content: string, is_anonymous?: boolean, category?: string }
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
 
     // get user
     const { data: authRes } = await supabase.auth.getUser()
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
 // or body: { id: string }
 export async function DELETE(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { data: authRes } = await supabase.auth.getUser()
     const user = authRes?.user
     if (!user) {

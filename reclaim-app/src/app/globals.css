@@ -382,4 +382,50 @@
       min-height: 100vh;
     }
   }
+
+  /* Print styles */
+  @media print {
+    /* Hide navigation and non-essential elements */
+    nav,
+    .print\:hidden,
+    button:not(.print\:block),
+    .no-print {
+      display: none !important;
+    }
+
+    /* Optimize page layout for printing */
+    body {
+      background: white;
+      color: black;
+    }
+
+    /* Remove shadows and borders for cleaner print */
+    .shadow,
+    .shadow-sm,
+    .shadow-md,
+    .shadow-lg {
+      box-shadow: none !important;
+    }
+
+    /* Ensure content fits on page */
+    .max-w-4xl,
+    .max-w-3xl {
+      max-width: 100% !important;
+    }
+
+    /* Page breaks */
+    .print\:break-before {
+      page-break-before: always;
+    }
+
+    .print\:break-after {
+      page-break-after: always;
+    }
+
+    /* Avoid breaking inside cards */
+    .card,
+    .bg-white {
+      page-break-inside: avoid;
+    }
+  }
 }

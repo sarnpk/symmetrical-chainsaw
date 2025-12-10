@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, AlertTriangle, Trash2, Brain, Image, Video, Mic, Link as LinkIcon, X, MicOff, Edit2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus, AlertTriangle, Trash2, Brain, Image, Video, Mic, Link as LinkIcon, X, MicOff, Edit2, HelpCircle, ChevronDown, ChevronUp, Circle, Download, Sparkles } from 'lucide-react'
 import MediaUpload from '@/components/MediaUpload'
 import { useRef } from 'react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
+import { exportMemoriesToPDF } from '@/lib/pdf-export'
 
 export default function ToxicMemoriesPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -28,17 +29,61 @@ export default function ToxicMemoriesPage() {
   const [editingMemory, setEditingMemory] = useState<any>(null)
   const [mediaUrls, setMediaUrls] = useState<{ audio?: string; video?: string; images?: string[] }>({})
   const [showInfo, setShowInfo] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([])
+  const [recordingTime, setRecordingTime] = useState(0)
+  const [suggestingTags, setSuggestingTags] = useState(false)
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const router = useRouter()
   const supabase = createClient()
   const recognitionRef = useRef<any>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const tags = ['gaslighting', 'manipulation', 'verbal_abuse', 'emotional_abuse', 'control']
+  const tags = [
+    'gaslighting', 'manipulation', 'verbal_abuse', 'emotional_abuse', 'control',
+    'silent_treatment', 'love_bombing', 'triangulation', 'projection', 'DARVO',
+    'blame_shifting', 'rage', 'threats', 'intimidation', 'isolation',
+    'financial_abuse', 'coercion', 'stalking', 'smear_campaign', 'hoovering'
+  ]
 
   const loadMemories = async () => {
     const response = await fetch('/api/toxic-memories')
     const data = await response.json()
     setMemories(data.memories || [])
+  }
+
+  const suggestTags = async () => {
+    if (!memoryText.trim()) {
+      toast.error('Enter memory text first')
+      return
+    }
+    setSuggestingTags(true)
+    try {
+      const res = await fetch('/api/toxic-memories/suggest-tags', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memory_text: memoryText })
+      })
+      if (res.ok) {
+        const { tags: suggestedTags } = await res.json()
+        setSelectedTags(suggestedTags)
+        toast.success('Tags suggested')
+      }
+    } catch (error) {
+      toast.error('Failed to suggest tags')
+    } finally {
+      setSuggestingTags(false)
+    }
+  }
+
+  const exportPDF = () => {
+    if (memories.length === 0) {
+      toast.error('No memories to export')
+      return
+    }
+    exportMemoriesToPDF(memories, user?.email || 'User')
+    toast.success('PDF exported')
   }
 
   useEffect(() => {
@@ -53,7 +98,7 @@ export default function ToxicMemoriesPage() {
         for (let i = event.resultIndex; i < event.results.length; i++) {
           transcript += event.results[i][0].transcript
         }
-        setMemoryText(prev => prev + ' ' + transcript)
+        setMemoryText(prev => (prev + ' ' + transcript).trim())
       }
 
       recognitionRef.current.onerror = () => setIsListening(false)
@@ -62,6 +107,7 @@ export default function ToxicMemoriesPage() {
 
     return () => {
       if (recognitionRef.current) recognitionRef.current.stop()
+      if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current)
     }
   }, [])
 
@@ -79,6 +125,94 @@ export default function ToxicMemoriesPage() {
     } else {
       recognitionRef.current.start()
       setIsListening(true)
+    }
+  }
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const recorder = new MediaRecorder(stream)
+      const chunks: Blob[] = []
+
+      recorder.ondataavailable = (e) => chunks.push(e.data)
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' })
+        await uploadAndTranscribe(audioBlob)
+        stream.getTracks().forEach(track => track.stop())
+        if (recordingIntervalRef.current) {
+          clearInterval(recordingIntervalRef.current)
+          recordingIntervalRef.current = null
+        }
+        setRecordingTime(0)
+      }
+
+      recorder.start()
+      setMediaRecorder(recorder)
+      setAudioChunks(chunks)
+      setIsRecording(true)
+      setRecordingTime(0)
+      
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime(prev => prev + 1)
+      }, 1000)
+      
+      toast.success('Recording started')
+    } catch (error) {
+      toast.error('Microphone access denied')
+    }
+  }
+
+  const stopRecording = () => {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop()
+      setIsRecording(false)
+      toast.success('Processing recording...')
+    }
+  }
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const uploadAndTranscribe = async (audioBlob: Blob) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
+
+      const fileName = `${Date.now()}-recording.webm`
+      const filePath = `${user.id}/audios/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('toxic-memories')
+        .upload(filePath, audioBlob)
+
+      if (uploadError) throw uploadError
+
+      const { data } = supabase.storage
+        .from('toxic-memories')
+        .getPublicUrl(filePath)
+
+      setMediaUrls(prev => ({ ...prev, audio: data.publicUrl }))
+
+      const formData = new FormData()
+      formData.append('audio', audioBlob, 'recording.webm')
+
+      const transcribeRes = await fetch('/api/transcribe-audio', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (transcribeRes.ok) {
+        const { transcript } = await transcribeRes.json()
+        setMemoryText(prev => prev ? `${prev}\n\n${transcript}` : transcript)
+        toast.success('Recording transcribed')
+      } else {
+        toast.success('Audio saved (transcription unavailable)')
+      }
+    } catch (error: any) {
+      toast.error(`Failed to process recording: ${error.message}`)
     }
   }
 
@@ -248,13 +382,24 @@ export default function ToxicMemoriesPage() {
               <p className="text-sm sm:text-base text-gray-600 mt-2">Quick snapshots of toxic incidents - brief notes with evidence</p>
             </div>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-2 w-full sm:w-auto whitespace-nowrap"
-          >
-            <Plus className="h-5 w-5" />
-            Add Memory
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+              <Plus className="h-5 w-5" />
+              Add Memory
+            </button>
+            {memories.length > 0 && (
+              <button
+                onClick={exportPDF}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                <Download className="h-5 w-5" />
+                Export PDF
+              </button>
+            )}
+          </div>
         </div>
 
         {showForm && (
@@ -265,13 +410,47 @@ export default function ToxicMemoriesPage() {
             <CardContent className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Memory Description</label>
-                <textarea
-                  value={memoryText}
-                  onFocus={() => setShowTextModal(true)}
-                  readOnly
-                  placeholder="Click to describe the toxic/abusive memory..."
-                  className="w-full h-32 p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-red-400"
-                />
+                <div className="space-y-3">
+                  <textarea
+                    value={memoryText}
+                    onFocus={() => setShowTextModal(true)}
+                    readOnly
+                    placeholder="Click to describe the toxic/abusive memory..."
+                    className="w-full h-32 p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-red-400"
+                  />
+                  
+                  {isRecording ? (
+                    <div className="bg-red-50 border-2 border-red-500 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="relative">
+                            <Circle className="h-6 w-6 text-red-600 fill-current animate-pulse" />
+                            <div className="absolute inset-0 rounded-full bg-red-600 animate-ping opacity-75"></div>
+                          </div>
+                          <div>
+                            <div className="text-sm font-semibold text-red-900">Recording...</div>
+                            <div className="text-2xl font-mono font-bold text-red-600">{formatTime(recordingTime)}</div>
+                          </div>
+                        </div>
+                        <button
+                          onClick={stopRecording}
+                          className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 font-semibold"
+                        >
+                          Stop & Save
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={startRecording}
+                      type="button"
+                      className="w-full bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 flex items-center justify-center gap-2 font-medium"
+                    >
+                      <Mic className="h-5 w-5" />
+                      Record Memory (Audio + Auto-Transcribe)
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div>
@@ -280,7 +459,17 @@ export default function ToxicMemoriesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Add Tags (Optional)</label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-gray-700">Add Tags (Optional)</label>
+                  <button
+                    onClick={suggestTags}
+                    disabled={suggestingTags || !memoryText.trim()}
+                    className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-1 disabled:opacity-50"
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    {suggestingTags ? 'Suggesting...' : 'AI Suggest'}
+                  </button>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {tags.map(tag => (
                     <button

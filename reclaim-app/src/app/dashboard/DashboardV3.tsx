@@ -167,7 +167,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
 
       {/* Hero Stats */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-6 text-white">
-        <h1 className="text-2xl font-bold mb-4">Welcome back, {profile?.display_name || 'Friend'}</h1>
+        <h1 className="text-2xl font-bold mb-4 text-white">Welcome back, {profile?.display_name || 'Friend'}</h1>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 text-3xl font-bold">

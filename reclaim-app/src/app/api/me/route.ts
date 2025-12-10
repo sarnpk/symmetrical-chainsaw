@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
-import { createServerSupabase } from '@/lib/supabase-server'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 // GET /api/me -> { id, email }
 export async function GET() {
   try {
-    const supabase = await createServerSupabase()
+    const supabase = await createServerSupabaseClient()
     const { data: authRes } = await supabase.auth.getUser()
     const user = authRes?.user
     if (!user) return NextResponse.json({ id: null, email: null }, { status: 200 })

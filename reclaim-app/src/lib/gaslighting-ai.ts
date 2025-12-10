@@ -7,3 +7,5 @@ export async function analyzeGaslighting(text: string) {
     suggestions: []
   }
 }
+
+export const gaslightingAI = { analyzeGaslighting }
