@@ -1,4 +1,5 @@
 import { geminiAI } from './gemini-ai'
+import { checkFeatureLimit, recordFeatureUsage } from './supabase'
 
 interface GaslightingStatement {
   id: string
@@ -41,7 +42,11 @@ export class GaslightingAI {
   /**
    * Detect contradictions between statements
    */
-  async detectContradictions(statements: GaslightingStatement[]): Promise<ContradictionAnalysis> {
+  async detectContradictions(statements: GaslightingStatement[], userId?: string): Promise<ContradictionAnalysis> {
+    if (userId) {
+      const { data: allowed } = await checkFeatureLimit(userId, 'gaslighting_tracker', 'monthly_count')
+      if (allowed === false) throw new Error('Gaslighting tracker limit reached')
+    }
     if (statements.length < 2) {
       return {
         contradictions: [],
@@ -90,6 +95,11 @@ Identify contradictions where they said opposite things at different times. Retu
       
       const result = JSON.parse(jsonMatch[0])
       
+      if (userId) {
+        await recordFeatureUsage(userId, 'gaslighting_tracker', 'monthly_count', 1, {
+          feature: 'contradiction_detection', statements_analyzed: statements.length
+        })
+      }
       return {
         contradictions: result.contradictions.map((c: any) => ({
           statement_1: statements[c.statement_1_index],
@@ -122,7 +132,11 @@ Identify contradictions where they said opposite things at different times. Retu
     event_title: string
     what_actually_happened: string
     their_versions: Array<{ version: string; date: string }>
-  }): Promise<TruthTimelineAnalysis> {
+  }, userId?: string): Promise<TruthTimelineAnalysis> {
+    if (userId) {
+      const { data: allowed } = await checkFeatureLimit(userId, 'gaslighting_tracker', 'monthly_count')
+      if (allowed === false) throw new Error('Gaslighting tracker limit reached')
+    }
     const prompt = `Analyze how their story changed over time:
 
 Event: ${timeline.event_title}
@@ -153,6 +167,11 @@ Analyze the changes and confabulation. Return JSON:
       
       const result = JSON.parse(jsonMatch[0])
       
+      if (userId) {
+        await recordFeatureUsage(userId, 'gaslighting_tracker', 'monthly_count', 1, {
+          feature: 'timeline_analysis', versions_analyzed: timeline.their_versions.length
+        })
+      }
       return {
         event_title: timeline.event_title,
         original_truth: timeline.what_actually_happened,
@@ -178,7 +197,7 @@ Analyze the changes and confabulation. Return JSON:
   /**
    * Generate gaslighting pattern report
    */
-  async generatePatternReport(statements: GaslightingStatement[]): Promise<{
+  async generatePatternReport(statements: GaslightingStatement[], userId?: string): Promise<{
     total_statements: number
     topics_breakdown: Record<string, number>
     avg_severity: number
@@ -186,6 +205,10 @@ Analyze the changes and confabulation. Return JSON:
     red_flags: string[]
     evidence_strength: 'weak' | 'moderate' | 'strong' | 'overwhelming'
   }> {
+    if (userId) {
+      const { data: allowed } = await checkFeatureLimit(userId, 'gaslighting_tracker', 'monthly_count')
+      if (allowed === false) throw new Error('Gaslighting tracker limit reached')
+    }
     const prompt = `Analyze these gaslighting statements for patterns:
 
 ${statements.map((s, i) => `
@@ -210,6 +233,11 @@ Provide pattern analysis in JSON:
       
       const result = JSON.parse(jsonMatch[0])
       
+      if (userId) {
+        await recordFeatureUsage(userId, 'gaslighting_tracker', 'monthly_count', 1, {
+          feature: 'pattern_report', statements_analyzed: statements.length
+        })
+      }
       return {
         total_statements: statements.length,
         ...result

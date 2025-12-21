@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { Calendar, Clock, Eye, ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
+import UnifiedHeader from '@/components/UnifiedHeader'
+import UnifiedFooter from '@/components/UnifiedFooter'
 
 export default function BlogPostPage() {
   const params = useParams()
@@ -68,20 +70,7 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
-            <span className="text-xl font-bold text-gray-900">Reclaim</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors">Blog</Link>
-            <Link href="/auth" className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </header>
+      <UnifiedHeader />
 
       <main className="py-12 px-4">
         <div className="container mx-auto max-w-4xl">
@@ -174,6 +163,7 @@ export default function BlogPostPage() {
           </div>
         </div>
       </main>
+      <UnifiedFooter />
     </div>
   )
 }

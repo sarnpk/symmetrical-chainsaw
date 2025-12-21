@@ -22,6 +22,12 @@ export default function SubscriptionPage() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [limits, setLimits] = useState<TierLimitsResponse['tiers'] | null>(null)
   const [loading, setLoading] = useState(true)
+  const [upgrading, setUpgrading] = useState<string | null>(null)
+
+  const handleUpgrade = async (tier: string) => {
+    setUpgrading(tier)
+    window.location.href = '/pricing'
+  }
 
   useEffect(() => {
     const run = async () => {
@@ -141,7 +147,23 @@ export default function SubscriptionPage() {
                   <div>Transcription minutes: <strong>{limits ? withPerMonth(limits[tier]['transcription_minutes:minutes'] ?? -1) : '—'}</strong></div>
                   <div>Evidence storage: <strong>{limits ? present(limits[tier]['storage:storage_mb'] ?? -1, (n) => `${n} MB`) : '—'}</strong></div>
                 </div>
-                {/* Future: add upgrade/downgrade buttons wired to billing provider */}
+                {tier !== currentTier && tier !== 'foundation' && (
+                  <button
+                    onClick={() => handleUpgrade(tier)}
+                    disabled={upgrading === tier}
+                    className="w-full mt-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                  >
+                    {upgrading === tier ? 'Loading...' : tier === 'recovery' ? 'Upgrade to Recovery' : 'Upgrade to Empowered'}
+                  </button>
+                )}
+                {tier === currentTier && tier !== 'foundation' && (
+                  <button
+                    className="w-full mt-4 py-2 bg-gray-200 text-gray-600 rounded-lg font-semibold cursor-not-allowed"
+                    disabled
+                  >
+                    Current Plan
+                  </button>
+                )}
               </CardContent>
             </Card>
           ))}

@@ -8,6 +8,5 @@
 [functions]
   directory = "netlify/functions"
 
-# Keep Supabase awake - runs daily at 6 AM UTC
-[[functions.keep-alive.schedule]]
-  cron = "0 6 * * *"
+[functions.keep-alive]
+  schedule = "0 6 * * *"

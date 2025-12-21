@@ -25,7 +25,7 @@ const NARCISSIST_PROFILES = {
 export async function POST(request: NextRequest) {
   try {
     // Check usage and get user
-    const usageResult = await checkAndRecordAIUsage('narcissist_simulator_predict')
+    const usageResult = await checkAndRecordAIUsage('narcissist_simulator', 'predict')
     if ('error' in usageResult) {
       return NextResponse.json({ error: usageResult.error }, { status: usageResult.status })
     }

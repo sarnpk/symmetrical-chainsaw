@@ -80,6 +80,7 @@ const navigationGroups = [
     items: [
       { name: 'Wellness', href: '/wellness', icon: HeartPulse },
       { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle },
+      { name: 'Hope Reframe', href: '/hope-reframe', icon: Sparkles },
       { name: 'Healing', href: '/healing', icon: Sparkles },
       { name: 'Mind Reset', href: '/mind-reset', icon: Brain },
       { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },

@@ -20,6 +20,7 @@ export default function CrisisToolkitPage() {
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
 
   useEffect(() => {
+    checkAuth();
     fetchStats();
     fetchUserTier();
     
@@ -31,6 +32,14 @@ export default function CrisisToolkitPage() {
       };
     }
   }, []);
+
+  const checkAuth = async () => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      window.location.href = '/auth?redirect=/crisis-toolkit';
+    }
+  };
 
   useEffect(() => {
     if (timer !== null && timer > 0) {
@@ -217,6 +226,22 @@ export default function CrisisToolkitPage() {
                 <p className="text-sm text-gray-600">{intervention.skills.length} techniques available</p>
               </button>
             ))}
+          </div>
+
+          {/* Hope Reframe Link */}
+          <div className="mt-8 bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 rounded-xl p-6 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">💛 Hope Reframe</h3>
+                <p className="text-sm text-gray-600">Transform distressing thoughts into grounded hope</p>
+              </div>
+              <a
+                href="/hope-reframe"
+                className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-md"
+              >
+                Open →
+              </a>
+            </div>
           </div>
         </div>
       </div>

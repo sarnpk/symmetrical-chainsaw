@@ -39,8 +39,8 @@ class AudioTranscriptionService {
   async processAudioTranscription(job: TranscriptionJob): Promise<TranscriptionResult> {
     try {
       // Check if user has transcription quota available
-      const canTranscribe = await checkFeatureLimit(job.userId, 'ai_interactions')
-      if (!canTranscribe) {
+      const { data: canTranscribe } = await checkFeatureLimit(job.userId, 'transcription_minutes', 'minutes')
+      if (canTranscribe === false) {
         return {
           success: false,
           error: 'Transcription limit reached for your subscription tier'
@@ -64,10 +64,11 @@ class AudioTranscriptionService {
       // Update evidence file with transcription results
       await this.updateEvidenceFileWithTranscription(job.evidenceFileId, gladiaResult)
 
-      // Record usage for billing
-      await recordFeatureUsage(job.userId, 'ai_interactions', 'monthly_count', 1, {
+      // Record usage for billing (in minutes)
+      const durationMinutes = Math.ceil((gladiaResult.duration || 0) / 60)
+      await recordFeatureUsage(job.userId, 'transcription_minutes', 'minutes', durationMinutes, {
         feature: 'audio_transcription',
-        duration: gladiaResult.duration,
+        duration_seconds: gladiaResult.duration,
         language: gladiaResult.language,
         confidence: gladiaResult.confidence
       })

@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import { Shield } from 'lucide-react';
-import AuthButton from '@/components/AuthButton';
+import UnifiedHeader from '@/components/UnifiedHeader';
+import UnifiedFooter from '@/components/UnifiedFooter';
 
 interface FAQItem {
   question: string;
@@ -222,19 +222,7 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Shield className="h-8 w-8 text-indigo-600" />
-            <span className="text-xl font-bold text-gray-900">Reclaim</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
-            <AuthButton />
-          </div>
-        </div>
-      </header>
+      <UnifiedHeader />
 
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
@@ -249,11 +237,11 @@ export default function FAQPage() {
 
         {/* Legal Evidence Highlight */}
         <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl p-6 mb-8 text-white">
-          <h2 className="text-2xl font-bold mb-3">⚖️ Court-Admissible Evidence Collection</h2>
-          <p className="text-lg mb-4">
+          <h2 className="text-2xl font-bold mb-3 text-white">⚖️ Court-Admissible Evidence Collection</h2>
+          <p className="text-lg mb-4 text-white">
             Build legal cases with timestamped, GPS-tagged documentation. Our AI creates court-ready evidence for divorce, custody, and harassment cases that attorneys use to win.
           </p>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
+          <div className="grid md:grid-cols-2 gap-4 text-sm text-white">
             <div>
               <strong>✓ Timestamped Documentation</strong> - Court-admissible evidence
             </div>
@@ -271,11 +259,11 @@ export default function FAQPage() {
 
         {/* Free Trial Box */}
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 mb-8 text-white">
-          <h2 className="text-2xl font-bold mb-3">🔍 Discover If You're Being Abused - Free Trial</h2>
-          <p className="text-lg mb-4">
+          <h2 className="text-2xl font-bold mb-3 text-white">🔍 Discover If You're Being Abused - Free Trial</h2>
+          <p className="text-lg mb-4 text-white">
             Not sure if you're experiencing narcissistic abuse? Our free trial provides enough AI conversations and analysis tools to help you identify manipulation patterns and abusive behaviors in your relationship.
           </p>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
+          <div className="grid md:grid-cols-2 gap-4 text-sm text-white">
             <div>
               <strong>✓ 15 AI Conversations/month</strong> - Get professional insights
             </div>
@@ -370,7 +358,9 @@ export default function FAQPage() {
               Our support team understands the unique challenges of narcissistic abuse recovery.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <AuthButton />
+              <a href="/auth" className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                Get Started
+              </a>
               <a
                 href="mailto:support@reclaim.app"
                 className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
@@ -381,6 +371,7 @@ export default function FAQPage() {
           </div>
         </div>
       </div>
+      <UnifiedFooter />
     </div>
   );
 }

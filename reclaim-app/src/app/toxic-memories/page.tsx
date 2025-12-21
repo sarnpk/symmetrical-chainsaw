@@ -34,6 +34,7 @@ export default function ToxicMemoriesPage() {
   const [audioChunks, setAudioChunks] = useState<Blob[]>([])
   const [recordingTime, setRecordingTime] = useState(0)
   const [suggestingTags, setSuggestingTags] = useState(false)
+  const [showDiscardGuide, setShowDiscardGuide] = useState(false)
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const router = useRouter()
   const supabase = createClient()
@@ -44,7 +45,8 @@ export default function ToxicMemoriesPage() {
     'gaslighting', 'manipulation', 'verbal_abuse', 'emotional_abuse', 'control',
     'silent_treatment', 'love_bombing', 'triangulation', 'projection', 'DARVO',
     'blame_shifting', 'rage', 'threats', 'intimidation', 'isolation',
-    'financial_abuse', 'coercion', 'stalking', 'smear_campaign', 'hoovering'
+    'financial_abuse', 'coercion', 'stalking', 'smear_campaign', 'hoovering',
+    'devaluation', 'discard', 'post_discard', 'hoover_attempt'
   ]
 
   const loadMemories = async () => {
@@ -327,6 +329,89 @@ export default function ToxicMemoriesPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
+      {showDiscardGuide && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-gray-900">Understanding Narcissist Discard Stages</h2>
+              <button onClick={() => setShowDiscardGuide(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-6 space-y-6">
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-4">
+                <p className="text-sm text-blue-900">
+                  The discard phase is a predictable pattern in narcissistic relationships. Understanding which stage you're in helps you recognize it's not your fault—it's their pattern.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="border-l-4 border-yellow-500 pl-4">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">🔻 Stage 1: Devaluation</h3>
+                  <p className="text-gray-700 mb-2">The shift from idealization to criticism. You notice:</p>
+                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                    <li>Increasing criticism and nitpicking</li>
+                    <li>Withdrawal of affection and attention</li>
+                    <li>Comparing you unfavorably to others</li>
+                    <li>Gaslighting intensifies</li>
+                    <li>You feel like you can't do anything right</li>
+                  </ul>
+                  <p className="text-xs text-yellow-700 mt-2 italic">Tag memories: devaluation</p>
+                </div>
+
+                <div className="border-l-4 border-red-500 pl-4">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">💔 Stage 2: Discard</h3>
+                  <p className="text-gray-700 mb-2">The sudden or gradual abandonment. Signs include:</p>
+                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                    <li>Abrupt ending or ghosting</li>
+                    <li>Blaming you for everything</li>
+                    <li>Moving on quickly to new supply</li>
+                    <li>Smear campaigns against you</li>
+                    <li>Complete emotional coldness</li>
+                  </ul>
+                  <p className="text-xs text-red-700 mt-2 italic">Tag memories: discard</p>
+                </div>
+
+                <div className="border-l-4 border-purple-500 pl-4">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">🌱 Stage 3: Post-Discard</h3>
+                  <p className="text-gray-700 mb-2">Your healing phase. You may experience:</p>
+                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                    <li>Confusion and self-doubt</li>
+                    <li>Grief and relief mixed together</li>
+                    <li>Clarity about the abuse patterns</li>
+                    <li>Rebuilding your sense of self</li>
+                    <li>Preparing for potential hoovering</li>
+                  </ul>
+                  <p className="text-xs text-purple-700 mt-2 italic">Tag memories: post_discard</p>
+                </div>
+
+                <div className="border-l-4 border-orange-500 pl-4">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">🪝 Hoovering Attempts</h3>
+                  <p className="text-gray-700 mb-2">When they try to pull you back in:</p>
+                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                    <li>Sudden apologies or love bombing</li>
+                    <li>Promises to change</li>
+                    <li>Creating crises to get attention</li>
+                    <li>Using flying monkeys (mutual friends/family)</li>
+                    <li>Fake emergencies</li>
+                  </ul>
+                  <p className="text-xs text-orange-700 mt-2 italic">Tag memories: hoover_attempt</p>
+                </div>
+              </div>
+
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 className="font-bold text-green-900 mb-2">💪 How to Use These Tags</h4>
+                <ul className="text-sm text-green-800 space-y-1">
+                  <li>• Tag your memories to track which stage you're experiencing</li>
+                  <li>• Recognize patterns—this helps you see it's their cycle, not your failure</li>
+                  <li>• Document hoovering attempts to resist going back</li>
+                  <li>• Use for therapy or legal documentation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {showTextModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-0 sm:p-4">
           <div className="bg-white rounded-none sm:rounded-lg w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[90vh] flex flex-col">
@@ -461,14 +546,23 @@ export default function ToxicMemoriesPage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-sm font-medium text-gray-700">Add Tags (Optional)</label>
-                  <button
-                    onClick={suggestTags}
-                    disabled={suggestingTags || !memoryText.trim()}
-                    className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-1 disabled:opacity-50"
-                  >
-                    <Sparkles className="h-3 w-3" />
-                    {suggestingTags ? 'Suggesting...' : 'AI Suggest'}
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowDiscardGuide(true)}
+                      className="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                    >
+                      <HelpCircle className="h-3 w-3" />
+                      Discard Stages Guide
+                    </button>
+                    <button
+                      onClick={suggestTags}
+                      disabled={suggestingTags || !memoryText.trim()}
+                      className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-1 disabled:opacity-50"
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      {suggestingTags ? 'Suggesting...' : 'AI Suggest'}
+                    </button>
+                  </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {tags.map(tag => (

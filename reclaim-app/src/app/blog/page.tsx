@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Calendar, Clock, Eye, ArrowRight, Search, Filter, Youtube, Instagram, Twitter, Facebook, Music } from 'lucide-react'
+import UnifiedHeader from '@/components/UnifiedHeader'
+import UnifiedFooter from '@/components/UnifiedFooter'
 
 interface BlogPost {
   id: string
@@ -130,21 +132,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
-            <span className="text-xl font-bold text-gray-900">Reclaim</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/pricing" className="text-sm text-indigo-600 hover:underline">Pricing</Link>
-            <Link href="/auth" className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </header>
+      <UnifiedHeader />
 
       <main className="py-16 px-4">
         <div className="container mx-auto max-w-7xl">
@@ -388,6 +376,7 @@ export default function BlogPage() {
           </div>
         </div>
       </main>
+      <UnifiedFooter />
     </div>
   )
 }

@@ -1,9 +1,19 @@
 import { NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createClient } from '@supabase/supabase-js'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Missing Supabase credentials')
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey)
     
     const { data: plans, error } = await supabase
       .from('subscription_plans')
@@ -12,13 +22,13 @@ export async function GET() {
       .order('sort_order')
 
     if (error) {
-      console.error('Error fetching subscription plans:', error)
-      return NextResponse.json({ error: 'Failed to fetch plans' }, { status: 500 })
+      console.error('Supabase error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ plans })
-  } catch (error) {
-    console.error('Subscription plans API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ plans: plans || [] })
+  } catch (error: any) {
+    console.error('API error:', error)
+    return NextResponse.json({ error: error?.message || 'Internal server error' }, { status: 500 })
   }
 }

@@ -1,5 +1,6 @@
 // AI-Enhanced Stonewalling Analysis
 import { geminiAI } from './gemini-ai'
+import { checkFeatureLimit, recordFeatureUsage } from './supabase'
 
 interface StonewallIncident {
   shutdown_type: string
@@ -47,7 +48,11 @@ export class StonewallAI {
   /**
    * Analyze stonewalling patterns from multiple incidents
    */
-  async analyzePatterns(incidents: StonewallIncident[]): Promise<StonewallPatternAnalysis> {
+  async analyzePatterns(incidents: StonewallIncident[], userId?: string): Promise<StonewallPatternAnalysis> {
+    if (userId) {
+      const { data: allowed } = await checkFeatureLimit(userId, 'stonewalling', 'monthly_count')
+      if (allowed === false) throw new Error('Stonewalling tracker limit reached')
+    }
     const prompt = `
 Analyze these stonewalling incidents for patterns:
 
@@ -70,7 +75,13 @@ Provide JSON:
 
     const response = await geminiAI.chat(prompt, [], 'pattern-analysis')
     const jsonMatch = response.match(/\{[\s\S]*\}/)
-    return jsonMatch ? JSON.parse(jsonMatch[0]) : this.getDefaultAnalysis()
+    const result = jsonMatch ? JSON.parse(jsonMatch[0]) : this.getDefaultAnalysis()
+    if (userId) {
+      await recordFeatureUsage(userId, 'stonewalling', 'monthly_count', 1, {
+        feature: 'pattern_analysis', incidents_analyzed: incidents.length
+      })
+    }
+    return result
   }
 
   /**
@@ -81,7 +92,11 @@ Provide JSON:
     duration_so_far: number
     trigger: string
     your_emotional_state: number
-  }): Promise<RealTimeGuidance> {
+  }, userId?: string): Promise<RealTimeGuidance> {
+    if (userId) {
+      const { data: allowed } = await checkFeatureLimit(userId, 'stonewalling', 'monthly_count')
+      if (allowed === false) throw new Error('Stonewalling tracker limit reached')
+    }
     const prompt = `
 I'm experiencing stonewalling RIGHT NOW:
 Type: ${context.shutdown_type}
@@ -101,7 +116,13 @@ Provide immediate guidance in JSON:
 
     const response = await geminiAI.chat(prompt, [], 'crisis')
     const jsonMatch = response.match(/\{[\s\S]*\}/)
-    return jsonMatch ? JSON.parse(jsonMatch[0]) : this.getDefaultGuidance()
+    const result = jsonMatch ? JSON.parse(jsonMatch[0]) : this.getDefaultGuidance()
+    if (userId) {
+      await recordFeatureUsage(userId, 'stonewalling', 'monthly_count', 1, {
+        feature: 'real_time_guidance'
+      })
+    }
+    return result
   }
 
   /**

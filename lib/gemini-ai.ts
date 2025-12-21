@@ -131,6 +131,7 @@ class GeminiAI {
 
   /**
    * Analyze journal entries for patterns
+   * NOTE: This method does NOT check limits - caller must check before calling
    */
   async analyzePatterns(journalEntries: Array<{
     title: string
@@ -219,6 +220,7 @@ Focus on identifying cycles, escalation patterns, triggers, and provide trauma-i
 
   /**
    * Mind reset tool for reframing negative thoughts
+   * NOTE: This method does NOT check limits - caller must check before calling
    */
   async mindReset(
     originalThought: string,
@@ -279,6 +281,7 @@ Focus on:
 
   /**
    * Generate personalized insights for users
+   * NOTE: This method does NOT check limits - caller must check before calling
    */
   async generateInsights(userData: {
     recent_entries: number
@@ -416,8 +419,20 @@ Focus on being supportive, trauma-informed, and actionable.`
 export const DEFAULT_FREE_TIER_MODEL = 'gemini-2.5-flash-lite'
 export const DEFAULT_PAID_TIER_MODEL = 'gemini-1.5-flash'
 
-// Export singleton instance (no client-exposed key fallback)
-export const geminiAI = new GeminiAI(process.env.GOOGLE_AI_API_KEY || '')
+// Factory function to create instance (server-side only)
+// DO NOT export singleton to prevent client-side exposure of API key
+function createGeminiAI(): GeminiAI {
+  if (!process.env.GOOGLE_AI_API_KEY) {
+    throw new Error('GOOGLE_AI_API_KEY environment variable is required')
+  }
+  return new GeminiAI(process.env.GOOGLE_AI_API_KEY)
+}
+
+// Export singleton instance for server-side use only
+export const geminiAI = createGeminiAI()
+
+// Export class for testing/mocking
+export { GeminiAI }
 
 // Export types
 export type { PatternAnalysisResult, MindResetResult }

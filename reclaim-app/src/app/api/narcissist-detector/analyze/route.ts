@@ -36,6 +36,9 @@ Provide a JSON response with this exact structure:
   },
   "manipulationTactics": ["tactic1", "tactic2"],
   "severityScore": 1-10,
+  "discardStage": "devaluation|discard|post_discard|hoovering|none",
+  "discardStageConfidence": 0-100,
+  "discardStageNote": "Brief note if in discard phase",
   "keyPhrases": [
     {
       "phrase": "exact phrase from text",

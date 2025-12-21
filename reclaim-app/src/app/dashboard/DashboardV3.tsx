@@ -13,6 +13,7 @@ import NoContactWidget from '@/components/NoContactWidget'
 import NarcissistDetectorWidget from '@/components/NarcissistDetectorWidget'
 import NarcissistSimulatorWidget from '@/components/NarcissistSimulatorWidget'
 import CrisisReframeWidget from '@/components/CrisisReframeWidget'
+import HopeReframeWidget from '@/components/HopeReframeWidget'
 import MoodCheckIn from '@/components/MoodCheckIn'
 
 interface DashboardV3Props {
@@ -22,7 +23,7 @@ interface DashboardV3Props {
 }
 
 export default function DashboardV3({ user, profile, recentEntries }: DashboardV3Props) {
-  const [stats, setStats] = useState({ streak: 0, entries: 0, relationshipHealth: 0 })
+  const [stats, setStats] = useState({ streak: 0, entries: 0 })
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
   const [showSafetyBanner, setShowSafetyBanner] = useState(true)
   const router = useRouter()
@@ -34,31 +35,24 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
 
   const loadStats = async () => {
     try {
-      const [streakRes, entriesRes, healthRes] = await Promise.all([
+      const [streakRes, entriesRes] = await Promise.all([
         fetch('/api/reality-anchor/streaks/morning_intention').catch(() => null),
-        supabase.from('journal_entries').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
-        fetch('/api/relationship-health').catch(() => null)
+        supabase.from('journal_entries').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
       ])
 
       let streakData = { current_streak: 0 }
-      let healthData = { score: 50 }
 
       if (streakRes && streakRes.ok) {
         streakData = await streakRes.json()
       }
 
-      if (healthRes && healthRes.ok) {
-        healthData = await healthRes.json()
-      }
-
       setStats({
         streak: streakData.current_streak || 0,
         entries: entriesRes.count || 0,
-        relationshipHealth: healthData.score || 50
+        relationshipHealth: 0
       })
     } catch (error) {
       console.error('Error loading stats:', error)
-      setStats({ streak: 0, entries: 0, relationshipHealth: 50 })
     }
   }
 
@@ -92,6 +86,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
       items: [
         { name: 'Wellness', href: '/wellness', icon: Heart, color: 'pink', featured: true, priority: 1 },
         { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle, color: 'red', featured: true, priority: 2 },
+        { name: 'Hope Reframe', href: '/hope-reframe', icon: Sparkles, color: 'amber', featured: true, priority: 3 },
         { name: 'Healing', href: '/healing', icon: Sparkles, color: 'purple', featured: true, priority: 5 },
         { name: 'Mind Reset', href: '/mind-reset', icon: Brain, color: 'purple', featured: true, priority: 6 },
         { name: 'Belief Reframe', href: '/belief-reframe', icon: Brain, color: 'green' },
@@ -168,24 +163,17 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
       {/* Hero Stats */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-6 text-white">
         <h1 className="text-2xl font-bold mb-4 text-white">Welcome back, {profile?.display_name || 'Friend'}</h1>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 text-3xl font-bold">
               <Flame className="h-8 w-8 text-orange-300" />
               {stats.streak}
             </div>
-            <div className="text-sm opacity-90">Day Streak</div>
+            <div className="text-sm opacity-90">Days Active</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold">{stats.entries}</div>
             <div className="text-sm opacity-90">Journal Entries</div>
-          </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-3xl font-bold">
-              <Heart className={`h-6 w-6 ${stats.relationshipHealth >= 70 ? 'text-green-300' : stats.relationshipHealth >= 40 ? 'text-yellow-300' : 'text-red-300'}`} />
-              {stats.relationshipHealth}
-            </div>
-            <div className="text-sm opacity-90">Health Score</div>
           </div>
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 text-3xl font-bold">
@@ -302,7 +290,10 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
       {/* TIER 3: Crisis & Alerts (Conditional) */}
       <div className="space-y-6">
         <h2 className="text-xl font-semibold text-gray-900">Active Alerts & Support</h2>
-        <CrisisReframeWidget />
+        <div className="grid md:grid-cols-2 gap-6">
+          <CrisisReframeWidget />
+          <HopeReframeWidget />
+        </div>
         <CognitiveDissonanceWidget />
         <NoContactWidget />
       </div>

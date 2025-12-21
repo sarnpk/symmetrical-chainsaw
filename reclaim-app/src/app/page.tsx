@@ -46,11 +46,15 @@ export default async function HomePage() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
-            <span className="text-xl font-bold text-gray-900">Reclaim</span>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-gray-900 leading-tight">Reclaim</span>
+              <span className="text-xs text-gray-500 leading-tight">Your Life</span>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <a href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block">Blog</a>
             <a href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block">FAQ</a>
+            <a href="/donate" className="text-purple-600 hover:text-purple-700 transition-colors font-semibold hidden sm:block">💜 Donate</a>
             <SignInButton variant="secondary" />
             <AuthButton variant="primary" />
           </div>
@@ -67,16 +71,130 @@ export default async function HomePage() {
             The #1 recovery platform for narcissistic abuse survivors. Get your free relationship health assessment, AI-powered tools for healing, and evidence-based support in 70+ languages. Start your recovery journey today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/free-narcissist-test" className="px-8 py-3 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition-colors inline-block text-lg shadow-lg">
+            <a href="/relationship-health-check" className="px-8 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition-colors inline-block text-lg shadow-lg hover:scale-105 transform">
+              ❤️ Relationship Health Check
+            </a>
+            <a href="/free-narcissist-test" className="px-8 py-3 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition-colors inline-block text-lg shadow-lg hover:scale-105 transform">
               🔍 Free Narcissist Test
             </a>
-            <a href="/free-assessment" className="px-8 py-3 bg-pink-600 text-white rounded-lg font-medium hover:bg-pink-700 transition-colors inline-block">
-              Free Relationship Check
+            <a href="/discard-stage-test" className="px-8 py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition-colors inline-block text-lg shadow-lg hover:scale-105 transform">
+              💔 Discard Stage Test
             </a>
-            <AuthButton variant="primary" />
           </div>
           <p className="text-sm text-gray-500 mt-4">
-            ✨ New: AI analyzes text to identify narcissist type in 60 seconds - No signup required
+            ✨ New: AI identifies narcissist type & discard stage in 30 seconds - No signup required
+          </p>
+        </div>
+      </section>
+
+      {/* Free Viral Tools Section */}
+      <section className="py-16 px-4 bg-gradient-to-br from-purple-600 to-pink-600 text-white">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4 text-white">
+            🎉 Free AI Tools - No Signup Required
+          </h2>
+          <p className="text-xl mb-8 max-w-3xl mx-auto text-white">
+            Get instant AI-powered analysis to understand narcissistic abuse patterns. 
+            Share with someone who needs help.
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* Free Narcissist Test */}
+            <a href="/free-narcissist-test" className="block">
+              <Card className="hover:shadow-2xl transition-all transform hover:scale-105 bg-white text-gray-900 h-full">
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                      🔥 VIRAL
+                    </div>
+                    <div className="text-sm text-gray-600">50,000+ analyses</div>
+                  </div>
+                  <CardTitle className="text-2xl text-purple-900">🔍 Free Narcissist Detector</CardTitle>
+                  <CardDescription className="text-base">
+                    Paste a message or describe behavior - AI identifies narcissist type in 60 seconds
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-left">
+                    <li>• Identifies 6 narcissist types (Overt, Covert, Malignant, etc.)</li>
+                    <li>• Detects 12 manipulation tactics (gaslighting, love-bombing, etc.)</li>
+                    <li>• Severity score & risk assessment</li>
+                    <li>• Recommended protection strategies</li>
+                  </ul>
+                  <div className="mt-4 p-3 bg-purple-50 rounded-lg">
+                    <p className="text-xs font-semibold text-purple-900">
+                      ✅ No signup • ✅ Instant results • ✅ 100% private
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Relationship Health Check */}
+            <a href="/relationship-health-check" className="block">
+              <Card className="hover:shadow-2xl transition-all transform hover:scale-105 bg-white text-gray-900 h-full">
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                      ❤️ NEW
+                    </div>
+                    <div className="text-sm text-gray-600">20,000+ checks</div>
+                  </div>
+                  <CardTitle className="text-2xl text-green-900">❤️ Relationship Health Check</CardTitle>
+                  <CardDescription className="text-base">
+                    Answer 10 questions - Find out if your relationship is healthy or toxic
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-left">
+                    <li>• Identifies healthy vs unhealthy patterns</li>
+                    <li>• Assesses emotional safety & respect</li>
+                    <li>• Evaluates communication & trust</li>
+                    <li>• Provides personalized recommendations</li>
+                  </ul>
+                  <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                    <p className="text-xs font-semibold text-green-900">
+                      ✅ No signup • ✅ Instant results • ✅ 100% private
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Discard Stage Test */}
+            <a href="/discard-stage-test" className="block">
+              <Card className="hover:shadow-2xl transition-all transform hover:scale-105 bg-white text-gray-900 h-full">
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                      🆕 NEW
+                    </div>
+                    <div className="text-sm text-gray-600">30,000+ analyses</div>
+                  </div>
+                  <CardTitle className="text-2xl text-red-900">💔 Discard Stage Detector</CardTitle>
+                  <CardDescription className="text-base">
+                    Describe your situation - AI identifies which discard stage you're in
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-left">
+                    <li>• Identifies 4 stages (Devaluation, Discard, Post-Discard, Hoovering)</li>
+                    <li>• Explains what's happening & why</li>
+                    <li>• Predicts what comes next</li>
+                    <li>• Stage-specific coping strategies</li>
+                  </ul>
+                  <div className="mt-4 p-3 bg-red-50 rounded-lg">
+                    <p className="text-xs font-semibold text-red-900">
+                      ✅ No signup • ✅ 30-second results • ✅ Anonymous
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </a>
+          </div>
+
+          <p className="text-sm mt-8 text-white">
+            💡 These tools have helped 80,000+ people recognize abuse patterns. Share to help someone you know.
           </p>
         </div>
       </section>
@@ -499,6 +617,7 @@ export default async function HomePage() {
           
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500 border-t pt-6">
+            <a href="/donate" className="hover:text-purple-600 transition-colors font-semibold text-purple-600">💜 Donate</a>
             <a href="/blog" className="hover:text-indigo-600 transition-colors">Blog</a>
             <a href="/faq" className="hover:text-indigo-600 transition-colors">FAQ</a>
             <a href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy Policy</a>

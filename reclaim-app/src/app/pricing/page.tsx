@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Check, X, Star, Shield, Heart, Brain, Users, Zap } from 'lucide-react'
+import UnifiedHeader from '@/components/UnifiedHeader'
+import UnifiedFooter from '@/components/UnifiedFooter'
+import { createClient } from '@supabase/supabase-js'
 
 interface SubscriptionPlan {
   plan_tier: string
@@ -25,25 +28,51 @@ interface FeatureComparison {
 }
 
 export default function PricingPage() {
-  const [plans, setPlans] = useState<SubscriptionPlan[]>([])
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([
+    { plan_tier: 'foundation', display_name: 'Foundation (Free)', description: 'Basic access for getting started', price_monthly: 0, price_yearly: 0 },
+    { plan_tier: 'recovery', display_name: 'Recovery', description: 'AI-powered recovery tools', price_monthly: 14.99, price_yearly: 150.00 },
+    { plan_tier: 'empowerment', display_name: 'Empowered', description: 'Complete recovery suite', price_monthly: 24.99, price_yearly: 250.00 }
+  ])
   const [loading, setLoading] = useState(true)
   const [isYearly, setIsYearly] = useState(false)
+  const [subscribing, setSubscribing] = useState<string | null>(null)
+
+  const handleSubscribe = async (tier: string) => {
+    setSubscribing(tier)
+    try {
+      const priceIds: Record<string, string> = {
+        'recovery-monthly': process.env.NEXT_PUBLIC_STRIPE_PRICE_RECOVERY_MONTHLY || '',
+        'recovery-yearly': process.env.NEXT_PUBLIC_STRIPE_PRICE_RECOVERY_YEARLY || '',
+        'empowerment-monthly': process.env.NEXT_PUBLIC_STRIPE_PRICE_EMPOWERMENT_MONTHLY || '',
+        'empowerment-yearly': process.env.NEXT_PUBLIC_STRIPE_PRICE_EMPOWERMENT_YEARLY || ''
+      }
+      const priceId = priceIds[`${tier}-${isYearly ? 'yearly' : 'monthly'}`]
+      
+      const res = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId, email: '' })
+      })
+      const { sessionId } = await res.json()
+      
+      const stripe = await import('@stripe/stripe-js').then(m => m.loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!))
+      await stripe?.redirectToCheckout({ sessionId })
+    } catch (error) {
+      console.error('Subscription error:', error)
+      alert('Failed to start checkout. Please try again.')
+    } finally {
+      setSubscribing(null)
+    }
+  }
 
   useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const response = await fetch('/api/subscription-plans')
-        const data = await response.json()
-        if (data.plans) {
-          setPlans(data.plans)
-        }
-      } catch (error) {
-        console.error('Failed to fetch plans:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchPlans()
+    fetch('/api/subscription-plans')
+      .then(res => res.json())
+      .then(data => {
+        if (data.plans?.length > 0) setPlans(data.plans)
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
   const getPlanData = (tier: string) => {
@@ -52,8 +81,10 @@ export default function PricingPage() {
 
   const getPrice = (tier: string) => {
     const plan = getPlanData(tier)
-    if (!plan) return 0
-    return isYearly ? plan.price_yearly : plan.price_monthly
+    if (!plan) return '0.00'
+    const price = isYearly ? plan.price_yearly : plan.price_monthly
+    const numPrice = typeof price === 'string' ? parseFloat(price) : Number(price)
+    return isNaN(numPrice) ? '0.00' : numPrice.toFixed(2)
   }
 
   const featureComparison: FeatureComparison[] = [
@@ -116,18 +147,7 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
-            <span className="text-xl font-bold text-gray-900">Reclaim</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors">Blog</Link>
-            <Link href="/pricing" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</Link>
-          </div>
-        </div>
-      </header>
+      <UnifiedHeader />
 
       <main className="py-16 px-4">
         <div className="container mx-auto">
@@ -179,7 +199,13 @@ export default function PricingPage() {
                     </div>
                     <CardDescription className="text-base">{getPlanData('foundation')?.description || 'Basic access for getting started'}</CardDescription>
                   </CardHeader>
-                  <CardContent />
+                  <CardContent>
+                    <Link href="/auth" className="block w-full">
+                      <button className="w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                        Get Started Free
+                      </button>
+                    </Link>
+                  </CardContent>
                 </Card>
 
                 {/* Recovery (Popular) */}
@@ -201,7 +227,15 @@ export default function PricingPage() {
                     </div>
                     <CardDescription className="text-base">{getPlanData('recovery')?.description || 'AI-powered recovery tools'}</CardDescription>
                   </CardHeader>
-                  <CardContent />
+                  <CardContent>
+                    <button 
+                      onClick={() => handleSubscribe('recovery')}
+                      disabled={subscribing === 'recovery'}
+                      className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                    >
+                      {subscribing === 'recovery' ? 'Loading...' : 'Subscribe Now'}
+                    </button>
+                  </CardContent>
                 </Card>
 
                 {/* Empowered */}
@@ -220,7 +254,15 @@ export default function PricingPage() {
                     </div>
                     <CardDescription className="text-base">{getPlanData('empowerment')?.description || 'Complete recovery suite'}</CardDescription>
                   </CardHeader>
-                  <CardContent />
+                  <CardContent>
+                    <button 
+                      onClick={() => handleSubscribe('empowerment')}
+                      disabled={subscribing === 'empowerment'}
+                      className="w-full py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50"
+                    >
+                      {subscribing === 'empowerment' ? 'Loading...' : 'Subscribe Now'}
+                    </button>
+                  </CardContent>
                 </Card>
               </>
             )}
@@ -324,6 +366,7 @@ export default function PricingPage() {
           </div>
         </div>
       </main>
+      <UnifiedFooter />
     </div>
   )
 }

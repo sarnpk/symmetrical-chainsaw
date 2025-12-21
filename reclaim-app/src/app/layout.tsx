@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import AppVersion from "../components/AppVersion"
 import CookieBanner from "../components/CookieBanner"
 import CrisisToolkitWidget from "../components/CrisisToolkitWidget"
+import GoogleAnalytics from "../components/GoogleAnalytics"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -45,6 +46,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Reclaim" />
       </head>
       <body className={`${inter.className} antialiased bg-gray-50 min-h-screen preload`}>
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
         <script
           dangerouslySetInnerHTML={{
             __html: `
