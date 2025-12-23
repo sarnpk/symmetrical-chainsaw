@@ -55,8 +55,8 @@ export default async function HomePage() {
             <a href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block text-sm">Blog</a>
             <a href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block text-sm">FAQ</a>
             <a href="/donate" className="text-purple-600 hover:text-purple-700 transition-colors font-semibold hidden sm:block text-sm">💜 Donate</a>
-            <div className="flex items-center gap-2">
-              <SignInButton variant="secondary" />
+            <SignInButton variant="secondary" />
+            <div className="hidden sm:block">
               <AuthButton variant="primary" />
             </div>
           </div>

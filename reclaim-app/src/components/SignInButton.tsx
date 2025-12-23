@@ -11,7 +11,7 @@ export default function SignInButton({ variant = 'secondary' }: SignInButtonProp
         href="/auth" 
         className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors inline-block"
       >
-        Sign In
+        Register Free
       </Link>
     )
   }
@@ -21,7 +21,7 @@ export default function SignInButton({ variant = 'secondary' }: SignInButtonProp
       href="/auth" 
       className="text-gray-700 hover:text-indigo-600 font-medium transition-colors"
     >
-      Sign In
+      Register Free
     </Link>
   )
 }
