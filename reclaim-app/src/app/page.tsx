@@ -51,12 +51,14 @@ export default async function HomePage() {
               <span className="text-xs text-gray-500 leading-tight">Your Life</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <a href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block">Blog</a>
-            <a href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block">FAQ</a>
-            <a href="/donate" className="text-purple-600 hover:text-purple-700 transition-colors font-semibold hidden sm:block">💜 Donate</a>
-            <SignInButton variant="secondary" />
-            <AuthButton variant="primary" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block text-sm">Blog</a>
+            <a href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors hidden sm:block text-sm">FAQ</a>
+            <a href="/donate" className="text-purple-600 hover:text-purple-700 transition-colors font-semibold hidden sm:block text-sm">💜 Donate</a>
+            <div className="flex items-center gap-2">
+              <SignInButton variant="secondary" />
+              <AuthButton variant="primary" />
+            </div>
           </div>
         </div>
       </header>
