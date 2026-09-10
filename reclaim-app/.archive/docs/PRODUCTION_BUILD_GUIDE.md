@@ -8,15 +8,15 @@ Create or update `.env.production.local` in the `reclaim-app` directory with all
 
 ```bash
 # Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://gstiokcvqmxiaqzmtzmv.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+NEXT_PUBLIC_SUPABASE_URL=<from .env.local>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<from .env.local>
+SUPABASE_SERVICE_ROLE_KEY=<from .env.local>
 
 # Google AI (for Narcissist Detector)
-GOOGLE_AI_API_KEY=your_google_ai_api_key_here
+GOOGLE_AI_API_KEY=<from .env.local>
 
 # Other APIs
-GLADIA_API_KEY=your_gladia_api_key_here
+GLADIA_API_KEY=<from .env.local>
 OPENAI_API_KEY=your_openai_api_key_here
 
 # App Configuration
@@ -84,11 +84,11 @@ git push origin main
 In Netlify Dashboard → Site Settings → Build & Deploy → Environment:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=https://gstiokcvqmxiaqzmtzmv.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-GOOGLE_AI_API_KEY=AIzaSy...
-GLADIA_API_KEY=e913013e-ef90-4165-8e87-d944e4740c1f
+NEXT_PUBLIC_SUPABASE_URL=<from .env.local>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<from .env.local>
+SUPABASE_SERVICE_ROLE_KEY=<from .env.local>
+GOOGLE_AI_API_KEY=<from .env.local>
+GLADIA_API_KEY=<from .env.local>
 OPENAI_API_KEY=sk-...
 NEXT_PUBLIC_APP_URL=https://your-domain.netlify.app
 ```

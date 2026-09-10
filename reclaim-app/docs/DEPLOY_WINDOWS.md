@@ -29,112 +29,65 @@ Before deploying, you need to set your environment variables in Netlify:
 ### Option A: Via Netlify Dashboard (Recommended)
 1. Go to https://app.netlify.com
 2. Select your site (or create a new one)
-3. Go to **Site settings** â†’ **Environment variables**
-4. Add these variables:
+3. Go to **Site settings** → **Environment variables**
+4. Add these variables from your `.env.local` file:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=https://gstiokcvqmxiaqzmtzmv.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzdGlva2N2cW14aWFxem10em12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzODQ0ODYsImV4cCI6MjA3MDk2MDQ4Nn0.HuQueaqGWoU6Hn6Z51HUDspMOZek85aRWgZXxKfPSrM
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzdGlva2N2cW14aWFxem10em12Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTM4NDQ4NiwiZXhwIjoyMDcwOTYwNDg2fQ.pE3OAwQKCZjg8PGpLBPCeZpJC2kXC-du2XSGOa8CJ48
-GOOGLE_AI_API_KEY=AIzaSyCuX8ubTgKKPer_PnJe1lUul3VTZRTaUsk
-GLADIA_API_KEY=e913013e-ef90-4165-8e87-d944e4740c1f
+NEXT_PUBLIC_SUPABASE_URL=<from .env.local>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<from .env.local>
+SUPABASE_SERVICE_ROLE_KEY=<from .env.local>
+GOOGLE_AI_API_KEY=<from .env.local>
+GLADIA_API_KEY=<from .env.local>
 NEXT_PUBLIC_V3_MOBILE=0
 ```
 
 ### Option B: Via CLI
 ```cmd
-netlify env:set NEXT_PUBLIC_SUPABASE_URL "https://gstiokcvqmxiaqzmtzmv.supabase.co"
-netlify env:set NEXT_PUBLIC_SUPABASE_ANON_KEY "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzdGlva2N2cW14aWFxem10em12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzODQ0ODYsImV4cCI6MjA3MDk2MDQ4Nn0.HuQueaqGWoU6Hn6Z51HUDspMOZek85aRWgZXxKfPSrM"
-netlify env:set SUPABASE_SERVICE_ROLE_KEY "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzdGlva2N2cW14aWFxem10em12Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTM4NDQ4NiwiZXhwIjoyMDcwOTYwNDg2fQ.pE3OAwQKCZjg8PGpLBPCeZpJC2kXC-du2XSGOa8CJ48"
-netlify env:set GOOGLE_AI_API_KEY "AIzaSyCuX8ubTgKKPer_PnJe1lUul3VTZRTaUsk"
-netlify env:set GLADIA_API_KEY "e913013e-ef90-4165-8e87-d944e4740c1f"
+netlify env:set NEXT_PUBLIC_SUPABASE_URL "<value from .env.local>"
+netlify env:set NEXT_PUBLIC_SUPABASE_ANON_KEY "<value from .env.local>"
+netlify env:set SUPABASE_SERVICE_ROLE_KEY "<value from .env.local>"
+netlify env:set GOOGLE_AI_API_KEY "<value from .env.local>"
+netlify env:set GLADIA_API_KEY "<value from .env.local>"
 netlify env:set NEXT_PUBLIC_V3_MOBILE "0"
 ```
 
 ## Step 5: Deploy!
 
-### Method 1: Using the Batch Script (Easiest)
-```cmd
-deploy.bat
-```
+### Option A: Deploy from Git (Recommended)
+1. Push your code to GitHub
+2. In Netlify dashboard, link your repo
+3. Set build settings:
+   - Base directory: `reclaim-app`
+   - Build command: `npm install && npm run build`
+   - Publish directory: `.next`
+4. Set environment variables (see Step 4)
+5. Deploy!
 
-### Method 2: Manual Commands
-
-1. **Test build locally first:**
-```cmd
-npm run build
-```
-
-2. **If build succeeds, deploy to production:**
+### Option B: Manual Deploy
 ```cmd
 netlify deploy --prod
 ```
 
-3. **Follow the prompts:**
-   - Select "Create & configure a new site" (first time) or choose existing site
-   - Choose your team
-   - Enter site name (or leave blank for random name)
-   - Confirm the publish directory: `.next`
+## Step 6: Verify Deployment
 
-## Step 6: Update Supabase Settings
-
-After deployment, you'll get a Netlify URL like: `https://your-site.netlify.app`
-
-1. Go to your Supabase Dashboard: https://supabase.com/dashboard
-2. Select your project
-3. Go to **Authentication** â†’ **URL Configuration**
-4. Add your Netlify URL to:
-   - **Site URL**: `https://your-site.netlify.app`
-   - **Redirect URLs**: Add `https://your-site.netlify.app/**`
+1. Visit your Netlify URL
+2. Check that all pages load correctly
+3. Test the checkout flow
+4. Verify environment variables are working
 
 ## Troubleshooting
 
 ### Build Fails
-```cmd
-# Clear cache and rebuild
-rmdir /s /q .next
-rmdir /s /q node_modules
-npm install
-npm run build
-```
+- Ensure Node.js 18+ is installed
+- Check that all environment variables are set in Netlify
+- Verify the build command works locally: `npm install && npm run build`
 
-### "netlify: command not found"
-```cmd
-# Reinstall Netlify CLI
-npm uninstall -g netlify-cli
-npm install -g netlify-cli
-```
+### Pages Not Loading
+- Check the Netlify function logs
+- Verify the publish directory is correct (`.next`)
+- Ensure the `@netlify/plugin-nextjs` plugin is active
 
-### Environment Variables Not Working
-- Make sure you set them in Netlify Dashboard
-- Redeploy after setting variables
-- Check variable names match exactly (case-sensitive)
-
-## Quick Commands Reference
-
-```cmd
-# Login to Netlify
-netlify login
-
-# Check current site status
-netlify status
-
-# View environment variables
-netlify env:list
-
-# Deploy to production
-netlify deploy --prod
-
-# Open site in browser
-netlify open:site
-
-# View deployment logs
-netlify logs
-```
-
-## Next Steps After Deployment
-
-1. âœ… Test your live site
-2. âœ… Set up custom domain (optional)
-3. âœ… Enable automatic deployments from Git
-4. âœ… Set up monitoring and alerts
+### API Routes Not Working
+- Check that environment variables are set in Netlify
+- Verify the API routes are properly configured
+- Check Netlify function logs for errors

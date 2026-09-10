@@ -20,8 +20,8 @@ Cloudflare Turnstile has been integrated into the registration and login pages t
 ### Configuration
 Keys are stored in `.env.local`:
 ```
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=0x4AAAAAACHvmqj6aVkicEsF
-TURNSTILE_SECRET_KEY=0x4AAAAAACHvmkCDaM8h8TVwPxF3bfwSTv4
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=<from .env.local>
+TURNSTILE_SECRET_KEY=<from .env.local>
 ```
 
 ## Features
