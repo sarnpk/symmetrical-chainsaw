@@ -41,7 +41,7 @@ Keep response supportive, professional, and focused on acceptance rather than ch
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
+        generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
       })
     });
 
