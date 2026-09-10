@@ -14,11 +14,11 @@ export function middleware(request: NextRequest) {
   // Content Security Policy
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://sandbox.paddle.com https://cdn.paddle.com https://buy.paddle.com https://challenges.cloudflare.com https://www.googletagmanager.com",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://sandbox.paddle.com https://cdn.paddle.com https://buy.paddle.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com",
     "style-src 'self' 'unsafe-inline' https://cdn.paddle.com",
     "img-src 'self' data: blob: https:",
     "font-src 'self'",
-    "connect-src 'self' https://*.supabase.co https://sandbox.paddle.com https://cdn.paddle.com https://api.paddle.com https://buy.paddle.com https://challenges.cloudflare.com",
+    "connect-src 'self' https://*.supabase.co https://sandbox.paddle.com https://cdn.paddle.com https://api.paddle.com https://buy.paddle.com https://checkout-service.paddle.com https://challenges.cloudflare.com https://www.google-analytics.com https://www.google.com",
     "frame-src https://sandbox.paddle.com https://cdn.paddle.com https://buy.paddle.com https://challenges.cloudflare.com",
     "object-src 'none'",
     "base-uri 'self'",
