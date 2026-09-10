@@ -14,12 +14,12 @@ export function middleware(request: NextRequest) {
   // Content Security Policy
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://challenges.cloudflare.com https://www.googletagmanager.com",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://sandbox.paddle.com https://cdn.paddle.com https://challenges.cloudflare.com https://www.googletagmanager.com",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self'",
-    "connect-src 'self' https://*.supabase.co https://api.stripe.com https://challenges.cloudflare.com",
-    "frame-src https://js.stripe.com https://challenges.cloudflare.com",
+    "connect-src 'self' https://*.supabase.co https://sandbox.paddle.com https://api.paddle.com https://challenges.cloudflare.com",
+    "frame-src https://sandbox.paddle.com https://cdn.paddle.com https://challenges.cloudflare.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

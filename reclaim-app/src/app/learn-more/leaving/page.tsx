@@ -260,6 +260,60 @@ export default function LeavingPage() {
           </div>
         </section>
 
+        {/* FAQ */}
+        <section className="mx-auto max-w-4xl px-4 py-12">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: [
+                  {
+                    "@type": "Question",
+                    name: "How do I leave a narcissist safely?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Create a safety plan, gather important documents, secure finances, build a support network, and leave when they are not home if possible. Contact the National DV Hotline at 1-800-799-7233 for help.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "What is the no contact rule?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "No contact means cutting off all communication with the narcissist. Block their number, email, and social media. If you share children, use a co-parenting app for all communication.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "How do I handle hoovering?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Hoovering is when a narcissist tries to pull you back after you leave. Recognize the tactics: love bombing, promises to change, guilt trips, and using children as messengers. Stay firm in your decision.",
+                    },
+                  },
+                ],
+              }),
+            }}
+          />
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">How do I leave a narcissist safely?</h3>
+              <p className="text-gray-600">Create a safety plan, gather important documents, secure finances, build a support network, and leave when they are not home if possible. Contact the National DV Hotline at 1-800-799-7233 for help.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">What is the no contact rule?</h3>
+              <p className="text-gray-600">No contact means cutting off all communication with the narcissist. Block their number, email, and social media. If you share children, use a co-parenting app for all communication.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">How do I handle hoovering?</h3>
+              <p className="text-gray-600">Hoovering is when a narcissist tries to pull you back after you leave. Recognize the tactics: love bombing, promises to change, guilt trips, and using children as messengers. Stay firm in your decision.</p>
+            </div>
+          </div>
+        </section>
+
         <section className="mb-12 bg-gray-900 text-white rounded-2xl p-8 md:p-12">
           <h2 className="text-2xl font-bold mb-4">You Deserve to Be Free</h2>
           <p className="text-gray-300 text-lg mb-6 max-w-2xl">

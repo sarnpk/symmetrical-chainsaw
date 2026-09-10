@@ -580,11 +580,80 @@ export default async function HomePage() {
                   },
                 },
                 {
-                  '@type': 'Organization',
-                  name: 'Reclaim',
-                  url: 'https://reclaim.app',
+                  "@type": "Organization",
+                  name: "Reclaim",
+                  url: "https://reclaim.app",
                   description:
-                    'Evidence-based recovery tools for survivors of narcissistic abuse, including free AI-powered health checks and a private journal.',
+                    "Evidence-based recovery tools for survivors of narcissistic abuse, including free AI-powered health checks and a private journal.",
+                },
+                {
+                  "@type": "FAQPage",
+                  mainEntity: [
+                    {
+                      "@type": "Question",
+                      name: "Is my data really private?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Yes. Your data is encrypted with AES-256 -- the same standard banks use. We can't read it. We don't sell it. We don't use it to train AI models. It's yours, encrypted, and protected.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Can the person I'm documenting find out I'm using Reclaim?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "No. Reclaim has no visible branding, no push notifications with sensitive content, and can be accessed from any device. Your usage is completely invisible.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Can I use this as evidence in court?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Yes. Every entry is timestamped, cryptographically signed, and stored with GPS location. Reclaim exports are formatted for court admissibility and have been accepted in family court, divorce proceedings, and workplace harassment cases.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Do I have to create an account to try the free tools?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "No. The free assessment, relationship health check, narcissist test, discard stage test, and gaslighting check all run without signup -- entirely anonymous. Create an account only when you want to save your history.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "I'm not sure I'm being abused. Should I use this?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "That's exactly who this is for. You don't need a diagnosis. You don't need proof. If something feels wrong, Reclaim helps you understand what's happening -- without telling you what to think.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "What if I'm still in the relationship?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Reclaim is designed for people at every stage -- whether you're in it, leaving, or long gone. Safety features like decoy mode and encrypted storage are built specifically for active situations.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Can I cancel anytime?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Yes. No contracts, no penalties, no \"are you sure?\" screens. One click and you're done. Your data stays accessible even on the free plan.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "What happens to my data if I cancel?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Your data never disappears. You can export everything before canceling, and your account stays accessible even on the free Foundation tier.",
+                      },
+                    },
+                  ],
                 },
               ],
             }),

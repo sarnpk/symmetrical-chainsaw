@@ -1,15 +1,24 @@
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set')
+let stripeInstance: Stripe | null = null
+
+function getStripe(): Stripe {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not set')
+  }
+  if (!stripeInstance) {
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-12-18.acacia',
+      typescript: true,
+    })
+  }
+  return stripeInstance
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-12-18.acacia',
-  typescript: true,
-})
+export { getStripe as stripe }
 
 export const getStripeCustomerByEmail = async (email: string) => {
+  const stripe = getStripe()
   const customers = await stripe.customers.list({
     email,
     limit: 1,
@@ -18,6 +27,7 @@ export const getStripeCustomerByEmail = async (email: string) => {
 }
 
 export const createStripeCustomer = async (email: string, name?: string) => {
+  const stripe = getStripe()
   return await stripe.customers.create({
     email,
     name,
@@ -29,8 +39,9 @@ export const createPaymentIntent = async (
   currency: string = 'usd',
   customerId?: string
 ) => {
+  const stripe = getStripe()
   return await stripe.paymentIntents.create({
-    amount: Math.round(amount * 100), // Convert to cents
+    amount: Math.round(amount * 100),
     currency,
     customer: customerId,
     automatic_payment_methods: {
@@ -43,6 +54,7 @@ export const createSubscription = async (
   customerId: string,
   priceId: string
 ) => {
+  const stripe = getStripe()
   return await stripe.subscriptions.create({
     customer: customerId,
     items: [{ price: priceId }],

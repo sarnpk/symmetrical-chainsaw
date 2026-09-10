@@ -8,6 +8,7 @@ import SiteFooter from '@/components/marketing/SiteFooter'
 import SectionHeading from '@/components/marketing/SectionHeading'
 import CtaBanner from '@/components/marketing/CtaBanner'
 import Reveal from '@/components/marketing/Reveal'
+import { initPaddle, getPaddlePriceId } from '@/lib/paddle'
 
 interface SubscriptionPlan {
   plan_tier: string
@@ -49,25 +50,20 @@ export default function PricingClient() {
   const handleSubscribe = async (tier: string) => {
     setSubscribing(tier)
     try {
-      const priceIds: Record<string, string> = {
-        'recovery-monthly': process.env.NEXT_PUBLIC_STRIPE_PRICE_RECOVERY_MONTHLY || '',
-        'recovery-yearly': process.env.NEXT_PUBLIC_STRIPE_PRICE_RECOVERY_YEARLY || '',
-        'empowerment-monthly': process.env.NEXT_PUBLIC_STRIPE_PRICE_EMPOWERMENT_MONTHLY || '',
-        'empowerment-yearly': process.env.NEXT_PUBLIC_STRIPE_PRICE_EMPOWERMENT_YEARLY || ''
+      const paddle = await initPaddle()
+      const priceId = getPaddlePriceId(tier, isYearly ? 'yearly' : 'monthly')
+
+      if (!priceId) {
+        alert('Price not configured. Please try again later.')
+        setSubscribing(null)
+        return
       }
-      const priceId = priceIds[`${tier}-${isYearly ? 'yearly' : 'monthly'}`]
 
-      const res = await fetch('/api/stripe/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, email: '' })
+      paddle.Checkout.open({
+        items: [{ priceId, quantity: 1 }],
       })
-      const { sessionId } = await res.json()
-
-      const stripe = await import('@stripe/stripe-js').then(m => m.loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!))
-      await stripe?.redirectToCheckout({ sessionId })
     } catch (error) {
-      console.error('Subscription error:', error)
+      console.error('Paddle checkout error:', error)
       alert('Failed to start checkout. Please try again.')
     } finally {
       setSubscribing(null)
@@ -267,7 +263,7 @@ export default function PricingClient() {
                               : 'bg-hope-600 text-white hover:bg-hope-700'
                           }`}
                         >
-                          {subscribing === plan.plan_tier ? 'Starting checkout…' : 'Subscribe now'}
+                          {subscribing === plan.plan_tier ? 'Starting checkout...' : 'Subscribe now'}
                         </button>
                       )}
                     </div>
@@ -336,7 +332,7 @@ export default function PricingClient() {
         <div className="bg-white pb-16 -mt-4">
           <p className="text-center">
             <Link href="/blog" className="font-semibold text-brand-700 hover:text-brand-800 transition-colors">
-              Read recovery stories →
+              Read recovery stories -&gt;
             </Link>
           </p>
         </div>

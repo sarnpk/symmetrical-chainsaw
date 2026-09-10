@@ -3,6 +3,10 @@ import { createClient } from '@supabase/supabase-js'
 
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json({ error: 'Stripe not configured' }, { status: 503 })
+    }
+
     const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
     const sig = req.headers.get('stripe-signature')
     const body = await req.text()
@@ -23,13 +27,12 @@ export async function POST(req: NextRequest) {
 
       await supabase
         .from('donations')
-        .update({ 
+        .update({
           status: 'completed',
           completed_at: new Date().toISOString()
         })
         .eq('stripe_session_id', session.id)
 
-      // Grant donor badge if user exists
       if (session.metadata?.user_id && session.metadata.user_id !== 'anonymous') {
         await supabase
           .from('profiles')

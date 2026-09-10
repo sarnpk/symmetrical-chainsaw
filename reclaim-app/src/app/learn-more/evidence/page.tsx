@@ -230,6 +230,60 @@ export default function EvidencePage() {
           </div>
         </section>
 
+        {/* FAQ */}
+        <section className="mx-auto max-w-4xl px-4 py-12">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: [
+                  {
+                    "@type": "Question",
+                    name: "What counts as evidence of emotional abuse?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Text messages, emails, voicemails, recorded conversations (where legal), journal entries with timestamps, witness statements, therapist records, and financial records.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Is a journal entry admissible in court?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Yes, if it is contemporaneous (made close to the event), detailed, and consistent. Digital entries with timestamps and metadata are stronger evidence than handwritten notes.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "How do I export evidence for my attorney?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Reclaim generates court-ready PDF exports with timestamps, GPS data, and pattern analysis that attorneys can use directly in proceedings.",
+                    },
+                  },
+                ],
+              }),
+            }}
+          />
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">What counts as evidence of emotional abuse?</h3>
+              <p className="text-gray-600">Text messages, emails, voicemails, recorded conversations (where legal), journal entries with timestamps, witness statements, therapist records, and financial records.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">Is a journal entry admissible in court?</h3>
+              <p className="text-gray-600">Yes, if it is contemporaneous (made close to the event), detailed, and consistent. Digital entries with timestamps and metadata are stronger evidence than handwritten notes.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">How do I export evidence for my attorney?</h3>
+              <p className="text-gray-600">Reclaim generates court-ready PDF exports with timestamps, GPS data, and pattern analysis that attorneys can use directly in proceedings.</p>
+            </div>
+          </div>
+        </section>
+
         <section className="mb-12 bg-gray-900 text-white rounded-2xl p-8 md:p-12">
           <h2 className="text-2xl font-bold mb-4">Start Documenting Today</h2>
           <p className="text-gray-300 text-lg mb-6 max-w-2xl">

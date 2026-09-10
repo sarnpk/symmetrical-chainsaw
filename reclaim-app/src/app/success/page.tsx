@@ -8,13 +8,14 @@ import SiteHeader from '@/components/marketing/SiteHeader'
 
 function SuccessContent() {
   const searchParams = useSearchParams()
-  const sessionId = searchParams.get('session_id')
+  const checkoutId = searchParams.get('checkout_id')
+  const transactionId = searchParams.get('transaction_id')
 
   useEffect(() => {
-    if (sessionId) {
-      console.log('Payment successful:', sessionId)
+    if (checkoutId || transactionId) {
+      console.log('Paddle payment successful:', { checkoutId, transactionId })
     }
-  }, [sessionId])
+  }, [checkoutId, transactionId])
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -30,7 +31,7 @@ function SuccessContent() {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold mb-4">What's Next?</h2>
+          <h2 className="text-2xl font-bold mb-4">What&apos;s Next?</h2>
           <ul className="space-y-3 text-left">
             <li className="flex items-start gap-3">
               <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />

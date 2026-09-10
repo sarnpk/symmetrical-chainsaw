@@ -218,6 +218,72 @@ export default function GaslightingPage() {
           </div>
         </section>
 
+        {/* FAQ */}
+        <section className="mx-auto max-w-4xl px-4 py-12">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: [
+                  {
+                    "@type": "Question",
+                    name: "What is gaslighting?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Gaslighting is a form of psychological manipulation where someone makes you question your own memory, perception, and sanity. They deny things they said, twist events, and make you feel like you are going crazy.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "How do I know if I am being gaslighted?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Common signs include: constantly second-guessing yourself, feeling confused, making excuses for their behavior, feeling like you are too sensitive, and having memory gaps about conversations.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Can gaslighting happen at work?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Yes. Workplace gaslighting includes taking credit for your ideas, denying promises were made, changing deadlines and denying it, and undermining your confidence in meetings.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "How do I document gaslighting?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Keep a detailed journal with dates, times, and exact quotes. Save text messages and emails. Use Reclaim's Gaslighting Truth Journal to create timestamped, court-ready records.",
+                    },
+                  },
+                ],
+              }),
+            }}
+          />
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">What is gaslighting?</h3>
+              <p className="text-gray-600">Gaslighting is a form of psychological manipulation where someone makes you question your own memory, perception, and sanity. They deny things they said, twist events, and make you feel like you are going crazy.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">How do I know if I am being gaslighted?</h3>
+              <p className="text-gray-600">Common signs include: constantly second-guessing yourself, feeling confused, making excuses for their behavior, feeling like you are too sensitive, and having memory gaps about conversations.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">Can gaslighting happen at work?</h3>
+              <p className="text-gray-600">Yes. Workplace gaslighting includes taking credit for your ideas, denying promises were made, changing deadlines and denying it, and undermining your confidence in meetings.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">How do I document gaslighting?</h3>
+              <p className="text-gray-600">Keep a detailed journal with dates, times, and exact quotes. Save text messages and emails. Use Reclaim&apos;s Gaslighting Truth Journal to create timestamped, court-ready records.</p>
+            </div>
+          </div>
+        </section>
+
         <section className="mb-12 bg-gray-900 text-white rounded-2xl p-8 md:p-12">
           <h2 className="text-2xl font-bold mb-4">You Are Not Crazy. You Are Being Manipulated.</h2>
           <p className="text-gray-300 text-lg mb-6 max-w-2xl">

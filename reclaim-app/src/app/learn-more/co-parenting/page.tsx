@@ -227,6 +227,60 @@ export default function CoParentingPage() {
           </div>
         </section>
 
+        {/* FAQ */}
+        <section className="mx-auto max-w-4xl px-4 py-12">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: [
+                  {
+                    "@type": "Question",
+                    name: "How do I communicate with a narcissistic co-parent?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Use the BIFF method: Brief, Informative, Firm, and Friendly. Keep all communication in writing. Never engage in emotional conversations. Stick to facts about the children.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Can I modify custody because of narcissistic abuse?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Document everything. Courts look for patterns of behavior, not isolated incidents. Use timestamped records, screenshots, and professional evaluations.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "What is parallel parenting?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Parallel parenting is a custody arrangement where each parent makes decisions during their time without consulting the other. It minimizes direct conflict while protecting the children.",
+                    },
+                  },
+                ],
+              }),
+            }}
+          />
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">How do I communicate with a narcissistic co-parent?</h3>
+              <p className="text-gray-600">Use the BIFF method: Brief, Informative, Firm, and Friendly. Keep all communication in writing. Never engage in emotional conversations. Stick to facts about the children.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">Can I modify custody because of narcissistic abuse?</h3>
+              <p className="text-gray-600">Document everything. Courts look for patterns of behavior, not isolated incidents. Use timestamped records, screenshots, and professional evaluations.</p>
+            </div>
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">What is parallel parenting?</h3>
+              <p className="text-gray-600">Parallel parenting is a custody arrangement where each parent makes decisions during their time without consulting the other. It minimizes direct conflict while protecting the children.</p>
+            </div>
+          </div>
+        </section>
+
         <section className="mb-12 bg-gray-900 text-white rounded-2xl p-8 md:p-12">
           <h2 className="text-2xl font-bold mb-4">You Are Not Alone in This</h2>
           <p className="text-gray-300 text-lg mb-6 max-w-2xl">

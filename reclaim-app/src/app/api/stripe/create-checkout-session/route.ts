@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseAdmin = createClient(
@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid price ID' }, { status: 400 })
     }
 
+    const stripe = getStripe()
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
