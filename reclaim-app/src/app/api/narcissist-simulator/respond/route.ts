@@ -155,7 +155,7 @@ Generate the narcissist's response. Stay in character. React realistically to wh
 Keep response under 100 words. Return ONLY the narcissist's message.`
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' })
+    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' })
     const narcissistResult = await model.generateContent(narcissistPrompt)
     const narcissistResponse = narcissistResult.response.text()
 
