@@ -382,6 +382,37 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* Learn More — Internal Links for SEO */}
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-24">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Learn more"
+              title="Understanding is the first step to healing"
+              lead="Explore our guides to understand what you have been through and how to move forward."
+            />
+          </Reveal>
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { title: 'What Is Gaslighting?', description: 'Signs, real examples, and how to stop doubting your reality.', href: '/learn-more/gaslighting', accent: 'brand' },
+              { title: 'Co-Parenting with a Narcissist', description: 'Communication strategies and documentation for court.', href: '/learn-more/co-parenting', accent: 'hope' },
+              { title: 'Document Abuse for Court', description: 'How to build timestamped, court-admissible evidence.', href: '/learn-more/evidence', accent: 'green' },
+              { title: 'How to Leave Safely', description: 'Safety planning, no contact, and recovery resources.', href: '/learn-more/leaving', accent: 'red' },
+            ].map((item, i) => (
+              <Reveal key={item.href} delay={i * 80}>
+                <Link href={item.href} className="block h-full">
+                  <div className={`h-full rounded-2xl border p-6 transition-all hover:-translate-y-1 hover:shadow-lift ${item.accent === 'brand' ? 'border-brand-200 bg-white' : item.accent === 'hope' ? 'border-hope-200 bg-white' : item.accent === 'green' ? 'border-green-200 bg-white' : 'border-dawn-100 bg-white'}`}>
+                    <h3 className="font-display text-lg font-semibold text-ink-900">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-ink-600">{item.description}</p>
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
+                      Read more <span aria-hidden="true">→</span>
+                    </span>
+                  </div>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
         {/* Stats rail */}
         <section className="border-y border-ink-200/70 bg-ink-50 py-14">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
