@@ -121,7 +121,7 @@ export default function GreyRockSessionDetailPage() {
                       <div className="text-sm font-medium text-gray-900">{(a.metadata as any)?.scenario_title || a.scenario_id}</div>
                       <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${a.is_correct ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>{a.is_correct ? 'Correct' : 'Incorrect'}</span>
                     </div>
-                    <div className="mt-1 text-xs text-gray-500">{new Date(a.created_at).toLocaleTimeString()} • {a.difficulty || '-'} • {a.latency_ms ? `${a.latency_ms} ms` : '-'}</div>
+                    <div className="mt-1 text-xs text-gray-500">{new Date(a.created_at).toLocaleTimeString()} " {a.difficulty || '-'} " {a.latency_ms ? `${a.latency_ms} ms` : '-'}</div>
                     <div className="mt-2 text-sm text-gray-700">Selected: <span className="text-gray-900">{a.selected_response}</span></div>
                   </div>
                 ))}

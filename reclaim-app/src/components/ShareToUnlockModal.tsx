@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Share2, Facebook, Twitter, MessageCircle, Lock, Unlock } from 'lucide-react'
 import { useState } from 'react'

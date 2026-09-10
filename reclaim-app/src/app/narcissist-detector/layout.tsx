@@ -1,4 +1,4 @@
-﻿export const metadata = {
+export const metadata = {
   title: 'Narcissist Detector - Reclaim',
   description: 'Analyze text to identify narcissistic patterns and manipulation tactics',
 }

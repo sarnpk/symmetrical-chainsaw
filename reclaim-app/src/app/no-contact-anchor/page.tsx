@@ -1,4 +1,4 @@
-﻿import { createServerSupabase } from '@/lib/supabase-server';
+import { createServerSupabase } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import NoContactAnchorContent from './NoContactAnchorContent';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -32,11 +32,11 @@ export default async function NoContactAnchorPage() {
           <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-6 mb-6">
             <h2 className="font-semibold text-indigo-900 mb-2">What you'll get:</h2>
             <ul className="text-left text-indigo-800 space-y-2">
-              <li>âœ… Track your no-contact streak</li>
-              <li>âœ… Crisis intervention tool</li>
-              <li>âœ… Urge intensity tracking & graphs</li>
-              <li>âœ… Milestone badges & achievements</li>
-              <li>âœ… "Why I Left" anchor list</li>
+              <li>�S& Track your no-contact streak</li>
+              <li>�S& Crisis intervention tool</li>
+              <li>�S& Urge intensity tracking & graphs</li>
+              <li>�S& Milestone badges & achievements</li>
+              <li>�S& "Why I Left" anchor list</li>
             </ul>
           </div>
           <Link

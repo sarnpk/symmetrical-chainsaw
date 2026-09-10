@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { Metadata } from "next"
 import { ArrowLeft, Clock, User, BookOpen, ExternalLink, Shield, Eye, Phone } from "lucide-react"
 import QuizShell from "@/components/marketing/QuizShell"

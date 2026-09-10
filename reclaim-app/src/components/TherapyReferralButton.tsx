@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { Heart, ExternalLink, Phone } from 'lucide-react';
 
@@ -204,7 +204,7 @@ export default function TherapyReferralButton({
       )}
 
       <div className="mt-2 text-xs text-gray-500 text-center">
-        Secure referral â€¢ Trauma-informed specialists â€¢ Confidential
+        Secure referral ⬢ Trauma-informed specialists ⬢ Confidential
       </div>
     </div>
   );

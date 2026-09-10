@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React from 'react'
 
@@ -72,20 +72,20 @@ export default function DirectTestPage() {
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <h3 className="font-semibold text-blue-800 mb-2">What this test does:</h3>
             <ul className="text-sm text-blue-700 space-y-1">
-              <li>â€¢ Makes a POST request to <code>/api/test-transcribe</code></li>
-              <li>â€¢ Uses test audio URL: <code>BabyElephantWalk60.wav</code></li>
-              <li>â€¢ Should return a job_id if successful</li>
-              <li>â€¢ Logs everything to browser console</li>
-              <li>â€¢ Shows raw response data</li>
+              <li>⬢ Makes a POST request to <code>/api/test-transcribe</code></li>
+              <li>⬢ Uses test audio URL: <code>BabyElephantWalk60.wav</code></li>
+              <li>⬢ Should return a job_id if successful</li>
+              <li>⬢ Logs everything to browser console</li>
+              <li>⬢ Shows raw response data</li>
             </ul>
           </div>
           
           <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
             <h3 className="font-semibold text-yellow-800 mb-2">Expected Results:</h3>
             <ul className="text-sm text-yellow-700 space-y-1">
-              <li>â€¢ <strong>Success:</strong> Status 200, success: true, job_id returned</li>
-              <li>â€¢ <strong>API Key Missing:</strong> Status 500, error about GLADIA_API_KEY</li>
-              <li>â€¢ <strong>Network Error:</strong> Fetch fails completely</li>
+              <li>⬢ <strong>Success:</strong> Status 200, success: true, job_id returned</li>
+              <li>⬢ <strong>API Key Missing:</strong> Status 500, error about GLADIA_API_KEY</li>
+              <li>⬢ <strong>Network Error:</strong> Fetch fails completely</li>
             </ul>
           </div>
         </div>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -511,11 +511,11 @@ export default function EmpathyAuditPage() {
             <div className="border rounded-lg p-6 bg-amber-50">
               <h3 className="font-semibold mb-3">ðŸ’¡ Guilt-Busting Affirmations</h3>
               <ul className="space-y-2 text-sm">
-                <li>â€¢ Detaching from her is not cruelâ€”it's survival</li>
-                <li>â€¢ My children need a stable parent, not one drained by her chaos</li>
-                <li>â€¢ I'm not abandoning herâ€”she's an adult responsible for herself</li>
-                <li>â€¢ Protecting my peace is protecting my children</li>
-                <li>â€¢ I deserve to redirect my empathy to those who reciprocate</li>
+                <li>⬢ Detaching from her is not cruelâ€”it's survival</li>
+                <li>⬢ My children need a stable parent, not one drained by her chaos</li>
+                <li>⬢ I'm not abandoning herâ€”she's an adult responsible for herself</li>
+                <li>⬢ Protecting my peace is protecting my children</li>
+                <li>⬢ I deserve to redirect my empathy to those who reciprocate</li>
               </ul>
             </div>
           </div>

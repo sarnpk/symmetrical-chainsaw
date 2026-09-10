@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -1237,7 +1237,7 @@ export default function NewJournalEntryPage() {
                     disabled={suggesting}
                     aria-label="Suggest title"
                   >
-                    {suggesting ? 'Getting suggestionsâ€¦' : 'Suggest title'}
+                    {suggesting ? 'Getting suggestions⬦' : 'Suggest title'}
                   </button>
                 </div>
                 <input
@@ -1455,7 +1455,7 @@ export default function NewJournalEntryPage() {
                     )}
 
                     {aiLoading && (
-                      <div className="text-xs text-gray-600">Analyzing your descriptionâ€¦</div>
+                      <div className="text-xs text-gray-600">Analyzing your description⬦</div>
                     )}
                   </div>
                 )}
@@ -1968,7 +1968,7 @@ export default function NewJournalEntryPage() {
                 {/* Transcription usage badge */}
                 <div className="mt-2">
                   {txUsageLoading ? (
-                    <span className="text-xs text-gray-500">Checking transcription usageâ€¦</span>
+                    <span className="text-xs text-gray-500">Checking transcription usage⬦</span>
                   ) : txUsageError ? (
                     <span className="text-xs text-red-600">{txUsageError}</span>
                   ) : txUsage ? (
@@ -1976,7 +1976,7 @@ export default function NewJournalEntryPage() {
                       <span className="text-xs text-gray-600">Transcription is not available on Foundation.</span>
                     ) : (
                       <span className={`text-xs font-medium px-2 py-1 rounded-full ${typeof txUsage.remainingMinutes === 'number' && txUsage.remainingMinutes <= 20 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}>
-                        {`Transcription quota: ${txUsage.usedMinutes} min used Â· ${txUsage.limitMinutes === 'unlimited' ? 'unlimited' : txUsage.remainingMinutes + ' min'} left this month`}
+                        {`Transcription quota: ${txUsage.usedMinutes} min used · ${txUsage.limitMinutes === 'unlimited' ? 'unlimited' : txUsage.remainingMinutes + ' min'} left this month`}
                       </span>
                     )
                   ) : null}
@@ -2009,7 +2009,7 @@ export default function NewJournalEntryPage() {
                                 disabled
                                 className="px-3 py-1.5 text-xs rounded-md bg-gray-200 text-gray-700"
                               >
-                                Transcribingâ€¦
+                                Transcribing⬦
                               </button>
                             )}
                             <button
@@ -2232,10 +2232,10 @@ export default function NewJournalEntryPage() {
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-blue-900 mb-2">ðŸ’¡ Remember</h3>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>â€¢ You don't need to select every behavior that applies</li>
-                    <li>â€¢ This section is completely optional</li>
-                    <li>â€¢ Your entries are private and secure</li>
-                    <li>â€¢ Documenting patterns can help you and professionals understand your situation</li>
+                    <li>⬢ You don't need to select every behavior that applies</li>
+                    <li>⬢ This section is completely optional</li>
+                    <li>⬢ Your entries are private and secure</li>
+                    <li>⬢ Documenting patterns can help you and professionals understand your situation</li>
                   </ul>
                 </div>
 
@@ -2280,7 +2280,7 @@ export default function NewJournalEntryPage() {
               </ul>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-800">
                 <div className="text-xs font-medium text-gray-600 mb-1">Example</div>
-                <p>Partner denied saying hurtful things I have in messages, insisted I â€œimagined it,â€ and said Iâ€™m too sensitive. I started doubting my memory despite the proof.</p>
+                <p>Partner denied saying hurtful things I have in messages, insisted I â€œimagined it,⬝ and said Iâ€™m too sensitive. I started doubting my memory despite the proof.</p>
               </div>
               <p className="text-xs text-gray-600">Tip: Longer, concrete details improve AI suggestions. Minimum ~20 characters.</p>
             </div>

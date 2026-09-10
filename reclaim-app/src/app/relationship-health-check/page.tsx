@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { AlertTriangle, CheckCircle, Shield, Brain, Heart } from 'lucide-react'
@@ -100,7 +100,7 @@ export default function RelationshipHealthCheckPage() {
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <div className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            â¤ï¸ Free Assessment - No Signup Required
+            ❤️ Free Assessment - No Signup Required
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Is Your Relationship <span className="text-green-600">Healthy</span>?

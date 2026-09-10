@@ -1,4 +1,4 @@
-﻿import { Metadata } from 'next'
+import { Metadata } from 'next'
 import { Shield, Anchor, Brain, Heart } from 'lucide-react'
 import AuthButton from '@/components/AuthButton'
 
@@ -56,10 +56,10 @@ export default function RealityAnchorStopsGaslightingPage() {
           <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
             <h3 className="text-lg font-semibold text-red-900 mb-2">Gaslighting by the Numbers:</h3>
             <ul className="text-red-800 space-y-2">
-              <li>â€¢ <strong>83% of abuse survivors</strong> report questioning their own sanity</li>
-              <li>â€¢ Average victim loses confidence in their memory within <strong>6 months</strong></li>
-              <li>â€¢ <strong>91% say</strong> gaslighting was the most damaging part of their abuse</li>
-              <li>â€¢ Recovery from gaslighting takes <strong>2-5 years</strong> without intervention</li>
+              <li>⬢ <strong>83% of abuse survivors</strong> report questioning their own sanity</li>
+              <li>⬢ Average victim loses confidence in their memory within <strong>6 months</strong></li>
+              <li>⬢ <strong>91% say</strong> gaslighting was the most damaging part of their abuse</li>
+              <li>⬢ Recovery from gaslighting takes <strong>2-5 years</strong> without intervention</li>
             </ul>
           </div>
 
@@ -70,19 +70,19 @@ export default function RealityAnchorStopsGaslightingPage() {
               <div>
                 <h4 className="font-semibold text-gray-800 mb-3">Memory Attacks:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
-                  <li>â€¢ "That never happened"</li>
-                  <li>â€¢ "You're imagining things"</li>
-                  <li>â€¢ "I never said that"</li>
-                  <li>â€¢ "You're remembering it wrong"</li>
+                  <li>⬢ "That never happened"</li>
+                  <li>⬢ "You're imagining things"</li>
+                  <li>⬢ "I never said that"</li>
+                  <li>⬢ "You're remembering it wrong"</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-800 mb-3">Emotional Invalidation:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
-                  <li>â€¢ "You're being too sensitive"</li>
-                  <li>â€¢ "You're overreacting"</li>
-                  <li>â€¢ "You're crazy"</li>
-                  <li>â€¢ "No one else has a problem with me"</li>
+                  <li>⬢ "You're being too sensitive"</li>
+                  <li>⬢ "You're overreacting"</li>
+                  <li>⬢ "You're crazy"</li>
+                  <li>⬢ "No one else has a problem with me"</li>
                 </ul>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function RealityAnchorStopsGaslightingPage() {
                     and the manipulation tactics you're facing.
                   </p>
                   <div className="bg-amber-100 p-3 rounded text-sm text-amber-700">
-                    <strong>Examples:</strong> "I am not responsible for their emotions" â€¢ "My boundaries matter" â€¢ 
+                    <strong>Examples:</strong> "I am not responsible for their emotions" ⬢ "My boundaries matter" ⬢ 
                     "I deserve respect and kindness"
                   </div>
                 </div>
@@ -250,10 +250,10 @@ export default function RealityAnchorStopsGaslightingPage() {
           <div className="bg-amber-50 border border-amber-200 p-6 rounded-lg mb-8">
             <h4 className="font-semibold text-amber-900 mb-3">Free Resources to Get Started:</h4>
             <ul className="text-amber-800 space-y-2">
-              <li>â€¢ Download our Reality Anchor Quick Start Guide</li>
-              <li>â€¢ Access 15 free AI conversations to practice the technique</li>
-              <li>â€¢ Join our survivor community for support and accountability</li>
-              <li>â€¢ Get personalized mantras based on your specific situation</li>
+              <li>⬢ Download our Reality Anchor Quick Start Guide</li>
+              <li>⬢ Access 15 free AI conversations to practice the technique</li>
+              <li>⬢ Join our survivor community for support and accountability</li>
+              <li>⬢ Get personalized mantras based on your specific situation</li>
             </ul>
           </div>
 

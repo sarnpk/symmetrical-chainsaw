@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -196,7 +196,7 @@ export default function EnhancedTraitLibrary({ userId, subscriptionTier }: Enhan
                   <div className="flex-1">
                     <div className="font-medium">{freq.trait_name}</div>
                     <div className="text-sm text-gray-600">
-                      {freq.occurrence_count} times â€¢ Avg intensity: {freq.intensity_average.toFixed(1)}/5
+                      {freq.occurrence_count} times ⬢ Avg intensity: {freq.intensity_average.toFixed(1)}/5
                     </div>
                   </div>
                   <div className="text-right">

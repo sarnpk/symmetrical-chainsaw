@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState } from 'react'
 
@@ -128,11 +128,11 @@ export default function FinalFixPage() {
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
             <h3 className="font-semibold text-blue-800 mb-2">ðŸ”§ What This Fix Does:</h3>
             <ul className="text-sm text-blue-700 space-y-1">
-              <li>â€¢ <strong>Corrected Path:</strong> Looks at <code>result.result.transcription.full_transcript</code></li>
-              <li>â€¢ <strong>Fallback Paths:</strong> Also checks <code>result.result.transcription.utterances</code></li>
-              <li>â€¢ <strong>Legacy Support:</strong> Still supports old API formats</li>
-              <li>â€¢ <strong>Detailed Logging:</strong> Shows exactly what paths are checked</li>
-              <li>â€¢ <strong>Database Update:</strong> Updates your evidence_files table on success</li>
+              <li>⬢ <strong>Corrected Path:</strong> Looks at <code>result.result.transcription.full_transcript</code></li>
+              <li>⬢ <strong>Fallback Paths:</strong> Also checks <code>result.result.transcription.utterances</code></li>
+              <li>⬢ <strong>Legacy Support:</strong> Still supports old API formats</li>
+              <li>⬢ <strong>Detailed Logging:</strong> Shows exactly what paths are checked</li>
+              <li>⬢ <strong>Database Update:</strong> Updates your evidence_files table on success</li>
             </ul>
             
             <div className="mt-3 p-2 bg-blue-100 rounded">

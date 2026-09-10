@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { 
@@ -409,7 +409,7 @@ export default function PatternsContent() {
                           <ul className="list-disc pl-5 text-sm text-gray-700">
                             {risk.evidence_refs.slice(0,5).map((e) => (
                               <li key={e.entry_id} className="truncate">
-                                <a className="text-indigo-600 hover:underline" href={`/journal/${e.entry_id}`}>{new Date(e.incident_date).toLocaleDateString()} Â· {e.matched_signals.join(', ') || 'signals'}</a>
+                                <a className="text-indigo-600 hover:underline" href={`/journal/${e.entry_id}`}>{new Date(e.incident_date).toLocaleDateString()} · {e.matched_signals.join(', ') || 'signals'}</a>
                                 <div className="text-gray-500 line-clamp-2">{e.snippet}</div>
                               </li>
                             ))}
@@ -568,10 +568,10 @@ export default function PatternsContent() {
                 <ul className="space-y-2 text-gray-600">
                   {analysis && analysis.totalEntries > 0 ? (
                     <>
-                      <li>â€¢ Total incidents analyzed: {analysis.totalEntries}</li>
-                      <li>â€¢ Top behavior types: {Object.entries(analysis.abuseTypeFrequency).sort((a,b)=> (b[1] as number)-(a[1] as number)).slice(0,3).map(([t,c])=>`${t} (${c as number})`).join(', ') || 'N/A'}</li>
-                      <li>â€¢ Peak days: {Object.entries(analysis.timePatterns).sort((a,b)=> (b[1] as number)-(a[1] as number)).slice(0,2).map(([d])=>d).join(', ') || 'N/A'}</li>
-                      <li>â€¢ See AI-generated insights below.</li>
+                      <li>⬢ Total incidents analyzed: {analysis.totalEntries}</li>
+                      <li>⬢ Top behavior types: {Object.entries(analysis.abuseTypeFrequency).sort((a,b)=> (b[1] as number)-(a[1] as number)).slice(0,3).map(([t,c])=>`${t} (${c as number})`).join(', ') || 'N/A'}</li>
+                      <li>⬢ Peak days: {Object.entries(analysis.timePatterns).sort((a,b)=> (b[1] as number)-(a[1] as number)).slice(0,2).map(([d])=>d).join(', ') || 'N/A'}</li>
+                      <li>⬢ See AI-generated insights below.</li>
                     </>
                   ) : (
                     <li>No data available.</li>

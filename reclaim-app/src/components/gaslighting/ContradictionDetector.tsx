@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -75,7 +75,7 @@ export default function ContradictionDetector({ statements }: { statements: any[
                               {c.contradiction_type.replace('_', ' ')}
                             </div>
                             <div className="text-sm text-gray-600 mb-2">
-                              {c.days_apart} days apart â€¢ {Math.round(c.confidence * 100)}% confidence
+                              {c.days_apart} days apart ⬢ {Math.round(c.confidence * 100)}% confidence
                             </div>
                           </div>
                         </div>

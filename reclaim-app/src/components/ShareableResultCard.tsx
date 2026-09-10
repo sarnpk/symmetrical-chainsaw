@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Download, Instagram } from 'lucide-react'
 import { useRef } from 'react'

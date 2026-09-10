@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
@@ -219,7 +219,7 @@ export default function BIFFAssistant() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-2">BIFF Communication Assistant</h1>
-              <p className="text-gray-600 text-sm">Brief â€¢ Informative â€¢ Friendly â€¢ Firm</p>
+              <p className="text-gray-600 text-sm">Brief ⬢ Informative ⬢ Friendly ⬢ Firm</p>
               <p className="text-indigo-600 text-xs font-medium mt-1">Radical Non-Engagement Tool</p>
             </div>
             <Link href="/docs/BIFF_ASSISTANT_USER_GUIDE.html" target="_blank">
@@ -497,8 +497,8 @@ export default function BIFFAssistant() {
                   <div className="text-gray-700">{c.response_text?.substring(0, 100)}...</div>
                   <div className="mt-2 text-xs text-gray-500">
                     BIFF Score: {c.biff_score}/10
-                    {c.jade_detected && ' â€¢ JADE detected'}
-                    {c.cooling_off_used && ' â€¢ Cooling-off used'}
+                    {c.jade_detected && ' ⬢ JADE detected'}
+                    {c.cooling_off_used && ' ⬢ Cooling-off used'}
                   </div>
                 </div>
               ))

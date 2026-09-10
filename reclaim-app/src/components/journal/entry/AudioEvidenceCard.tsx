@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -252,7 +252,7 @@ export default function AudioEvidenceCard({ evidenceFiles, evidenceUrls }: Audio
                   <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full">Completed</span>
                 )}
                 {file.transcription_status === 'processing' && (
-                  <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">Processingâ€¦</span>
+                  <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">Processing⬦</span>
                 )}
                 {file.transcription_status === 'failed' && (
                   <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full">Failed</span>

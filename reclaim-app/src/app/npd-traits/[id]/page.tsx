@@ -176,7 +176,7 @@ export default function TraitDetailPage() {
             <ul className="space-y-3">
               {trait.examples.map((example, idx) => (
                 <li key={idx} className="flex items-start gap-3">
-                  <span className="text-indigo-600 font-bold mt-1">•</span>
+                  <span className="text-indigo-600 font-bold mt-1">"</span>
                   <span className="text-gray-700">{replacePronouns(example, profile?.abuser_gender)}</span>
                 </li>
               ))}
@@ -195,7 +195,7 @@ export default function TraitDetailPage() {
             <ul className="space-y-3">
               {trait.response_strategies.map((strategy, idx) => (
                 <li key={idx} className="flex items-start gap-3">
-                  <span className="text-green-600 font-bold mt-1">✓</span>
+                  <span className="text-green-600 font-bold mt-1"></span>
                   <span className="text-gray-700">{replacePronouns(strategy, profile?.abuser_gender)}</span>
                 </li>
               ))}

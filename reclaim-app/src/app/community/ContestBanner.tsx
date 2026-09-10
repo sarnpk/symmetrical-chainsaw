@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { Trophy, TrendingUp, Award, Gift } from 'lucide-react'

@@ -1,4 +1,4 @@
-﻿// Static crisis intervention data based on evidence-based techniques
+// Static crisis intervention data based on evidence-based techniques
 
 export type ConditionType = 'anxiety' | 'depression' | 'ptsd' | 'social_anxiety' | 'ocd';
 

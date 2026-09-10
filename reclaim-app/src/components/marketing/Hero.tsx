@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { CheckCircle2 } from 'lucide-react'
 
 const trustPoints = [
@@ -69,22 +69,22 @@ export default function Hero() {
                 <span className="h-2.5 w-2.5 rounded-full bg-dawn-300" />
                 <span className="h-2.5 w-2.5 rounded-full bg-ink-200" />
                 <span className="h-2.5 w-2.5 rounded-full bg-ink-200" />
-                <span className="ml-3 text-xs font-medium text-ink-400">Reality Log Â· Evidence</span>
+                <span className="ml-3 text-xs font-medium text-ink-400">Reality Log · Evidence</span>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between rounded-lg bg-brand-50 px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm text-white">â€¢</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm text-white">⬢</span>
                     <div>
-                      <p className="text-sm font-semibold text-ink-900">March 12 Â· 9:41 PM</p>
-                      <p className="text-xs text-ink-500">Gaslighting Â· silent treatment</p>
+                      <p className="text-sm font-semibold text-ink-900">March 12 · 9:41 PM</p>
+                      <p className="text-xs text-ink-500">Gaslighting · silent treatment</p>
                     </div>
                   </div>
                   <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-brand-700">Recorded</span>
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-hope-50 px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-hope-600 text-sm text-white">â€¢</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-hope-600 text-sm text-white">⬢</span>
                     <div>
                       <p className="text-sm font-semibold text-ink-900">Manipulation decoded</p>
                       <p className="text-xs text-ink-500">Hoovering pattern detected</p>

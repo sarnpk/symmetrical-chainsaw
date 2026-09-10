@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { Shield, Plus, Trash2, AlertTriangle, TrendingDown, Calendar, HelpCircle } from 'lucide-react'
@@ -159,7 +159,7 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
             <div className="text-5xl font-bold mb-2">{stats.daysNoContact}</div>
             <div className="text-xl">Days No Contact ðŸ›¡ï¸</div>
             <div className="mt-4 text-sm opacity-90">
-              {stats.totalUrgesLogged} urges logged â€¢ Avg intensity: {stats.avgUrgeIntensity}/10
+              {stats.totalUrgesLogged} urges logged ⬢ Avg intensity: {stats.avgUrgeIntensity}/10
             </div>
             {milestones?.nextMilestone && (
               <div className="mt-3 text-sm opacity-90">

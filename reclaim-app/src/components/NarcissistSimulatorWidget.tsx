@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Bot, Target, TrendingUp, Play } from 'lucide-react'

@@ -1,4 +1,4 @@
-﻿import { Metadata } from 'next'
+import { Metadata } from 'next'
 import { Shield, Brain, MessageSquare, AlertTriangle } from 'lucide-react'
 import AuthButton from '@/components/AuthButton'
 
@@ -56,9 +56,9 @@ export default function AIDetectsNarcissisticAbusePage() {
           <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
             <h3 className="text-lg font-semibold text-red-900 mb-2">The Shocking Reality:</h3>
             <ul className="text-red-800 space-y-2">
-              <li>â€¢ Average victim endures <strong>7 years</strong> before recognizing abuse</li>
-              <li>â€¢ <strong>84% of survivors</strong> wish they identified patterns sooner</li>
-              <li>â€¢ Abusers make victims question their own reality</li>
+              <li>⬢ Average victim endures <strong>7 years</strong> before recognizing abuse</li>
+              <li>⬢ <strong>84% of survivors</strong> wish they identified patterns sooner</li>
+              <li>⬢ Abusers make victims question their own reality</li>
             </ul>
           </div>
 
@@ -86,16 +86,16 @@ export default function AIDetectsNarcissisticAbusePage() {
           <div className="bg-gray-50 p-6 rounded-lg mb-8">
             <h4 className="font-semibold text-gray-900 mb-3">Gaslighting Phrases:</h4>
             <ul className="text-gray-700 space-y-2 mb-4">
-              <li>â€¢ "You're being too sensitive" (Emotional invalidation)</li>
-              <li>â€¢ "That never happened" (Reality distortion)</li>
-              <li>â€¢ "You're imagining things" (Perception undermining)</li>
+              <li>⬢ "You're being too sensitive" (Emotional invalidation)</li>
+              <li>⬢ "That never happened" (Reality distortion)</li>
+              <li>⬢ "You're imagining things" (Perception undermining)</li>
             </ul>
             
             <h4 className="font-semibold text-gray-900 mb-3">Advanced Tactics:</h4>
             <ul className="text-gray-700 space-y-2">
-              <li>â€¢ <strong>Triangulation:</strong> Using others to create jealousy</li>
-              <li>â€¢ <strong>Projection:</strong> Accusing you of their behaviors</li>
-              <li>â€¢ <strong>Future Faking:</strong> False promises for control</li>
+              <li>⬢ <strong>Triangulation:</strong> Using others to create jealousy</li>
+              <li>⬢ <strong>Projection:</strong> Accusing you of their behaviors</li>
+              <li>⬢ <strong>Future Faking:</strong> False promises for control</li>
             </ul>
           </div>
 

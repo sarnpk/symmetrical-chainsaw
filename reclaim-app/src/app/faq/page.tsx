@@ -1,4 +1,4 @@
-﻿import { Metadata } from 'next'
+import { Metadata } from 'next'
 import FaqClient from './FaqClient'
 
 export const metadata: Metadata = {

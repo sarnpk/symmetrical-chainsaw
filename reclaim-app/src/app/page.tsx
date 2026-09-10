@@ -1,4 +1,4 @@
-﻿import { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Metadata } from 'next'
 import {
@@ -23,7 +23,7 @@ import SiteFooter from '@/components/marketing/SiteFooter'
 export const metadata: Metadata = {
   title: 'Reclaim - Private AI Recovery Journal for Abuse Survivors',
   description:
-    'Turn your history into evidence. A private AI-assisted journal for survivors of narcissistic abuse — free assessment, gaslighting tracker, and trauma-informed support in 70+ languages.',
+    'Turn your history into evidence. A private AI-assisted journal for survivors of narcissistic abuse  free assessment, gaslighting tracker, and trauma-informed support in 70+ languages.',
   openGraph: {
     title: 'Reclaim - Turn your history into evidence.',
     description:
@@ -147,7 +147,7 @@ export default async function HomePage() {
                 href="/auth"
                 className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg"
               >
-                Get Started — Free
+                Get Started  Free
               </Link>
               <Link
                 href="/learn-more"
@@ -218,7 +218,7 @@ export default async function HomePage() {
                   <div className="px-6 pb-6">
                     <ul className="space-y-2 text-sm">
                       {tier.features.map((f) => (
-                        <li key={f}>✓ {f}</li>
+                        <li key={f}> {f}</li>
                       ))}
                     </ul>
                     <Link
@@ -255,7 +255,7 @@ export default async function HomePage() {
             </h2>
             <p className="text-gray-600 mb-8">
               AES-256 encryption. We can't read your entries. No one can. Not us, not advertisers, not anyone.
-              Your healing stays private — always.
+              Your healing stays private  always.
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
               <div className="flex items-center gap-2">

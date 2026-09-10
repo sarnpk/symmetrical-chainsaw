@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { MessageCircle, Users, X, Send, AlertCircle, Reply } from 'lucide-react'
@@ -91,7 +91,7 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
     
     const names = [
       'Butterfly ðŸ¦‹', 'Phoenix ðŸ”¥', 'Moonlight ðŸŒ™', 'Warrior âš”ï¸', 'Sunrise ðŸŒ…',
-      'Ocean ðŸŒŠ', 'Mountain â›°ï¸', 'Star â­', 'Rainbow ðŸŒˆ', 'Lotus ðŸª·',
+      'Ocean ðŸŒŠ', 'Mountain â›°ï¸', 'Star ⭐', 'Rainbow ðŸŒˆ', 'Lotus ðŸª·',
       'Eagle ðŸ¦…', 'Rose ðŸŒ¹', 'Thunder âš¡', 'Willow ðŸŒ¿', 'Crystal ðŸ’Ž',
       'Dove ðŸ•Šï¸', 'Flame ðŸ”¥', 'River ðŸžï¸', 'Cloud â˜ï¸', 'Breeze ðŸƒ'
     ]
@@ -339,7 +339,7 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
                         {room.participant_count}/{room.max_participants}
                       </span>
                       {room.participant_count > 0 && (
-                        <span className="text-gray-500">â€¢ {room.participant_count} active</span>
+                        <span className="text-gray-500">⬢ {room.participant_count} active</span>
                       )}
                     </div>
                   </div>

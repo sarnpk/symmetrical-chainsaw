@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
 import {
@@ -1026,7 +1026,7 @@ export default function AICoachContent() {
                     }}
                     className="px-2 py-1.5 sm:px-3 sm:py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm text-left"
                   >
-                    <strong>Balanced</strong> - Moderate detail â­
+                    <strong>Balanced</strong> - Moderate detail ⭐
                   </button>
                   <button
                     onClick={() => {

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Client-side transcription polling utility
  * Handles checking transcription status and updating UI accordingly
  */
@@ -131,7 +131,7 @@ export class TranscriptionPoller {
         this.options.maxDelay
       )
 
-      console.log(`â±ï¸ Scheduling next poll in ${delay}ms`)
+      console.log(`⏱️ Scheduling next poll in ${delay}ms`)
       this.timeoutId = setTimeout(() => this.poll(), delay)
 
     } catch (error: any) {
@@ -152,7 +152,7 @@ export class TranscriptionPoller {
 
       // Retry with longer delay on error
       const delay = Math.min(this.options.initialDelay * 2, this.options.maxDelay)
-      console.log(`â±ï¸ Retrying poll in ${delay}ms after error`)
+      console.log(`⏱️ Retrying poll in ${delay}ms after error`)
       this.timeoutId = setTimeout(() => this.poll(), delay)
     }
   }

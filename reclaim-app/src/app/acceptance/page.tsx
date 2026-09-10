@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -625,7 +625,7 @@ export default function AcceptancePage() {
                             <div className="text-sm font-medium mb-2">Affirmations</div>
                             <ul className="text-sm text-gray-700 space-y-1">
                               {aiCoaching.affirmations.map((aff: string, idx: number) => (
-                                <li key={idx}>â€¢ {aff}</li>
+                                <li key={idx}>⬢ {aff}</li>
                               ))}
                             </ul>
                           </div>
@@ -693,17 +693,17 @@ export default function AcceptancePage() {
             <div>
               <h4 className="font-medium mb-2">When Hope Resurfaces:</h4>
               <ul className="space-y-1 text-xs">
-                <li>â€¢ Remember: NPD is permanent</li>
-                <li>â€¢ The mask was never real</li>
-                <li>â€¢ Your healing matters more than their change</li>
+                <li>⬢ Remember: NPD is permanent</li>
+                <li>⬢ The mask was never real</li>
+                <li>⬢ Your healing matters more than their change</li>
               </ul>
             </div>
             <div>
               <h4 className="font-medium mb-2">Reality Anchors:</h4>
               <ul className="space-y-1 text-xs">
-                <li>â€¢ Read your journal entries</li>
-                <li>â€¢ Talk to your support network</li>
-                <li>â€¢ Review documented abuse patterns</li>
+                <li>⬢ Read your journal entries</li>
+                <li>⬢ Talk to your support network</li>
+                <li>⬢ Review documented abuse patterns</li>
               </ul>
             </div>
           </div>

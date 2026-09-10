@@ -1,7 +1,8 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { X, LifeBuoy } from 'lucide-react';
 
 export default function CrisisToolkitWidget() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -13,7 +14,7 @@ export default function CrisisToolkitWidget() {
           <div className="flex justify-between items-start mb-3">
             <h3 className="font-bold text-gray-900">Need support?</h3>
             <button onClick={() => setIsExpanded(false)} className="text-gray-400 hover:text-gray-600">
-              âœ•
+              <X className="h-4 w-4" />
             </button>
           </div>
           <p className="text-sm text-gray-600 mb-4">
@@ -30,10 +31,10 @@ export default function CrisisToolkitWidget() {
       
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full w-14 h-14 shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center text-2xl"
+        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full w-14 h-14 shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center"
         aria-label="Crisis Toolkit"
       >
-        ðŸ†˜
+        <LifeBuoy className="h-7 w-7" />
       </button>
     </div>
   );

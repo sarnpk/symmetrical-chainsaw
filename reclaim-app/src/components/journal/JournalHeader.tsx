@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { BookOpen, Plus, List, Grid, HelpCircle } from 'lucide-react'

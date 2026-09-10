@@ -1,4 +1,4 @@
-﻿import { Shield, Heart, Brain, Lock, CheckCircle, ArrowRight, Star } from 'lucide-react'
+import { Shield, Heart, Brain, Lock, CheckCircle, ArrowRight, Star } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import AuthButton from '@/components/AuthButton'
 import QuizShell from '@/components/marketing/QuizShell'
@@ -269,9 +269,9 @@ export default function LearnMorePage() {
                 Our timestamped evidence helps prove grounds for divorce and protects your interests.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>â€¢ Financial control documentation</li>
-                <li>â€¢ Emotional abuse evidence</li>
-                <li>â€¢ Communication pattern analysis</li>
+                <li>⬢ Financial control documentation</li>
+                <li>⬢ Emotional abuse evidence</li>
+                <li>⬢ Communication pattern analysis</li>
               </ul>
             </Card>
 
@@ -283,9 +283,9 @@ export default function LearnMorePage() {
                 Critical evidence for custody evaluations and court decisions.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>â€¢ Parental alienation proof</li>
-                <li>â€¢ Child safety documentation</li>
-                <li>â€¢ Co-parenting violations</li>
+                <li>⬢ Parental alienation proof</li>
+                <li>⬢ Child safety documentation</li>
+                <li>⬢ Co-parenting violations</li>
               </ul>
             </Card>
 
@@ -297,9 +297,9 @@ export default function LearnMorePage() {
                 Build strong cases for HR complaints and legal action.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>â€¢ Hostile work environment proof</li>
-                <li>â€¢ Discrimination documentation</li>
-                <li>â€¢ Retaliation evidence</li>
+                <li>⬢ Hostile work environment proof</li>
+                <li>⬢ Discrimination documentation</li>
+                <li>⬢ Retaliation evidence</li>
               </ul>
             </Card>
           </div>

@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Service-role client for privileged operations
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
     
     while (Date.now() - startTime < maxWaitMs) {
       attempt++
-      console.log(`â³ Poll attempt ${attempt} for job ${jobId}`)
+      console.log(`⏳ Poll attempt ${attempt} for job ${jobId}`)
       
       try {
         const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
@@ -252,7 +252,7 @@ export async function POST(request: Request) {
           delay = 10000
         }
         
-        console.log(`â±ï¸ Waiting ${delay}ms before next check...`)
+        console.log(`⏱️ Waiting ${delay}ms before next check...`)
         await new Promise(resolve => setTimeout(resolve, delay))
         
       } catch (pollError: any) {

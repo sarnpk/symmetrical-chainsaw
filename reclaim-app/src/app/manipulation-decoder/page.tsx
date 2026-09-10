@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -572,7 +572,7 @@ export default function ManipulationDecoderPage() {
                     <h4 className="font-semibold text-sm mb-2">Emotional Hooks</h4>
                     <ul className="text-sm text-gray-700 space-y-1">
                       {aiAnalysis.emotional_hooks?.map((hook: string, idx: number) => (
-                        <li key={idx}>â€¢ {hook}</li>
+                        <li key={idx}>⬢ {hook}</li>
                       ))}
                     </ul>
                   </div>

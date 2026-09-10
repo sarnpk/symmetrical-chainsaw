@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { useState } from 'react'
@@ -168,7 +168,7 @@ export default function JournalEntryHeader({ entry, onDelete }: JournalEntryHead
               <div className="flex justify-end gap-2 pt-2">
                 <button onClick={() => setShowExport(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-300">Cancel</button>
                 <button onClick={handleExport} disabled={downloading} className="px-4 py-2 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60">
-                  {downloading ? 'Preparingâ€¦' : 'Download'}
+                  {downloading ? 'Preparing⬦' : 'Download'}
                 </button>
               </div>
             </div>

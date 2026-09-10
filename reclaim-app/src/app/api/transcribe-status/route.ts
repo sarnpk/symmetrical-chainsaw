@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Service-role client for privileged operations
@@ -200,7 +200,7 @@ export async function POST(request: Request) {
     }
     
     // Still processing
-    console.log(`â³ Job ${jobIdToCheck} still processing (status: ${result.status})`)
+    console.log(`⏳ Job ${jobIdToCheck} still processing (status: ${result.status})`)
     return NextResponse.json({
       success: true,
       status: 'processing',

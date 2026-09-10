@@ -337,11 +337,11 @@ export default function BoundaryDetailPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">30d Success Rate</div>
-              <div className="text-xl font-bold text-gray-900">{sr30 != null ? `${sr30.toFixed(0)}%` : '—'}</div>
+              <div className="text-xl font-bold text-gray-900">{sr30 != null ? `${sr30.toFixed(0)}%` : ''}</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">90d Success Rate</div>
-              <div className="text-xl font-bold text-gray-900">{sr90 != null ? `${sr90.toFixed(0)}%` : '—'}</div>
+              <div className="text-xl font-bold text-gray-900">{sr90 != null ? `${sr90.toFixed(0)}%` : ''}</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">Violations (recent)</div>
@@ -425,7 +425,7 @@ export default function BoundaryDetailPage() {
               disabled={saving}
               className="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50"
             >
-              {saving ? 'Saving…' : 'Save Changes'}
+              {saving ? 'Saving&' : 'Save Changes'}
             </button>
             <Link
               href="/boundaries"
@@ -438,7 +438,7 @@ export default function BoundaryDetailPage() {
               disabled={deleting}
               className="px-4 py-3 rounded-lg border border-red-300 text-red-700 font-medium hover:bg-red-50 disabled:opacity-50"
             >
-              {deleting ? 'Deleting…' : 'Delete'}
+              {deleting ? 'Deleting&' : 'Delete'}
             </button>
           </div>
         </div>
@@ -475,7 +475,7 @@ export default function BoundaryDetailPage() {
                 <div key={rv.id} className="flex items-center justify-between border border-gray-200 rounded-lg px-3 py-2">
                   <div className="text-sm text-gray-700">
                     <span className="font-medium">scheduled</span>
-                    {rv.scheduled_date ? <span className="ml-2">• {new Date(rv.scheduled_date).toLocaleString()}</span> : null}
+                    {rv.scheduled_date ? <span className="ml-2">" {new Date(rv.scheduled_date).toLocaleString()}</span> : null}
                   </div>
                   <button onClick={()=>markScheduledCompleted(rv.id)} className="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Mark Completed</button>
                 </div>
@@ -534,7 +534,7 @@ export default function BoundaryDetailPage() {
                   <div className="text-sm text-gray-700">
                     <span className="font-medium">{ix.interaction_type}</span>
                     {ix.severity ? <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{ix.severity}</span> : null}
-                    {ix.description ? <span className="ml-2">• {ix.description}</span> : null}
+                    {ix.description ? <span className="ml-2">" {ix.description}</span> : null}
                   </div>
                   <div className="text-xs text-gray-500">{new Date(ix.created_at).toLocaleString()}</div>
                 </div>
@@ -592,7 +592,7 @@ export default function BoundaryDetailPage() {
                 <div key={rv.id} className="flex items-center justify-between border border-gray-200 rounded-lg px-3 py-2">
                   <div className="text-sm text-gray-700">
                     <span className="font-medium">{rv.review_type}</span>
-                    {rv.effectiveness_rating ? <span className="ml-2">• effectiveness {rv.effectiveness_rating}/5</span> : null}
+                    {rv.effectiveness_rating ? <span className="ml-2">" effectiveness {rv.effectiveness_rating}/5</span> : null}
                     {rv.needs_modification ? <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">needs modification</span> : null}
                   </div>
                   <div className="text-xs text-gray-500">{rv.completed_date ? new Date(rv.completed_date).toLocaleString() : new Date(rv.created_at).toLocaleString()}</div>

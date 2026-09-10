@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
 import { Send, Bot, User, RotateCcw, AlertCircle, Loader, Shield, HelpCircle, Eye, TrendingUp, History, Trash2, Clock, ArrowDown } from 'lucide-react'

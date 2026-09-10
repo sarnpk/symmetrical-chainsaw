@@ -1,4 +1,4 @@
-﻿// Placeholder for gaslighting AI analysis
+// Placeholder for gaslighting AI analysis
 export async function analyzeGaslighting(text: string) {
   return {
     isGaslighting: false,

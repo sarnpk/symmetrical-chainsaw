@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { geminiAI, DEFAULT_PAID_TIER_MODEL } from '@/lib/gemini-ai'
@@ -301,7 +301,7 @@ function parseAIResponse(response: string): any {
     const actionsText = actionsMatch[1].trim()
     sections.actions = actionsText
       .split('\n')
-      .map(line => line.replace(/^[â€¢\-*]\s*/, '').trim())
+      .map(line => line.replace(/^[⬢\-*]\s*/, '').trim())
       .filter(line => line.length > 0)
   }
 
@@ -310,7 +310,7 @@ function parseAIResponse(response: string): any {
     const copingText = copingMatch[1].trim()
     sections.coping = copingText
       .split('\n')
-      .map(line => line.replace(/^[â€¢\-*]\s*/, '').trim())
+      .map(line => line.replace(/^[⬢\-*]\s*/, '').trim())
       .filter(line => line.length > 0)
   }
 

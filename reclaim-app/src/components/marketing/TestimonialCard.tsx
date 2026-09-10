@@ -1,4 +1,4 @@
-﻿import { BadgeCheck } from 'lucide-react'
+import { BadgeCheck } from 'lucide-react'
 
 interface TestimonialCardProps {
   quote: string

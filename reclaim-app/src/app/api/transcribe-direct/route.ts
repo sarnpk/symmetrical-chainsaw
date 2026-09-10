@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Service-role client for privileged operations
@@ -108,7 +108,7 @@ async function pollUntilComplete(jobId: string, maxWaitMs = 300000): Promise<str
   
   while (Date.now() - startTime < maxWaitMs) {
     attempt++
-    console.log(`â³ Poll attempt ${attempt} for job ${jobId}`)
+    console.log(`⏳ Poll attempt ${attempt} for job ${jobId}`)
     
     const result = await checkGladiaStatus(jobId)
     
@@ -126,7 +126,7 @@ async function pollUntilComplete(jobId: string, maxWaitMs = 300000): Promise<str
     
     // Calculate next delay (exponential backoff: 1s, 2s, 4s, 8s, then 10s max)
     const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000)
-    console.log(`â±ï¸ Waiting ${delay}ms before next check...`)
+    console.log(`⏱️ Waiting ${delay}ms before next check...`)
     await new Promise(resolve => setTimeout(resolve, delay))
   }
   

@@ -182,7 +182,7 @@ export default function RealityTestPage() {
               ) : (
                 <div className="space-y-4">
                   <div className="text-center py-4">
-                    <div className="text-6xl mb-4">✨</div>
+                    <div className="text-6xl mb-4">(</div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">Session Complete!</h3>
                   </div>
                   

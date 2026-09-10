@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -223,7 +223,7 @@ export default function PositiveMomentsPage() {
               </div>
               <div className="text-right">
                 <div className="text-3xl font-bold text-green-600">{streakData.current_streak || 0}</div>
-                <div className="text-sm text-green-600">Current â€¢ Best: {streakData.longest_streak || 0}</div>
+                <div className="text-sm text-green-600">Current ⬢ Best: {streakData.longest_streak || 0}</div>
               </div>
             </div>
           </div>
@@ -309,11 +309,11 @@ export default function PositiveMomentsPage() {
                         <div className="mt-2 p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
                           <p className="font-medium mb-2">Try these prompts:</p>
                           <ul className="space-y-1 text-xs">
-                            <li>â€¢ Someone who made me smile today...</li>
-                            <li>â€¢ A simple pleasure I enjoyed...</li>
-                            <li>â€¢ Something about my body I appreciate...</li>
-                            <li>â€¢ A challenge that helped me grow...</li>
-                            <li>â€¢ A moment of peace I experienced...</li>
+                            <li>⬢ Someone who made me smile today...</li>
+                            <li>⬢ A simple pleasure I enjoyed...</li>
+                            <li>⬢ Something about my body I appreciate...</li>
+                            <li>⬢ A challenge that helped me grow...</li>
+                            <li>⬢ A moment of peace I experienced...</li>
                           </ul>
                         </div>
                       )}

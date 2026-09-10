@@ -168,14 +168,14 @@ export default function CommentsSection({ postId }: { postId: string }) {
             disabled={submitting || !content.trim()}
             className={`px-4 py-2 rounded-lg text-white ${submitting ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'}`}
           >
-            {submitting ? 'Posting…' : 'Post comment'}
+            {submitting ? 'Posting&' : 'Post comment'}
           </button>
         </div>
       </div>
 
       <div className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
         <div className="px-4 py-3 text-sm text-gray-600">
-          {loading ? 'Loading comments…' : `${comments.length} comment${comments.length === 1 ? '' : 's'}`}
+          {loading ? 'Loading comments&' : `${comments.length} comment${comments.length === 1 ? '' : 's'}`}
         </div>
         {comments.map(c => (
           <div key={c.id} className="px-4 py-3">
@@ -185,7 +185,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
                 <div className="flex items-center gap-3">
                   {editingId === c.id ? (
                     <>
-                      <button onClick={saveEdit} disabled={savingEdit || !editText.trim()} className={`text-xs ${savingEdit ? 'text-gray-400' : 'text-indigo-600 hover:text-indigo-700'}`}>{savingEdit ? 'Saving…' : 'Save'}</button>
+                      <button onClick={saveEdit} disabled={savingEdit || !editText.trim()} className={`text-xs ${savingEdit ? 'text-gray-400' : 'text-indigo-600 hover:text-indigo-700'}`}>{savingEdit ? 'Saving&' : 'Save'}</button>
                       <button onClick={cancelEdit} disabled={savingEdit} className="text-xs text-gray-500 hover:text-gray-700">Cancel</button>
                     </>
                   ) : (
@@ -218,7 +218,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
               disabled={loadingMore}
               className={`px-4 py-2 rounded-lg text-sm font-medium border ${loadingMore ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'} border-gray-200`}
             >
-              {loadingMore ? 'Loading…' : 'Load more comments'}
+              {loadingMore ? 'Loading&' : 'Load more comments'}
             </button>
           </div>
         )}

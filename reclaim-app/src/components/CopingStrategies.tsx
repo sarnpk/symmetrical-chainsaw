@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -450,7 +450,7 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
                   </div>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <button onClick={importLatestCheckIn} className="px-2 py-1 text-xs border rounded hover:bg-gray-50">Import latest check-in</button>
-                    <button onClick={() => fetchAISuggestions(aiContext)} disabled={aiLoading} className="px-2 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-60">{aiLoading ? 'Generatingâ€¦' : 'Generate'}</button>
+                    <button onClick={() => fetchAISuggestions(aiContext)} disabled={aiLoading} className="px-2 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-60">{aiLoading ? 'Generating⬦' : 'Generate'}</button>
                   </div>
                 </div>
 
@@ -510,7 +510,7 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
 
                   {/* Suggestions Grid */}
                   {aiLoading ? (
-                    <div className="py-6 text-center text-gray-600">Generating suggestionsâ€¦</div>
+                    <div className="py-6 text-center text-gray-600">Generating suggestions⬦</div>
                   ) : aiSuggestions.length === 0 ? (
                     <div className="py-6 text-center text-gray-600">No suggestions returned</div>
                   ) : (

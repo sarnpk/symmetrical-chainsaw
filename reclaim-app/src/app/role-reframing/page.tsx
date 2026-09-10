@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -193,7 +193,7 @@ export default function RoleReframingPage() {
                   <h4 className="font-semibold text-sm mb-2 text-red-900">Red Flags</h4>
                   <ul className="text-sm text-red-800 space-y-1">
                     {aiAnalysis.red_flags.map((flag: string, idx: number) => (
-                      <li key={idx}>â€¢ {flag}</li>
+                      <li key={idx}>⬢ {flag}</li>
                     ))}
                   </ul>
                 </div>
@@ -204,7 +204,7 @@ export default function RoleReframingPage() {
                   <h4 className="font-semibold text-sm mb-2">Action Steps</h4>
                   <ul className="text-sm text-gray-700 space-y-1">
                     {aiAnalysis.action_steps.map((step: string, idx: number) => (
-                      <li key={idx}>â€¢ {step}</li>
+                      <li key={idx}>⬢ {step}</li>
                     ))}
                   </ul>
                 </div>

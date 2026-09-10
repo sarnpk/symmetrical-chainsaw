@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Service-role client for direct database updates
@@ -267,7 +267,7 @@ export async function POST(request: Request) {
     }
 
     // Still processing
-    console.log(`â³ FIXED STATUS API: Job ${jobIdToCheck} still processing (status: ${result.status})`)
+    console.log(`⏳ FIXED STATUS API: Job ${jobIdToCheck} still processing (status: ${result.status})`)
     return NextResponse.json({
       success: true,
       status: 'processing',

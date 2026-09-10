@@ -1,4 +1,4 @@
-﻿export type CopingTemplate = {
+export type CopingTemplate = {
   strategy_name: string
   description: string
   category: 'breathing' | 'grounding' | 'physical' | 'creative' | 'emotional' | 'other'

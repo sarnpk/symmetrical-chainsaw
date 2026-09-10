@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { stonewallAI } from '@/lib/stonewalling-ai'
 
 export async function POST(req: NextRequest) {

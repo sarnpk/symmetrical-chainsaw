@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
 import { Send, Bot, User, RotateCcw, AlertCircle, Loader, Shield, HelpCircle, Eye, TrendingUp, History, Trash2, Clock, ArrowDown } from 'lucide-react'
@@ -558,7 +558,7 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
             <div className="bg-white rounded-lg shadow-lg p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="text-sm">
-                  <span className="font-medium">Type:</span> {NARCISSIST_TYPES.find(t => t.id === narcissistType)?.label} â€¢ 
+                  <span className="font-medium">Type:</span> {NARCISSIST_TYPES.find(t => t.id === narcissistType)?.label} ⬢ 
                   <span className="font-medium ml-2">Scenario:</span> {SCENARIOS.find(s => s.id === scenario)?.label}
                 </div>
                 <div className="flex gap-2">
@@ -800,14 +800,14 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
                             <span className="text-sm font-medium text-gray-700">
                               {NARCISSIST_TYPES.find(t => t.id === session.narcissist_type)?.label}
                             </span>
-                            <span className="text-sm text-gray-500">â€¢</span>
+                            <span className="text-sm text-gray-500">⬢</span>
                             <span className="text-sm text-gray-500">
                               {SCENARIOS.find(s => s.id === session.scenario)?.label}
                             </span>
                           </div>
 
                           <div className="text-sm text-gray-600 mb-2">
-                            <strong>{session.total_messages}</strong> messages â€¢ 
+                            <strong>{session.total_messages}</strong> messages ⬢ 
                             Started {new Date(session.created_at).toLocaleDateString()} at {new Date(session.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
 

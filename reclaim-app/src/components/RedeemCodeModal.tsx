@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { X, Gift, Clock, Star } from 'lucide-react'
@@ -115,13 +115,13 @@ export default function RedeemCodeModal({ isOpen, onClose, onSuccess }: RedeemCo
                 <span className="font-medium text-green-900">Valid Code!</span>
               </div>
               <div className="text-sm text-green-700 space-y-1">
-                <p>â€¢ Upgrade to: <span className="font-medium capitalize">{validationResult.target_tier}</span></p>
-                <p>â€¢ Trial duration: <span className="font-medium">{validationResult.trial_duration_days} days</span></p>
+                <p>⬢ Upgrade to: <span className="font-medium capitalize">{validationResult.target_tier}</span></p>
+                <p>⬢ Trial duration: <span className="font-medium">{validationResult.trial_duration_days} days</span></p>
                 {validationResult.description && (
-                  <p>â€¢ {validationResult.description}</p>
+                  <p>⬢ {validationResult.description}</p>
                 )}
                 {validationResult.remaining_uses !== -1 && (
-                  <p>â€¢ Remaining uses: <span className="font-medium">{validationResult.remaining_uses}</span></p>
+                  <p>⬢ Remaining uses: <span className="font-medium">{validationResult.remaining_uses}</span></p>
                 )}
               </div>
             </div>
@@ -133,10 +133,10 @@ export default function RedeemCodeModal({ isOpen, onClose, onSuccess }: RedeemCo
               <span className="font-medium text-blue-900">How it works</span>
             </div>
             <ul className="text-sm text-blue-700 space-y-1">
-              <li>â€¢ Enter a valid trial code to upgrade your account</li>
-              <li>â€¢ Enjoy premium features for the trial period</li>
-              <li>â€¢ Your account will revert to your original tier when the trial ends</li>
-              <li>â€¢ You can upgrade to a paid plan anytime during the trial</li>
+              <li>⬢ Enter a valid trial code to upgrade your account</li>
+              <li>⬢ Enjoy premium features for the trial period</li>
+              <li>⬢ Your account will revert to your original tier when the trial ends</li>
+              <li>⬢ You can upgrade to a paid plan anytime during the trial</li>
             </ul>
           </div>
 

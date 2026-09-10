@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { Metadata } from 'next'
 import { Shield, FileText, ChevronRight, ArrowLeft, ArrowRight, AlertTriangle, BookOpen, Heart, CheckCircle, Clock } from 'lucide-react'
 import QuizShell from '@/components/marketing/QuizShell'

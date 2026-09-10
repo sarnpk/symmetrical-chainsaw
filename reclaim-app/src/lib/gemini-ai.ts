@@ -1,4 +1,4 @@
-﻿// Enhanced Google Gemini AI Integration
+// Enhanced Google Gemini AI Integration
 // Handles all AI features: chat, pattern analysis, mind reset, insights
 
 interface GeminiRequest {

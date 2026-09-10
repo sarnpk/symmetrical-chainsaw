@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { Gift, Clock, Star, Users, Zap, Shield } from 'lucide-react'
@@ -43,7 +43,7 @@ export default function RedeemCodeLaunchPost() {
                 </div>
                 <div className="text-2xl font-mono font-bold mb-2">YOUTUBE7DAY</div>
                 <p className="text-indigo-100 text-sm mb-3">7 days of Recovery features - Perfect for getting started</p>
-                <div className="text-xs text-indigo-200">Limited to first 100 users â€¢ Expires in 30 days</div>
+                <div className="text-xs text-indigo-200">Limited to first 100 users ⬢ Expires in 30 days</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
                 <div className="flex items-center gap-2 mb-3">
@@ -52,7 +52,7 @@ export default function RedeemCodeLaunchPost() {
                 </div>
                 <div className="text-2xl font-mono font-bold mb-2">RECOVERY30</div>
                 <p className="text-indigo-100 text-sm mb-3">30 days of full Empowerment access - Complete recovery suite</p>
-                <div className="text-xs text-indigo-200">Limited to 25 users â€¢ Perfect for serious healing journey</div>
+                <div className="text-xs text-indigo-200">Limited to 25 users ⬢ Perfect for serious healing journey</div>
               </div>
             </div>
             <div className="text-center mt-6">

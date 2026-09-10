@@ -1,4 +1,4 @@
-﻿import { Metadata } from 'next'
+import { Metadata } from 'next'
 import { Shield, Brain, MessageSquare, AlertTriangle } from 'lucide-react'
 import AuthButton from '@/components/AuthButton'
 
@@ -92,10 +92,10 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
           <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
             <h3 className="text-lg font-semibold text-red-900 mb-2">The Shocking Reality:</h3>
             <ul className="text-red-800 space-y-2">
-              <li>â€¢ Average victim endures <strong>7 years</strong> before recognizing abuse</li>
-              <li>â€¢ <strong>84% of survivors</strong> wish they identified patterns sooner</li>
-              <li>â€¢ Abusers make victims question their own reality 47 times per day</li>
-              <li>â€¢ <strong>91% of narcissists</strong> use gaslighting as primary control tactic</li>
+              <li>⬢ Average victim endures <strong>7 years</strong> before recognizing abuse</li>
+              <li>⬢ <strong>84% of survivors</strong> wish they identified patterns sooner</li>
+              <li>⬢ Abusers make victims question their own reality 47 times per day</li>
+              <li>⬢ <strong>91% of narcissists</strong> use gaslighting as primary control tactic</li>
             </ul>
           </div>
 
@@ -123,20 +123,20 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
           <div className="bg-gray-50 p-6 rounded-lg mb-8">
             <h4 className="font-semibold text-gray-900 mb-3">Gaslighting Phrases AI Flags:</h4>
             <ul className="text-gray-700 space-y-2 mb-4">
-              <li>â€¢ "You're being too sensitive" â†’ <span className="text-red-600 font-medium">Emotional invalidation</span></li>
-              <li>â€¢ "That never happened" â†’ <span className="text-red-600 font-medium">Reality distortion</span></li>
-              <li>â€¢ "You're imagining things" â†’ <span className="text-red-600 font-medium">Perception undermining</span></li>
-              <li>â€¢ "Everyone agrees with me" â†’ <span className="text-red-600 font-medium">False consensus</span></li>
-              <li>â€¢ "You're crazy/unstable" â†’ <span className="text-red-600 font-medium">Character assassination</span></li>
+              <li>⬢ "You're being too sensitive" â†’ <span className="text-red-600 font-medium">Emotional invalidation</span></li>
+              <li>⬢ "That never happened" â†’ <span className="text-red-600 font-medium">Reality distortion</span></li>
+              <li>⬢ "You're imagining things" â†’ <span className="text-red-600 font-medium">Perception undermining</span></li>
+              <li>⬢ "Everyone agrees with me" â†’ <span className="text-red-600 font-medium">False consensus</span></li>
+              <li>⬢ "You're crazy/unstable" â†’ <span className="text-red-600 font-medium">Character assassination</span></li>
             </ul>
             
             <h4 className="font-semibold text-gray-900 mb-3">Advanced Tactics AI Recognizes:</h4>
             <ul className="text-gray-700 space-y-2">
-              <li>â€¢ <strong>Triangulation:</strong> Using others to create jealousy or validate their position</li>
-              <li>â€¢ <strong>Projection:</strong> Accusing you of behaviors they're actually doing</li>
-              <li>â€¢ <strong>Future Faking:</strong> Making false promises to maintain control</li>
-              <li>â€¢ <strong>Word Salad:</strong> Confusing circular arguments that go nowhere</li>
-              <li>â€¢ <strong>Hoovering:</strong> Attempts to suck you back in after separation</li>
+              <li>⬢ <strong>Triangulation:</strong> Using others to create jealousy or validate their position</li>
+              <li>⬢ <strong>Projection:</strong> Accusing you of behaviors they're actually doing</li>
+              <li>⬢ <strong>Future Faking:</strong> Making false promises to maintain control</li>
+              <li>⬢ <strong>Word Salad:</strong> Confusing circular arguments that go nowhere</li>
+              <li>⬢ <strong>Hoovering:</strong> Attempts to suck you back in after separation</li>
             </ul>
           </div>
 
@@ -226,21 +226,21 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             <div>
               <h4 className="font-semibold text-gray-900 mb-3">Human Limitations:</h4>
               <ul className="text-gray-700 space-y-2">
-                <li>â€¢ Emotional attachment clouds judgment</li>
-                <li>â€¢ Hope for change creates denial</li>
-                <li>â€¢ Trauma bonding feels like love</li>
-                <li>â€¢ Gaslighting erodes confidence</li>
-                <li>â€¢ Isolation removes reality checks</li>
+                <li>⬢ Emotional attachment clouds judgment</li>
+                <li>⬢ Hope for change creates denial</li>
+                <li>⬢ Trauma bonding feels like love</li>
+                <li>⬢ Gaslighting erodes confidence</li>
+                <li>⬢ Isolation removes reality checks</li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-3">AI Advantages:</h4>
               <ul className="text-gray-700 space-y-2">
-                <li>â€¢ Objective pattern recognition</li>
-                <li>â€¢ No emotional investment</li>
-                <li>â€¢ Instant analysis of thousands of data points</li>
-                <li>â€¢ Consistent evaluation criteria</li>
-                <li>â€¢ Identifies subtle escalation</li>
+                <li>⬢ Objective pattern recognition</li>
+                <li>⬢ No emotional investment</li>
+                <li>⬢ Instant analysis of thousands of data points</li>
+                <li>⬢ Consistent evaluation criteria</li>
+                <li>⬢ Identifies subtle escalation</li>
               </ul>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             </p>
             <AuthButton variant="primary" />
             <p className="text-sm text-green-700 mt-4">
-              No credit card â€¢ No commitment â€¢ Results in 5 minutes
+              No credit card ⬢ No commitment ⬢ Results in 5 minutes
             </p>
           </div>
 
@@ -306,7 +306,7 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             </p>
             <AuthButton variant="primary" />
             <p className="text-sm text-indigo-200 mt-4">
-              Trusted by 50,000+ abuse survivors â€¢ 4.8/5 rating â€¢ Featured in Psychology Today
+              Trusted by 50,000+ abuse survivors ⬢ 4.8/5 rating ⬢ Featured in Psychology Today
             </p>
           </div>
         </div>

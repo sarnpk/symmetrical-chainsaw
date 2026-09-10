@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import {
@@ -426,11 +426,11 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
   </style>
 </head>
 <body>
-  <h1>ðŸ›¡ï¸ Safety Plan</h1>
+  <h1>�x:�️ Safety Plan</h1>
   <p><em>Generated: ${new Date().toLocaleString()}</em></p>
   
   <div class="section">
-    <h2>ðŸš¨ Crisis Resources</h2>
+    <h2>=� Crisis Resources</h2>
     ${emergencyResources.map(r => `
       <div class="resource">
         <h3>${r.name}</h3>
@@ -443,7 +443,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
 
   ${emergencyContacts.length > 0 ? `
   <div class="section">
-    <h2>ðŸ“ž Emergency Contacts</h2>
+    <h2>�x~ Emergency Contacts</h2>
     ${emergencyContacts.map(c => `
       <div class="contact">
         <h3>${c.name}</h3>
@@ -457,12 +457,12 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
 
   ${safeLocations.length > 0 ? `
   <div class="section">
-    <h2>ðŸ“ Safe Locations</h2>
+    <h2>�x� Safe Locations</h2>
     ${safeLocations.map(l => `
       <div class="location">
         <h3>${l.name}</h3>
         <p><span class="label">Address:</span> ${l.address}</p>
-        <p><span class="label">Contact:</span> ${l.contact_person} â€¢ ${l.phone}</p>
+        <p><span class="label">Contact:</span> ${l.contact_person} " ${l.phone}</p>
         ${l.notes ? `<p><span class="label">Notes:</span> ${l.notes}</p>` : ''}
       </div>
     `).join('')}
@@ -471,7 +471,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
 
   ${docs.length > 0 ? `
   <div class="section">
-    <h2>ðŸ“„ Important Documents</h2>
+    <h2>�x Important Documents</h2>
     <ul>
       ${docs.map(d => `<li>${d}</li>`).join('')}
     </ul>
@@ -480,16 +480,16 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
 
   ${(financialResources.emergency_fund || financialResources.trusted_contact?.name || (financialResources.accounts && financialResources.accounts.length > 0)) ? `
   <div class="section">
-    <h2>ðŸ’° Financial Resources</h2>
+    <h2>�x� Financial Resources</h2>
     ${financialResources.emergency_fund ? `<p><span class="label">Emergency Fund:</span> $${financialResources.emergency_fund}</p>` : ''}
     ${financialResources.trusted_contact?.name ? `
       <p><span class="label">Trusted Contact:</span> ${financialResources.trusted_contact.name}
-      ${financialResources.trusted_contact.phone ? ` â€¢ ${financialResources.trusted_contact.phone}` : ''}</p>
+      ${financialResources.trusted_contact.phone ? ` " ${financialResources.trusted_contact.phone}` : ''}</p>
     ` : ''}
     ${financialResources.accounts && financialResources.accounts.length > 0 ? `
       <h3>Accounts</h3>
       <ul>
-        ${financialResources.accounts.map(a => `<li>${a.institution} â€¢ ****${a.last4}</li>`).join('')}
+        ${financialResources.accounts.map(a => `<li>${a.institution} " ****${a.last4}</li>`).join('')}
       </ul>
     ` : ''}
     ${financialResources.notes ? `<p><span class="label">Notes:</span> ${financialResources.notes}</p>` : ''}
@@ -498,7 +498,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
 
   ${(escapePlan.code_word || escapePlan.safe_bag_location || (escapePlan.steps && escapePlan.steps.length > 0)) ? `
   <div class="section">
-    <h2>ðŸšª Escape Plan</h2>
+    <h2>�xa� Escape Plan</h2>
     ${escapePlan.code_word ? `<p><span class="label">Code Word:</span> ${escapePlan.code_word}</p>` : ''}
     ${escapePlan.safe_bag_location ? `<p><span class="label">Safe Bag Location:</span> ${escapePlan.safe_bag_location}</p>` : ''}
     ${escapePlan.steps && escapePlan.steps.length > 0 ? `
@@ -510,10 +510,10 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
 
   ${professionalSupport.length > 0 ? `
   <div class="section">
-    <h2>ðŸ‘¥ Professional Support</h2>
+    <h2>�x� Professional Support</h2>
     ${professionalSupport.map(ps => `
       <div class="contact">
-        <h3>${ps.role || 'Support'} â€” ${ps.name}</h3>
+        <h3>${ps.role || 'Support'} � ${ps.name}</h3>
         ${ps.organization ? `<p><span class="label">Organization:</span> ${ps.organization}</p>` : ''}
         ${ps.phone ? `<p class="phone">${ps.phone}</p>` : ''}
         ${ps.email ? `<p>${ps.email}</p>` : ''}
@@ -524,7 +524,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
   ` : ''}
 
   <div class="section">
-    <h2>ðŸ“… Review Information</h2>
+    <h2>�x& Review Information</h2>
     <p><span class="label">Last Reviewed:</span> ${lastReviewed ? new Date(lastReviewed).toLocaleString() : 'Never'}</p>
     <p><span class="label">Review Frequency:</span> Every ${reviewFrequencyDays} days</p>
   </div>
@@ -611,7 +611,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
               </>
             ) : (
               <>
-                <span className="font-medium">Reminder:</span> You havenâ€™t marked this plan as reviewed yet. Set your cadence and mark it reviewed.
+                <span className="font-medium">Reminder:</span> You haven�"t marked this plan as reviewed yet. Set your cadence and mark it reviewed.
               </>
             )}
           </div>
@@ -712,7 +712,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
             <ul className="space-y-2">
               {(financialResources.accounts || []).map((acc, idx) => (
                 <li key={idx} className="flex items-center justify-between p-2 border rounded">
-                  <span className="text-sm text-gray-700 break-words">{acc.institution} â€¢ ****{acc.last4}</span>
+                  <span className="text-sm text-gray-700 break-words">{acc.institution} " ****{acc.last4}</span>
                   <button onClick={() => removeAccount(idx)} className="text-red-600 hover:text-red-700 p-1"><Trash2 className="h-4 w-4" /></button>
                 </li>
               ))}
@@ -858,9 +858,9 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
             {professionalSupport.map((ps, idx) => (
               <li key={idx} className="p-3 border rounded flex items-start justify-between gap-3">
                 <div className="text-sm text-gray-700 break-words">
-                  <div className="font-medium">{ps.role || 'Support'} â€” {ps.name}</div>
+                  <div className="font-medium">{ps.role || 'Support'} � {ps.name}</div>
                   <div>{ps.organization}</div>
-                  <div className="text-gray-600 break-words">{ps.phone} {ps.email && `â€¢ ${ps.email}`}</div>
+                  <div className="text-gray-600 break-words">{ps.phone} {ps.email && `" ${ps.email}`}</div>
                   {ps.notes && <div className="text-gray-500 break-words">{ps.notes}</div>}
                 </div>
                 <button onClick={() => removeSupport(idx)} className="text-red-600 hover:text-red-700 p-1"><Trash2 className="h-4 w-4" /></button>
@@ -953,7 +953,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
               <div>
                 <h3 className="font-semibold text-gray-900">{contact.name}</h3>
                 <p className="text-blue-600 font-mono">{contact.phone}</p>
-                <p className="text-sm text-gray-600">{contact.relationship} â€¢ Available: {contact.available_times}</p>
+                <p className="text-sm text-gray-600">{contact.relationship} " Available: {contact.available_times}</p>
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -996,7 +996,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
               <div>
                 <h3 className="font-semibold text-gray-900">{location.name}</h3>
                 <p className="text-gray-600 break-words">{location.address}</p>
-                <p className="text-sm text-gray-600">Contact: {location.contact_person} â€¢ {location.phone}</p>
+                <p className="text-sm text-gray-600">Contact: {location.contact_person} " {location.phone}</p>
                 {location.notes && <p className="text-sm text-gray-500 mt-1">{location.notes}</p>}
               </div>
               <div className="flex items-center gap-2">
@@ -1195,7 +1195,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
       <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border border-blue-200 p-6">
         <div className="text-center mb-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            ðŸ‘¥ Professional Support Available
+            �x� Professional Support Available
           </h2>
           <p className="text-gray-700 text-sm">
             Your safety plan is comprehensive. Consider connecting with professionals 
@@ -1206,7 +1206,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
         <div className="grid md:grid-cols-2 gap-4">
           {/* Therapy Referral */}
           <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-            <h3 className="font-semibold text-blue-900 mb-2">ðŸ§  Mental Health Support</h3>
+            <h3 className="font-semibold text-blue-900 mb-2">�x�� Mental Health Support</h3>
             <p className="text-blue-700 mb-3 text-sm">
               Connect with trauma-informed therapists who understand narcissistic abuse recovery.
             </p>
@@ -1226,7 +1226,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
 
           {/* Legal Referral */}
           <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border border-amber-200">
-            <h3 className="font-semibold text-amber-900 mb-2">âš–ï¸ Legal Protection</h3>
+            <h3 className="font-semibold text-amber-900 mb-2">�a Legal Protection</h3>
             <p className="text-amber-700 mb-3 text-sm">
               Your documented evidence can support legal action. Connect with family law attorneys.
             </p>
@@ -1246,7 +1246,7 @@ export default function SafetyPlanContentSimplified({ userId }: SafetyPlanConten
         </div>
         
         <div className="mt-4 text-xs text-gray-500 text-center">
-          Secure referrals â€¢ Specialized professionals â€¢ Confidential consultations
+          Secure referrals " Specialized professionals " Confidential consultations
         </div>
       </div>
 

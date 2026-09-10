@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -1133,19 +1133,19 @@ export default function AdminDashboard() {
               <div>
                 <h4 className="font-medium text-indigo-900 mb-2">YouTube Strategy</h4>
                 <ul className="text-sm text-indigo-700 space-y-1">
-                  <li>â€¢ Use codes in video descriptions</li>
-                  <li>â€¢ Mention in video content</li>
-                  <li>â€¢ Pin comments with codes</li>
-                  <li>â€¢ Create urgency with limited uses</li>
+                  <li>⬢ Use codes in video descriptions</li>
+                  <li>⬢ Mention in video content</li>
+                  <li>⬢ Pin comments with codes</li>
+                  <li>⬢ Create urgency with limited uses</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-medium text-purple-900 mb-2">Social Media Tips</h4>
                 <ul className="text-sm text-purple-700 space-y-1">
-                  <li>â€¢ Share in Instagram stories</li>
-                  <li>â€¢ Use in TikTok captions</li>
-                  <li>â€¢ Facebook group exclusives</li>
-                  <li>â€¢ Twitter thread promotions</li>
+                  <li>⬢ Share in Instagram stories</li>
+                  <li>⬢ Use in TikTok captions</li>
+                  <li>⬢ Facebook group exclusives</li>
+                  <li>⬢ Twitter thread promotions</li>
                 </ul>
               </div>
             </div>

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -79,7 +79,7 @@ export default function BoundaryBuilderHelpPage() {
               <span className="ml-2">Best Practices</span>
             </div>
             <ul className="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
-              <li>Be specific and behavior-focused: â€œIf X happens, I will Y.â€</li>
+              <li>Be specific and behavior-focused: â€œIf X happens, I will Y.⬝</li>
               <li>Keep it short, neutral, and repeatable.</li>
               <li>Follow through consistently; you are enforcing your limits, not controlling others.</li>
             </ul>

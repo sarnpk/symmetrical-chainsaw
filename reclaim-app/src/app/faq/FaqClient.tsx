@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { ChevronDown, Check, Scale, Search, Zap, ShieldCheck, CreditCard, Wrench } from 'lucide-react'

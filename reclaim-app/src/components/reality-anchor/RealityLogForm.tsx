@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -203,7 +203,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
           </button>
           <div className="text-sm text-gray-800 flex items-center gap-2">
             <span className={`inline-block h-2 w-2 rounded-full ${isDictating ? 'bg-red-500 animate-pulse' : 'bg-gray-400'}`}></span>
-            {isDictating ? 'Dictatingâ€¦' : speechSupported ? 'Tap mic to dictate' : 'Dictation not supported'}
+            {isDictating ? 'Dictating⬦' : speechSupported ? 'Tap mic to dictate' : 'Dictation not supported'}
           </div>
           <button
             type="button"
@@ -227,7 +227,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
             value={editorText}
             onChange={(e) => setEditorText(e.target.value)}
             className="w-full h-full resize-none outline-none text-base p-4 border border-gray-300 rounded-lg"
-            placeholder={editorMode === 'event' ? 'Speak or type what happenedâ€¦' : 'Speak or type the factsâ€¦'}
+            placeholder={editorMode === 'event' ? 'Speak or type what happened⬦' : 'Speak or type the facts⬦'}
             autoFocus
           />
         </div>

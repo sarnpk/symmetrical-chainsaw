@@ -100,11 +100,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       lines.push('## Evidence')
       for (const f of evidence) {
         const name = f.file_name || f.storage_path
-        const cap = redact ? '' : (f.caption ? ` — ${f.caption}` : '')
+        const cap = redact ? '' : (f.caption ? `  ${f.caption}` : '')
         lines.push(`- ${name}${cap}`)
         if (!redact && f.transcription) {
           const snippet = String(f.transcription).slice(0, 600)
-          lines.push(`  - Transcript: ${snippet}${f.transcription.length > 600 ? '…' : ''}`)
+          lines.push(`  - Transcript: ${snippet}${f.transcription.length > 600 ? '&' : ''}`)
         }
       }
       lines.push('')
@@ -142,10 +142,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         const u = new URL(url)
         const parts = u.pathname.split('/').filter(Boolean)
         const tail = parts[parts.length - 1] || ''
-        const base = `${u.hostname}/${parts.length > 1 ? '…/' : ''}${tail}`
-        return base.length > 60 ? `${base.slice(0, 57)}…` : base
+        const base = `${u.hostname}/${parts.length > 1 ? '&/' : ''}${tail}`
+        return base.length > 60 ? `${base.slice(0, 57)}&` : base
       } catch {
-        return url.length > 60 ? `${url.slice(0, 57)}…` : url
+        return url.length > 60 ? `${url.slice(0, 57)}&` : url
       }
     }
 
@@ -219,7 +219,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
                 const sec = Math.floor(t % 60)
                 return `${m}:${sec.toString().padStart(2, '0')}`
               }
-              lines.push(`${name} [${mmss(start)}–${mmss(end)}]: ${txt}`)
+              lines.push(`${name} [${mmss(start)}${mmss(end)}]: ${txt}`)
             }
           }
           if (lines.length) return lines.slice(0, 12).join('\n')
@@ -354,7 +354,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     // Behavior types
     if (entry.abuse_types?.length) {
       drawHeading('Behavior types')
-      for (const t of entry.abuse_types) drawTextWrapped(`• ${t.replace('_', ' ')}`)
+      for (const t of entry.abuse_types) drawTextWrapped(`" ${t.replace('_', ' ')}`)
     }
 
     // Emotional impact
@@ -369,13 +369,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       drawHeading('Evidence')
       for (const f of evidence) {
         const name = f.file_name || f.storage_path
-        const cap = redact ? '' : (f.caption ? ` — ${f.caption}` : '')
-        drawTextWrapped(`• ${name}${cap}`)
+        const cap = redact ? '' : (f.caption ? `  ${f.caption}` : '')
+        drawTextWrapped(`" ${name}${cap}`)
         if (!redact && f.transcription) {
           const formatted = formatTranscript(String(f.transcription))
           const snippet = formatted.slice(0, 600)
           drawTextWrapped(`Transcript:`)
-          drawTextWrapped(snippet + (formatted.length > 600 ? '…' : ''))
+          drawTextWrapped(snippet + (formatted.length > 600 ? '&' : ''))
         }
       }
 
@@ -423,7 +423,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         drawHeading('Audio Evidence')
         for (const f of audioFiles) {
           const name = f.file_name || f.storage_path
-          const cap = f.caption ? ` — ${f.caption}` : ''
+          const cap = f.caption ? `  ${f.caption}` : ''
           // Get a link for the audio
           let urlText = ''
           try {
@@ -441,7 +441,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
           const formatted = f.transcription ? formatTranscript(String(f.transcription)) : ''
           const snippet = formatted
-            ? formatted.slice(0, 600) + (formatted.length > 600 ? '…' : '')
+            ? formatted.slice(0, 600) + (formatted.length > 600 ? '&' : '')
             : 'No transcript available.'
 
           // Compute dynamic bubble height
@@ -463,7 +463,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
           page.drawRectangle({ x: margin, y: bubbleTop - bubbleHeight, width: bubbleWidth, height: bubbleHeight, borderColor: rgb(0.82, 0.86, 0.98), borderWidth: 1, opacity: 0 })
 
           // Title line
-          page.drawText(`• ${name}${cap}`, { x: margin + bubblePadding, y: bubbleTop - 20, size: 12, font: fontBold, color: rgb(0.12, 0.12, 0.2) })
+          page.drawText(`" ${name}${cap}`, { x: margin + bubblePadding, y: bubbleTop - 20, size: 12, font: fontBold, color: rgb(0.12, 0.12, 0.2) })
 
           // URL line and clickable annotation (optional)
           let cursorY = bubbleTop - 26

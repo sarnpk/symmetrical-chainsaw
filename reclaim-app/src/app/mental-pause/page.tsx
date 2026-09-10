@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -267,7 +267,7 @@ export default function MentalPausePage() {
                     <div className="text-6xl font-bold text-white mb-2">{countdown}</div>
                     <div className="text-xl font-medium text-white">
                       {breathingPhase === 'inhale' && 'â†‘ Breathe In'}
-                      {breathingPhase === 'hold' && 'â¸ Hold'}
+                      {breathingPhase === 'hold' && '⏸ Hold'}
                       {breathingPhase === 'exhale' && 'â†“ Breathe Out'}
                     </div>
                   </div>
@@ -311,7 +311,7 @@ export default function MentalPausePage() {
                   </div>
                   <div className="flex items-center justify-center gap-3">
                     <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">â¸</span>
+                      <span className="text-2xl">⏸</span>
                     </div>
                     <p className="text-gray-700"><strong>HOLD</strong> for <strong>7 seconds</strong></p>
                   </div>

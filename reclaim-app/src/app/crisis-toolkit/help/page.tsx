@@ -1,4 +1,4 @@
-﻿export default function CrisisToolkitHelpPage() {
+export default function CrisisToolkitHelpPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <iframe

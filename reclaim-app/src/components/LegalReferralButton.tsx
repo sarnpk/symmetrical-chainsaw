@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { Scale, ExternalLink, Shield } from 'lucide-react';
 
@@ -209,7 +209,7 @@ export default function LegalReferralButton({
       </button>
 
       <div className="mt-2 text-xs text-gray-500 text-center">
-        Court-ready evidence â€¢ Family law specialists â€¢ Confidential consultation
+        Court-ready evidence ⬢ Family law specialists ⬢ Confidential consultation
       </div>
     </div>
   );

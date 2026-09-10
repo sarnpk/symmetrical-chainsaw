@@ -1,4 +1,4 @@
-﻿// Browser-compatible password utilities using Web Crypto API
+// Browser-compatible password utilities using Web Crypto API
 // Provides: hashPassword, verifyPassword, generateSecurePassword
 
 const HASH_ALGORITHM = 'SHA-256'

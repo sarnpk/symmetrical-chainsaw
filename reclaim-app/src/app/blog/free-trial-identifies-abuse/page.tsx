@@ -1,4 +1,4 @@
-﻿import { Metadata } from 'next'
+import { Metadata } from 'next'
 import { Shield, CheckCircle, Clock, Users } from 'lucide-react'
 import AuthButton from '@/components/AuthButton'
 
@@ -53,10 +53,10 @@ export default function FreeTrialIdentifiesAbusePage() {
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8">
             <h3 className="text-lg font-semibold text-yellow-900 mb-2">The Invisible Prison:</h3>
             <ul className="text-yellow-800 space-y-2">
-              <li>â€¢ Emotional abuse escalates so gradually, you adapt without realizing</li>
-              <li>â€¢ Abusers are masters at making YOU feel like the problem</li>
-              <li>â€¢ Friends and family often can't see what happens behind closed doors</li>
-              <li>â€¢ You've been conditioned to doubt your own perceptions</li>
+              <li>⬢ Emotional abuse escalates so gradually, you adapt without realizing</li>
+              <li>⬢ Abusers are masters at making YOU feel like the problem</li>
+              <li>⬢ Friends and family often can't see what happens behind closed doors</li>
+              <li>⬢ You've been conditioned to doubt your own perceptions</li>
             </ul>
           </div>
 
@@ -120,37 +120,37 @@ export default function FreeTrialIdentifiesAbusePage() {
               <div>
                 <h4 className="font-semibold text-gray-800 mb-2">Emotional Manipulation:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
-                  <li>â€¢ Gaslighting ("That never happened")</li>
-                  <li>â€¢ Silent treatment punishment</li>
-                  <li>â€¢ Emotional blackmail</li>
-                  <li>â€¢ Guilt-tripping and blame-shifting</li>
+                  <li>⬢ Gaslighting ("That never happened")</li>
+                  <li>⬢ Silent treatment punishment</li>
+                  <li>⬢ Emotional blackmail</li>
+                  <li>⬢ Guilt-tripping and blame-shifting</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-800 mb-2">Control Tactics:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
-                  <li>â€¢ Isolation from friends/family</li>
-                  <li>â€¢ Financial control</li>
-                  <li>â€¢ Monitoring your activities</li>
-                  <li>â€¢ Threatening consequences</li>
+                  <li>⬢ Isolation from friends/family</li>
+                  <li>⬢ Financial control</li>
+                  <li>⬢ Monitoring your activities</li>
+                  <li>⬢ Threatening consequences</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-800 mb-2">Psychological Games:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
-                  <li>â€¢ Triangulation (using others)</li>
-                  <li>â€¢ Hot and cold behavior</li>
-                  <li>â€¢ Future faking promises</li>
-                  <li>â€¢ Projection of their issues</li>
+                  <li>⬢ Triangulation (using others)</li>
+                  <li>⬢ Hot and cold behavior</li>
+                  <li>⬢ Future faking promises</li>
+                  <li>⬢ Projection of their issues</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-800 mb-2">Validation Seeking:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
-                  <li>â€¢ Making you prove your love</li>
-                  <li>â€¢ Constant need for attention</li>
-                  <li>â€¢ Jealousy and possessiveness</li>
-                  <li>â€¢ Never being "good enough"</li>
+                  <li>⬢ Making you prove your love</li>
+                  <li>⬢ Constant need for attention</li>
+                  <li>⬢ Jealousy and possessiveness</li>
+                  <li>⬢ Never being "good enough"</li>
                 </ul>
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function FreeTrialIdentifiesAbusePage() {
             </p>
             <AuthButton variant="secondary" />
             <p className="text-sm text-indigo-200 mt-4">
-              Takes less than 5 minutes to start â€¢ Results available immediately
+              Takes less than 5 minutes to start ⬢ Results available immediately
             </p>
           </div>
 

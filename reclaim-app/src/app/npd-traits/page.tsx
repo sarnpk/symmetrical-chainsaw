@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -196,7 +196,7 @@ export default function NPDTraitsPage() {
                       <ul className="text-sm text-gray-600 space-y-1">
                         {trait.examples.slice(0, 2).map((example, idx) => (
                           <li key={idx} className="flex items-start gap-2">
-                            <span className="text-indigo-600 mt-1">â€¢</span>
+                            <span className="text-indigo-600 mt-1">⬢</span>
                             <span>{example}</span>
                           </li>
                         ))}

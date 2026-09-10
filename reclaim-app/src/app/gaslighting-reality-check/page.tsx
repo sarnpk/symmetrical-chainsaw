@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { AlertTriangle, ArrowRight, CheckCircle, Shield, Brain, Heart, Eye } from 'lucide-react'
@@ -433,7 +433,7 @@ export default function GaslightingRealityCheckPage() {
                   </button>
                 </div>
                 <p className="text-xs mt-3 opacity-90">
-                  Instant PDF delivery â€¢ No spam â€¢ 100% free
+                  Instant PDF delivery ⬢ No spam ⬢ 100% free
                 </p>
               </div>
             </div>
@@ -467,7 +467,7 @@ export default function GaslightingRealityCheckPage() {
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-red-500">
               <h3 className="font-bold text-xl mb-2">ðŸš« Denial & Memory Questioning</h3>
               <p className="text-gray-700 mb-3">
-                "That never happened" â€¢ "You're remembering it wrong" â€¢ "I never said that"
+                "That never happened" ⬢ "You're remembering it wrong" ⬢ "I never said that"
               </p>
               <p className="text-sm text-gray-600">
                 Making you question your own memory and perception of events.
@@ -477,7 +477,7 @@ export default function GaslightingRealityCheckPage() {
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-orange-500">
               <h3 className="font-bold text-xl mb-2">ðŸ˜¢ Emotional Invalidation</h3>
               <p className="text-gray-700 mb-3">
-                "You're too sensitive" â€¢ "You're overreacting" â€¢ "You're being dramatic"
+                "You're too sensitive" ⬢ "You're overreacting" ⬢ "You're being dramatic"
               </p>
               <p className="text-sm text-gray-600">
                 Dismissing your emotions and making you feel like your reactions are wrong.
@@ -487,7 +487,7 @@ export default function GaslightingRealityCheckPage() {
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
               <h3 className="font-bold text-xl mb-2">ðŸ”„ Reality Distortion</h3>
               <p className="text-gray-700 mb-3">
-                "You're crazy" â€¢ "Everyone thinks you're..." â€¢ "You have problems"
+                "You're crazy" ⬢ "Everyone thinks you're..." ⬢ "You have problems"
               </p>
               <p className="text-sm text-gray-600">
                 Making you question your sanity and perception of reality.
@@ -497,7 +497,7 @@ export default function GaslightingRealityCheckPage() {
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-purple-500">
               <h3 className="font-bold text-xl mb-2">ðŸŽ­ Blame Shifting</h3>
               <p className="text-gray-700 mb-3">
-                "You made me do it" â€¢ "If you hadn't..." â€¢ "It's your fault I..."
+                "You made me do it" ⬢ "If you hadn't..." ⬢ "It's your fault I..."
               </p>
               <p className="text-sm text-gray-600">
                 Making you responsible for their actions and emotions.

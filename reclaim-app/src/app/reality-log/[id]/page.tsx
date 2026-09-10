@@ -196,7 +196,7 @@ export default function RealityLogEntryPage() {
             {entry.is_consistent && (
               <div>
                 <p className="text-sm text-gray-600">📌 Pattern</p>
-                <p className="text-gray-700 mt-1">✓ Consistent with past behavior</p>
+                <p className="text-gray-700 mt-1"> Consistent with past behavior</p>
                 {entry.pattern_note && (
                   <p className="text-gray-600 mt-2 italic">{entry.pattern_note}</p>
                 )}
@@ -223,7 +223,7 @@ export default function RealityLogEntryPage() {
             </div>
 
             <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-green-900 font-medium">✅ Remember:</p>
+              <p className="text-green-900 font-medium"> Remember:</p>
               <p className="text-green-800 mt-2">
                 This is NOT your fault. This is her pattern. You are not crazy. You documented this.
               </p>

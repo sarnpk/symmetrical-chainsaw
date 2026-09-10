@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { RotateCcw, Target, RefreshCw, Shield, Heart } from 'lucide-react'
 
 export default function HealingContent() {

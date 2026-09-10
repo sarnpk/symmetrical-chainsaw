@@ -1,4 +1,4 @@
-﻿import versionInfo from "../version.json"
+import versionInfo from "../version.json"
 
 export default function AppVersion() {
   // Prefer semantic version from version.json, fallback to env/CI commit
@@ -26,10 +26,10 @@ export default function AppVersion() {
     <footer className="w-full py-4 text-center text-xs text-gray-500 select-none">
       <span className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1">
         <span>Reclaim</span>
-        <span className="text-gray-300">â€¢</span>
+        <span className="text-gray-300">⬢</span>
         <span>version</span>
         <code className="font-mono">{versionLabel}</code>
-        <span className="text-gray-300">â€¢</span>
+        <span className="text-gray-300">⬢</span>
         <span>{displayTime}</span>
       </span>
     </footer>

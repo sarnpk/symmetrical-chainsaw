@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 // POST /api/ai/suggest-coping-strategies
 // Body: { context?: { mood?: number; anxiety?: number; energy?: number; preferred_categories?: string[] } }

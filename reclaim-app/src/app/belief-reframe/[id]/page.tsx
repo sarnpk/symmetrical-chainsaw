@@ -359,7 +359,7 @@ export default function BeliefDetailPage() {
                     <div className="flex-1">
                       <p className="text-gray-900">{evidence.evidence_text}</p>
                       <p className="text-sm text-gray-600 mt-2">
-                        {evidence.evidence_source === 'journal' ? 'From journal entry' : 'Manual entry'} • 
+                        {evidence.evidence_source === 'journal' ? 'From journal entry' : 'Manual entry'} " 
                         {' '}{new Date(evidence.created_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -463,7 +463,7 @@ export default function BeliefDetailPage() {
                 <div className="space-y-3">
                   {aiHope.hope_statements?.map((statement: string, i: number) => (
                     <div key={i} className="p-4 bg-white rounded-lg border-l-4 border-blue-500">
-                      <p className="text-gray-900">✨ {statement}</p>
+                      <p className="text-gray-900">( {statement}</p>
                     </div>
                   ))}
                 </div>
@@ -650,11 +650,11 @@ export default function BeliefDetailPage() {
                   </ul>
                 </div>
                 <div className="p-4 bg-white rounded-lg border border-amber-200">
-                  <h4 className="font-semibold text-amber-900 mb-3">🤝 Support Resources:</h4>
+                  <h4 className="font-semibold text-amber-900 mb-3">> Support Resources:</h4>
                   <ul className="space-y-2">
                     {aiActionPlan.support_resources?.map((resource: string, i: number) => (
                       <li key={i} className="flex items-start gap-2">
-                        <span className="text-amber-600">•</span>
+                        <span className="text-amber-600">"</span>
                         <span className="text-gray-900">{resource}</span>
                       </li>
                     ))}

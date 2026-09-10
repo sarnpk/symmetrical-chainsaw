@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { AlertCircle, Shield, ArrowRight } from 'lucide-react'

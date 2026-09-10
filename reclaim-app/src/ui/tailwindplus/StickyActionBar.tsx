@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 
@@ -30,7 +30,7 @@ export default function StickyActionBar({ primaryLabel, onPrimary, secondaryLabe
           onClick={onPrimary}
           className="flex-1 h-11 rounded-md bg-indigo-600 text-white font-semibold shadow-sm hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {busy ? "Please waitâ€¦" : primaryLabel}
+          {busy ? "Please wait⬦" : primaryLabel}
         </button>
       </div>
     </div>

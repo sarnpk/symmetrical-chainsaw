@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState, useEffect } from 'react'
 import { AlertCircle, Send, Copy, Trash2, Download, Loader, MessageSquare, MessageCircle, HelpCircle } from 'lucide-react'
@@ -332,7 +332,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Analysis Details</h2>
                 <p className="text-sm text-gray-500">
-                  {new Date(selectedHistoryItem.created_at).toLocaleString()} â€¢ {selectedHistoryItem.input_type}
+                  {new Date(selectedHistoryItem.created_at).toLocaleString()} ⬢ {selectedHistoryItem.input_type}
                 </p>
               </div>
               <button
@@ -775,7 +775,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
                         {item.primary_type || item.analysis_result?.primaryType}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {item.input_type} â€¢ Severity: {item.severity_score || item.analysis_result?.severityScore}/10
+                        {item.input_type} ⬢ Severity: {item.severity_score || item.analysis_result?.severityScore}/10
                       </div>
                     </button>
                     <button

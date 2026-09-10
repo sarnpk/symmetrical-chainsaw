@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Search, Filter, SortDesc, SortAsc } from 'lucide-react'
 

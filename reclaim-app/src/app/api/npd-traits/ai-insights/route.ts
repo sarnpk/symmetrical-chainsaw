@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 interface CopingStrategy {
   type: 'immediate' | 'mindset' | 'empowerment'
@@ -91,7 +91,7 @@ function analyzeText(text: string): AIInsight {
   if (relevantStrategies.length === 0) {
     relevantStrategies.push(
       { type: 'immediate', title: 'Grounding Exercise', action: 'Name 5 things you can see, 4 you can touch, 3 you can hear', icon: 'ðŸŒ±' },
-      { type: 'mindset', title: 'Validation', action: 'Your experience matters and your feelings are valid', icon: 'â¤ï¸' },
+      { type: 'mindset', title: 'Validation', action: 'Your experience matters and your feelings are valid', icon: '❤️' },
       { type: 'empowerment', title: 'Self-Care', action: 'Do one small thing just for you right now', icon: 'ðŸŒŸ' }
     )
   }

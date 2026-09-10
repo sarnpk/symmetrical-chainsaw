@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react'
+import React, { useState } from 'react'
 import { useTranscriptionPoller } from '@/hooks/useTranscriptionPoller'
 
 interface TranscriptionExampleProps {

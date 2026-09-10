@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect, Suspense } from 'react'
 import { CheckCircle, Clock, Download, ArrowRight, Shield, Book, FileText, Headphones } from 'lucide-react'
@@ -167,7 +167,7 @@ function ThankYouContent() {
               </a>
 
               <p className="text-xs text-gray-500 text-center mt-3">
-                Instant download â€¢ 30-day money-back guarantee
+                Instant download ⬢ 30-day money-back guarantee
               </p>
             </div>
 
@@ -175,8 +175,8 @@ function ThankYouContent() {
             <div className="text-center text-sm opacity-90">
               <p className="mb-2">âœ¨ Join 3,247 people who've downloaded the Complete Playbook</p>
               <div className="flex justify-center gap-4 text-xs">
-                <span>â­â­â­â­â­ 4.9/5</span>
-                <span>â€¢</span>
+                <span>⭐⭐⭐⭐⭐ 4.9/5</span>
+                <span>⬢</span>
                 <span>847 Reviews</span>
               </div>
             </div>

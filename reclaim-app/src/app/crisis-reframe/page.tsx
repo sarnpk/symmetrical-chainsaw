@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -632,7 +632,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
               onClick={() => handleRate(rating)}
               className="px-4 py-2 border rounded-lg hover:bg-indigo-50 hover:border-indigo-300"
             >
-              {'â­'.repeat(rating)}
+              {'⭐'.repeat(rating)}
             </button>
           ))}
         </div>

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -203,7 +203,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
                   <CardHeader>
                     <CardTitle className="text-base line-clamp-1">{entry.title}</CardTitle>
                     <div className="text-xs text-gray-500">
-                      {new Date(entry.incident_date).toLocaleDateString()} â€¢ Safety: {entry.safety_rating}/5
+                      {new Date(entry.incident_date).toLocaleDateString()} ⬢ Safety: {entry.safety_rating}/5
                     </div>
                   </CardHeader>
                   <CardContent>
