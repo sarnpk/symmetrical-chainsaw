@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
   // Content Security Policy
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://sandbox.paddle.com https://cdn.paddle.com https://buy.paddle.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://sandbox.paddle.com https://cdn.paddle.com https://buy.paddle.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com",
     "style-src 'self' 'unsafe-inline' https://cdn.paddle.com",
     "img-src 'self' data: blob: https:",
     "font-src 'self'",

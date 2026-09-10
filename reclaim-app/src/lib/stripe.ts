@@ -15,6 +15,7 @@ function getStripe(): Stripe {
   return stripeInstance
 }
 
+export { getStripe }
 export { getStripe as stripe }
 
 export const getStripeCustomerByEmail = async (email: string) => {
