@@ -39,13 +39,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Input is required' }, { status: 400 })
     }
 
-    // Check usage limits
-    const canUse = await trackUsage(user.id, 'hope_reframe')
+    // Check usage limits (non-blocking — if tracking fails, allow the request)
+    let canUse = { allowed: true as boolean, upgrade_required: undefined as string | undefined }
+    try {
+      const result = await trackUsage(user.id, 'hope_reframe')
+      canUse = result
+    } catch (trackingError) {
+      console.error('Usage tracking error (allowing request):', trackingError)
+    }
     if (!canUse.allowed) {
       return NextResponse.json(
         { 
           error: 'Monthly limit reached',
-          usage_info: canUse.usage_info,
           upgrade_required: canUse.upgrade_required
         },
         { status: 429 }
@@ -68,14 +73,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       reframe,
       mantra,
-      usage_info: canUse.usage_info,
       created_at: new Date().toISOString()
     })
 
   } catch (error) {
     console.error('Hope reframe generation error:', error)
+    const message = error instanceof Error ? error.message : String(error)
     return NextResponse.json(
-      { error: 'I\'m here with you. Let\'s try again in a moment.' },
+      { error: 'I\'m here with you. Let\'s try again in a moment.', detail: message },
       { status: 500 }
     )
   }

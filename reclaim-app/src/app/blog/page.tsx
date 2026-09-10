@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Calendar, Clock, Eye, ArrowRight, Search, Filter, Youtube, Instagram, Twitter, Facebook, Music } from 'lucide-react'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import UnifiedFooter from '@/components/UnifiedFooter'
+import QuizShell from '@/components/marketing/QuizShell'
 
 interface BlogPost {
   id: string
@@ -131,8 +130,7 @@ export default function BlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <UnifiedHeader />
+    <QuizShell>
 
       <main className="py-16 px-4">
         <div className="container mx-auto max-w-7xl">
@@ -376,7 +374,6 @@ export default function BlogPage() {
           </div>
         </div>
       </main>
-      <UnifiedFooter />
-    </div>
+      </QuizShell>
   )
 }

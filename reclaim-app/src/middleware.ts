@@ -2,25 +2,37 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  // Security headers
   const response = NextResponse.next()
-  
-  // Add security headers
+
+  // Security headers
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   response.headers.set('X-XSS-Protection', '1; mode=block')
-  
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+
+  // Content Security Policy
+  const csp = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://challenges.cloudflare.com https://www.googletagmanager.com",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self'",
+    "connect-src 'self' https://*.supabase.co https://api.stripe.com https://challenges.cloudflare.com",
+    "frame-src https://js.stripe.com https://challenges.cloudflare.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join('; ')
+
+  response.headers.set('Content-Security-Policy', csp)
+
   // Admin route protection
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    // Add additional security headers for admin routes
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate')
     response.headers.set('Pragma', 'no-cache')
-    
-    // Log admin access attempts
-    console.log(`Admin access attempt: ${request.ip} -> ${request.nextUrl.pathname}`)
   }
-  
+
   return response
 }
 

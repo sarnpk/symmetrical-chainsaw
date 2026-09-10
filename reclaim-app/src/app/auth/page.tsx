@@ -6,12 +6,11 @@ import { createClient } from '@/lib/supabase'
 import { LogIn, UserPlus } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import { Turnstile } from '@marsidev/react-turnstile'
+import Logo from '@/components/marketing/Logo'
 
 function AuthForm() {
   const searchParams = useSearchParams()
-  const [isSignUp, setIsSignUp] = useState(true)
+  const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState(searchParams.get('email') || '')
   const redirectTo = searchParams.get('redirect') || '/dashboard'
   const [password, setPassword] = useState('')
@@ -21,32 +20,16 @@ function AuthForm() {
   const [childrenCount, setChildrenCount] = useState(0)
   const [custodyArrangement, setCustodyArrangement] = useState('')
   const [loading, setLoading] = useState(false)
-  const [turnstileToken, setTurnstileToken] = useState('')
-  
+
   const router = useRouter()
   const supabase = createClient()
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!turnstileToken) {
-      toast.error('Please complete the security check')
-      return
-    }
-    
     setLoading(true)
 
     try {
-      // Verify Turnstile token
-      const verifyRes = await fetch('/api/verify-turnstile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: turnstileToken })
-      })
-      
-      if (!verifyRes.ok) {
-        throw new Error('Security verification failed')
-      }
       if (isSignUp) {
         const { data, error } = await supabase.auth.signUp({
           email,
@@ -113,7 +96,6 @@ function AuthForm() {
         
         toast.success('Welcome back!')
         router.push(redirectTo)
-        router.refresh()
       }
     } catch (error: any) {
       toast.error(error.message)
@@ -274,18 +256,9 @@ function AuthForm() {
             )}
           </div>
           
-          <div className="flex justify-center">
-            <Turnstile
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAACHvmqj6aVkicEsF'}
-              onSuccess={(token) => setTurnstileToken(token)}
-              onError={() => toast.error('Security check failed')}
-              onExpire={() => setTurnstileToken('')}
-            />
-          </div>
-          
           <button
             type="submit"
-            disabled={loading || !turnstileToken}
+            disabled={loading}
             className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 transition-colors"
           >
             {loading ? (
@@ -319,7 +292,17 @@ function AuthForm() {
 export default function AuthPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <UnifiedHeader showAuth={false} />
+      <header className="py-6">
+        <div className="container mx-auto px-4">
+          <Link href="/" className="inline-flex items-center gap-2" aria-label="Reclaim home">
+            <Logo className="h-9 w-9" />
+            <span className="flex flex-col leading-none">
+              <span className="font-display text-lg font-semibold text-ink-900 tracking-tight">Reclaim</span>
+              <span className="text-[11px] font-medium text-ink-500 tracking-wide">Your Life</span>
+            </span>
+          </Link>
+        </div>
+      </header>
       <Suspense fallback={<div className="flex items-center justify-center px-4 py-16">Loading...</div>}>
         <AuthForm />
       </Suspense>

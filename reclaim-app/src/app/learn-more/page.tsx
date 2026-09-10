@@ -1,23 +1,11 @@
-import { Shield, Heart, Brain, Users, Lock, CheckCircle, ArrowRight, Star } from 'lucide-react'
+import { Shield, Heart, Brain, Lock, CheckCircle, ArrowRight, Star } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import AuthButton from '@/components/AuthButton'
+import QuizShell from '@/components/marketing/QuizShell'
 
 export default function LearnMorePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Shield className="h-8 w-8 text-indigo-600" />
-            <span className="text-xl font-bold text-gray-900">Reclaim</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
-            <AuthButton />
-          </div>
-        </div>
-      </header>
+    <QuizShell>
 
       {/* Hero Section */}
       <section className="py-20 px-4">
@@ -478,7 +466,7 @@ export default function LearnMorePage() {
             </div>
             
             <div className="border-b pb-6">
-              <h3 className="text-xl font-semibent text-gray-900 mb-3">Is there a free version?</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Is there a free version?</h3>
               <p className="text-gray-600">
                 Yes, our Foundation plan is completely free and includes basic access to all core features 
                 including Reality Anchor routines, journal entries, AI coaching, and safety planning.
@@ -524,29 +512,6 @@ export default function LearnMorePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t bg-white py-12 px-4">
-        <div className="container mx-auto">
-          <div className="text-center text-gray-600 mb-6">
-            <p className="mb-4">
-              &copy; 2025 Reclaim Platform. Your safety and privacy are our priority.
-            </p>
-            <p className="text-sm mb-6">
-              This platform is designed for educational and support purposes. 
-              Always consult with qualified professionals for medical or legal advice.
-            </p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500 border-t pt-6">
-            <a href="/faq" className="hover:text-indigo-600 transition-colors">FAQ</a>
-            <a href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy Policy</a>
-            <a href="/terms" className="hover:text-indigo-600 transition-colors">Terms of Service</a>
-            <a href="/cookies" className="hover:text-indigo-600 transition-colors">Cookie Policy</a>
-            <a href="/gdpr" className="hover:text-indigo-600 transition-colors">Data Rights</a>
-            <a href="mailto:support@reclaim.app" className="hover:text-indigo-600 transition-colors">Contact</a>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </QuizShell>
   )
 }

@@ -40,6 +40,7 @@ import {
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
 import toast from 'react-hot-toast'
+import Logo from '@/components/marketing/Logo'
 import MobileNavbar from '@/ui/tailwindplus/MobileNavbar'
 
 interface DashboardLayoutProps {
@@ -175,7 +176,7 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between h-16 px-6 border-b sticky top-0 bg-white z-10">
             <div className="flex items-center">
-              <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
+              <Logo className="h-8 w-8" />
               <span className="ml-2 text-xl font-bold text-gray-900">Reclaim</span>
             </div>
             <button 

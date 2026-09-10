@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast'
 import AppVersion from "../components/AppVersion"
@@ -13,21 +13,43 @@ const inter = Inter({
   preload: true
 });
 
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  axes: ["opsz", "SOFT", "WONK"],
+  variable: "--font-display",
+  weight: "variable",
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: "Reclaim - Recovery Platform",
+  metadataBase: new URL("https://reclaim.app"),
+  title: {
+    default: "Reclaim - Recovery Platform",
+    template: "%s | Reclaim",
+  },
   description: "A secure digital recovery tool for survivors of narcissistic abuse",
   manifest: "/manifest.json",
   formatDetection: {
     telephone: false,
   },
   themeColor: "#6366f1",
+  openGraph: {
+    type: "website",
+    siteName: "Reclaim",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Reclaim — turn your history into evidence. Your truth into recovery.",
+      },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({
@@ -45,19 +67,10 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Reclaim" />
       </head>
-      <body className={`${inter.className} antialiased bg-gray-50 min-h-screen preload`}>
+      <body className={`${inter.className} ${fraunces.variable} antialiased bg-gray-50 min-h-screen`}>
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('load', function() {
-                document.body.classList.remove('preload');
-              });
-            `,
-          }}
-        />
         <main className="min-h-screen">
           {children}
         </main>

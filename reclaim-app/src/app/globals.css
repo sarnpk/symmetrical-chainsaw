@@ -1,6 +1,70 @@
 @import "tailwindcss";
 
 /* ============================================
+   DESIGN TOKENS (Tailwind v4 @theme)
+   See docs/PREMIUM_WEBSITE_DESIGN.md §2 & §3
+   ============================================ */
+@theme {
+  /* Brand primaries */
+  --color-brand-50:  #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+
+  /* Support violet (secondary, "hope" accent) */
+  --color-hope-50:   #f5f3ff;
+  --color-hope-100:  #ede9fe;
+  --color-hope-200:  #ddd6fe;
+  --color-hope-300:  #c4b5fd;
+  --color-hope-400:  #a78bfa;
+  --color-hope-500:  #8b5cf6;
+  --color-hope-600:  #7c3aed;
+  --color-hope-700:  #6d28d9;
+
+  /* Rose = "warm breakthrough" accent */
+  --color-dawn-50:  #fff1f2;
+  --color-dawn-100: #ffe4e6;
+  --color-dawn-300: #fda4af;
+  --color-dawn-500: #f43f5e;
+  --color-dawn-600: #e11d48;
+
+  /* Neutral warm-gray */
+  --color-ink-50:   #fafafa;
+  --color-ink-100:  #f5f5f4;
+  --color-ink-200:  #e7e5e4;
+  --color-ink-300:  #d6d3d1;
+  --color-ink-400:  #a8a29e;
+  --color-ink-500:  #78716c;
+  --color-ink-600:  #57534e;
+  --color-ink-700:  #44403c;
+  --color-ink-800:  #292524;
+  --color-ink-900:  #1c1917;
+
+  /* Semantic */
+  --color-success: #16a34a;
+  --color-danger:  #dc2626;
+  --color-warning: #d97706;
+
+  /* Radius */
+  --radius-card: 1rem;
+  --radius-panel: 1.5rem;
+
+  /* Motion */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Shadows */
+  --shadow-soft: 0 1px 2px rgb(28 25 23 / 0.04), 0 8px 24px rgb(28 25 23 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(28 25 23 / 0.05), 0 18px 40px rgb(28 25 23 / 0.10);
+}
+
+/* ============================================
    HIGH PRIORITY UI IMPROVEMENTS - WEB 5.0
    ============================================ */
 
@@ -11,16 +75,33 @@
     font-size: 17px; /* Increased from 16px for better readability */
   }
 
+  /* Display headings use the brand serif (Fraunces) via --font-display.
+     Explicit size utilities in markup still override these base rules. */
   h1 {
-    @apply text-3xl font-bold text-gray-900 leading-tight;
+    font-family: var(--font-display), Georgia, serif;
+    color: var(--color-ink-900);
+    font-weight: 600;
+    line-height: 1.05;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    letter-spacing: -0.02em;
   }
 
   h2 {
-    @apply text-xl font-semibold text-gray-900 leading-snug;
+    font-family: var(--font-display), Georgia, serif;
+    color: var(--color-ink-900);
+    font-weight: 600;
+    line-height: 1.1;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    letter-spacing: -0.01em;
   }
 
   h3 {
-    @apply text-lg font-medium text-gray-900 leading-normal;
+    font-family: var(--font-display), Georgia, serif;
+    color: var(--color-ink-900);
+    font-weight: 600;
+    line-height: 1.25;
+    font-size: clamp(1.375rem, 2vw, 1.625rem);
+    letter-spacing: -0.01em;
   }
 
   /* Better body text contrast */
@@ -31,7 +112,7 @@
 
   /* Better link styles */
   a:not(.no-underline) {
-    @apply text-indigo-600 hover:text-indigo-700 underline-offset-2 transition-colors duration-150;
+    @apply text-brand-600 hover:text-brand-700 underline-offset-2 transition-colors duration-150;
   }
 
   /* 2. FOCUS STATES FOR ACCESSIBILITY */
@@ -40,26 +121,16 @@
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    @apply outline-none ring-2 ring-indigo-500 ring-offset-2;
-  }
-
-  /* 3. RESPONSIVE TEXT SIZING */
-  @media (max-width: 640px) {
-    h1 {
-      @apply text-2xl;
-    }
-    h2 {
-      @apply text-lg;
-    }
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2;
   }
 }
 
 @layer components {
   /* STANDARDIZED BUTTON STYLES */
   .btn-primary {
-    @apply px-4 py-2 bg-indigo-600 text-white rounded-lg;
-    @apply hover:bg-indigo-700 active:scale-95;
-    @apply focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
+    @apply px-4 py-2 bg-brand-600 text-white rounded-lg;
+    @apply hover:bg-brand-700 active:scale-95;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
     @apply transition-all duration-150;
   }
@@ -314,17 +385,12 @@
 
   /* BONUS: Better selection colors */
   ::selection {
-    @apply bg-indigo-100 text-indigo-900;
+    @apply bg-brand-100 text-brand-900;
   }
 
   /* BONUS: Smooth transitions for theme changes */
   * {
     @apply transition-colors duration-200;
-  }
-
-  /* Disable transitions on page load */
-  .preload * {
-    transition: none !important;
   }
 
   /* Custom mobile styles for journal form */
@@ -370,6 +436,20 @@
   /* Safe area insets for mobile */
   .safe-area-inset {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Subtle floating chips for marketing hero (killed by reduced-motion rule below) */
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .float-a { animation: floaty 6s ease-in-out infinite; }
+  .float-b { animation: floaty 7s ease-in-out 1.2s infinite; }
+  .float-c { animation: floaty 8s ease-in-out 0.6s infinite; }
+
+  /* Brand display font (resolves to the self-hosted Fraunces via --font-display) */
+  .font-display {
+    font-family: var(--font-display), Georgia, serif;
   }
 
   /* Mobile viewport height */
@@ -427,5 +507,19 @@
     .bg-white {
       page-break-inside: avoid;
     }
+  }
+}
+
+/* ============================================
+   REDUCED MOTION (a11y) — docs/PREMIUM_WEBSITE_DESIGN.md §8
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -15,9 +15,24 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     const body = await req.json()
+
+    // Validate required fields
+    if (!body.statement || typeof body.statement !== 'string' || body.statement.trim().length === 0) {
+      return NextResponse.json({ error: 'Statement is required' }, { status: 400 })
+    }
+
+    // Sanitize and limit fields
+    const sanitized = {
+      user_id: user.id,
+      statement: body.statement.trim().slice(0, 5000),
+      context: body.context?.trim().slice(0, 2000) || null,
+      emotion: body.emotion?.trim().slice(0, 100) || null,
+      statement_date: body.statement_date || new Date().toISOString(),
+    }
+
     const { data, error } = await supabase
       .from('gaslighting_statements')
-      .insert({ user_id: user.id, ...body })
+      .insert(sanitized)
       .select()
       .single()
 

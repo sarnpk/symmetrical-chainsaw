@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react'
 import { AlertTriangle, CheckCircle, Shield, Brain, Heart } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import UnifiedFooter from '@/components/UnifiedFooter'
+import QuizShell from '@/components/marketing/QuizShell'
 
 const questions = [
   "Do you feel safe expressing your feelings and opinions?",
@@ -96,8 +95,7 @@ export default function RelationshipHealthCheckPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-      <UnifiedHeader currentTool="relationship-health" />
+    <QuizShell>
 
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
@@ -280,7 +278,6 @@ export default function RelationshipHealthCheckPage() {
         </section>
       )}
 
-      <UnifiedFooter />
-    </div>
+      </QuizShell>
   )
 }

@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import UnifiedFooter from '@/components/UnifiedFooter'
+import QuizShell from '@/components/marketing/QuizShell'
 
 export default function DonatePage() {
   const [customAmount, setCustomAmount] = useState('')
@@ -18,8 +17,7 @@ export default function DonatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
-      <UnifiedHeader />
+    <QuizShell>
       <div className="py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
@@ -133,7 +131,6 @@ export default function DonatePage() {
         </div>
       </div>
       </div>
-      <UnifiedFooter />
-    </div>
+      </QuizShell>
   )
 }

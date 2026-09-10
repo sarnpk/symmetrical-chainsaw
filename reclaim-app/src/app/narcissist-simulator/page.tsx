@@ -410,7 +410,7 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
               <div className="flex items-center gap-2">
                 <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Narcissist Simulator</h1>
                 <Link 
-                  href="/docs/NARCISSIST_SIMULATOR_CUSTOM_CONTEXT_GUIDE.md"
+                  href="/narcissist-simulator/guide"
                   target="_blank"
                   className="text-indigo-600 hover:text-indigo-700"
                   title="View User Guide"

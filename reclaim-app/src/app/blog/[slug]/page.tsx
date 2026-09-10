@@ -5,8 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { Calendar, Clock, Eye, ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import UnifiedFooter from '@/components/UnifiedFooter'
+import QuizShell from '@/components/marketing/QuizShell'
 
 export default function BlogPostPage() {
   const params = useParams()
@@ -69,8 +68,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <UnifiedHeader />
+    <QuizShell>
 
       <main className="py-12 px-4">
         <div className="container mx-auto max-w-4xl">
@@ -163,7 +161,6 @@ export default function BlogPostPage() {
           </div>
         </div>
       </main>
-      <UnifiedFooter />
-    </div>
+      </QuizShell>
   )
 }

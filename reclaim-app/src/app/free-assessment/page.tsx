@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Heart, AlertTriangle, Shield, CheckCircle, XCircle, Info, ArrowRight, Brain } from 'lucide-react'
 import Link from 'next/link'
+import QuizShell from '@/components/marketing/QuizShell'
 
 const assessmentQuestions = [
   { id: 'q1', question: 'My partner listens to me without interrupting', category: 'communication', weight: 1 },
@@ -64,25 +65,7 @@ export default function FreeAssessmentPage() {
 
   if (isComplete && results) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50">
-        <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link href="/" className="flex items-center space-x-3">
-                <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
-                <span className="text-xl font-bold text-gray-900">Reclaim</span>
-              </Link>
-              <div className="flex items-center space-x-4">
-                <Link href="/auth" className="text-gray-600 hover:text-gray-900 font-medium">
-                  Sign In
-                </Link>
-                <Link href="/auth" className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
-                  Get Started
-                </Link>
-              </div>
-            </div>
-          </div>
-        </header>
+      <QuizShell>
 
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
@@ -169,33 +152,15 @@ export default function FreeAssessmentPage() {
             </div>
           </div>
         </main>
-      </div>
-    )
+    </QuizShell>
+  )
   }
 
   const question = assessmentQuestions[currentQuestion]
   const progress = ((currentQuestion + 1) / assessmentQuestions.length) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50">
-      <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-3">
-              <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
-              <span className="text-xl font-bold text-gray-900">Reclaim</span>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Link href="/auth" className="text-gray-600 hover:text-gray-900 font-medium">
-                Sign In
-              </Link>
-              <Link href="/auth" className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+    <QuizShell>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <section className="text-center mb-12">
@@ -289,13 +254,13 @@ export default function FreeAssessmentPage() {
             </div>
           </div>
 
-          <footer className="text-center mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
-            <p className="text-purple-700">
+          <footer className="text-center mt-8 p-6 bg-hope-50/70 rounded-panel border border-hope-200">
+            <p className="text-hope-700">
               Powered by <span className="font-bold">Reclaim</span> - Trusted by thousands for relationship health and abuse recovery
             </p>
           </footer>
         </div>
       </main>
-    </div>
+    </QuizShell>
   )
 }

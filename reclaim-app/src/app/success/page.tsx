@@ -4,7 +4,7 @@ import { useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { CheckCircle } from 'lucide-react'
 import Link from 'next/link'
-import UnifiedHeader from '@/components/UnifiedHeader'
+import SiteHeader from '@/components/marketing/SiteHeader'
 
 function SuccessContent() {
   const searchParams = useSearchParams()
@@ -71,7 +71,7 @@ function SuccessContent() {
 export default function SuccessPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-      <UnifiedHeader />
+      <SiteHeader />
       <Suspense fallback={<div className="container mx-auto px-4 py-16 text-center">Loading...</div>}>
         <SuccessContent />
       </Suspense>

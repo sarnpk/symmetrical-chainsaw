@@ -1,16 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
+  images: {
+    domains: ['localhost'],
+    unoptimized: true,
+  },
+  poweredByHeader: false,
+  reactStrictMode: true,
+  trailingSlash: false,
+  output: 'standalone',
+  onDemandEntries: {
+    maxInactiveAge: 0,
+    pagesBufferLength: 0,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  compress: true,
-  poweredByHeader: false,
-  images: {
-    formats: ['image/avif', 'image/webp'],
+  eslint: {
+    ignoreDuringBuilds: true,
   },
-}
+  productionBrowserSourceMaps: false,
+};
 
-module.exports = nextConfig 
+module.exports = nextConfig;

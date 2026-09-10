@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react'
 import { AlertTriangle, CheckCircle, Shield, Brain } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import UnifiedFooter from '@/components/UnifiedFooter'
+import QuizShell from '@/components/marketing/QuizShell'
 
 const questions = [
   "Do they lack empathy for your feelings or needs?",
@@ -72,8 +71,7 @@ export default function FreeNarcissistTestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      <UnifiedHeader currentTool="narcissist-test" />
+    <QuizShell>
 
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
@@ -219,7 +217,6 @@ export default function FreeNarcissistTestPage() {
         </section>
       )}
 
-      <UnifiedFooter />
-    </div>
+      </QuizShell>
   )
 }

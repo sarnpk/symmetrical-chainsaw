@@ -726,7 +726,8 @@ export default function AcceptancePage() {
             }
             setShowVoiceInput(false);
           }}
-          initialText={
+          title="Voice Input"
+          initialValue={
             voiceInputField === 'dailyStruggle' ? dailyStruggle :
             voiceInputField === 'hopeTriggersText' ? hopeTriggersText :
             voiceInputField === 'realityAnchorsText' ? realityAnchorsText :

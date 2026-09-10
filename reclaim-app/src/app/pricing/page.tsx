@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Check, X, Star, Shield, Heart, Brain, Users, Zap } from 'lucide-react'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import UnifiedFooter from '@/components/UnifiedFooter'
-import { createClient } from '@supabase/supabase-js'
+import { Check, X, Star, Shield, Heart, Brain, Zap, Users } from 'lucide-react'
+import SiteHeader from '@/components/marketing/SiteHeader'
+import SiteFooter from '@/components/marketing/SiteFooter'
+import SectionHeading from '@/components/marketing/SectionHeading'
+import CtaBanner from '@/components/marketing/CtaBanner'
+import Reveal from '@/components/marketing/Reveal'
 
 interface SubscriptionPlan {
   plan_tier: string
@@ -27,12 +28,20 @@ interface FeatureComparison {
   }[]
 }
 
+const defaultPlans: SubscriptionPlan[] = [
+  { plan_tier: 'foundation', display_name: 'Foundation (Free)', description: 'Basic access for getting started', price_monthly: 0, price_yearly: 0 },
+  { plan_tier: 'recovery', display_name: 'Recovery', description: 'AI-powered recovery tools', price_monthly: 14.99, price_yearly: 150.00 },
+  { plan_tier: 'empowerment', display_name: 'Empowered', description: 'Complete recovery suite', price_monthly: 24.99, price_yearly: 250.00 }
+]
+
+const tierMeta: Record<string, { accent: 'green' | 'brand' | 'hope'; icon: any; popular?: boolean }> = {
+  foundation: { accent: 'green', icon: Heart },
+  recovery: { accent: 'brand', icon: Shield, popular: true },
+  empowerment: { accent: 'hope', icon: Star }
+}
+
 export default function PricingPage() {
-  const [plans, setPlans] = useState<SubscriptionPlan[]>([
-    { plan_tier: 'foundation', display_name: 'Foundation (Free)', description: 'Basic access for getting started', price_monthly: 0, price_yearly: 0 },
-    { plan_tier: 'recovery', display_name: 'Recovery', description: 'AI-powered recovery tools', price_monthly: 14.99, price_yearly: 150.00 },
-    { plan_tier: 'empowerment', display_name: 'Empowered', description: 'Complete recovery suite', price_monthly: 24.99, price_yearly: 250.00 }
-  ])
+  const [plans, setPlans] = useState<SubscriptionPlan[]>(defaultPlans)
   const [loading, setLoading] = useState(true)
   const [isYearly, setIsYearly] = useState(false)
   const [subscribing, setSubscribing] = useState<string | null>(null)
@@ -47,14 +56,14 @@ export default function PricingPage() {
         'empowerment-yearly': process.env.NEXT_PUBLIC_STRIPE_PRICE_EMPOWERMENT_YEARLY || ''
       }
       const priceId = priceIds[`${tier}-${isYearly ? 'yearly' : 'monthly'}`]
-      
+
       const res = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ priceId, email: '' })
       })
       const { sessionId } = await res.json()
-      
+
       const stripe = await import('@stripe/stripe-js').then(m => m.loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!))
       await stripe?.redirectToCheckout({ sessionId })
     } catch (error) {
@@ -145,25 +154,44 @@ export default function PricingPage() {
     }
   ]
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <UnifiedHeader />
+  const cellValue = (value: string | boolean) => {
+    if (typeof value === 'boolean') {
+      return value
+        ? <Check className="h-5 w-5 text-success-600 mx-auto" aria-label="Included" />
+        : <X className="h-5 w-5 text-ink-300 mx-auto" aria-label="Not included" />
+    }
+    return <span className="text-sm font-medium text-ink-700">{value}</span>
+  }
 
-      <main className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">Choose Your Recovery Plan</h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Transparent, simple pricing. Upgrade anytime. Downgrade or cancel easily.
-            </p>
-            
-            {/* Billing Toggle */}
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <span className={`text-sm font-medium ${!isYearly ? 'text-indigo-600' : 'text-gray-500'}`}>Monthly</span>
+  const colLabel = (key: string) => (key === 'foundation' ? 'Foundation' : key === 'recovery' ? 'Recovery' : 'Empowered')
+
+  const headerColClass = (key: string) =>
+    key === 'foundation' ? 'text-green-700' : key === 'recovery' ? 'text-brand-700' : 'text-hope-600'
+
+  return (
+    <div className="min-h-screen bg-white">
+      <SiteHeader />
+
+      <main>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Simple, honest pricing"
+              title="Choose your recovery plan"
+              lead="Transparent pricing. Upgrade anytime. Downgrade or cancel easily — your data never disappears."
+            />
+          </Reveal>
+
+          <Reveal delay={80}>
+            <div className="mt-8 flex items-center justify-center gap-4">
+              <span className={`text-sm font-medium ${!isYearly ? 'text-brand-700' : 'text-ink-500'}`}>Monthly</span>
               <button
                 onClick={() => setIsYearly(!isYearly)}
+                role="switch"
+                aria-checked={isYearly}
+                aria-label="Toggle yearly billing"
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  isYearly ? 'bg-indigo-600' : 'bg-gray-200'
+                  isYearly ? 'bg-brand-600' : 'bg-ink-200'
                 }`}
               >
                 <span
@@ -172,201 +200,149 @@ export default function PricingPage() {
                   }`}
                 />
               </button>
-              <span className={`text-sm font-medium ${isYearly ? 'text-indigo-600' : 'text-gray-500'}`}>
-                Yearly <span className="text-green-600 font-semibold">(Save 17%)</span>
+              <span className={`text-sm font-medium ${isYearly ? 'text-brand-700' : 'text-ink-500'}`}>
+                Yearly <span className="font-semibold text-success-600">(Save 17%)</span>
               </span>
             </div>
-          </div>
+          </Reveal>
 
-          {/* Tier cards */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="mt-12 grid gap-6 md:grid-cols-3 items-stretch">
             {loading ? (
-              <div className="col-span-3 text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+              <div className="col-span-3 flex justify-center py-12">
+                <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-brand-600" aria-label="Loading plans" />
               </div>
             ) : (
-              <>
-                {/* Foundation */}
-                <Card className="relative">
-                  <CardHeader>
-                    <CardTitle className="text-green-700 flex items-center gap-2">
-                      <Heart className="h-5 w-5" />
-                      {getPlanData('foundation')?.display_name || 'Foundation (Free)'}
-                    </CardTitle>
-                    <div className="text-4xl font-bold">
-                      ${getPrice('foundation')}
-                      <span className="text-lg font-normal text-gray-500">/{isYearly ? 'year' : 'month'}</span>
-                    </div>
-                    <CardDescription className="text-base">{getPlanData('foundation')?.description || 'Basic access for getting started'}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Link href="/auth" className="block w-full">
-                      <button className="w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
-                        Get Started Free
-                      </button>
-                    </Link>
-                  </CardContent>
-                </Card>
-
-                {/* Recovery (Popular) */}
-                <Card className="relative border-indigo-200 shadow-lg">
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-medium">
-                    Popular
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="text-indigo-700 flex items-center gap-2">
-                      <Shield className="h-5 w-5" />
-                      {getPlanData('recovery')?.display_name || 'Recovery'}
-                    </CardTitle>
-                    <div className="text-4xl font-bold">
-                      ${getPrice('recovery')}
-                      <span className="text-lg font-normal text-gray-500">/{isYearly ? 'year' : 'month'}</span>
-                      {isYearly && (
-                        <div className="text-sm text-green-600 font-medium">Save $30/year</div>
+              defaultPlans.map((plan, i) => {
+                const meta = tierMeta[plan.plan_tier]
+                const active = getPlanData(plan.plan_tier)
+                const name = active?.display_name || plan.display_name
+                return (
+                  <Reveal key={plan.plan_tier} delay={i * 100} className="h-full">
+                    <div
+                      className={`relative flex h-full flex-col rounded-panel border bg-white p-7 shadow-soft transition-shadow hover:shadow-lift ${
+                        meta.popular ? 'border-brand-300 ring-1 ring-brand-200' : 'border-ink-200'
+                      }`}
+                    >
+                      {meta.popular && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-600 px-4 py-1 text-sm font-semibold text-white">
+                          Popular
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2 font-display text-xl font-semibold text-ink-900">
+                        <meta.icon className={`h-5 w-5 ${meta.accent === 'green' ? 'text-success-600' : meta.accent === 'hope' ? 'text-hope-600' : 'text-brand-600'}`} />
+                        {name}
+                      </div>
+                      <p className="mt-2 text-base leading-relaxed text-ink-600">
+                        {active?.description || plan.description}
+                      </p>
+                      <div className="mt-6 flex items-baseline gap-1">
+                        <span className="font-display text-5xl font-semibold text-ink-900">${getPrice(plan.plan_tier)}</span>
+                        <span className="text-lg text-ink-500">/{isYearly ? 'year' : 'month'}</span>
+                      </div>
+                      {isYearly && plan.plan_tier === 'recovery' && (
+                        <p className="mt-1 text-sm font-medium text-success-600">Save $30/year</p>
+                      )}
+                      {isYearly && plan.plan_tier === 'empowerment' && (
+                        <p className="mt-1 text-sm font-medium text-success-600">Save $50/year</p>
+                      )}
+                      <div className="mt-7 flex-1" />
+                      {plan.plan_tier === 'foundation' ? (
+                        <Link
+                          href="/auth"
+                          className={`flex w-full items-center justify-center rounded-lg py-3 text-center font-semibold transition-colors ${
+                            meta.accent === 'green'
+                              ? 'bg-success-600 text-white hover:bg-success-700'
+                              : 'bg-brand-600 text-white hover:bg-brand-700'
+                          }`}
+                        >
+                          Start free
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={() => handleSubscribe(plan.plan_tier)}
+                          disabled={subscribing === plan.plan_tier}
+                          className={`flex w-full items-center justify-center rounded-lg py-3 font-semibold transition-colors disabled:opacity-50 ${
+                            meta.accent === 'brand'
+                              ? 'bg-brand-600 text-white hover:bg-brand-700'
+                              : 'bg-hope-600 text-white hover:bg-hope-700'
+                          }`}
+                        >
+                          {subscribing === plan.plan_tier ? 'Starting checkout…' : 'Subscribe now'}
+                        </button>
                       )}
                     </div>
-                    <CardDescription className="text-base">{getPlanData('recovery')?.description || 'AI-powered recovery tools'}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <button 
-                      onClick={() => handleSubscribe('recovery')}
-                      disabled={subscribing === 'recovery'}
-                      className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50"
-                    >
-                      {subscribing === 'recovery' ? 'Loading...' : 'Subscribe Now'}
-                    </button>
-                  </CardContent>
-                </Card>
-
-                {/* Empowered */}
-                <Card className="relative">
-                  <CardHeader>
-                    <CardTitle className="text-purple-700 flex items-center gap-2">
-                      <Star className="h-5 w-5" />
-                      {getPlanData('empowerment')?.display_name || 'Empowered'}
-                    </CardTitle>
-                    <div className="text-4xl font-bold">
-                      ${getPrice('empowerment')}
-                      <span className="text-lg font-normal text-gray-500">/{isYearly ? 'year' : 'month'}</span>
-                      {isYearly && (
-                        <div className="text-sm text-green-600 font-medium">Save $50/year</div>
-                      )}
-                    </div>
-                    <CardDescription className="text-base">{getPlanData('empowerment')?.description || 'Complete recovery suite'}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <button 
-                      onClick={() => handleSubscribe('empowerment')}
-                      disabled={subscribing === 'empowerment'}
-                      className="w-full py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50"
-                    >
-                      {subscribing === 'empowerment' ? 'Loading...' : 'Subscribe Now'}
-                    </button>
-                  </CardContent>
-                </Card>
-              </>
+                  </Reveal>
+                )
+              })
             )}
           </div>
 
-          {/* Feature Comparison */}
-          <div className="mt-20">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Compare All Features</h2>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full max-w-7xl mx-auto bg-white border border-gray-200 rounded-lg shadow-sm">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="text-left p-4 font-semibold text-gray-900">Features</th>
-                    <th className="text-center p-4 font-semibold text-green-700">Foundation</th>
-                    <th className="text-center p-4 font-semibold text-indigo-700">Recovery</th>
-                    <th className="text-center p-4 font-semibold text-purple-700">Empowered</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {featureComparison.map((category, categoryIndex) => (
-                    <React.Fragment key={category.category}>
-                      <tr className="bg-gray-25">
-                        <td colSpan={4} className="p-4 font-semibold text-gray-800 border-t">
-                          <div className="flex items-center gap-2">
-                            <category.icon className="h-5 w-5" />
-                            {category.category}
-                          </div>
-                        </td>
-                      </tr>
-                      {category.features.map((feature, featureIndex) => (
-                        <tr key={feature.name} className={featureIndex % 2 === 0 ? 'bg-white' : 'bg-gray-25'}>
-                          <td className="p-4 text-gray-700">{feature.name}</td>
-                          <td className="p-4 text-center">
-                            {typeof feature.foundation === 'boolean' ? (
-                              feature.foundation ? (
-                                <Check className="h-5 w-5 text-green-600 mx-auto" />
-                              ) : (
-                                <X className="h-5 w-5 text-gray-400 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-sm font-medium text-gray-700">{feature.foundation}</span>
-                            )}
-                          </td>
-                          <td className="p-4 text-center">
-                            {typeof feature.recovery === 'boolean' ? (
-                              feature.recovery ? (
-                                <Check className="h-5 w-5 text-green-600 mx-auto" />
-                              ) : (
-                                <X className="h-5 w-5 text-gray-400 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-sm font-medium text-indigo-700">{feature.recovery}</span>
-                            )}
-                          </td>
-                          <td className="p-4 text-center">
-                            {typeof feature.empowerment === 'boolean' ? (
-                              feature.empowerment ? (
-                                <Check className="h-5 w-5 text-green-600 mx-auto" />
-                              ) : (
-                                <X className="h-5 w-5 text-gray-400 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-sm font-medium text-purple-700">{feature.empowerment}</span>
-                            )}
+          <Reveal delay={200}>
+            <div className="mt-20">
+              <h2 className="text-center font-display text-3xl font-semibold text-ink-900 sm:text-4xl">
+                Compare all features
+              </h2>
+
+              <div className="mt-12 overflow-x-auto rounded-panel border border-ink-200 bg-white shadow-soft">
+                <table className="w-full border-collapse text-sm">
+                  <thead>
+                    <tr className="border-b border-ink-200 bg-ink-50/60">
+                      <th className="p-4 text-left font-display text-[15px] font-semibold text-ink-900">Features</th>
+                      {(['foundation', 'recovery', 'empowerment'] as const).map(key => (
+                        <th key={key} className={`p-4 text-center font-display text-[15px] font-semibold ${headerColClass(key)}`}>
+                          {colLabel(key)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {featureComparison.map((category) => (
+                      <Fragment key={category.category}>
+                        <tr className="border-t border-ink-200 bg-ink-50/40">
+                          <td colSpan={4} className="p-4 font-display text-[15px] font-semibold text-ink-900">
+                            <div className="flex items-center gap-2">
+                              <category.icon className="h-5 w-5 text-brand-600" />
+                              {category.category}
+                            </div>
                           </td>
                         </tr>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            
-            <p className="text-sm text-gray-500 text-center mt-6 max-w-4xl mx-auto">
-              All limits are per day unless specified. "Unlimited" features are subject to fair use policy. 
-              Storage and transcription limits are monthly allowances.
-            </p>
-          </div>
+                        {category.features.map((feature, i) => (
+                          <tr key={feature.name} className={`border-t border-ink-100 ${i % 2 === 0 ? 'bg-white' : 'bg-ink-50/30'}`}>
+                            <td className="p-4 text-ink-700">{feature.name}</td>
+                            <td className="p-4 text-center">{cellValue(feature.foundation)}</td>
+                            <td className="p-4 text-center">{cellValue(feature.recovery)}</td>
+                            <td className="p-4 text-center">{cellValue(feature.empowerment)}</td>
+                          </tr>
+                        ))}
+                      </Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-          {/* CTA Section */}
-          <div className="text-center mt-16 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-12">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Start Your Recovery Journey?</h3>
-            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join thousands of survivors who are reclaiming their lives with our evidence-based tools and supportive community.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link 
-                href="/auth" 
-                className="inline-flex items-center justify-center bg-indigo-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
-              >
-                Start Free Today
-              </Link>
-              <Link 
-                href="/blog" 
-                className="inline-flex items-center justify-center border border-indigo-600 text-indigo-600 px-8 py-4 rounded-lg font-semibold hover:bg-indigo-50 transition-colors"
-              >
-                Read Recovery Stories
-              </Link>
+              <p className="mx-auto mt-6 max-w-4xl text-center text-sm text-ink-500">
+                All limits are per day unless specified. "Unlimited" features are subject to a fair use policy.
+                Storage and transcription limits are monthly allowances.
+              </p>
             </div>
-          </div>
+          </Reveal>
+        </div>
+
+        <CtaBanner
+          title="Ready to start your recovery journey?"
+          lead="Join thousands of survivors who are reclaiming their lives with evidence-based tools — start free today."
+          cta={{ label: 'Start free today', href: '/auth' }}
+        />
+        <div className="bg-white pb-16 -mt-4">
+          <p className="text-center">
+            <Link href="/blog" className="font-semibold text-brand-700 hover:text-brand-800 transition-colors">
+              Read recovery stories →
+            </Link>
+          </p>
         </div>
       </main>
-      <UnifiedFooter />
+
+      <SiteFooter />
     </div>
   )
 }

@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || '0x4AAAAAACHvmkCDaM8h8TVwPxF3bfwSTv4'
-
 export async function POST(request: NextRequest) {
   try {
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY
+    if (!turnstileSecret) {
+      return NextResponse.json(
+        { success: false, error: 'Turnstile not configured' },
+        { status: 500 }
+      )
+    }
+
     const { token } = await request.json()
 
     if (!token) {
@@ -21,7 +27,7 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          secret: TURNSTILE_SECRET_KEY,
+          secret: turnstileSecret,
           response: token,
         }),
       }
@@ -38,7 +44,6 @@ export async function POST(request: NextRequest) {
       )
     }
   } catch (error) {
-    console.error('Turnstile verification error:', error)
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }

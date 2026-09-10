@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase-server'
 
-// Force Node.js runtime (not Edge) and dynamic rendering for auth callback
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
@@ -10,14 +9,18 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
 
+  // Validate redirect URL - only allow relative paths starting with /
+  const safeNext = next.startsWith('/') && !next.startsWith('//') && !next.includes('://')
+    ? next
+    : '/dashboard'
+
   if (code) {
     const supabase = await createServerSupabase()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      return NextResponse.redirect(`${origin}${safeNext}`)
     }
   }
 
-  // Return user to an error page with instructions
   return NextResponse.redirect(`${origin}/auth/auth-code-error`)
 }

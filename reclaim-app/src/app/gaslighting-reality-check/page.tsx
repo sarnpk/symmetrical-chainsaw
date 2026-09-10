@@ -9,8 +9,7 @@ import ViralResultShare from '@/components/ViralResultShare'
 import FloatingShareButton from '@/components/FloatingShareButton'
 import ShareableResultCard from '@/components/ShareableResultCard'
 import ShareToUnlockModal from '@/components/ShareToUnlockModal'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import UnifiedFooter from '@/components/UnifiedFooter'
+import QuizShell from '@/components/marketing/QuizShell'
 import { useEffect } from 'react'
 
 export default function GaslightingRealityCheckPage() {
@@ -152,7 +151,7 @@ export default function GaslightingRealityCheckPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50">
+    <QuizShell>
       {showShareModal && (
         <ShareToUnlockModal
           onUnlock={() => {
@@ -167,8 +166,6 @@ export default function GaslightingRealityCheckPage() {
         title="Free Gaslighting Reality Check"
         description="AI-powered tool validates your reality. Find out if you're being gaslighted in 30 seconds."
       />
-      <UnifiedHeader currentTool="gaslighting" />
-
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <div className="inline-block bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
@@ -527,7 +524,6 @@ export default function GaslightingRealityCheckPage() {
         </div>
       </section>
 
-      <UnifiedFooter />
-    </div>
+      </QuizShell>
   )
 }

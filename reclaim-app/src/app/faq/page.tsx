@@ -1,20 +1,16 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import UnifiedHeader from '@/components/UnifiedHeader';
-import UnifiedFooter from '@/components/UnifiedFooter';
-
-interface FAQItem {
-  question: string;
-  answer: string;
-  category: 'trial' | 'features' | 'safety' | 'subscription' | 'technical';
-}
+import { useState } from 'react'
+import { ChevronDown, Check, Scale, Search, Zap, ShieldCheck, CreditCard, Wrench } from 'lucide-react'
+import SiteHeader from '@/components/marketing/SiteHeader'
+import SiteFooter from '@/components/marketing/SiteFooter'
+import SectionHeading from '@/components/marketing/SectionHeading'
+import Reveal from '@/components/marketing/Reveal'
 
 interface FAQItem {
-  question: string;
-  answer: string;
-  category: 'trial' | 'features' | 'safety' | 'subscription' | 'technical' | 'legal';
+  question: string
+  answer: string
+  category: 'trial' | 'features' | 'safety' | 'subscription' | 'technical' | 'legal'
 }
 
 const faqData: FAQItem[] = [
@@ -191,187 +187,190 @@ const faqData: FAQItem[] = [
     question: "Can Reclaim help with child protective services (CPS) cases?",
     answer: "Yes! Reclaim documents unsafe environments, parental manipulation of children, and neglect patterns. Our evidence helps CPS workers and family courts understand the psychological harm to children in narcissistic abuse situations. The documentation supports decisions about child safety and custody arrangements."
   }
-];
+]
+
+const faqSchemaJson = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqData.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+})
 
 const categories = {
-  legal: { name: 'Legal Evidence & Court Cases', icon: '⚖️' },
-  trial: { name: 'Free Trial & Abuse Identification', icon: '🔍' },
-  features: { name: 'Features & Tools', icon: '⚡' },
-  safety: { name: 'Safety & Privacy', icon: '🛡️' },
-  subscription: { name: 'Subscriptions & Pricing', icon: '💳' },
-  technical: { name: 'Technical Support', icon: '🔧' }
-};
+  legal: { name: 'Legal Evidence & Court Cases', icon: Scale },
+  trial: { name: 'Free Trial & Abuse Identification', icon: Search },
+  features: { name: 'Features & Tools', icon: Zap },
+  safety: { name: 'Safety & Privacy', icon: ShieldCheck },
+  subscription: { name: 'Subscriptions & Pricing', icon: CreditCard },
+  technical: { name: 'Technical Support', icon: Wrench }
+} as const
 
 export default function FAQPage() {
-  const [openItems, setOpenItems] = useState<Set<number>>(new Set());
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [openItems, setOpenItems] = useState<Set<number>>(new Set())
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
   const toggleItem = (index: number) => {
-    const newOpenItems = new Set(openItems);
+    const newOpenItems = new Set(openItems)
     if (newOpenItems.has(index)) {
-      newOpenItems.delete(index);
+      newOpenItems.delete(index)
     } else {
-      newOpenItems.add(index);
+      newOpenItems.add(index)
     }
-    setOpenItems(newOpenItems);
-  };
+    setOpenItems(newOpenItems)
+  }
 
-  const filteredFAQs = selectedCategory === 'all' 
-    ? faqData 
-    : faqData.filter(item => item.category === selectedCategory);
+  const filteredFAQs = selectedCategory === 'all'
+    ? faqData
+    : faqData.filter(item => item.category === selectedCategory)
+
+  const pillActive = (key: string) =>
+    selectedCategory === key
+      ? 'bg-brand-600 text-white shadow-soft'
+      : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-      <UnifiedHeader />
+    <div className="min-h-screen bg-white">
+      <SiteHeader />
 
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Get answers about identifying abuse, using our features, and how Reclaim can support your journey to freedom and healing.
-          </p>
-        </div>
+      <main className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: faqSchemaJson }}
+        />
+        <Reveal>
+          <SectionHeading
+            eyebrow="Questions"
+            title="Frequently asked questions"
+            lead="Answers about identifying abuse, using our features, and how Reclaim supports your journey to freedom and healing."
+          />
+        </Reveal>
 
-        {/* Legal Evidence Highlight */}
-        <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl p-6 mb-8 text-white">
-          <h2 className="text-2xl font-bold mb-3 text-white">⚖️ Court-Admissible Evidence Collection</h2>
-          <p className="text-lg mb-4 text-white">
-            Build legal cases with timestamped, GPS-tagged documentation. Our AI creates court-ready evidence for divorce, custody, and harassment cases that attorneys use to win.
-          </p>
-          <div className="grid md:grid-cols-2 gap-4 text-sm text-white">
-            <div>
-              <strong>✓ Timestamped Documentation</strong> - Court-admissible evidence
+        <Reveal delay={100}>
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            <div className="flex flex-col gap-3 rounded-panel bg-gradient-to-br from-brand-600 to-hope-600 p-7 text-white shadow-lift">
+              <div className="flex items-center gap-2">
+                <Scale className="h-6 w-6" aria-hidden="true" />
+                <h2 className="font-display text-2xl font-semibold text-white">Court-Admissible Evidence Collection</h2>
+              </div>
+              <p className="text-[15px] leading-relaxed text-white/90">
+                Build legal cases with timestamped, GPS-tagged documentation. Our AI creates court-ready
+                evidence for divorce, custody, and harassment cases that attorneys use to win.
+              </p>
+              <ul className="mt-2 space-y-2 text-sm text-white/95">
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Timestamped documentation — court-admissible evidence</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> AI pattern analysis — prove manipulation tactics</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Audio transcription — convert conversations to legal text</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Secure evidence storage — tamper-proof documentation</li>
+              </ul>
             </div>
-            <div>
-              <strong>✓ AI Pattern Analysis</strong> - Prove manipulation tactics
-            </div>
-            <div>
-              <strong>✓ Audio Transcription</strong> - Convert conversations to legal text
-            </div>
-            <div>
-              <strong>✓ Secure Evidence Storage</strong> - Tamper-proof documentation
+
+            <div className="flex flex-col gap-3 rounded-panel bg-gradient-to-br from-hope-600 to-brand-600 p-7 text-white shadow-lift">
+              <div className="flex items-center gap-2">
+                <Search className="h-6 w-6" aria-hidden="true" />
+                <h2 className="font-display text-2xl font-semibold text-white">Discover if you're being abused — free</h2>
+              </div>
+              <p className="text-[15px] leading-relaxed text-white/90">
+                Not sure if you're experiencing narcissistic abuse? The free Foundation tier gives you
+                enough AI conversations and analysis tools to recognize manipulation patterns.
+              </p>
+              <ul className="mt-2 space-y-2 text-sm text-white/95">
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 15 AI conversations / month — get professional insights</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 3 manipulation analyses / month — decode messages</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Basic safety tools — essential protection features</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 10 journal entries / month — document and reflect</li>
+              </ul>
             </div>
           </div>
-        </div>
+        </Reveal>
 
-        {/* Free Trial Box */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 mb-8 text-white">
-          <h2 className="text-2xl font-bold mb-3 text-white">🔍 Discover If You're Being Abused - Free Trial</h2>
-          <p className="text-lg mb-4 text-white">
-            Not sure if you're experiencing narcissistic abuse? Our free trial provides enough AI conversations and analysis tools to help you identify manipulation patterns and abusive behaviors in your relationship.
-          </p>
-          <div className="grid md:grid-cols-2 gap-4 text-sm text-white">
-            <div>
-              <strong>✓ 15 AI Conversations/month</strong> - Get professional insights
-            </div>
-            <div>
-              <strong>✓ 3 Manipulation Analyses/month</strong> - Decode concerning messages
-            </div>
-            <div>
-              <strong>✓ Basic Safety Tools</strong> - Essential protection features
-            </div>
-            <div>
-              <strong>✓ 10 Journal Entries/month</strong> - Document and reflect
-            </div>
-          </div>
-        </div>
-
-        {/* Category Filter */}
-        <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          <button
-            onClick={() => setSelectedCategory('all')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              selectedCategory === 'all'
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            All Questions
-          </button>
-          {Object.entries(categories).map(([key, category]) => (
+        <Reveal delay={150}>
+          <div className="mt-10 flex flex-wrap justify-center gap-2">
             <button
-              key={key}
-              onClick={() => setSelectedCategory(key)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                selectedCategory === key
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              onClick={() => setSelectedCategory('all')}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${pillActive('all')}`}
             >
-              {category.icon} {category.name}
+              All Questions
             </button>
-          ))}
-        </div>
+            {Object.entries(categories).map(([key, category]) => (
+              <button
+                key={key}
+                onClick={() => setSelectedCategory(key)}
+                className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${pillActive(key)}`}
+              >
+                <category.icon className="h-4 w-4" aria-hidden="true" />
+                {category.name}
+              </button>
+            ))}
+          </div>
+        </Reveal>
 
-        {/* FAQ Items */}
-        <div className="space-y-4">
+        <div className="mt-10 space-y-4">
           {filteredFAQs.map((item, index) => {
-            const isOpen = openItems.has(index);
-            const category = categories[item.category];
-            
+            const isOpen = openItems.has(index)
+            const category = categories[item.category]
+            const globalIndex = faqData.indexOf(item)
+
             return (
               <div
-                key={index}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+                key={globalIndex}
+                className="overflow-hidden rounded-panel border border-ink-200 bg-white shadow-soft transition-shadow hover:shadow-lift"
               >
                 <button
                   onClick={() => toggleItem(index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-panel-${globalIndex}`}
+                  className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-ink-50/60"
                 >
-                  <div className="flex items-center space-x-3">
-                    <span className="text-lg">{category.icon}</span>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {item.question}
-                    </h3>
+                  <div className="flex items-center gap-3">
+                    <category.icon className="h-5 w-5 shrink-0 text-brand-600" aria-hidden="true" />
+                    <h3 className="font-display text-lg font-semibold text-ink-900">{item.question}</h3>
                   </div>
-                  {isOpen ? (
-                    <ChevronUpIcon className="h-5 w-5 text-gray-500" />
-                  ) : (
-                    <ChevronDownIcon className="h-5 w-5 text-gray-500" />
-                  )}
+                  <ChevronDown
+                    className={`h-5 w-5 shrink-0 text-ink-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+                    aria-hidden="true"
+                  />
                 </button>
-                
                 {isOpen && (
-                  <div className="px-6 pb-4">
-                    <div className="pl-8">
-                      <p className="text-gray-700 leading-relaxed">
-                        {item.answer}
-                      </p>
-                    </div>
+                  <div id={`faq-panel-${globalIndex}`} className="px-6 pb-5 pl-14">
+                    <p className="text-[15px] leading-relaxed text-ink-600">{item.answer}</p>
                   </div>
                 )}
               </div>
-            );
+            )
           })}
         </div>
 
-        {/* CTA Section */}
-        <div className="mt-12 text-center">
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Still Have Questions?
-            </h2>
-            <p className="text-gray-600 mb-6">
+        <Reveal delay={100}>
+          <div className="mt-14 rounded-panel border border-ink-200 bg-ink-50/60 p-8 text-center">
+            <h2 className="font-display text-2xl font-semibold text-ink-900">Still have questions?</h2>
+            <p className="mt-2 text-ink-600">
               Our support team understands the unique challenges of narcissistic abuse recovery.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/auth" className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
-                Get Started
+            <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row">
+              <a
+                href="/auth"
+                className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-brand-700"
+              >
+                Get started
               </a>
               <a
                 href="mailto:support@reclaim.app"
-                className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                className="inline-flex items-center justify-center rounded-lg bg-ink-100 px-8 py-3 font-semibold text-ink-700 transition-colors hover:bg-ink-200"
               >
-                Contact Support
+                Contact support
               </a>
             </div>
           </div>
-        </div>
-      </div>
-      <UnifiedFooter />
+        </Reveal>
+      </main>
+
+      <SiteFooter />
     </div>
-  );
+  )
 }

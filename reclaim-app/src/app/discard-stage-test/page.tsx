@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react'
 import { AlertTriangle, CheckCircle, Shield, Brain, TrendingDown } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import UnifiedHeader from '@/components/UnifiedHeader'
-import UnifiedFooter from '@/components/UnifiedFooter'
+import QuizShell from '@/components/marketing/QuizShell'
 
 const questions = [
   "Are they withdrawing affection and attention?",
@@ -76,8 +75,7 @@ export default function DiscardStageTestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-purple-50">
-      <UnifiedHeader currentTool="discard" />
+    <QuizShell>
 
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
@@ -241,7 +239,6 @@ export default function DiscardStageTestPage() {
         </section>
       )}
 
-      <UnifiedFooter />
-    </div>
+      </QuizShell>
   )
 }
