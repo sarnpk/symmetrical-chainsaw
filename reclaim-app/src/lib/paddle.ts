@@ -11,6 +11,7 @@ export async function initPaddle(): Promise<Paddle> {
 
   const paddle = await initializePaddle({
     seller: Number(process.env.NEXT_PUBLIC_PADDLE_SELLER_ID),
+    environment: 'production',
   })
 
   paddleInstance = paddle
