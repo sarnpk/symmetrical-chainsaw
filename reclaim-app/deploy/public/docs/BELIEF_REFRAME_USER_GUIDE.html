@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belief Reframe - User Guide | Reclaim</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.2em; opacity: 0.9; }
+        .content { padding: 40px; }
+        .section { margin-bottom: 40px; }
+        .section h2 { 
+            color: #8b5cf6;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #8b5cf6;
+            padding-bottom: 10px;
+        }
+        .section h3 { 
+            color: #7c3aed;
+            font-size: 1.3em;
+            margin: 20px 0 10px;
+        }
+        .feature-box {
+            background: #faf5ff;
+            border-left: 4px solid #8b5cf6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .warning-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .step {
+            background: #f9fafb;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .step-number {
+            display: inline-block;
+            background: #8b5cf6;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        ul { margin-left: 20px; margin-top: 10px; }
+        li { margin: 8px 0; }
+        .emoji { font-size: 1.5em; margin-right: 10px; }
+        .cta {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            border-radius: 8px;
+        }
+        .cta h3 { margin-bottom: 15px; }
+        .cta button {
+            background: white;
+            color: #8b5cf6;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cta button:hover { transform: scale(1.05); }
+        .belief-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .belief-card h4 {
+            color: #1e293b;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .strength-badge {
+            background: #8b5cf6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        .ai-feature {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .ai-feature h4 {
+            color: #0c4a6e;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .cta { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Belief Reframe</h1>
+            <p>Challenge False Beliefs from Narcissistic Abuse</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Recovery & Empowered Tier Feature</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>🎯 What Is Belief Reframe?</h2>
+                <p>Belief Reframe is a CBT-based system designed to identify, challenge, and replace false beliefs installed by narcissistic abuse. It helps you systematically rebuild your self-worth and reconnect with reality through evidence-based therapeutic techniques.</p>
+                
+                <div class="info-box">
+                    <strong>🧠 The Science:</strong> Narcissistic abuse installs false beliefs about your worth, capabilities, and reality. CBT (Cognitive Behavioral Therapy) techniques help identify these distorted thoughts and replace them with balanced, evidence-based beliefs.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔍 Core Components</h2>
+                
+                <div class="belief-card">
+                    <h4>
+                        <span class="emoji">💭</span>False Beliefs Tracking
+                    </h4>
+                    <p>Document and monitor harmful beliefs installed by abuse:</p>
+                    <ul>
+                        <li>Track belief strength (1-10 scale)</li>
+                        <li>Record when/how beliefs were installed</li>
+                        <li>Monitor progress over time</li>
+                        <li>Identify patterns and triggers</li>
+                    </ul>
+                </div>
+
+                <div class="belief-card">
+                    <h4>
+                        <span class="emoji">🛡️</span>Counter-Evidence Collection
+                    </h4>
+                    <p>Build evidence that contradicts false beliefs:</p>
+                    <ul>
+                        <li>Document achievements and successes</li>
+                        <li>Record positive feedback from others</li>
+                        <li>Note moments of competence and strength</li>
+                        <li>Collect objective proof of your worth</li>
+                    </ul>
+                </div>
+
+                <div class="belief-card">
+                    <h4>
+                        <span class="emoji">📚</span>Origin Memories
+                    </h4>
+                    <p>Understand how false beliefs were installed:</p>
+                    <ul>
+                        <li>Document specific incidents of abuse</li>
+                        <li>Identify manipulation tactics used</li>
+                        <li>Connect current beliefs to past trauma</li>
+                        <li>Process memories in a safe context</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🤖 AI-Powered Tools</h2>
+                
+                <div class="ai-feature">
+                    <h4>
+                        <span class="emoji">🔬</span>Reality Testing Coach
+                    </h4>
+                    <p>Guided CBT sessions to challenge distorted thoughts:</p>
+                    <ul>
+                        <li>Socratic questioning to examine beliefs</li>
+                        <li>Evidence evaluation exercises</li>
+                        <li>Alternative perspective generation</li>
+                        <li>Balanced thought development</li>
+                    </ul>
+                </div>
+
+                <div class="ai-feature">
+                    <h4>
+                        <span class="emoji">✨</span>Affirmation Generator
+                    </h4>
+                    <p>Personalized affirmations based on your specific beliefs:</p>
+                    <ul>
+                        <li>Targeted counter-statements</li>
+                        <li>Evidence-based affirmations</li>
+                        <li>Strength-focused messaging</li>
+                        <li>Daily practice suggestions</li>
+                    </ul>
+                </div>
+
+                <div class="ai-feature">
+                    <h4>
+                        <span class="emoji">🔍</span>Memory Analysis
+                    </h4>
+                    <p>Pattern detection in origin memories:</p>
+                    <ul>
+                        <li>Identify manipulation tactics</li>
+                        <li>Recognize abuse patterns</li>
+                        <li>Connect memories to current beliefs</li>
+                        <li>Therapeutic insights and validation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🚀 Getting Started</h2>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Identify Your First False Belief</strong>
+                    <p>Start with a belief that feels particularly strong or limiting:</p>
+                    <ul>
+                        <li>"I'm not good enough"</li>
+                        <li>"I can't trust my own judgment"</li>
+                        <li>"I'm responsible for others' emotions"</li>
+                        <li>"I don't deserve love/respect"</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Rate the Belief Strength</strong>
+                    <p>On a scale of 1-10, how strongly do you believe this right now? Be honest - this is your baseline for tracking progress.</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Add Origin Memories</strong>
+                    <p>Document when/how this belief was installed:</p>
+                    <ul>
+                        <li>Specific incidents or patterns</li>
+                        <li>What was said or done</li>
+                        <li>How it made you feel</li>
+                        <li>The manipulation tactic used</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Start Collecting Counter-Evidence</strong>
+                    <p>Look for any evidence that contradicts the false belief:</p>
+                    <ul>
+                        <li>Past achievements</li>
+                        <li>Positive feedback</li>
+                        <li>Times you succeeded</li>
+                        <li>Moments of strength</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Use AI Reality Testing</strong>
+                    <p>Let the AI coach guide you through challenging the belief with CBT techniques. This is where the real transformation happens.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 Best Practices</h2>
+                
+                <div class="feature-box">
+                    <h3>🎯 Focus on One Belief at a Time</h3>
+                    <p>Don't overwhelm yourself. Work deeply on one false belief before moving to the next. Quality over quantity.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h3>📊 Track Your Progress</h3>
+                    <p>Update belief strength regularly. Seeing the numbers decrease over time provides powerful motivation and validation.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h3>🔄 Daily Counter-Evidence</h3>
+                    <p>Make it a habit to notice and record evidence that contradicts your false beliefs. Small moments add up to big changes.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h3>🤖 Use AI Tools Regularly</h3>
+                    <p>The AI coach is most effective with regular use. Schedule weekly reality testing sessions for consistent progress.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚠️ Important Notes</h2>
+                
+                <div class="warning-box">
+                    <h3>🩺 Professional Support</h3>
+                    <p>Belief Reframe is a therapeutic tool but not a replacement for professional therapy. If you're experiencing severe symptoms, please seek professional help.</p>
+                </div>
+
+                <div class="warning-box">
+                    <h3>⏰ Be Patient</h3>
+                    <p>Changing deeply ingrained beliefs takes time. Some beliefs may have been reinforced for years or decades. Progress is often gradual but real.</p>
+                </div>
+
+                <div class="warning-box">
+                    <h3>🔒 Privacy & Safety</h3>
+                    <p>All your data is encrypted and private. However, be mindful of your emotional state when working with traumatic memories. Take breaks as needed.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎉 Success Indicators</h2>
+                <p>You'll know Belief Reframe is working when you notice:</p>
+                <ul>
+                    <li>Decreased belief strength scores over time</li>
+                    <li>Automatic questioning of negative self-talk</li>
+                    <li>Increased self-compassion and patience</li>
+                    <li>Better emotional regulation during triggers</li>
+                    <li>Growing collection of counter-evidence</li>
+                    <li>Feeling more grounded in reality</li>
+                    <li>Increased confidence in your perceptions</li>
+                </ul>
+            </div>
+
+            <div class="cta">
+                <h3>🌟 Ready to Reclaim Your Mind?</h3>
+                <p>Start challenging those false beliefs today. Your authentic self is waiting.</p>
+                <button onclick="window.close()">Begin Your Journey</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

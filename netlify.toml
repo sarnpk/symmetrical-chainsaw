@@ -1,6 +1,7 @@
 [build]
-  command = "cd reclaim-app && npm install && npm run build"
-  publish = "reclaim-app/.next"
+  base = "reclaim-app"
+  command = "npm install && npm run build"
+  publish = ".next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
