@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
     // Call Google Generative AI
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.5-flash' })
+    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' })
     
     const prompt = ANALYSIS_PROMPT.replace('{TEXT}', text)
     

@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       .join(', ')
 
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.5-flash' })
+    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' })
     const prompt = TRAIT_ANALYSIS_PROMPT.replace('{TRAITS}', selectedTraits)
     
     const result = await model.generateContent(prompt)

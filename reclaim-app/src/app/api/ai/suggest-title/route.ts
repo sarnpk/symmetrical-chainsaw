@@ -14,8 +14,8 @@ const AI_LIMITS = {
   empowerment: -1,
 } as const
 
-const DEFAULT_FREE_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash'
-const DEFAULT_PAID_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash'
+const DEFAULT_FREE_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash'
+const DEFAULT_PAID_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash'
 
 // FNV-1a hash for simple caching keys
 function hashText(input: string): string {
