@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     default: "Reclaim - Recovery Platform",
     template: "%s | Reclaim",
   },
-  description: "A secure digital recovery tool for survivors of narcissistic abuse",
+  description: "Private AI-powered recovery tools for survivors of narcissistic abuse. Free assessment, gaslighting tracker, and court-ready documentation in 70+ languages.",
   manifest: "/manifest.json",
   formatDetection: {
     telephone: false,
@@ -67,6 +67,47 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Reclaim" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  name: 'Reclaim',
+                  url: 'https://reclaim.app',
+                  logo: 'https://reclaim.app/favicon.svg',
+                  description: 'AI-powered recovery tools for survivors of narcissistic abuse.',
+                  sameAs: [],
+                },
+                {
+                  '@type': 'WebSite',
+                  name: 'Reclaim',
+                  url: 'https://reclaim.app',
+                  potentialAction: {
+                    '@type': 'SearchAction',
+                    target: 'https://reclaim.app/blog?q={search_term_string}',
+                    'query-input': 'required name=search_term_string',
+                  },
+                },
+                {
+                  '@type': 'SoftwareApplication',
+                  name: 'Reclaim',
+                  applicationCategory: 'HealthApplication',
+                  operatingSystem: 'Web',
+                  offers: {
+                    '@type': 'AggregateOffer',
+                    lowPrice: '0',
+                    highPrice: '24.99',
+                    priceCurrency: 'USD',
+                    offerCount: '3',
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className={`${inter.className} ${fraunces.variable} antialiased bg-gray-50 min-h-screen`}>
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (

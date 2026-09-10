@@ -1,0 +1,45 @@
+# Reclaim - robots.txt
+# https://reclaim.app
+
+User-agent: *
+Allow: /
+Allow: /learn-more/
+Allow: /blog/
+Allow: /free-tools/
+Allow: /pricing
+Allow: /faq
+Allow: /donate
+
+# Block app pages from indexing
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+Disallow: /settings
+Disallow: /account
+Disallow: /usage
+Disallow: /subscription
+Disallow: /auth
+Disallow: /success
+
+# Block AI crawlers from app content
+User-agent: GPTBot
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+
+User-agent: CCBot
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Google-Extended
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://reclaim.app/sitemap.xml
