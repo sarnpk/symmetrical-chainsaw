@@ -10,7 +10,7 @@ export async function initPaddle(): Promise<Paddle> {
   if (paddleInstance) return paddleInstance
 
   const paddle = await initializePaddle({
-    sellerId: Number(process.env.NEXT_PUBLIC_PADDLE_SELLER_ID),
+    seller: Number(process.env.NEXT_PUBLIC_PADDLE_SELLER_ID),
   })
 
   paddleInstance = paddle
