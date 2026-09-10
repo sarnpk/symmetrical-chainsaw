@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { Brain, Shield, Heart, Zap, AlertTriangle, CheckCircle } from 'lucide-react'
@@ -155,7 +155,7 @@ export default function AICopingInsights({ text, onActionSelect }: AICopingInsig
 
       <div className="mt-3 pt-3 border-t border-purple-200">
         <p className="text-xs text-gray-500">
-          💡 These insights are generated based on your notes and are meant to support, not replace, professional help.
+          ðŸ’¡ These insights are generated based on your notes and are meant to support, not replace, professional help.
         </p>
       </div>
     </div>

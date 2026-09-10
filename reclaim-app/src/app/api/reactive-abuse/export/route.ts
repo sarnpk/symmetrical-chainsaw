@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
     </div>
   </div>
 
-  ${incidents.length > 5 ? '<div class="warning"><strong>⚠️ Pattern Alert:</strong> Multiple documented incidents where your concerns were turned against you.</div>' : ''}
+  ${incidents.length > 5 ? '<div class="warning"><strong>âš ï¸ Pattern Alert:</strong> Multiple documented incidents where your concerns were turned against you.</div>' : ''}
 
   <h2>Incident Timeline</h2>
   ${incidents.map(incident => `
@@ -89,8 +89,8 @@ export async function GET(req: NextRequest) {
       <div class="field"><span class="field-label">What You Addressed:</span> ${incident.what_you_addressed}</div>
       ${incident.what_they_said ? `<div class="quote">"${incident.what_they_said}"</div>` : ''}
       ${incident.what_they_accused_you_of ? `<div class="field"><span class="field-label">They Accused You Of:</span> ${incident.what_they_accused_you_of}</div>` : ''}
-      ${incident.did_you_apologize ? '<div class="field" style="color: #dc2626;">❌ You ended up apologizing</div>' : ''}
-      ${!incident.original_issue_resolved ? '<div class="field" style="color: #f59e0b;">⚠️ Original issue never resolved</div>' : ''}
+      ${incident.did_you_apologize ? '<div class="field" style="color: #dc2626;">âŒ You ended up apologizing</div>' : ''}
+      ${!incident.original_issue_resolved ? '<div class="field" style="color: #f59e0b;">âš ï¸ Original issue never resolved</div>' : ''}
     </div>
   `).join('')}
 </body>

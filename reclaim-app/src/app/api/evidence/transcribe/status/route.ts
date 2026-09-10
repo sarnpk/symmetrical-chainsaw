@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Service-role client for direct database updates
@@ -9,13 +9,13 @@ const supabaseAdmin = createClient(
 
 // FIXED transcription extraction - handles Gladia v2 API structure properly
 function extractTranscriptionText(result: any): string | null {
-  console.log('🔍 FIXED STATUS API: Extracting transcription from Gladia v2 API')
+  console.log('ðŸ” FIXED STATUS API: Extracting transcription from Gladia v2 API')
   
   // Priority 1: Gladia v2 API format - result.result.transcription.full_transcript
   if (result?.result?.transcription?.full_transcript && typeof result.result.transcription.full_transcript === 'string') {
     const text = result.result.transcription.full_transcript.trim()
     if (text) {
-      console.log('✅ FIXED STATUS API: Found v2 full_transcript:', text)
+      console.log('âœ… FIXED STATUS API: Found v2 full_transcript:', text)
       return text
     }
   }
@@ -29,7 +29,7 @@ function extractTranscriptionText(result: any): string | null {
       .trim()
     
     if (text) {
-      console.log('✅ FIXED STATUS API: Found v2 utterances transcription:', text)
+      console.log('âœ… FIXED STATUS API: Found v2 utterances transcription:', text)
       return text
     }
   }
@@ -38,7 +38,7 @@ function extractTranscriptionText(result: any): string | null {
   if (result?.transcription?.full_transcript && typeof result.transcription.full_transcript === 'string') {
     const text = result.transcription.full_transcript.trim()
     if (text) {
-      console.log('✅ FIXED STATUS API: Found legacy full_transcript:', text)
+      console.log('âœ… FIXED STATUS API: Found legacy full_transcript:', text)
       return text
     }
   }
@@ -52,18 +52,18 @@ function extractTranscriptionText(result: any): string | null {
       .trim()
     
     if (text) {
-      console.log('✅ FIXED STATUS API: Found legacy utterances transcription:', text)
+      console.log('âœ… FIXED STATUS API: Found legacy utterances transcription:', text)
       return text
     }
   }
   
-  console.log('❌ FIXED STATUS API: No transcription text found')
+  console.log('âŒ FIXED STATUS API: No transcription text found')
   return null
 }
 
 export async function POST(request: Request) {
   try {
-    console.log('🔍 FIXED STATUS API: Called with corrected Gladia v2 structure')
+    console.log('ðŸ” FIXED STATUS API: Called with corrected Gladia v2 structure')
     
     const authHeader = request.headers.get('authorization') || ''
     if (!authHeader) {
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'evidence_file_id required' }, { status: 400 })
     }
 
-    console.log(`🔍 FIXED STATUS API: Checking evidence_file_id: ${evidence_file_id}, job_id: ${job_id}`)
+    console.log(`ðŸ” FIXED STATUS API: Checking evidence_file_id: ${evidence_file_id}, job_id: ${job_id}`)
 
     // Get evidence file
     const { data: evidenceFile, error: fileError } = await supabaseAdmin
@@ -115,7 +115,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'GLADIA_API_KEY not configured' }, { status: 500 })
     }
 
-    console.log(`🔍 FIXED STATUS API: Checking Gladia directly for job ${jobIdToCheck}`)
+    console.log(`ðŸ” FIXED STATUS API: Checking Gladia directly for job ${jobIdToCheck}`)
 
     const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobIdToCheck}`, {
       headers: { 'x-gladia-key': gladiaApiKey },
@@ -130,14 +130,14 @@ export async function POST(request: Request) {
     }
 
     const result = await statusResponse.json()
-    console.log(`📊 FIXED STATUS API: Gladia response status: ${result.status}`)
+    console.log(`ðŸ“Š FIXED STATUS API: Gladia response status: ${result.status}`)
 
     // Extract transcription using the corrected logic
     const transcription = extractTranscriptionText(result)
     const isCompleted = result.status === 'done' || transcription
 
     if (isCompleted && transcription) {
-      console.log(`🎉 FIXED STATUS API: Transcription completed: "${transcription}"`)
+      console.log(`ðŸŽ‰ FIXED STATUS API: Transcription completed: "${transcription}"`)
 
       // Update evidence file with completed transcription
       try {
@@ -179,7 +179,7 @@ export async function POST(request: Request) {
           }, { status: 500 })
         }
 
-        console.log(`✅ FIXED STATUS API: Successfully updated evidence file ${evidence_file_id}`)
+        console.log(`âœ… FIXED STATUS API: Successfully updated evidence file ${evidence_file_id}`)
 
         // Record usage
         try {
@@ -206,7 +206,7 @@ export async function POST(request: Request) {
               billing_period_end: currentPeriodEnd.toISOString().split('T')[0]
             })
 
-          console.log(`📊 FIXED STATUS API: Recorded usage for user ${user.id}`)
+          console.log(`ðŸ“Š FIXED STATUS API: Recorded usage for user ${user.id}`)
         } catch (usageError) {
           console.warn('FIXED STATUS API: Failed to record usage:', usageError)
         }
@@ -252,7 +252,7 @@ export async function POST(request: Request) {
           .eq('id', evidence_file_id)
           .eq('user_id', user.id)
 
-        console.log(`❌ FIXED STATUS API: Updated evidence file ${evidence_file_id} with error`)
+        console.log(`âŒ FIXED STATUS API: Updated evidence file ${evidence_file_id} with error`)
       } catch (dbError) {
         console.error('FIXED STATUS API: Failed to update evidence file with error:', dbError)
       }
@@ -267,7 +267,7 @@ export async function POST(request: Request) {
     }
 
     // Still processing
-    console.log(`⏳ FIXED STATUS API: Job ${jobIdToCheck} still processing (status: ${result.status})`)
+    console.log(`â³ FIXED STATUS API: Job ${jobIdToCheck} still processing (status: ${result.status})`)
     return NextResponse.json({
       success: true,
       status: 'processing',
@@ -278,7 +278,7 @@ export async function POST(request: Request) {
     })
 
   } catch (e: any) {
-    console.error('❌ FIXED STATUS API error:', e)
+    console.error('âŒ FIXED STATUS API error:', e)
     return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 })
   }
 }

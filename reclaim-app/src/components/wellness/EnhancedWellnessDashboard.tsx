@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -288,7 +288,7 @@ export default function EnhancedWellnessDashboard({ userId, subscriptionTier }: 
                     <div className="font-medium">{goal.title}</div>
                     <div className="text-sm text-gray-600">
                       Progress: {goal.current_value}/{goal.target_value}
-                      {goal.target_date && ` • Due: ${new Date(goal.target_date).toLocaleDateString()}`}
+                      {goal.target_date && ` â€¢ Due: ${new Date(goal.target_date).toLocaleDateString()}`}
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                       <div 

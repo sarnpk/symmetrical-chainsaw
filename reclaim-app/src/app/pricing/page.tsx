@@ -1,17 +1,17 @@
-import { Metadata } from 'next'
+﻿import { Metadata } from 'next'
 import PricingClient from './PricingClient'
 
 export const metadata: Metadata = {
-  title: 'Pricing — Start Free, Upgrade When Ready',
+  title: 'Pricing â€” Start Free, Upgrade When Ready',
   description: 'Transparent pricing for Reclaim recovery tools. Free foundation plan with AI coaching, journal, and safety tools. Paid plans unlock court-ready exports and unlimited access. Cancel anytime.',
   alternates: {
-    canonical: 'https://reclaim.app/pricing',
+    canonical: 'https://reclaimyourlife.app/pricing',
   },
   openGraph: {
-    title: 'Pricing — Start Free, Upgrade When Ready | Reclaim',
+    title: 'Pricing â€” Start Free, Upgrade When Ready | Reclaim',
     description: 'Free recovery tools for narcissistic abuse survivors. Paid plans from $14.99/mo with court-ready exports and unlimited AI coaching.',
     type: 'website',
-    url: 'https://reclaim.app/pricing',
+    url: 'https://reclaimyourlife.app/pricing',
   },
 }
 

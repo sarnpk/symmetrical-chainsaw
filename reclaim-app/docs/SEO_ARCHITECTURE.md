@@ -1,8 +1,8 @@
-# Reclaim — Complete SEO Architecture
+﻿# Reclaim â€” Complete SEO Architecture
 
-> **Domain:** reclaim.app
+> **Domain:** reclaimyourlife.app
 > **Niche:** Narcissistic abuse recovery, emotional abuse support, trauma-informed AI tools
-> **Business model:** Freemium SaaS (free tools → email capture → paid subscription)
+> **Business model:** Freemium SaaS (free tools â†’ email capture â†’ paid subscription)
 > **Target audience:** Survivors of narcissistic/emotional abuse (partners, parents, coworkers, co-parents)
 
 ---
@@ -13,31 +13,31 @@
 
 | Keyword | Est. Monthly Volume | Intent | Difficulty |
 |---------|-------------------|--------|------------|
-| narcissistic abuse | 40,000–60,000 | Informational | High |
-| am I being gaslighted | 12,000–18,000 | Informational/Transactional | Medium |
-| narcissist test | 15,000–22,000 | Transactional | Medium |
-| gaslighting examples | 20,000–30,000 | Informational | High |
-| how to deal with a narcissist | 18,000–25,000 | Informational | Medium |
-| relationship red flags | 25,000–35,000 | Informational | High |
-| narcissistic abuse recovery | 8,000–12,000 | Informational | Medium |
-| emotional abuse test | 6,000–10,000 | Transactional | Low |
-| grey rock method | 10,000–15,000 | Informational | Medium |
-| BIFF response | 4,000–6,000 | Informational | Low |
+| narcissistic abuse | 40,000â€“60,000 | Informational | High |
+| am I being gaslighted | 12,000â€“18,000 | Informational/Transactional | Medium |
+| narcissist test | 15,000â€“22,000 | Transactional | Medium |
+| gaslighting examples | 20,000â€“30,000 | Informational | High |
+| how to deal with a narcissist | 18,000â€“25,000 | Informational | Medium |
+| relationship red flags | 25,000â€“35,000 | Informational | High |
+| narcissistic abuse recovery | 8,000â€“12,000 | Informational | Medium |
+| emotional abuse test | 6,000â€“10,000 | Transactional | Low |
+| grey rock method | 10,000â€“15,000 | Informational | Medium |
+| BIFF response | 4,000â€“6,000 | Informational | Low |
 
 ### Secondary Keywords (Supporting, Medium Volume)
 
 | Keyword | Est. Monthly Volume | Intent | Cluster |
 |---------|-------------------|--------|---------|
-| what is gaslighting | 30,000–40,000 | Informational | Gaslighting |
-| narcissistic personality disorder signs | 8,000–12,000 | Informational | NPD |
-| how to co-parent with a narcissist | 5,000–8,000 | Informational | Co-parenting |
-| reactive abuse | 6,000–10,000 | Informational | Abuse types |
-| stonewalling in relationships | 5,000–8,000 | Informational | Abuse types |
-| narcissistic discard | 8,000–12,000 | Informational | Narcissist types |
-| love bombing vs genuine | 4,000–6,000 | Informational | Narcissist types |
-| DARVO narcissist | 3,000–5,000 | Informational | Manipulation |
-| how to leave a narcissist | 6,000–10,000 | Informational/Transactional | Recovery |
-| trauma bonding | 8,000–12,000 | Informational | Recovery |
+| what is gaslighting | 30,000â€“40,000 | Informational | Gaslighting |
+| narcissistic personality disorder signs | 8,000â€“12,000 | Informational | NPD |
+| how to co-parent with a narcissist | 5,000â€“8,000 | Informational | Co-parenting |
+| reactive abuse | 6,000â€“10,000 | Informational | Abuse types |
+| stonewalling in relationships | 5,000â€“8,000 | Informational | Abuse types |
+| narcissistic discard | 8,000â€“12,000 | Informational | Narcissist types |
+| love bombing vs genuine | 4,000â€“6,000 | Informational | Narcissist types |
+| DARVO narcissist | 3,000â€“5,000 | Informational | Manipulation |
+| how to leave a narcissist | 6,000â€“10,000 | Informational/Transactional | Recovery |
+| trauma bonding | 8,000â€“12,000 | Informational | Recovery |
 
 ### Long-Tail Keywords (Low Competition, High Conversion)
 
@@ -146,59 +146,59 @@
 ## 3. SEO-Friendly Site Structure
 
 ```
-reclaim.app/
-├── / (Landing page — pillar: narcissistic abuse recovery)
-├── /auth (Sign in / Sign up)
-├── /dashboard (App — noindex)
-│
-├── /learn-more (Pillar: What is narcissistic abuse)
-│   ├── /learn-more/gaslighting
-│   ├── /learn-more/co-parenting
-│   ├── /learn-more/evidence
-│   ├── /learn-more/recovery
-│   └── /learn-more/leaving
-│
-├── /free-tools/
-│   ├── /free-assessment
-│   ├── /free-narcissist-test
-│   ├── /relationship-health-check
-│   ├── /discard-stage-test
-│   └── /gaslighting-reality-check
-│
-├── /npd-traits (Pillar: NPD personality traits)
-├── /manipulation-decoder (Pillar: Manipulation tactics)
-├── /gaslighting-tracker (Tool)
-├── /narcissist-detector (Tool)
-├── /narcissist-simulator (Tool)
-│
-├── /journal (App — noindex)
-├── /crisis-reframe (App)
-├── /hope-reframe (App)
-├── /mind-reset (App)
-├── /wellness (App)
-├── /safety-plan (App)
-├── /grey-rock-templates (App)
-├── /biff-assistant (App)
-│
-├── /pricing (Conversion page)
-├── /faq (Supporting content)
-├── /blog/ (Supporting content)
-│   ├── /blog/[slug]
-│
-├── /donate (Conversion page)
-├── /success (Post-conversion)
-├── /terms (Legal)
-├── /privacy (Legal)
-│
-├── /sitemap.xml (Auto-generated)
-├── /robots.txt
-└── /og.png (Social preview)
+reclaimyourlife.app/
+â”œâ”€â”€ / (Landing page â€” pillar: narcissistic abuse recovery)
+â”œâ”€â”€ /auth (Sign in / Sign up)
+â”œâ”€â”€ /dashboard (App â€” noindex)
+â”‚
+â”œâ”€â”€ /learn-more (Pillar: What is narcissistic abuse)
+â”‚   â”œâ”€â”€ /learn-more/gaslighting
+â”‚   â”œâ”€â”€ /learn-more/co-parenting
+â”‚   â”œâ”€â”€ /learn-more/evidence
+â”‚   â”œâ”€â”€ /learn-more/recovery
+â”‚   â””â”€â”€ /learn-more/leaving
+â”‚
+â”œâ”€â”€ /free-tools/
+â”‚   â”œâ”€â”€ /free-assessment
+â”‚   â”œâ”€â”€ /free-narcissist-test
+â”‚   â”œâ”€â”€ /relationship-health-check
+â”‚   â”œâ”€â”€ /discard-stage-test
+â”‚   â””â”€â”€ /gaslighting-reality-check
+â”‚
+â”œâ”€â”€ /npd-traits (Pillar: NPD personality traits)
+â”œâ”€â”€ /manipulation-decoder (Pillar: Manipulation tactics)
+â”œâ”€â”€ /gaslighting-tracker (Tool)
+â”œâ”€â”€ /narcissist-detector (Tool)
+â”œâ”€â”€ /narcissist-simulator (Tool)
+â”‚
+â”œâ”€â”€ /journal (App â€” noindex)
+â”œâ”€â”€ /crisis-reframe (App)
+â”œâ”€â”€ /hope-reframe (App)
+â”œâ”€â”€ /mind-reset (App)
+â”œâ”€â”€ /wellness (App)
+â”œâ”€â”€ /safety-plan (App)
+â”œâ”€â”€ /grey-rock-templates (App)
+â”œâ”€â”€ /biff-assistant (App)
+â”‚
+â”œâ”€â”€ /pricing (Conversion page)
+â”œâ”€â”€ /faq (Supporting content)
+â”œâ”€â”€ /blog/ (Supporting content)
+â”‚   â”œâ”€â”€ /blog/[slug]
+â”‚
+â”œâ”€â”€ /donate (Conversion page)
+â”œâ”€â”€ /success (Post-conversion)
+â”œâ”€â”€ /terms (Legal)
+â”œâ”€â”€ /privacy (Legal)
+â”‚
+â”œâ”€â”€ /sitemap.xml (Auto-generated)
+â”œâ”€â”€ /robots.txt
+â””â”€â”€ /og.png (Social preview)
 ```
 
 ### URL Rules
 - Lowercase, hyphenated slugs
 - No dates in URLs (evergreen content)
-- max 3 levels deep (reclaim.app/category/page)
+- max 3 levels deep (reclaimyourlife.app/category/page)
 - Tool pages under root (not /tools/) for shorter URLs
 - Blog posts under /blog/ for topical authority
 
@@ -208,12 +208,12 @@ reclaim.app/
 
 ### Hub-and-Spoke Model
 
-**Hub pages** (pillar pages) link to all spoke pages in their cluster. Spoke pages link back to hub and to 2–3 related spokes.
+**Hub pages** (pillar pages) link to all spoke pages in their cluster. Spoke pages link back to hub and to 2â€“3 related spokes.
 
 ```
                     Landing Page (/)
                          |
-        ┌────────────────┼────────────────┐
+        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
         |                |                |
   /learn-more      /npd-traits    /manipulation-decoder
    (Pillar)        (Pillar)         (Pillar)
@@ -224,9 +224,9 @@ reclaim.app/
 
 ### Link Rules
 1. Every page links to its parent cluster hub
-2. Every page links to 1–2 related tools
+2. Every page links to 1â€“2 related tools
 3. Free tools link to the paid upgrade page
-4. Blog posts link to 2–3 relevant tools
+4. Blog posts link to 2â€“3 relevant tools
 5. FAQ links to relevant feature pages
 6. Landing page links to all free tools and pricing
 7. Pricing page links back to free tools (comparison)
@@ -251,7 +251,7 @@ reclaim.app/
 ## 5. Title Tags & Meta Descriptions
 
 ### Title Tag Formula
-`[Primary Keyword] — [Value Prop] | Reclaim`
+`[Primary Keyword] â€” [Value Prop] | Reclaim`
 (Max 60 characters)
 
 ### Meta Description Formula
@@ -262,19 +262,19 @@ reclaim.app/
 
 | Page | Title | Meta Description |
 |------|-------|-----------------|
-| / | Reclaim — Narcissistic Abuse Recovery Tools | Free AI-powered tools for narcissistic abuse survivors. Document gaslighting, track patterns, and build court-ready evidence. Start free. |
+| / | Reclaim â€” Narcissistic Abuse Recovery Tools | Free AI-powered tools for narcissistic abuse survivors. Document gaslighting, track patterns, and build court-ready evidence. Start free. |
 | /learn-more | What Is Narcissistic Abuse? Signs & Recovery Guide | Learn to recognize narcissistic abuse patterns, gaslighting tactics, and manipulation. Free assessment tools and recovery resources. |
 | /learn-more/gaslighting | What Is Gaslighting? Examples, Signs & How to Stop It | Gaslighting makes you doubt your reality. Learn the signs, see real examples, and use our free tool to document what's actually happening. |
-| /free-assessment | Free Emotional Abuse Assessment — 30-Second Screening | Take a free, confidential assessment to identify emotional abuse patterns. AI-powered analysis in 70+ languages. No signup required. |
+| /free-assessment | Free Emotional Abuse Assessment â€” 30-Second Screening | Take a free, confidential assessment to identify emotional abuse patterns. AI-powered analysis in 70+ languages. No signup required. |
 | /free-narcissist-test | Am I Dealing with a Narcissist? Free Online Test | Free narcissist test backed by clinical criteria. Identify manipulation tactics, narcissist types, and relationship patterns in 30 seconds. |
-| /relationship-health-check | Relationship Health Check — Is Your Relationship Healthy? | Free relationship assessment measuring communication, respect, boundaries, and emotional safety. Instant results, no judgment. |
-| /gaslighting-tracker | Gaslighting Truth Journal — Document What Actually Happened | Document gaslighting incidents with timestamps, audio, and evidence. AI analyzes patterns and shows you the truth. |
-| /narcissist-detector | Narcissist Detector — Identify Manipulation Patterns | Paste a message or describe behavior. AI identifies narcissist type, manipulation tactics, and severity score. Free analysis. |
-| /narcissist-simulator | Narcissist Simulator — Practice Grey Rock & BIFF Responses | Practice difficult conversations with an AI that mimics narcissistic patterns. Build confidence before the real interaction. |
-| /biff-assistant | BIFF Response Assistant — High-Conflict Communication | Generate Brief, Informate, Firm, Friendly responses to high-conflict messages. AI-powered with JADE detection. |
-| /pricing | Pricing — Start Free, Upgrade When Ready | Transparent pricing for Reclaim recovery tools. Free foundation plan. Cancel anytime. Your data never disappears. |
-| /blog | Recovery Stories & Resources — Reclaim Blog | Evidence-based insights, survivor stories, and practical tools for healing from narcissistic abuse. Updated weekly. |
-| /faq | FAQ — Your Questions About Reclaim, Answered | Privacy, court evidence, free tools, pricing — everything you need to know before starting your recovery journey. |
+| /relationship-health-check | Relationship Health Check â€” Is Your Relationship Healthy? | Free relationship assessment measuring communication, respect, boundaries, and emotional safety. Instant results, no judgment. |
+| /gaslighting-tracker | Gaslighting Truth Journal â€” Document What Actually Happened | Document gaslighting incidents with timestamps, audio, and evidence. AI analyzes patterns and shows you the truth. |
+| /narcissist-detector | Narcissist Detector â€” Identify Manipulation Patterns | Paste a message or describe behavior. AI identifies narcissist type, manipulation tactics, and severity score. Free analysis. |
+| /narcissist-simulator | Narcissist Simulator â€” Practice Grey Rock & BIFF Responses | Practice difficult conversations with an AI that mimics narcissistic patterns. Build confidence before the real interaction. |
+| /biff-assistant | BIFF Response Assistant â€” High-Conflict Communication | Generate Brief, Informate, Firm, Friendly responses to high-conflict messages. AI-powered with JADE detection. |
+| /pricing | Pricing â€” Start Free, Upgrade When Ready | Transparent pricing for Reclaim recovery tools. Free foundation plan. Cancel anytime. Your data never disappears. |
+| /blog | Recovery Stories & Resources â€” Reclaim Blog | Evidence-based insights, survivor stories, and practical tools for healing from narcissistic abuse. Updated weekly. |
+| /faq | FAQ â€” Your Questions About Reclaim, Answered | Privacy, court evidence, free tools, pricing â€” everything you need to know before starting your recovery journey. |
 
 ---
 
@@ -336,8 +336,8 @@ reclaim.app/
 {
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://reclaim.app" },
-    { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://reclaim.app/learn-more" }
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://reclaimyourlife.app" },
+    { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://reclaimyourlife.app/learn-more" }
   ]
 }
 ```
@@ -347,8 +347,8 @@ reclaim.app/
 {
   "@type": "Organization",
   "name": "Reclaim",
-  "url": "https://reclaim.app",
-  "logo": "https://reclaim.app/favicon.svg",
+  "url": "https://reclaimyourlife.app",
+  "logo": "https://reclaimyourlife.app/favicon.svg",
   "sameAs": []
 }
 ```
@@ -357,10 +357,10 @@ reclaim.app/
 ```json
 {
   "@type": "WebSite",
-  "url": "https://reclaim.app",
+  "url": "https://reclaimyourlife.app",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://reclaim.app/blog?q={search_term_string}",
+    "target": "https://reclaimyourlife.app/blog?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 }
@@ -373,9 +373,9 @@ reclaim.app/
 ### Crawlability & Indexing
 | Priority | Task | Status |
 |----------|------|--------|
-| P0 | robots.txt — block /dashboard, /admin, /api, /settings | Needs creation |
-| P0 | XML sitemap — include all public pages, exclude noindex | ✅ Exists |
-| P0 | Canonical URLs on every page | ✅ Done |
+| P0 | robots.txt â€” block /dashboard, /admin, /api, /settings | Needs creation |
+| P0 | XML sitemap â€” include all public pages, exclude noindex | âœ… Exists |
+| P0 | Canonical URLs on every page | âœ… Done |
 | P1 | hreflang tags for multilingual content | Needs implementation |
 | P1 | Internal 301 redirect map for old URLs | Audit needed |
 | P2 | Paginated blog archives with rel=prev/next | When >20 posts |
@@ -389,13 +389,13 @@ reclaim.app/
 | TTFB | <800ms | ~400ms (static) |
 
 ### Speed Optimizations
-- [ ] Enable `next/dynamic` for below-fold widgets (✅ done for dashboard)
+- [ ] Enable `next/dynamic` for below-fold widgets (âœ… done for dashboard)
 - [ ] Image optimization with `next/image` for blog post images
 - [ ] Font subsetting for Fraunces (reduce from variable to specific weights)
 - [ ] Preconnect to `generativelanguage.googleapis.com` for Gemini API
 - [ ] Lazy-load heavy components (NarcissistSimulator, etc.)
 
-### Security Headers (✅ Done via middleware)
+### Security Headers (âœ… Done via middleware)
 - Content-Security-Policy
 - X-Frame-Options: DENY
 - X-Content-Type-Options: nosniff
@@ -406,134 +406,134 @@ reclaim.app/
 
 ## 8. Conversion Paths
 
-### Organic → Free Tool → Email Capture → Paid
+### Organic â†’ Free Tool â†’ Email Capture â†’ Paid
 
 ```
 Google Search: "am I being gaslighted"
-    ↓
+    â†“
 /free-narcissist-test (free, no signup)
-    ↓
-Results page → "Save your results" → /auth (email capture)
-    ↓
-Dashboard → feature-limited → "Upgrade for full access" → /pricing
-    ↓
+    â†“
+Results page â†’ "Save your results" â†’ /auth (email capture)
+    â†“
+Dashboard â†’ feature-limited â†’ "Upgrade for full access" â†’ /pricing
+    â†“
 Paid subscription ($15/mo or $25/mo)
 ```
 
-### Blog → Tool → Upgrade
+### Blog â†’ Tool â†’ Upgrade
 
 ```
 Google Search: "how to grey rock a narcissist"
-    ↓
+    â†“
 Blog post: "Grey Rock Method: Complete Guide"
-    ↓
-Internal link: "Practice with our Grey Rock Simulator" → /grey-rock
-    ↓
-Tool experience → "Unlock unlimited practice" → /pricing
+    â†“
+Internal link: "Practice with our Grey Rock Simulator" â†’ /grey-rock
+    â†“
+Tool experience â†’ "Unlock unlimited practice" â†’ /pricing
 ```
 
-### Landing Page → Free Assessment → Signup
+### Landing Page â†’ Free Assessment â†’ Signup
 
 ```
 Google Search: "narcissistic abuse recovery"
-    ↓
+    â†“
 / (landing page)
-    ↓
-"Start free assessment" CTA → /free-assessment
-    ↓
-Assessment results → "Create free account to save" → /auth
-    ↓
-Onboarding → Dashboard → Nurture → Paid
+    â†“
+"Start free assessment" CTA â†’ /free-assessment
+    â†“
+Assessment results â†’ "Create free account to save" â†’ /auth
+    â†“
+Onboarding â†’ Dashboard â†’ Nurture â†’ Paid
 ```
 
 ---
 
 ## 9. Top 10 Priority Pages to Create
 
-### 1. /learn-more/gaslighting — "What Is Gaslighting?"
+### 1. /learn-more/gaslighting â€” "What Is Gaslighting?"
 - **Intent:** Informational (high volume, top-of-funnel)
 - **Keywords:** what is gaslighting, gaslighting examples, gaslighting in relationships
 - **Purpose:** Pillar page for gaslighting cluster. Education + free tool CTA.
-- **Internal links:** → /gaslighting-reality-check, /gaslighting-tracker, /free-assessment, /learn-more
+- **Internal links:** â†’ /gaslighting-reality-check, /gaslighting-tracker, /free-assessment, /learn-more
 - **Schema:** Article + FAQPage
 
-### 2. /learn-more/co-parenting — "Co-Parenting with a Narcissist"
+### 2. /learn-more/co-parenting â€” "Co-Parenting with a Narcissist"
 - **Intent:** Informational (high-intent audience)
 - **Keywords:** co-parenting with a narcissist, narcissistic co-parent, custody battle narcissist
 - **Purpose:** Pillar page for co-parenting cluster. Guides + evidence tools.
-- **Internal links:** → /journal, /safety-plan, /biff-assistant, /learn-more/evidence
+- **Internal links:** â†’ /journal, /safety-plan, /biff-assistant, /learn-more/evidence
 - **Schema:** Article + FAQPage
 
-### 3. /learn-more/evidence — "How to Document Abuse for Court"
+### 3. /learn-more/evidence â€” "How to Document Abuse for Court"
 - **Intent:** Informational/Transactional (high conversion)
 - **Keywords:** documenting emotional abuse, court-admissible evidence, abuse evidence divorce
 - **Purpose:** Pillar page for evidence cluster. Converts to paid (court-ready exports).
-- **Internal links:** → /journal, /pricing, /gaslighting-tracker, /learn-more
+- **Internal links:** â†’ /journal, /pricing, /gaslighting-tracker, /learn-more
 - **Schema:** Article + FAQPage
 
-### 4. /learn-more/leaving — "How to Leave a Narcissist Safely"
+### 4. /learn-more/leaving â€” "How to Leave a Narcissist Safely"
 - **Intent:** Informational (crisis-stage, high urgency)
 - **Keywords:** how to leave a narcissist, leaving narcissistic relationship, escape narcissist
 - **Purpose:** Safety-focused guide with crisis resources + safety plan CTA.
-- **Internal links:** → /safety-plan, /no-contact-anchor, /crisis-reframe, /learn-more
+- **Internal links:** â†’ /safety-plan, /no-contact-anchor, /crisis-reframe, /learn-more
 - **Schema:** Article + FAQPage
 
-### 5. /blog/grey-rock-method — "Grey Rock Method: Complete Guide"
+### 5. /blog/grey-rock-method â€” "Grey Rock Method: Complete Guide"
 - **Intent:** Informational (medium volume, high engagement)
 - **Keywords:** grey rock method, grey rock technique, how to grey rock
 - **Purpose:** Blog post that links to grey rock templates + simulator.
-- **Internal links:** → /grey-rock-templates, /narcissist-simulator, /biff-assistant
+- **Internal links:** â†’ /grey-rock-templates, /narcissist-simulator, /biff-assistant
 - **Schema:** Article + BreadcrumbList
 
-### 6. /blog/trauma-bonding — "Trauma Bonding: Why You Can't Leave"
+### 6. /blog/trauma-bonding â€” "Trauma Bonding: Why You Can't Leave"
 - **Intent:** Informational (emotional, high engagement)
 - **Keywords:** trauma bonding, trauma bond, why can't I leave
 - **Purpose:** Emotional validation post that funnels to recovery tools.
-- **Internal links:** → /hope-reframe, /crisis-reframe, /mind-reset, /pricing
+- **Internal links:** â†’ /hope-reframe, /crisis-reframe, /mind-reset, /pricing
 - **Schema:** Article + BreadcrumbList
 
-### 7. /blog/darvo — "What Is DARVO? The Narcissist's Favorite Trick"
+### 7. /blog/darvo â€” "What Is DARVO? The Narcissist's Favorite Trick"
 - **Intent:** Informational (growing search volume)
 - **Keywords:** DARVO, DARVO narcissist, deny attack reverse victim
 - **Purpose:** Educational post that explains DARVO + links to detection tools.
-- **Internal links:** → /narcissist-detector, /manipulation-decoder, /gaslighting-tracker
+- **Internal links:** â†’ /narcissist-detector, /manipulation-decoder, /gaslighting-tracker
 - **Schema:** Article + BreadcrumbList
 
-### 8. /blog/narcissistic-parent — "Signs You Have a Narcissistic Parent"
+### 8. /blog/narcissistic-parent â€” "Signs You Have a Narcissistic Parent"
 - **Intent:** Informational (high volume, underserved)
 - **Keywords:** narcissistic parent, narcissistic mother, narcissistic father signs
 - **Purpose:** Family-focused content for a different audience segment.
-- **Internal links:** → /free-narcissist-test, /belief-reframe, /healing, /npd-traits
+- **Internal links:** â†’ /free-narcissist-test, /belief-reframe, /healing, /npd-traits
 - **Schema:** Article + BreadcrumbList
 
-### 9. /blog/workplace-gaslighting — "Workplace Gaslighting: What to Do"
+### 9. /blog/workplace-gaslighting â€” "Workplace Gaslighting: What to Do"
 - **Intent:** Informational (professional audience)
 - **Keywords:** workplace gaslighting, gaslighting at work, boss gaslighting
 - **Purpose:** Workplace-specific content for the coworker/employee segment.
-- **Internal links:** → /gaslighting-tracker, /journal, /biff-assistant, /learn-more/evidence
+- **Internal links:** â†’ /gaslighting-tracker, /journal, /biff-assistant, /learn-more/evidence
 - **Schema:** Article + BreadcrumbList
 
-### 10. /free-tools — "Free Narcissistic Abuse Recovery Tools"
+### 10. /free-tools â€” "Free Narcissistic Abuse Recovery Tools"
 - **Intent:** Transactional (comparison/landing page)
 - **Keywords:** free narcissist test, free gaslighting test, emotional abuse test online
 - **Purpose:** Consolidated free tools landing page. Converts to account creation.
-- **Internal links:** → /free-assessment, /free-narcissist-test, /relationship-health-check, /discard-stage-test, /gaslighting-reality-check, /auth
+- **Internal links:** â†’ /free-assessment, /free-narcissist-test, /relationship-health-check, /discard-stage-test, /gaslighting-reality-check, /auth
 - **Schema:** SoftwareApplication + FAQPage
 
 ---
 
 ## 10. Implementation Roadmap
 
-### Phase 1: Foundation (Week 1–2)
+### Phase 1: Foundation (Week 1â€“2)
 - [ ] Create `robots.txt` blocking /dashboard, /admin, /api, /settings
 - [ ] Update sitemap to exclude noindex pages
-- [ ] Add `rel=canonical` to all pages (✅ done on landing, extend to all)
+- [ ] Add `rel=canonical` to all pages (âœ… done on landing, extend to all)
 - [ ] Add breadcrumb navigation to all subpages
 - [ ] Add structured data (SoftwareApplication, Organization) to layout.tsx
-- [ ] Fix favicon (✅ done — new arch logo)
+- [ ] Fix favicon (âœ… done â€” new arch logo)
 - [ ] Add preconnect hints for external APIs
 
-### Phase 2: Content Pages (Week 2–4)
+### Phase 2: Content Pages (Week 2â€“4)
 - [ ] Create /learn-more/gaslighting (pillar page)
 - [ ] Create /learn-more/co-parenting (pillar page)
 - [ ] Create /learn-more/evidence (pillar page)
@@ -541,7 +541,7 @@ Onboarding → Dashboard → Nurture → Paid
 - [ ] Create /free-tools (consolidated landing page)
 - [ ] Update all existing pages with optimized title tags and meta descriptions
 
-### Phase 3: Blog Content (Week 4–8)
+### Phase 3: Blog Content (Week 4â€“8)
 - [ ] Publish: Grey Rock Method guide
 - [ ] Publish: Trauma Bonding guide
 - [ ] Publish: DARVO guide
@@ -550,15 +550,15 @@ Onboarding → Dashboard → Nurture → Paid
 - [ ] Add Article schema to all blog posts
 - [ ] Add BreadcrumbList schema to all blog posts
 
-### Phase 4: On-Page SEO (Week 6–10)
+### Phase 4: On-Page SEO (Week 6â€“10)
 - [ ] Audit all H1/H2/H3 heading hierarchy
 - [ ] Add alt text to all images
 - [ ] Implement hreflang tags for multilingual pages
-- [ ] Add internal links from every blog post to 2–3 tools
+- [ ] Add internal links from every blog post to 2â€“3 tools
 - [ ] Add "Related Tools" section to all learn-more pages
 - [ ] Add FAQ schema to all learn-more and tool pages
 
-### Phase 5: Technical Optimization (Week 8–12)
+### Phase 5: Technical Optimization (Week 8â€“12)
 - [ ] Optimize Core Web Vitals (images, fonts, scripts)
 - [ ] Implement structured data for all page types
 - [ ] Set up Google Search Console and submit sitemap
@@ -566,7 +566,7 @@ Onboarding → Dashboard → Nurture → Paid
 - [ ] A/B test meta descriptions for CTR improvement
 
 ### Phase 6: Growth & Monitoring (Ongoing)
-- [ ] Publish 2–4 blog posts per month
+- [ ] Publish 2â€“4 blog posts per month
 - [ ] Update existing content quarterly
 - [ ] Monitor keyword rankings weekly
 - [ ] Track conversion funnels monthly
@@ -585,6 +585,6 @@ Onboarding → Dashboard → Nurture → Paid
 | Pages indexed | Search Console | All public pages |
 | Core Web Vitals | PageSpeed Insights | All green |
 | Backlinks | Ahrefs/SEMrush | +10/month |
-| Conversion rate (organic → signup) | Analytics | >5% |
+| Conversion rate (organic â†’ signup) | Analytics | >5% |
 | Bounce rate | Analytics | <60% |
 | Average session duration | Analytics | >2 minutes |

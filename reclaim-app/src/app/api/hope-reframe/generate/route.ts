@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { geminiAI, DEFAULT_PAID_TIER_MODEL } from '@/lib/gemini-ai'
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Input is required' }, { status: 400 })
     }
 
-    // Check usage limits (non-blocking — if tracking fails, allow the request)
+    // Check usage limits (non-blocking â€” if tracking fails, allow the request)
     let canUse = { allowed: true as boolean, upgrade_required: undefined as string | undefined }
     try {
       const result = await trackUsage(user.id, 'hope_reframe')

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -257,7 +257,7 @@ export default function LettingGoPage() {
 
                   {aiAnalysis.cognitiveDistortions && aiAnalysis.cognitiveDistortions.length > 0 && (
                     <div>
-                      <h3 className="font-semibold text-purple-900 mb-2">🧠 Cognitive Distortions Detected</h3>
+                      <h3 className="font-semibold text-purple-900 mb-2">ðŸ§  Cognitive Distortions Detected</h3>
                       <div className="flex flex-wrap gap-2">
                         {aiAnalysis.cognitiveDistortions.map((distortion: string, i: number) => (
                           <span key={i} className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">
@@ -282,7 +282,7 @@ export default function LettingGoPage() {
 
                   {aiAnalysis.patternInterruptSuggestions && aiAnalysis.patternInterruptSuggestions.length > 0 && (
                     <div>
-                      <h3 className="font-semibold text-purple-900 mb-2">⚡ Pattern Interrupt Suggestions</h3>
+                      <h3 className="font-semibold text-purple-900 mb-2">âš¡ Pattern Interrupt Suggestions</h3>
                       <div className="space-y-2">
                         {aiAnalysis.patternInterruptSuggestions.map((suggestion: string, i: number) => (
                           <div key={i} className="p-2 bg-orange-50 rounded border border-orange-200 text-sm text-orange-900">
@@ -295,14 +295,14 @@ export default function LettingGoPage() {
 
                   {aiAnalysis.thirdPersonReframe && (
                     <div className="p-4 bg-pink-50 rounded-lg border border-pink-200">
-                      <h3 className="font-semibold text-pink-900 mb-2">👥 Third Person Perspective</h3>
+                      <h3 className="font-semibold text-pink-900 mb-2">ðŸ‘¥ Third Person Perspective</h3>
                       <p className="text-sm text-pink-800 italic">"{aiAnalysis.thirdPersonReframe}"</p>
                     </div>
                   )}
 
                   {aiAnalysis.gratitudePrompts && aiAnalysis.gratitudePrompts.length > 0 && (
                     <div>
-                      <h3 className="font-semibold text-purple-900 mb-2">🙏 Gratitude Prompts for You</h3>
+                      <h3 className="font-semibold text-purple-900 mb-2">ðŸ™ Gratitude Prompts for You</h3>
                       <ul className="list-disc list-inside space-y-1 text-sm text-purple-800">
                         {aiAnalysis.gratitudePrompts.map((prompt: string, i: number) => (
                           <li key={i}>{prompt}</li>
@@ -313,7 +313,7 @@ export default function LettingGoPage() {
 
                   {aiAnalysis.mostEffectiveStep && (
                     <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                      <h3 className="font-semibold text-blue-900 mb-1">🎯 Most Effective Step for You</h3>
+                      <h3 className="font-semibold text-blue-900 mb-1">ðŸŽ¯ Most Effective Step for You</h3>
                       <p className="text-sm text-blue-800">{aiAnalysis.mostEffectiveStep}</p>
                     </div>
                   )}
@@ -824,7 +824,7 @@ export default function LettingGoPage() {
         <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
           <CardHeader className="cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-indigo-800">💡 About Letting Go</CardTitle>
+              <CardTitle className="text-indigo-800">ðŸ’¡ About Letting Go</CardTitle>
               {showInfo ? <ChevronUp className="h-5 w-5 text-indigo-600" /> : <ChevronDown className="h-5 w-5 text-indigo-600" />}
             </div>
           </CardHeader>
@@ -832,10 +832,10 @@ export default function LettingGoPage() {
             <CardContent className="space-y-2 text-sm text-indigo-900">
               <p>Track your journey from emotional attachment to healthy detachment.</p>
               <div className="space-y-1">
-                <div><strong>✓ Measure progress:</strong> See your detachment levels improve over time</div>
-                <div><strong>✓ Identify patterns:</strong> What triggers attachment feelings?</div>
-                <div><strong>✓ Celebrate milestones:</strong> First day without thinking about them</div>
-                <div><strong>✓ Build new identity:</strong> Who are you becoming without them?</div>
+                <div><strong>âœ“ Measure progress:</strong> See your detachment levels improve over time</div>
+                <div><strong>âœ“ Identify patterns:</strong> What triggers attachment feelings?</div>
+                <div><strong>âœ“ Celebrate milestones:</strong> First day without thinking about them</div>
+                <div><strong>âœ“ Build new identity:</strong> Who are you becoming without them?</div>
               </div>
             </CardContent>
           )}
@@ -949,7 +949,7 @@ export default function LettingGoPage() {
                     {entry.emotional_state_before && entry.emotional_state_after && (
                       <div className="flex items-center gap-2 text-sm">
                         <span className="text-gray-600">Mood shift:</span>
-                        <span className="font-bold">{entry.emotional_state_before} → {entry.emotional_state_after}</span>
+                        <span className="font-bold">{entry.emotional_state_before} â†’ {entry.emotional_state_after}</span>
                         <span className={`font-bold ${entry.emotional_state_after > entry.emotional_state_before ? 'text-green-600' : 'text-gray-600'}`}>
                           ({entry.emotional_state_after > entry.emotional_state_before ? '+' : ''}{entry.emotional_state_after - entry.emotional_state_before})
                         </span>

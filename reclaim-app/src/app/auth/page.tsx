@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -114,7 +114,7 @@ function AuthForm() {
           {redirectTo !== '/dashboard' && (
             <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-800">
-                🔒 Please sign in to access {redirectTo.replace('/', '').replace('-', ' ')}
+                ðŸ”’ Please sign in to access {redirectTo.replace('/', '').replace('-', ' ')}
               </p>
             </div>
           )}
@@ -247,7 +247,7 @@ function AuthForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
               required
               minLength={6}
             />

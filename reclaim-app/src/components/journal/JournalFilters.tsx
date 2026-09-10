@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Search, Filter, SortDesc, SortAsc } from 'lucide-react'
 
@@ -120,7 +120,7 @@ export default function JournalFilters({
           <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:items-end">
             <div className="flex-1 min-w-0 sm:min-w-[200px]">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Safety Level (show ≤)
+                Safety Level (show â‰¤)
               </label>
               <select
                 value={filterSafety || ''}
@@ -128,9 +128,9 @@ export default function JournalFilters({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="">All levels</option>
-                <option value="2">≤ 2 (High concern)</option>
-                <option value="3">≤ 3 (Medium)</option>
-                <option value="5">≤ 5 (All entries)</option>
+                <option value="2">â‰¤ 2 (High concern)</option>
+                <option value="3">â‰¤ 3 (Medium)</option>
+                <option value="5">â‰¤ 5 (All entries)</option>
               </select>
             </div>
 

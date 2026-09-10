@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { CRISIS_INTERVENTIONS, ConditionType } from '@/lib/crisis-toolkit-data';
@@ -197,7 +197,7 @@ export default function CrisisToolkitPage() {
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Crisis Toolkit</h1>
             <p className="text-gray-600">Quick support when you need it most</p>
-            <a href="/crisis-toolkit/help" className="text-sm text-blue-600 hover:underline">📖 How to use this toolkit</a>
+            <a href="/crisis-toolkit/help" className="text-sm text-blue-600 hover:underline">ðŸ“– How to use this toolkit</a>
             {usage && (
               <div className="mt-2 text-sm">
                 <span className={usage.remaining < 3 ? 'text-red-600 font-medium' : 'text-gray-600'}>
@@ -210,7 +210,7 @@ export default function CrisisToolkitPage() {
             )}
             {stats && stats.totalUses > 0 && (
               <p className="text-sm text-purple-600 mt-2 font-medium">
-                💪 {stats.resilience}
+                ðŸ’ª {stats.resilience}
               </p>
             )}
           </div>
@@ -232,14 +232,14 @@ export default function CrisisToolkitPage() {
           <div className="mt-8 bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">💛 Hope Reframe</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">ðŸ’› Hope Reframe</h3>
                 <p className="text-sm text-gray-600">Transform distressing thoughts into grounded hope</p>
               </div>
               <a
                 href="/hope-reframe"
                 className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-md"
               >
-                Open →
+                Open â†’
               </a>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function CrisisToolkitPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
       <div className="max-w-2xl mx-auto pt-8">
         <button onClick={reset} className="mb-4 text-gray-600 hover:text-gray-900">
-          ← Back
+          â† Back
         </button>
 
         {currentStep === 'ruleout' && (
@@ -293,7 +293,7 @@ export default function CrisisToolkitPage() {
                       />
                       {intrusiveThought && (
                         <p className="mt-2 text-sm font-medium text-purple-600">
-                          ✓ Labeled as: "This is a sticky/intrusive thought"
+                          âœ“ Labeled as: "This is a sticky/intrusive thought"
                         </p>
                       )}
                     </div>
@@ -315,7 +315,7 @@ export default function CrisisToolkitPage() {
                         : 'bg-blue-600 text-white hover:bg-blue-700'
                     }`}
                   >
-                    {usedSkills.includes(skill.id) ? '✓ Used' : 'Try This'}
+                    {usedSkills.includes(skill.id) ? 'âœ“ Used' : 'Try This'}
                   </button>
                 </div>
               ))}
@@ -325,20 +325,20 @@ export default function CrisisToolkitPage() {
                 onClick={fetchAiRecommendations}
                 className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700"
               >
-                ✨ Get AI Skill Recommendations
+                âœ¨ Get AI Skill Recommendations
               </button>
             )}
             
             {showAiSkills && aiRecommendations.length > 0 && (
               <div className="mt-6 space-y-4">
                 <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                  ✨ AI Recommended for You
+                  âœ¨ AI Recommended for You
                 </h3>
                 {aiRecommendations.map((rec, idx) => (
                   <div key={idx} className="border-2 border-purple-200 rounded-lg p-4 bg-purple-50">
                     <h4 className="font-bold text-purple-900 mb-2">{rec.name}</h4>
                     <p className="text-gray-700 text-sm mb-2">{rec.description}</p>
-                    <p className="text-xs text-purple-600 italic mb-2">💡 {rec.why}</p>
+                    <p className="text-xs text-purple-600 italic mb-2">ðŸ’¡ {rec.why}</p>
                     <button
                       onClick={() => startSkill(rec.name, rec.duration)}
                       className={`w-full py-2 rounded-lg font-medium ${
@@ -347,7 +347,7 @@ export default function CrisisToolkitPage() {
                           : 'bg-purple-600 text-white hover:bg-purple-700'
                       }`}
                     >
-                      {usedSkills.includes(rec.name) ? '✓ Used' : 'Try This'}
+                      {usedSkills.includes(rec.name) ? 'âœ“ Used' : 'Try This'}
                     </button>
                   </div>
                 ))}
@@ -376,7 +376,7 @@ export default function CrisisToolkitPage() {
               disabled={isPlayingVoice}
               className="w-full mb-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {isPlayingVoice ? '🔊 Playing...' : '🎙️ Listen to Guided Voice'}
+              {isPlayingVoice ? 'ðŸ”Š Playing...' : 'ðŸŽ™ï¸ Listen to Guided Voice'}
             </button>
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 mb-6">
               <p className="text-gray-800">{intervention.futureVision}</p>
@@ -400,7 +400,7 @@ export default function CrisisToolkitPage() {
 
         {currentStep === 'complete' && (
           <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-            <div className="text-6xl mb-4">💪</div>
+            <div className="text-6xl mb-4">ðŸ’ª</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">You did it</h2>
             <p className="text-gray-600 mb-6">You showed up for yourself. That takes courage.</p>
             <button

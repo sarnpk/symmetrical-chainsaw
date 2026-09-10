@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -572,7 +572,7 @@ export default function ManipulationDecoderPage() {
                     <h4 className="font-semibold text-sm mb-2">Emotional Hooks</h4>
                     <ul className="text-sm text-gray-700 space-y-1">
                       {aiAnalysis.emotional_hooks?.map((hook: string, idx: number) => (
-                        <li key={idx}>• {hook}</li>
+                        <li key={idx}>â€¢ {hook}</li>
                       ))}
                     </ul>
                   </div>
@@ -609,17 +609,17 @@ export default function ManipulationDecoderPage() {
                 </div>
                 
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded p-4 border border-blue-200">
-                  <h4 className="font-semibold text-sm mb-3 text-gray-900">💡 Recommended Next Steps</h4>
+                  <h4 className="font-semibold text-sm mb-3 text-gray-900">ðŸ’¡ Recommended Next Steps</h4>
                   
                   <div className="mb-3 p-3 bg-white rounded border-l-4 border-blue-500">
                     <p className="text-sm text-gray-700">
                       {emotionalImpact === 'severe' || aiAnalysis.tactics?.some((t: string) => t.toLowerCase().includes('gaslighting') || t.toLowerCase().includes('threat')) ? 
-                        '🚨 This appears to be a significant incident. Consider documenting it as a Toxic Memory for evidence and pattern tracking.' :
+                        'ðŸš¨ This appears to be a significant incident. Consider documenting it as a Toxic Memory for evidence and pattern tracking.' :
                         aiAnalysis.tactics?.some((t: string) => t.toLowerCase().includes('gaslighting') || t.toLowerCase().includes('reality')) ?
-                        '⚓ Gaslighting detected. Adding this to Reality Anchor can help you stay grounded in facts.' :
+                        'âš“ Gaslighting detected. Adding this to Reality Anchor can help you stay grounded in facts.' :
                         isMyFault ?
-                        '🧠 You mentioned feeling at fault. This might be a good time to examine related false beliefs.' :
-                        '📝 Consider documenting this manipulation pattern to build awareness and evidence.'
+                        'ðŸ§  You mentioned feeling at fault. This might be a good time to examine related false beliefs.' :
+                        'ðŸ“ Consider documenting this manipulation pattern to build awareness and evidence.'
                       }
                     </p>
                   </div>
@@ -629,19 +629,19 @@ export default function ManipulationDecoderPage() {
                       href="/toxic-memories?new=true"
                       className="px-3 py-2 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 flex items-center gap-1 transition-colors"
                     >
-                      📝 Document as Toxic Memory
+                      ðŸ“ Document as Toxic Memory
                     </Link>
                     <Link
                       href="/reality-log/new"
                       className="px-3 py-2 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 flex items-center gap-1 transition-colors"
                     >
-                      ⚓ Add to Reality Anchor
+                      âš“ Add to Reality Anchor
                     </Link>
                     <Link
                       href="/belief-reframe/new"
                       className="px-3 py-2 bg-purple-100 text-purple-700 rounded text-sm hover:bg-purple-200 flex items-center gap-1 transition-colors"
                     >
-                      🧠 Challenge Related Beliefs
+                      ðŸ§  Challenge Related Beliefs
                     </Link>
                   </div>
                 </div>
@@ -671,19 +671,19 @@ export default function ManipulationDecoderPage() {
                     ))}
                     
                     <div className="bg-gradient-to-r from-amber-50 to-red-50 rounded p-4 border border-amber-200 mt-4">
-                      <h4 className="font-semibold text-sm mb-2 text-gray-900">📋 Document This Pattern</h4>
+                      <h4 className="font-semibold text-sm mb-2 text-gray-900">ðŸ“‹ Document This Pattern</h4>
                       <div className="flex gap-2 flex-wrap">
                         <Link
                           href="/toxic-memories?new=true"
                           className="px-3 py-2 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition-colors"
                         >
-                          📝 Save as Toxic Memory
+                          ðŸ“ Save as Toxic Memory
                         </Link>
                         <Link
                           href="/reality-log/new"
                           className="px-3 py-2 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 transition-colors"
                         >
-                          ⚓ Log in Reality Anchor
+                          âš“ Log in Reality Anchor
                         </Link>
                       </div>
                     </div>
@@ -692,12 +692,12 @@ export default function ManipulationDecoderPage() {
                   <div>
                     <p className="text-gray-600 mb-4">No obvious manipulation tactics detected. Trust your gut if something feels off.</p>
                     <div className="bg-blue-50 rounded p-3 border border-blue-200">
-                      <p className="text-sm text-blue-800 mb-2">💡 Even without clear patterns, documenting your concerns can be valuable:</p>
+                      <p className="text-sm text-blue-800 mb-2">ðŸ’¡ Even without clear patterns, documenting your concerns can be valuable:</p>
                       <Link
                         href="/reality-log/new"
                         className="inline-block px-3 py-2 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 transition-colors"
                       >
-                        ⚓ Document Gut Feeling
+                        âš“ Document Gut Feeling
                       </Link>
                     </div>
                   </div>

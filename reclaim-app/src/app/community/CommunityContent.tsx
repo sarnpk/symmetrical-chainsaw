@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -443,7 +443,7 @@ export default function CommunityContent() {
               disabled={loadingMorePosts}
               className={`px-4 py-2 rounded-lg text-sm font-medium border ${loadingMorePosts ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'} border-gray-200`}
             >
-              {loadingMorePosts ? 'Loading…' : 'Load more'}
+              {loadingMorePosts ? 'Loadingâ€¦' : 'Load more'}
             </button>
           </div>
         )}
@@ -475,7 +475,7 @@ export default function CommunityContent() {
                     <span>{group.members} members</span>
                     {group.isPrivate && (
                       <>
-                        <span>•</span>
+                        <span>â€¢</span>
                         <Lock className="h-3 w-3" />
                         <span>Private</span>
                       </>
@@ -523,7 +523,7 @@ export default function CommunityContent() {
             Emergency contacts and crisis helplines for immediate support.
           </p>
           <button className="text-red-600 hover:text-red-700 font-medium text-sm">
-            View Resources →
+            View Resources â†’
           </button>
         </div>
 
@@ -538,7 +538,7 @@ export default function CommunityContent() {
             Books, articles, and resources recommended by the community.
           </p>
           <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
-            Browse Library →
+            Browse Library â†’
           </button>
         </div>
 
@@ -553,7 +553,7 @@ export default function CommunityContent() {
             Live and recorded workshops on healing and recovery topics.
           </p>
           <button className="text-green-600 hover:text-green-700 font-medium text-sm">
-            View Schedule →
+            View Schedule â†’
           </button>
         </div>
       </div>
@@ -714,7 +714,7 @@ export default function CommunityContent() {
                   disabled={submitting}
                   className={`px-4 py-2 rounded-lg text-white ${submitting ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'}`}
                 >
-                  {submitting ? 'Posting…' : 'Post'}
+                  {submitting ? 'Postingâ€¦' : 'Post'}
                 </button>
               </div>
             </form>
@@ -759,7 +759,7 @@ export default function CommunityContent() {
                 disabled={deleting}
                 className="px-4 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-500 disabled:opacity-50"
               >
-                {deleting ? 'Deleting…' : 'Delete'}
+                {deleting ? 'Deletingâ€¦' : 'Delete'}
               </button>
             </div>
           </DialogPanel>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -341,7 +341,7 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
                 <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-purple-600 font-bold text-sm">✨</span>
+                  <span className="text-purple-600 font-bold text-sm">âœ¨</span>
                 </div>
               </div>
               <div className="flex-1">
@@ -356,7 +356,7 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
                   className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
                 >
                   Upgrade to Recovery
-                  <span className="text-xs">→</span>
+                  <span className="text-xs">â†’</span>
                 </a>
               </div>
             </div>
@@ -450,7 +450,7 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
                   </div>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <button onClick={importLatestCheckIn} className="px-2 py-1 text-xs border rounded hover:bg-gray-50">Import latest check-in</button>
-                    <button onClick={() => fetchAISuggestions(aiContext)} disabled={aiLoading} className="px-2 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-60">{aiLoading ? 'Generating…' : 'Generate'}</button>
+                    <button onClick={() => fetchAISuggestions(aiContext)} disabled={aiLoading} className="px-2 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-60">{aiLoading ? 'Generatingâ€¦' : 'Generate'}</button>
                   </div>
                 </div>
 
@@ -462,15 +462,15 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
                   {/* Context inputs */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
-                      <label className="block text-xs text-gray-600 mb-1">Mood (1–10)</label>
+                      <label className="block text-xs text-gray-600 mb-1">Mood (1â€“10)</label>
                       <input type="range" min={1} max={10} value={aiContext.mood ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, mood: Number(e.target.value) }))} className="w-full" />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-600 mb-1">Anxiety (1–10)</label>
+                      <label className="block text-xs text-gray-600 mb-1">Anxiety (1â€“10)</label>
                       <input type="range" min={1} max={10} value={aiContext.anxiety ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, anxiety: Number(e.target.value) }))} className="w-full" />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-600 mb-1">Energy (1–10)</label>
+                      <label className="block text-xs text-gray-600 mb-1">Energy (1â€“10)</label>
                       <input type="range" min={1} max={10} value={aiContext.energy ?? 5} onChange={(e) => setAiContext((c) => ({ ...c, energy: Number(e.target.value) }))} className="w-full" />
                     </div>
                   </div>
@@ -510,7 +510,7 @@ export default function CopingStrategies({ userId, subscriptionTier }: CopingStr
 
                   {/* Suggestions Grid */}
                   {aiLoading ? (
-                    <div className="py-6 text-center text-gray-600">Generating suggestions…</div>
+                    <div className="py-6 text-center text-gray-600">Generating suggestionsâ€¦</div>
                   ) : aiSuggestions.length === 0 ? (
                     <div className="py-6 text-center text-gray-600">No suggestions returned</div>
                   ) : (

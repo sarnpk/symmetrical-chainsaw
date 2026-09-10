@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast'
@@ -22,7 +22,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://reclaim.app"),
+  metadataBase: new URL("https://reclaimyourlife.app"),
   title: {
     default: "Reclaim - Recovery Platform",
     template: "%s | Reclaim",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Reclaim — turn your history into evidence. Your truth into recovery.",
+        alt: "Reclaim â€” turn your history into evidence. Your truth into recovery.",
       },
     ],
   },
@@ -76,18 +76,18 @@ export default function RootLayout({
                 {
                   '@type': 'Organization',
                   name: 'Reclaim',
-                  url: 'https://reclaim.app',
-                  logo: 'https://reclaim.app/favicon.svg',
+                  url: 'https://reclaimyourlife.app',
+                  logo: 'https://reclaimyourlife.app/favicon.svg',
                   description: 'AI-powered recovery tools for survivors of narcissistic abuse.',
                   sameAs: [],
                 },
                 {
                   '@type': 'WebSite',
                   name: 'Reclaim',
-                  url: 'https://reclaim.app',
+                  url: 'https://reclaimyourlife.app',
                   potentialAction: {
                     '@type': 'SearchAction',
-                    target: 'https://reclaim.app/blog?q={search_term_string}',
+                    target: 'https://reclaimyourlife.app/blog?q={search_term_string}',
                     'query-input': 'required name=search_term_string',
                   },
                 },

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Share2, Facebook, Twitter, MessageCircle, Sparkles } from 'lucide-react'
 import toast from 'react-hot-toast'

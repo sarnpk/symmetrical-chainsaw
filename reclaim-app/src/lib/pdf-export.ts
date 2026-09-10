@@ -1,4 +1,4 @@
-import jsPDF from 'jspdf'
+﻿import jsPDF from 'jspdf'
 
 export const exportMemoriesToPDF = (memories: any[], userName: string) => {
   const doc = new jsPDF()

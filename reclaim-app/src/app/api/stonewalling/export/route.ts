@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
     </div>
   </div>
 
-  ${incidents.length > 5 ? '<div class="warning"><strong>⚠️ Pattern Alert:</strong> Multiple documented incidents of stonewalling behavior.</div>' : ''}
+  ${incidents.length > 5 ? '<div class="warning"><strong>âš ï¸ Pattern Alert:</strong> Multiple documented incidents of stonewalling behavior.</div>' : ''}
 
   <h2>Incident Timeline</h2>
   ${incidents.map(incident => `

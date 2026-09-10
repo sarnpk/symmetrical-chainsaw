@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { AlertCircle, Shield, ArrowRight } from 'lucide-react'
@@ -37,7 +37,7 @@ export default function CrisisReframeWidget() {
 
         <div className="bg-red-100 border border-red-200 rounded-lg p-3 text-center">
           <p className="text-sm font-semibold text-red-900">
-            🚨 Use when you're in panic or crisis
+            ðŸš¨ Use when you're in panic or crisis
           </p>
         </div>
       </div>

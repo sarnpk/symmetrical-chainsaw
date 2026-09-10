@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -59,8 +59,8 @@ export default function AICoachHelpPage() {
               <h2 className="text-lg font-medium text-gray-900">Overview</h2>
             </div>
             <p className="text-gray-700 text-sm">
-              AI Coach offers supportive, trauma‑informed guidance. Share what's on your mind and receive brief, practical
-              suggestions—grounding skills, reframes, and next steps.
+              AI Coach offers supportive, traumaâ€‘informed guidance. Share what's on your mind and receive brief, practical
+              suggestionsâ€”grounding skills, reframes, and next steps.
             </p>
           </section>
 
@@ -71,7 +71,7 @@ export default function AICoachHelpPage() {
             </div>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
               <li>Start with one sentence about what you need (vent, plan, calm, boundary).</li>
-              <li>Ask for formats: bullets, 1‑minute exercise, or a compassionate reframe.</li>
+              <li>Ask for formats: bullets, 1â€‘minute exercise, or a compassionate reframe.</li>
               <li>Keep PII minimal; you control what you share.</li>
             </ul>
           </section>

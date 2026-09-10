@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
 
@@ -18,7 +18,7 @@ export default function DynamicFixPage() {
     setResult(null)
 
     try {
-      console.log('🔧 DYNAMIC FIX: Using corrected Gladia v2 API structure')
+      console.log('ðŸ”§ DYNAMIC FIX: Using corrected Gladia v2 API structure')
       
       const response = await fetch('/api/fix-stuck-final', {
         method: 'POST',
@@ -30,14 +30,14 @@ export default function DynamicFixPage() {
       })
 
       const data = await response.json()
-      console.log('📊 Dynamic fix result:', data)
+      console.log('ðŸ“Š Dynamic fix result:', data)
       setResult(data)
       
       if (data.success && data.status === 'completed') {
-        alert(`🎉 FIXED!\n\nTranscription: "${data.transcription}"\n\nYour journal should now show this transcription!`)
+        alert(`ðŸŽ‰ FIXED!\n\nTranscription: "${data.transcription}"\n\nYour journal should now show this transcription!`)
       }
     } catch (err: any) {
-      console.error('❌ Dynamic fix error:', err)
+      console.error('âŒ Dynamic fix error:', err)
       setResult({ error: err.message })
     } finally {
       setLoading(false)
@@ -58,11 +58,11 @@ export default function DynamicFixPage() {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-          <h1 className="text-2xl font-bold mb-6">🔧 Dynamic Fix - Any Job ID</h1>
+          <h1 className="text-2xl font-bold mb-6">ðŸ”§ Dynamic Fix - Any Job ID</h1>
           
           {/* Quick Fix for Latest */}
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <h3 className="font-semibold text-red-800 mb-3">🚨 Quick Fix Latest Stuck Job</h3>
+            <h3 className="font-semibold text-red-800 mb-3">ðŸš¨ Quick Fix Latest Stuck Job</h3>
             <p className="text-sm text-red-700 mb-3">
               Fix your latest stuck transcription immediately:
             </p>
@@ -75,7 +75,7 @@ export default function DynamicFixPage() {
               disabled={loading}
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-semibold"
             >
-              🚨 Fix Latest Stuck Job
+              ðŸš¨ Fix Latest Stuck Job
             </button>
           </div>
 
@@ -118,7 +118,7 @@ export default function DynamicFixPage() {
             disabled={loading || (!jobId && !evidenceFileId)}
             className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 font-semibold mb-6"
           >
-            {loading ? '🔧 Fixing...' : '🔧 Fix This Transcription'}
+            {loading ? 'ðŸ”§ Fixing...' : 'ðŸ”§ Fix This Transcription'}
           </button>
 
           {/* Loading */}
@@ -149,7 +149,7 @@ export default function DynamicFixPage() {
               
               {result.transcription && (
                 <div className="p-4 bg-green-50 border border-green-200 rounded-md">
-                  <h4 className="font-semibold text-green-800 mb-2">🎉 SUCCESS! TRANSCRIPTION EXTRACTED:</h4>
+                  <h4 className="font-semibold text-green-800 mb-2">ðŸŽ‰ SUCCESS! TRANSCRIPTION EXTRACTED:</h4>
                   <p className="text-green-700 text-lg font-mono bg-white p-3 rounded border">
                     "{result.transcription}"
                   </p>
@@ -157,7 +157,7 @@ export default function DynamicFixPage() {
                   {result.fixed && (
                     <div className="mt-3 p-2 bg-green-100 rounded">
                       <p className="text-sm text-green-600 font-semibold">
-                        ✅ Database Updated Successfully!
+                        âœ… Database Updated Successfully!
                       </p>
                       <p className="text-xs text-green-600">
                         Your journal should now show this transcription instead of "processing"
@@ -171,7 +171,7 @@ export default function DynamicFixPage() {
 
           {/* Root Cause Fix Needed */}
           <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-            <h3 className="font-semibold text-yellow-800 mb-2">⚠️ Root Cause Fix Needed</h3>
+            <h3 className="font-semibold text-yellow-800 mb-2">âš ï¸ Root Cause Fix Needed</h3>
             <p className="text-sm text-yellow-700 mb-2">
               The real problem is that <code>/api/evidence/transcribe/status</code> is not working properly. 
               This endpoint should automatically update the database when transcriptions complete.

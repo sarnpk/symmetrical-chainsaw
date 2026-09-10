@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Empty State Component
  * Modern empty states with illustrations
  */

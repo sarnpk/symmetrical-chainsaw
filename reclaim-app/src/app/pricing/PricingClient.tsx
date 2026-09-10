@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Fragment, useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -174,7 +174,7 @@ export default function PricingClient() {
             <SectionHeading
               eyebrow="Simple, honest pricing"
               title="Choose your recovery plan"
-              lead="Transparent pricing. Upgrade anytime. Downgrade or cancel easily — your data never disappears."
+              lead="Transparent pricing. Upgrade anytime. Downgrade or cancel easily â€” your data never disappears."
             />
           </Reveal>
 
@@ -326,7 +326,7 @@ export default function PricingClient() {
 
         <CtaBanner
           title="Ready to start your recovery journey?"
-          lead="Join thousands of survivors who are reclaiming their lives with evidence-based tools — start free today."
+          lead="Join thousands of survivors who are reclaiming their lives with evidence-based tools â€” start free today."
           cta={{ label: 'Start free today', href: '/auth' }}
         />
         <div className="bg-white pb-16 -mt-4">

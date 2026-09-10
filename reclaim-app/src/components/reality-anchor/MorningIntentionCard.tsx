@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -71,7 +71,7 @@ export default function MorningIntentionCard({ userId }: MorningIntentionCardPro
             <Heart className="h-5 w-5 text-indigo-600" />
             <CardTitle className="text-lg">Morning Intention</CardTitle>
           </div>
-          <span className="text-sm font-bold text-indigo-600">🔥 {streak} days</span>
+          <span className="text-sm font-bold text-indigo-600">ðŸ”¥ {streak} days</span>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">

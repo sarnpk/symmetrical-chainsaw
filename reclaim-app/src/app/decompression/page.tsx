@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -27,10 +27,10 @@ const INTERACTION_TYPES = [
 const RITUAL_TYPES = [
   { value: 'walk', label: 'Walk', icon: Footprints, color: 'green' },
   { value: 'exercise', label: 'Exercise', icon: Activity, color: 'blue' },
-  { value: 'meditation', label: 'Meditation', icon: '🧘', color: 'purple' },
+  { value: 'meditation', label: 'Meditation', icon: 'ðŸ§˜', color: 'purple' },
   { value: 'music', label: 'Music', icon: Music, color: 'pink' },
   { value: 'journaling', label: 'Journaling', icon: BookOpen, color: 'indigo' },
-  { value: 'other', label: 'Other', icon: '✨', color: 'gray' },
+  { value: 'other', label: 'Other', icon: 'âœ¨', color: 'gray' },
 ]
 
 export default function DecompressionPage() {
@@ -253,7 +253,7 @@ export default function DecompressionPage() {
               {moodImprovement > 0 && (
                 <div className="bg-green-50 p-4 rounded-lg">
                   <p className="text-green-900 font-medium">
-                    ✨ Mood improved by {moodImprovement} points!
+                    âœ¨ Mood improved by {moodImprovement} points!
                   </p>
                 </div>
               )}

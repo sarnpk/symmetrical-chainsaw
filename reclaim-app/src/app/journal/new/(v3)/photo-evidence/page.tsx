@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -92,7 +92,7 @@ export default function PhotoEvidencePage() {
       
       <main className="flex-1 overflow-y-auto px-4 py-4">
         <MobileFormCard 
-          title="📸 Photo Evidence"
+          title="ðŸ“¸ Photo Evidence"
           description={
             !areMandatoryFieldsFilled() 
               ? "Please fill in Date, Title, and Description before uploading photos"
@@ -193,7 +193,7 @@ export default function PhotoEvidencePage() {
           <div className="flex">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                <span className="text-yellow-600 font-bold text-sm">📷</span>
+                <span className="text-yellow-600 font-bold text-sm">ðŸ“·</span>
               </div>
             </div>
             <div className="ml-3">

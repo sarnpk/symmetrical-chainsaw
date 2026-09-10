@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { RotateCcw, Target, RefreshCw, Shield, Heart } from 'lucide-react'
 
 export default function HealingContent() {
@@ -64,7 +64,7 @@ export default function HealingContent() {
             <p className="mt-1 text-sm text-gray-600">{tool.description}</p>
             <div className="mt-4 text-sm font-medium text-indigo-600">
               Open
-              <span aria-hidden className="ml-1">→</span>
+              <span aria-hidden className="ml-1">â†’</span>
             </div>
           </Link>
         ))}

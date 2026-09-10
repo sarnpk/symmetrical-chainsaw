@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 
 const PRESET_BELIEFS = [
   { text: 'I am unlovable for who I am', category: 'self_worth' },

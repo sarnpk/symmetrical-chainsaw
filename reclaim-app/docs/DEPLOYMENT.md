@@ -1,9 +1,9 @@
-# Netlify Deployment Guide
+﻿# Netlify Deployment Guide
 
 ## Pre-Deployment Checklist
 
 ### 1. Environment Variables
-Set these in Netlify Dashboard → Site Settings → Environment Variables:
+Set these in Netlify Dashboard â†’ Site Settings â†’ Environment Variables:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
@@ -15,8 +15,8 @@ NEXT_PUBLIC_APP_URL=https://your-site.netlify.app
 
 ### 2. Supabase Configuration
 - Ensure your Supabase project is set up
-- Add your Netlify domain to Supabase Auth → URL Configuration → Site URL
-- Add your Netlify domain to Supabase Auth → URL Configuration → Redirect URLs
+- Add your Netlify domain to Supabase Auth â†’ URL Configuration â†’ Site URL
+- Add your Netlify domain to Supabase Auth â†’ URL Configuration â†’ Redirect URLs
 
 ### 3. Build Settings in Netlify
 - **Base directory**: `reclaim-app`
@@ -88,11 +88,11 @@ netlify deploy --prod
 ## Performance Optimization
 
 The following are already configured:
-- ✅ Image optimization
-- ✅ Compression enabled
-- ✅ React strict mode
-- ✅ Security headers
-- ✅ Standalone output for faster cold starts
+- âœ… Image optimization
+- âœ… Compression enabled
+- âœ… React strict mode
+- âœ… Security headers
+- âœ… Standalone output for faster cold starts
 
 ## Monitoring
 

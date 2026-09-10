@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { AlertTriangle, ArrowRight, CheckCircle, Shield, Brain, Heart, Eye } from 'lucide-react'
@@ -169,7 +169,7 @@ export default function GaslightingRealityCheckPage() {
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <div className="inline-block bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            👁️ Free Reality Check - No Signup Required
+            ðŸ‘ï¸ Free Reality Check - No Signup Required
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Are You Being <span className="text-orange-600">Gaslighted</span>?
@@ -404,17 +404,17 @@ export default function GaslightingRealityCheckPage() {
                     <Heart className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-1 text-white">🎁 Get Your Free Reality Anchor Kit</h3>
+                    <h3 className="text-2xl font-bold mb-1 text-white">ðŸŽ Get Your Free Reality Anchor Kit</h3>
                     <p className="text-sm opacity-90">Personalized PDF based on your situation</p>
                   </div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-4 mb-4">
                   <p className="font-semibold mb-2">Your Reality Anchor Kit includes:</p>
                   <ul className="text-sm space-y-1">
-                    <li>✓ 15 gaslighting phrases to watch for</li>
-                    <li>✓ Reality validation checklist</li>
-                    <li>✓ Memory documentation template</li>
-                    <li>✓ Trusted person conversation guide</li>
+                    <li>âœ“ 15 gaslighting phrases to watch for</li>
+                    <li>âœ“ Reality validation checklist</li>
+                    <li>âœ“ Memory documentation template</li>
+                    <li>âœ“ Trusted person conversation guide</li>
                   </ul>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -433,7 +433,7 @@ export default function GaslightingRealityCheckPage() {
                   </button>
                 </div>
                 <p className="text-xs mt-3 opacity-90">
-                  Instant PDF delivery • No spam • 100% free
+                  Instant PDF delivery â€¢ No spam â€¢ 100% free
                 </p>
               </div>
             </div>
@@ -447,7 +447,7 @@ export default function GaslightingRealityCheckPage() {
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-bold text-red-900 mb-2">⚠️ Health Warning</h3>
+                <h3 className="text-lg font-bold text-red-900 mb-2">âš ï¸ Health Warning</h3>
                 <p className="text-red-800">
                   Gaslighting can cause serious physical harm and chronic diseases including Complex PTSD (C-PTSD), anxiety disorders, depression, and autoimmune conditions. If you're experiencing severe gaslighting, seek professional help immediately.
                 </p>
@@ -465,9 +465,9 @@ export default function GaslightingRealityCheckPage() {
 
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-red-500">
-              <h3 className="font-bold text-xl mb-2">🚫 Denial & Memory Questioning</h3>
+              <h3 className="font-bold text-xl mb-2">ðŸš« Denial & Memory Questioning</h3>
               <p className="text-gray-700 mb-3">
-                "That never happened" • "You're remembering it wrong" • "I never said that"
+                "That never happened" â€¢ "You're remembering it wrong" â€¢ "I never said that"
               </p>
               <p className="text-sm text-gray-600">
                 Making you question your own memory and perception of events.
@@ -475,9 +475,9 @@ export default function GaslightingRealityCheckPage() {
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-orange-500">
-              <h3 className="font-bold text-xl mb-2">😢 Emotional Invalidation</h3>
+              <h3 className="font-bold text-xl mb-2">ðŸ˜¢ Emotional Invalidation</h3>
               <p className="text-gray-700 mb-3">
-                "You're too sensitive" • "You're overreacting" • "You're being dramatic"
+                "You're too sensitive" â€¢ "You're overreacting" â€¢ "You're being dramatic"
               </p>
               <p className="text-sm text-gray-600">
                 Dismissing your emotions and making you feel like your reactions are wrong.
@@ -485,9 +485,9 @@ export default function GaslightingRealityCheckPage() {
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
-              <h3 className="font-bold text-xl mb-2">🔄 Reality Distortion</h3>
+              <h3 className="font-bold text-xl mb-2">ðŸ”„ Reality Distortion</h3>
               <p className="text-gray-700 mb-3">
-                "You're crazy" • "Everyone thinks you're..." • "You have problems"
+                "You're crazy" â€¢ "Everyone thinks you're..." â€¢ "You have problems"
               </p>
               <p className="text-sm text-gray-600">
                 Making you question your sanity and perception of reality.
@@ -495,9 +495,9 @@ export default function GaslightingRealityCheckPage() {
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-purple-500">
-              <h3 className="font-bold text-xl mb-2">🎭 Blame Shifting</h3>
+              <h3 className="font-bold text-xl mb-2">ðŸŽ­ Blame Shifting</h3>
               <p className="text-gray-700 mb-3">
-                "You made me do it" • "If you hadn't..." • "It's your fault I..."
+                "You made me do it" â€¢ "If you hadn't..." â€¢ "It's your fault I..."
               </p>
               <p className="text-sm text-gray-600">
                 Making you responsible for their actions and emotions.

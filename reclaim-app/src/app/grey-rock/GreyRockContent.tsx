@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useRef, useEffect } from 'react'
 import { 
@@ -475,7 +475,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
         <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
           {streak && (
             <span className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full bg-orange-50 text-orange-800 border border-orange-200">
-              🔥 Streak {streak.current_streak} {streak.best_streak > 0 ? `(best ${streak.best_streak})` : ''}
+              ðŸ”¥ Streak {streak.current_streak} {streak.best_streak > 0 ? `(best ${streak.best_streak})` : ''}
             </span>
           )}
           <span className="inline-flex items-center gap-2 text-xs px-2.5 py-1 rounded-full bg-slate-50 text-slate-700 border border-slate-200">
@@ -731,7 +731,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
                 <div className="mt-3 flex items-center gap-2 flex-wrap">
                   {streak && (
                     <span className="inline-flex items-center gap-2 text-[11px] px-2.5 py-1 rounded-full bg-orange-50 text-orange-800 border border-orange-200">
-                      🔥 Streak {streak.current_streak} {streak.best_streak > 0 ? `(best ${streak.best_streak})` : ''}
+                      ðŸ”¥ Streak {streak.current_streak} {streak.best_streak > 0 ? `(best ${streak.best_streak})` : ''}
                     </span>
                   )}
                   <span className="inline-flex items-center gap-2 text-[11px] px-2 py-1 rounded-full bg-slate-50 text-slate-700 border border-slate-200">
@@ -746,7 +746,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
                 </div>
               </div>
               {loadingScenarios && (
-                <div className="text-sm text-gray-500 mb-4">Loading scenarios…</div>
+                <div className="text-sm text-gray-500 mb-4">Loading scenariosâ€¦</div>
               )}
               {availableScenarios.length === 0 && (
                 <div className="max-w-md mx-auto mb-6 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-md p-4">
@@ -788,7 +788,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
                 <div className="flex items-center gap-2 flex-wrap">
                   {streak && (
                     <span className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded-full bg-orange-50 text-orange-800 border border-orange-200">
-                      🔥 {streak.current_streak}
+                      ðŸ”¥ {streak.current_streak}
                     </span>
                   )}
                   <span className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded-full bg-slate-50 text-slate-700 border border-slate-200">
@@ -875,7 +875,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
                     className="text-xs px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
                     aria-pressed={isPausing}
                   >
-                    {isPausing ? 'Pausing…' : 'Pause 5s before responding'}
+                    {isPausing ? 'Pausingâ€¦' : 'Pause 5s before responding'}
                   </button>
                   <button
                     onClick={() => setShowWhyPanel(true)}
@@ -888,9 +888,9 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
 
               {tipsExpanded && showTips && (
                 <div className="bg-slate-50 border border-slate-200 rounded-md p-3 text-xs text-slate-700 mb-4">
-                  • Use short, neutral phrases like “Okay.” “I’ll consider that.”
-                  <br />• Don’t justify or defend; acknowledge without taking responsibility.
-                  <br />• End quickly and redirect or disengage.
+                  â€¢ Use short, neutral phrases like â€œOkay.â€ â€œIâ€™ll consider that.â€
+                  <br />â€¢ Donâ€™t justify or defend; acknowledge without taking responsibility.
+                  <br />â€¢ End quickly and redirect or disengage.
                 </div>
               )}
 
@@ -901,7 +901,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
                   role="status"
                   aria-live="assertive"
                 >
-                  Pause in progress… {countdown}s remaining
+                  Pause in progressâ€¦ {countdown}s remaining
                 </div>
               )}
               

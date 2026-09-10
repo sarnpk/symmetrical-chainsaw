@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -142,7 +142,7 @@ export default function HopeReframePage() {
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-6 mb-6 shadow-sm">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm">💡</span>
+                <span className="text-white text-sm">ðŸ’¡</span>
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-blue-900 mb-1">How Hope Reframe Works</h3>

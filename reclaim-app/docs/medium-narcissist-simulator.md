@@ -1,4 +1,4 @@
-# I Practiced Talking to My Narcissistic Ex Using AI — Here's What Happened
+﻿# I Practiced Talking to My Narcissistic Ex Using AI â€” Here's What Happened
 
 ## How an AI Narcissist Simulator Helped Me Stop Walking on Eggshells
 
@@ -22,9 +22,9 @@ You can't afford to practice. There's no "undo" button on a text message.
 
 ## Enter the Narcissist Simulator
 
-The AI at Reclaim.app does something brilliant: it **replicates your specific narcissist's patterns** so you can practice responses in a zero-consequence environment.
+The AI at reclaimyourlife.app does something brilliant: it **replicates your specific narcissist's patterns** so you can practice responses in a zero-consequence environment.
 
-I described my ex's typical tactics—love-bombing when he wanted something, silent treatment when I set boundaries, gaslighting about documented events. The AI absorbed it all.
+I described my ex's typical tacticsâ€”love-bombing when he wanted something, silent treatment when I set boundaries, gaslighting about documented events. The AI absorbed it all.
 
 Then I practiced.
 
@@ -32,7 +32,7 @@ Then I practiced.
 
 **Attempt 1:** I tried explaining my reasoning (JADE - Justify, Argue, Defend, Explain). The AI immediately used my words against me, just like my ex would. *Lesson learned.*
 
-**Attempt 2:** I went full Grey Rock—boring, factual, emotionless. The AI tried to provoke me with guilt trips. I didn't bite. *It felt powerful.*
+**Attempt 2:** I went full Grey Rockâ€”boring, factual, emotionless. The AI tried to provoke me with guilt trips. I didn't bite. *It felt powerful.*
 
 **Attempt 3:** I practiced BIFF (Brief, Informative, Friendly, Firm) for co-parenting. The AI predicted his next manipulation tactic. I was ready.
 
@@ -55,7 +55,7 @@ The simulator uses **real psychological patterns** from narcissistic abuse resea
 - Triangulation and flying monkeys
 - Hoovering attempts
 
-It's not just random AI responses—it's **trained on actual narcissistic behavior patterns**.
+It's not just random AI responsesâ€”it's **trained on actual narcissistic behavior patterns**.
 
 ## The Science Behind Practice
 
@@ -84,7 +84,7 @@ After one week of practice:
 
 ## Try It Yourself
 
-The Narcissist Simulator is free to try at **Reclaim.app**. You can:
+The Narcissist Simulator is free to try at **reclaimyourlife.app**. You can:
 - Describe your narcissist's specific patterns
 - Practice Grey Rock, BIFF, and boundary-setting
 - Get real-time feedback on your responses
@@ -94,7 +94,7 @@ The Narcissist Simulator is free to try at **Reclaim.app**. You can:
 
 I wish I'd had this tool years ago. It would've saved me countless sleepless nights, therapy sessions spent processing bad interactions, and hours of anxiety.
 
-Now, when my ex texts, I don't panic. I know exactly what to say—because I've already practiced.
+Now, when my ex texts, I don't panic. I know exactly what to sayâ€”because I've already practiced.
 
 **The best defense against manipulation is preparation.** And for the first time, we have a tool that lets us practice safely.
 
@@ -102,7 +102,7 @@ Now, when my ex texts, I don't panic. I know exactly what to say—because I've 
 
 *Have you dealt with a narcissist? What strategies worked for you? Share in the comments below.*
 
-**Try the Narcissist Simulator free:** [Reclaim.app/narcissist-simulator](https://reclaim.app/narcissist-simulator)
+**Try the Narcissist Simulator free:** [reclaimyourlife.app/narcissist-simulator](https://reclaimyourlife.app/narcissist-simulator)
 
 **Related tools:**
 - Free Narcissist Detector (analyzes messages in 60 seconds)

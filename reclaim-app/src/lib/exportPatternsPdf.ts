@@ -1,4 +1,4 @@
-import jsPDF from 'jspdf'
+﻿import jsPDF from 'jspdf'
 
 export type PdfInputs = {
   analysis: {
@@ -155,7 +155,7 @@ export function exportPatternsPdf({ analysis, risk, insights, timeframeLabel, ge
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(22)
   doc.setTextColor(25, 25, 40)
-  const title = `${brandName} — Pattern Analysis Report`
+  const title = `${brandName} â€” Pattern Analysis Report`
   doc.text(title, contentX, y)
   y += 22
   doc.setFont('helvetica', 'normal')
@@ -164,7 +164,7 @@ export function exportPatternsPdf({ analysis, risk, insights, timeframeLabel, ge
   doc.text(`Timeframe: ${timeframeLabel}`, contentX, y)
   y += 14
   if (risk?.timeframe?.start && risk?.timeframe?.end) {
-    doc.text(`Data window: ${new Date(risk.timeframe.start).toLocaleDateString()} – ${new Date(risk.timeframe.end).toLocaleDateString()}`, contentX, y)
+    doc.text(`Data window: ${new Date(risk.timeframe.start).toLocaleDateString()} â€“ ${new Date(risk.timeframe.end).toLocaleDateString()}`, contentX, y)
     y += 14
   }
   if (generatedAt) {
@@ -271,7 +271,7 @@ export function exportPatternsPdf({ analysis, risk, insights, timeframeLabel, ge
     preTitleGap()
     y = drawSectionTitle(doc, 'Top Drivers', y, contentX)
     const drivers = ((risk as any).reasons || (risk as any).top_reasons) as Array<{ reason: string; weight: number }>
-    const items = (drivers || []).slice(0, 5).map((r) => `• ${r.reason} (weight ${r.weight})`)
+    const items = (drivers || []).slice(0, 5).map((r) => `â€¢ ${r.reason} (weight ${r.weight})`)
     if (items.length) {
       y = drawParagraph(doc, items.join('\n'), y, contentX, maxWidth)
     } else {
@@ -298,12 +298,12 @@ export function exportPatternsPdf({ analysis, risk, insights, timeframeLabel, ge
     const refs = ((risk as any).evidence_refs as Array<any>).slice(0, 5)
     refs.forEach((e: any, idx: number) => {
       ensureSpace(60)
-      const dateStr = e?.incident_date ? new Date(e.incident_date).toLocaleDateString() : '—'
+      const dateStr = e?.incident_date ? new Date(e.incident_date).toLocaleDateString() : 'â€”'
       const signals = Array.isArray(e?.matched_signals) ? e.matched_signals.join(', ') : ''
-      const head = `${idx + 1}. ${dateStr}${signals ? `  •  ${signals}` : ''}`
+      const head = `${idx + 1}. ${dateStr}${signals ? `  â€¢  ${signals}` : ''}`
       y = drawParagraph(doc, head, y, contentX, maxWidth)
       if (e?.snippet) {
-        y = drawParagraph(doc, `“${String(e.snippet).slice(0, 180)}${String(e.snippet).length > 180 ? '…' : ''}”`, y, contentX + 12, maxWidth - 12)
+        y = drawParagraph(doc, `â€œ${String(e.snippet).slice(0, 180)}${String(e.snippet).length > 180 ? 'â€¦' : ''}â€`, y, contentX + 12, maxWidth - 12)
       }
     })
   }
@@ -319,7 +319,7 @@ export function exportPatternsPdf({ analysis, risk, insights, timeframeLabel, ge
   const metaLines: string[] = []
   if (reportId) metaLines.push(`Report ID: ${reportId}`)
   if (modelVersion) metaLines.push(`Model Version: ${modelVersion}`)
-  if (meta.length) metaLines.push(meta.join('  •  '))
+  if (meta.length) metaLines.push(meta.join('  â€¢  '))
   if (generatedAt) metaLines.push(`Generated: ${new Date(generatedAt).toLocaleString()}`)
   y = drawParagraph(doc,
     metaLines.join('\n'),
@@ -335,7 +335,7 @@ export function exportPatternsPdf({ analysis, risk, insights, timeframeLabel, ge
     const pageLabel = `Page ${i} of ${pages}`
     const pageLabelWidth = doc.getTextWidth(pageLabel)
     const year = new Date().getFullYear()
-    const copyright = `© ${year} ${brandName}`
+    const copyright = `Â© ${year} ${brandName}`
     const copyWidth = doc.getTextWidth(copyright)
     // Left: site URL (clickable)
     if (siteUrl) {

@@ -1,4 +1,4 @@
-# I Pasted My Boyfriend's Text Into an AI. It Told Me to Run.
+﻿# I Pasted My Boyfriend's Text Into an AI. It Told Me to Run.
 
 "You're too sensitive. I never said that. You're remembering it wrong."
 
@@ -10,7 +10,7 @@ Then my best friend said something that changed everything: "Have you ever actua
 
 ## The Screenshot That Started It
 
-She'd been keeping screenshots. Not to be dramatic—she was just worried. When she showed me six months of his texts laid out in order, I saw it.
+She'd been keeping screenshots. Not to be dramaticâ€”she was just worried. When she showed me six months of his texts laid out in order, I saw it.
 
 The pattern.
 
@@ -55,9 +55,9 @@ I read it three times. Then I pasted another message. Same result. Another one. 
 
 The tool didn't just identify tactics. It explained *why* they work:
 
-"Guilt-tripping is effective because it exploits your empathy. You're not 'too sensitive'—you're responding normally to abnormal behavior designed to manipulate."
+"Guilt-tripping is effective because it exploits your empathy. You're not 'too sensitive'â€”you're responding normally to abnormal behavior designed to manipulate."
 
-I cried. Not sad crying—relief crying.
+I cried. Not sad cryingâ€”relief crying.
 
 I wasn't crazy. I wasn't too sensitive. I was being manipulated by someone who knew exactly what they were doing.
 
@@ -65,7 +65,7 @@ I wasn't crazy. I wasn't too sensitive. I was being manipulated by someone who k
 
 I showed him the analysis. Big mistake.
 
-He said the AI was "biased against men" and I was "looking for problems." Classic DARVO—Deny, Attack, Reverse Victim and Offender.
+He said the AI was "biased against men" and I was "looking for problems." Classic DARVOâ€”Deny, Attack, Reverse Victim and Offender.
 
 But here's the thing: Once you see the pattern, you can't unsee it.
 
@@ -79,7 +79,7 @@ Therapists cost $150-300 per session. Most of us can't afford that, especially w
 
 This tool is free. It takes 60 seconds. And it gives you what you desperately need: **external validation that you're not crazy.**
 
-Because that's what narcissistic abuse does—it makes you doubt your own perception of reality. Having an objective analysis breaks that spell.
+Because that's what narcissistic abuse doesâ€”it makes you doubt your own perception of reality. Having an objective analysis breaks that spell.
 
 ## The Science Behind It
 
@@ -95,7 +95,7 @@ It's not perfect. But it's accurate enough to show you what you can't see when y
 
 ## Try It Yourself
 
-Go to Reclaim.app/free-narcissist-test. Paste a message. Any message from someone you're questioning.
+Go to reclaimyourlife.app/free-narcissist-test. Paste a message. Any message from someone you're questioning.
 
 If it comes back clean, great. If it doesn't... at least you'll know.
 
@@ -131,7 +131,7 @@ Who knew?
 
 ---
 
-**Try the Free Narcissist Detector:** Reclaim.app/free-narcissist-test (No signup required)
+**Try the Free Narcissist Detector:** reclaimyourlife.app/free-narcissist-test (No signup required)
 
 **Other free tools:**
 - Relationship Health Check (10 questions, instant results)
@@ -140,6 +140,6 @@ Who knew?
 
 ---
 
-*Have you ever had someone tell you "you're too sensitive"? What was your wake-up moment? Share in the comments—your story might help someone else.*
+*Have you ever had someone tell you "you're too sensitive"? What was your wake-up moment? Share in the commentsâ€”your story might help someone else.*
 
 #Narcissist #ToxicRelationships #Gaslighting #EmotionalAbuse #MentalHealth #Dating #Relationships #RedFlags #Manipulation #Recovery #Healing #SelfLove #Boundaries #Therapy #Psychology

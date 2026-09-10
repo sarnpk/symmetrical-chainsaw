@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { Metadata } from 'next'
 import {
   FileCheck2,
@@ -25,20 +25,20 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Free Narcissistic Abuse Recovery Tools | Reclaim',
     description:
-      'Free AI-powered tools for narcissistic abuse survivors. Assessments, manipulation detection, and pattern recognition — no signup required.',
+      'Free AI-powered tools for narcissistic abuse survivors. Assessments, manipulation detection, and pattern recognition â€” no signup required.',
     type: 'website',
-    url: 'https://reclaim.app/free-tools',
+    url: 'https://reclaimyourlife.app/free-tools',
     images: [
       {
         url: '/og.png',
         width: 1200,
         height: 630,
-        alt: 'Free narcissistic abuse recovery tools — start understanding in 30 seconds',
+        alt: 'Free narcissistic abuse recovery tools â€” start understanding in 30 seconds',
       },
     ],
   },
   alternates: {
-    canonical: 'https://reclaim.app/free-tools',
+    canonical: 'https://reclaimyourlife.app/free-tools',
   },
   twitter: {
     card: 'summary_large_image',
@@ -145,7 +145,7 @@ export default function FreeToolsPage() {
         <section className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-16 pb-12 text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
-            Free tools — no signup required
+            Free tools â€” no signup required
           </div>
           <h1 className="mt-6 font-display text-4xl sm:text-5xl font-bold text-ink-900 leading-tight">
             Start understanding in 30 seconds
@@ -232,7 +232,7 @@ export default function FreeToolsPage() {
             </h2>
             <p className="text-center text-ink-600 max-w-2xl mx-auto mb-10 leading-relaxed">
               If something feels wrong in your relationship, trust that feeling. These tools exist to
-              help you understand what is happening — without telling you what to think or do.
+              help you understand what is happening â€” without telling you what to think or do.
             </p>
             <div className="grid gap-6 md:grid-cols-3">
               {whoThisIsFor.map((item) => (
@@ -270,7 +270,7 @@ export default function FreeToolsPage() {
           </h2>
           <p className="mt-4 text-ink-600 max-w-xl mx-auto leading-relaxed">
             These free tools are a starting point. Reclaim gives you an AI-powered journal,
-            manipulation decoder, evidence exports, safety planning, and much more — all private,
+            manipulation decoder, evidence exports, safety planning, and much more â€” all private,
             all encrypted, all yours.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -304,21 +304,21 @@ export default function FreeToolsPage() {
               name: 'Free Narcissistic Abuse Recovery Tools',
               description:
                 'Free AI-powered assessment tools for survivors of narcissistic abuse. Recognize manipulation patterns, detect gaslighting, and validate your experience in 30 seconds.',
-              url: 'https://reclaim.app/free-tools',
+              url: 'https://reclaimyourlife.app/free-tools',
               mainEntity: {
                 '@type': 'ItemList',
                 itemListElement: freeTools.map((tool, i) => ({
                   '@type': 'ListItem',
                   position: i + 1,
                   name: tool.title,
-                  url: `https://reclaim.app${tool.href}`,
+                  url: `https://reclaimyourlife.app${tool.href}`,
                   description: tool.description,
                 })),
               },
               provider: {
                 '@type': 'Organization',
                 name: 'Reclaim',
-                url: 'https://reclaim.app',
+                url: 'https://reclaimyourlife.app',
               },
             }),
           }}

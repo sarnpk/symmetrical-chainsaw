@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation'
+﻿import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Metadata } from 'next'
 import {
@@ -37,7 +37,7 @@ import Reveal from '@/components/marketing/Reveal'
 export const metadata: Metadata = {
   title: 'Reclaim - Private AI Recovery Journal for Abuse Survivors | Free Health Check',
   description:
-    'Turn your history into evidence. A private AI-assisted journal and evidence platform for survivors of narcissistic abuse — free relationship health check, gaslighting tracker, and trauma-informed support in 70+ languages.',
+    'Turn your history into evidence. A private AI-assisted journal and evidence platform for survivors of narcissistic abuse â€” free relationship health check, gaslighting tracker, and trauma-informed support in 70+ languages.',
   keywords:
     'narcissistic abuse recovery, relationship health assessment, gaslighting tracker, BIFF communication, trauma recovery, emotional abuse support, toxic relationship help, evidence journal',
   openGraph: {
@@ -45,11 +45,11 @@ export const metadata: Metadata = {
     description:
       'Private AI-assisted journal and evidence platform for survivors of narcissistic abuse. Free relationship health assessment in 70+ languages.',
     type: 'website',
-    url: 'https://reclaim.app',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Reclaim — turn your history into evidence. Your truth into recovery.' }],
+    url: 'https://reclaimyourlife.app',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Reclaim â€” turn your history into evidence. Your truth into recovery.' }],
   },
   alternates: {
-    canonical: 'https://reclaim.app/',
+    canonical: 'https://reclaimyourlife.app/',
   },
   twitter: {
     card: 'summary_large_image',
@@ -72,8 +72,8 @@ const aboutPoints = [
 ] as const
 
 const audienceSegments = [
-  { icon: Heart, title: "If you're in a relationship", description: "You love them. You also feel crazy. The highs are incredible and the lows are devastating. You've started to wonder if you're the narcissist. You're not. But you need clarity — and Reclaim gives it to you.", accent: 'brand' },
-  { icon: Baby, title: "If you're co-parenting", description: 'Every pickup is a battle. Every text is a trap. They use the kids as messengers, weaponize the schedule, and tell the court you\'re the problem. Reclaim helps you document everything — clearly, credibly, and admissibly.', accent: 'hope' },
+  { icon: Heart, title: "If you're in a relationship", description: "You love them. You also feel crazy. The highs are incredible and the lows are devastating. You've started to wonder if you're the narcissist. You're not. But you need clarity â€” and Reclaim gives it to you.", accent: 'brand' },
+  { icon: Baby, title: "If you're co-parenting", description: 'Every pickup is a battle. Every text is a trap. They use the kids as messengers, weaponize the schedule, and tell the court you\'re the problem. Reclaim helps you document everything â€” clearly, credibly, and admissibly.', accent: 'hope' },
   { icon: Anchor, title: "If you've left", description: "The hardest part isn't leaving. It's staying gone. The hoovering. The \"I've changed\" texts. The mutual friends who don't believe you. Reclaim keeps you grounded in reality when the manipulation pulls you back.", accent: 'green' },
   { icon: Briefcase, title: "If you're at work", description: 'Your boss takes credit for your work. Your colleague gaslights you in meetings. HR doesn\'t help. You need documentation that\'s timestamped, organized, and ready for when you need it.', accent: 'blue' },
 ] as const
@@ -81,13 +81,13 @@ const audienceSegments = [
 const freeTools = [
   { icon: BarChart3, title: 'Relationship Health Check', description: 'Answer 10 questions to find out if your relationship is healthy or toxic.', href: '/relationship-health-check', accent: 'green' },
   { icon: Brain, title: 'Free Narcissist Test', description: 'AI identifies the narcissist type and manipulation tactics from your situation.', href: '/free-narcissist-test', accent: 'hope' },
-  { icon: Heart, title: 'Discard Stage Test', description: 'Understand which discard stage you are in — and what comes next.', href: '/discard-stage-test', accent: 'red' },
+  { icon: Heart, title: 'Discard Stage Test', description: 'Understand which discard stage you are in â€” and what comes next.', href: '/discard-stage-test', accent: 'red' },
   { icon: Shield, title: 'Gaslighting Reality Check', description: 'See manipulation patterns clearly when your reality is being denied.', href: '/gaslighting-reality-check', accent: 'brand' },
   { icon: FileCheck2, title: 'Free Assessment', description: 'A thorough 25-question screening of the abuse patterns in your life.', href: '/free-assessment', accent: 'blue' },
 ] as const
 
 const featuredTools = [
-  { icon: Shield, title: 'Crisis Reframe', description: 'Immediate, trauma-informed intervention when you are in a panic moment — STOP, grounding, and hope-building narratives.', href: '/crisis-reframe', badge: 'Urgent', accent: 'red' },
+  { icon: Shield, title: 'Crisis Reframe', description: 'Immediate, trauma-informed intervention when you are in a panic moment â€” STOP, grounding, and hope-building narratives.', href: '/crisis-reframe', badge: 'Urgent', accent: 'red' },
   { icon: BarChart3, title: 'Narcissist Detector', description: 'Paste a message or describe behavior. AI identifies the narcissist type, 12 manipulation tactics, and a severity score.', href: '/narcissist-detector', badge: 'AI', accent: 'hope' },
   { icon: Brain, title: 'Narcissist Simulator', description: 'Practice Grey Rock, BIFF, and boundary setting in a safe AI simulation before you face the real thing.', href: '/narcissist-simulator', badge: 'AI', accent: 'brand' },
 ] as const
@@ -97,11 +97,11 @@ const features = [
   { icon: Brain, title: 'Belief Reframe System', description: 'Challenge abuse-driven false beliefs with CBT techniques and AI-guided reality testing.', accent: 'green' },
   { icon: Heart, title: 'Positive Moments Journal', description: 'Capture counter-evidence that builds a truer record of your experience.', accent: 'blue' },
   { icon: Brain, title: 'Cognitive Dissonance Alerts', description: 'AI detects conflicting beliefs across journals and helps resolve them.', accent: 'amber' },
-  { icon: Shield, title: 'BIFF Assistant', description: 'Master Brief, Informative, Friendly, Firm communication — with JADE detection.', accent: 'brand' },
+  { icon: Shield, title: 'BIFF Assistant', description: 'Master Brief, Informative, Friendly, Firm communication â€” with JADE detection.', accent: 'brand' },
   { icon: FileCheck2, title: 'Gaslighting Truth Journal', description: 'Document their lies vs. reality with audio, video, and image evidence.', accent: 'red' },
   { icon: BarChart3, title: 'Reactive Abuse Tracker', description: 'Track DARVO patterns and export clean reports when your concerns get turned around.', accent: 'hope' },
   { icon: Shield, title: 'Stonewalling Journal', description: 'Log silent treatment and emotional withdrawal with pattern tracking.', accent: 'green' },
-  { icon: Wind, title: 'Urge Surfing', description: 'Ride the wave of urges without giving in — voice-guided and streak-backed.', accent: 'blue' },
+  { icon: Wind, title: 'Urge Surfing', description: 'Ride the wave of urges without giving in â€” voice-guided and streak-backed.', accent: 'blue' },
   { icon: HeartPulse, title: 'Multilingual AI Coach', description: 'Trauma-informed support in 70+ languages including Urdu, Hindi, Arabic, and Spanish.', accent: 'hope' },
   { icon: BookOpen, title: 'Reality Log & Journal', description: 'Document incidents objectively with structured, evidence-grade templates.', accent: 'brand' },
   { icon: Lock, title: 'Safety & Boundaries', description: 'Emergency planning, Grey Rock techniques, and boundary-setting tools.', accent: 'green' },
@@ -119,21 +119,21 @@ const testimonials = [
     quote:
       'I used Reclaim during my divorce. The journal helped me see the gaslighting clearly, and the export format was accepted by my attorney. It kept me sane through the hardest year of my life.',
     name: 'Amara R.',
-    context: 'Survivor · divorce proceedings',
+    context: 'Survivor Â· divorce proceedings',
     verified: true,
   },
   {
     quote:
       'For the first time I had a record that proved I was not the crazy one. The manipulation decoder showed me the patterns I had been blaming myself for.',
     name: 'Daniel M.',
-    context: 'Survivor · workplace gaslighting',
+    context: 'Survivor Â· workplace gaslighting',
     verified: true,
   },
   {
     quote:
       'The crisis reframe tool talked me down in a moment I could not have handled alone. Knowing it is always there, private and judgment-free, changed everything.',
     name: 'Sofia L.',
-    context: 'Survivor · 2 years in recovery',
+    context: 'Survivor Â· 2 years in recovery',
     verified: false,
   },
   {
@@ -146,9 +146,9 @@ const testimonials = [
 ] as const
 
 const howItWorks = [
-  { step: '01', title: 'Document your reality', description: 'Journal incidents with timestamps, locations, and evidence — voice, photo, or video. Structured templates keep it objective.' },
+  { step: '01', title: 'Document your reality', description: 'Journal incidents with timestamps, locations, and evidence â€” voice, photo, or video. Structured templates keep it objective.' },
   { step: '02', title: 'See the patterns', description: 'AI decodes gaslighting, love-bombing, triangulation, and other tactics. Watch your own history reveal the truth.' },
-  { step: '03', title: 'Rebuild — and protect', description: 'Practice responses, build your safety plan, and export court-ready records. Your healing stays in your hands.' },
+  { step: '03', title: 'Rebuild â€” and protect', description: 'Practice responses, build your safety plan, and export court-ready records. Your healing stays in your hands.' },
 ] as const
 
 const pricingTiers = [
@@ -210,7 +210,7 @@ const faqItems = [
   {
     question: 'Is my data really private?',
     answer:
-      'Yes. Your data is encrypted with AES-256 — the same standard banks use. We can\u2019t read it. We don\u2019t sell it. We don\u2019t use it to train AI models. It\u2019s yours, encrypted, and protected.',
+      'Yes. Your data is encrypted with AES-256 â€” the same standard banks use. We can\u2019t read it. We don\u2019t sell it. We don\u2019t use it to train AI models. It\u2019s yours, encrypted, and protected.',
   },
   {
     question: 'Can the person I\u2019m documenting find out I\u2019m using Reclaim?',
@@ -274,7 +274,7 @@ export default async function HomePage() {
             <SectionHeading
               eyebrow="Why Reclaim"
               title="You're not imagining it. The patterns are real."
-              lead="If you've ever left a conversation feeling confused, guilty, or crazy — when you know what they said happened differently — that's not you. That's a manipulation tactic. Reclaim helps you see it clearly for the first time."
+              lead="If you've ever left a conversation feeling confused, guilty, or crazy â€” when you know what they said happened differently â€” that's not you. That's a manipulation tactic. Reclaim helps you see it clearly for the first time."
             />
           </Reveal>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
@@ -296,7 +296,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-24" id="free-tools">
           <Reveal>
             <SectionHeading
-              eyebrow="Free AI tools — no signup"
+              eyebrow="Free AI tools â€” no signup"
               title="Start understanding in 30 seconds"
               lead="Five free, anonymous tools that help you recognize abuse patterns and see clearly. Share the ones that help."
             />
@@ -382,7 +382,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Learn More — Internal Links for SEO */}
+        {/* Learn More â€” Internal Links for SEO */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-24">
           <Reveal>
             <SectionHeading
@@ -404,7 +404,7 @@ export default async function HomePage() {
                     <h3 className="font-display text-lg font-semibold text-ink-900">{item.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-ink-600">{item.description}</p>
                     <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
-                      Read more <span aria-hidden="true">→</span>
+                      Read more <span aria-hidden="true">â†’</span>
                     </span>
                   </div>
                 </Link>
@@ -447,7 +447,7 @@ export default async function HomePage() {
             <Reveal>
               <SectionHeading
                 eyebrow="Who this is for"
-                title="You're not alone — and this was never your fault"
+                title="You're not alone â€” and this was never your fault"
               />
             </Reveal>
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -505,7 +505,7 @@ export default async function HomePage() {
                 className="inline-flex items-center gap-1 text-[15px] font-semibold text-brand-700 hover:text-brand-800 transition-colors"
               >
                 View full comparison
-                <span aria-hidden="true">→</span>
+                <span aria-hidden="true">â†’</span>
               </a>
             </p>
           </Reveal>
@@ -526,9 +526,9 @@ export default async function HomePage() {
           <Reveal>
             <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
               <Shield className="mx-auto h-8 w-8 text-red-600" aria-hidden="true" />
-              <h2 className="mt-4 font-display text-2xl font-semibold text-red-900">Your safety comes first — always</h2>
+              <h2 className="mt-4 font-display text-2xl font-semibold text-red-900">Your safety comes first â€” always</h2>
               <p className="mt-3 text-sm text-red-800 max-w-xl mx-auto">
-                If you're in immediate danger, please reach out. Reclaim is a tool for documentation and healing — not a replacement for professional support.
+                If you're in immediate danger, please reach out. Reclaim is a tool for documentation and healing â€” not a replacement for professional support.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
                 <div className="text-red-900 font-semibold">Emergency: Call 911</div>
@@ -553,7 +553,7 @@ export default async function HomePage() {
         {/* Final CTA */}
         <CtaBanner
           title="Begin today. Reclaim your peace."
-          lead="Your history can become evidence, and your recovery can start tonight — privately, on your terms."
+          lead="Your history can become evidence, and your recovery can start tonight â€” privately, on your terms."
           cta={{ label: 'Start the free assessment', href: '/free-assessment' }}
         />
 
@@ -570,7 +570,7 @@ export default async function HomePage() {
                   operatingSystem: 'Web',
                   description:
                     'Private AI-assisted journal and evidence platform for survivors of narcissistic abuse. Free relationship health assessment and gaslighting tracker in 70+ languages.',
-                  url: 'https://reclaim.app',
+                  url: 'https://reclaimyourlife.app',
                   offers: {
                     '@type': 'AggregateOffer',
                     lowPrice: '0',
@@ -582,7 +582,7 @@ export default async function HomePage() {
                 {
                   "@type": "Organization",
                   name: "Reclaim",
-                  url: "https://reclaim.app",
+                  url: "https://reclaimyourlife.app",
                   description:
                     "Evidence-based recovery tools for survivors of narcissistic abuse, including free AI-powered health checks and a private journal.",
                 },

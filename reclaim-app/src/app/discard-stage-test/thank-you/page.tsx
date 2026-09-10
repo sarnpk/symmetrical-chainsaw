@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect, Suspense } from 'react'
 import { CheckCircle, Clock, Download, ArrowRight, Shield, Book, FileText, Headphones } from 'lucide-react'
@@ -51,7 +51,7 @@ function ThankYouContent() {
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              ✅ Check Your Email!
+              âœ… Check Your Email!
             </h1>
             <p className="text-lg text-gray-600 mb-4">
               Your "{stageName} Stage Survival Guide" is on its way to:
@@ -83,7 +83,7 @@ function ThankYouContent() {
             {/* Warning Hook */}
             <div className="text-center mb-6">
               <h2 className="text-3xl md:text-4xl font-bold mb-3">
-                ⚠️ WAIT! You're Only 25% Prepared...
+                âš ï¸ WAIT! You're Only 25% Prepared...
               </h2>
               <p className="text-xl opacity-90">
                 Your free guide covers the {stageName} stage.
@@ -95,15 +95,15 @@ function ThankYouContent() {
               <p className="text-lg mb-4">But what about:</p>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">❌</span>
+                  <span className="text-2xl">âŒ</span>
                   <span>The Discard Phase (sudden abandonment)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">❌</span>
+                  <span className="text-2xl">âŒ</span>
                   <span>Post-Discard Recovery (healing roadmap)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">❌</span>
+                  <span className="text-2xl">âŒ</span>
                   <span>Hoover Attempts (when they come back)</span>
                 </div>
               </div>
@@ -112,7 +112,7 @@ function ThankYouContent() {
             {/* Product Offer */}
             <div className="bg-white rounded-lg p-6 text-gray-900 mb-6">
               <h3 className="text-2xl font-bold mb-4 text-center">
-                🎯 Complete Discard Stage Playbook
+                ðŸŽ¯ Complete Discard Stage Playbook
               </h3>
               
               <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -167,16 +167,16 @@ function ThankYouContent() {
               </a>
 
               <p className="text-xs text-gray-500 text-center mt-3">
-                Instant download • 30-day money-back guarantee
+                Instant download â€¢ 30-day money-back guarantee
               </p>
             </div>
 
             {/* Social Proof */}
             <div className="text-center text-sm opacity-90">
-              <p className="mb-2">✨ Join 3,247 people who've downloaded the Complete Playbook</p>
+              <p className="mb-2">âœ¨ Join 3,247 people who've downloaded the Complete Playbook</p>
               <div className="flex justify-center gap-4 text-xs">
-                <span>⭐⭐⭐⭐⭐ 4.9/5</span>
-                <span>•</span>
+                <span>â­â­â­â­â­ 4.9/5</span>
+                <span>â€¢</span>
                 <span>847 Reviews</span>
               </div>
             </div>

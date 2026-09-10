@@ -1,4 +1,4 @@
-# My Narcissistic Ex Hated When I Got Boring (Here's Why It Worked)
+﻿# My Narcissistic Ex Hated When I Got Boring (Here's Why It Worked)
 
 He used to say I was "no fun anymore."
 
@@ -145,12 +145,12 @@ That's when you've won.
 ---
 
 **Free Grey Rock Tools:**
-- Response Generator: Reclaim.app/grey-rock-templates
-- Practice Simulator: Reclaim.app/narcissist-simulator
-- BIFF Communication Guide: Reclaim.app/biff-assistant
+- Response Generator: reclaimyourlife.app/grey-rock-templates
+- Practice Simulator: reclaimyourlife.app/narcissist-simulator
+- BIFF Communication Guide: reclaimyourlife.app/biff-assistant
 
 ---
 
-*What's your Grey Rock success story? Or are you still struggling with it? Let's talk in the comments—this stuff is hard, and we all need support.*
+*What's your Grey Rock success story? Or are you still struggling with it? Let's talk in the commentsâ€”this stuff is hard, and we all need support.*
 
 #GreyRock #NarcissisticAbuse #Coparenting #Divorce #NoContact #EmotionalAbuse #Boundaries #MentalHealth #Healing #Recovery #ToxicRelationships #Manipulation #SelfCare #Therapy #HighConflict

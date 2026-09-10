@@ -1,4 +1,4 @@
-# Narcissist Detector Feature Specification
+﻿# Narcissist Detector Feature Specification
 
 ## Overview
 A sophisticated AI-powered tool that analyzes text/conversations to identify narcissistic personality patterns, classify narcissist types, detect manipulation tactics, and predict likely narcissistic responses based on real conversation context.
@@ -21,42 +21,42 @@ A sophisticated AI-powered tool that analyzes text/conversations to identify nar
 **Analysis Output**:
 ```
 Primary Classification:
-├─ Narcissist Type: Covert Narcissist
-├─ Confidence: 85%
-├─ Secondary Types: Vulnerable (45%), Communal (30%)
-│
+â”œâ”€ Narcissist Type: Covert Narcissist
+â”œâ”€ Confidence: 85%
+â”œâ”€ Secondary Types: Vulnerable (45%), Communal (30%)
+â”‚
 Traits Detected (with confidence scores):
-├─ Gaslighting: 92% (HIGH)
-├─ Victim Mentality: 88% (HIGH)
-├─ Passive Aggression: 75% (MEDIUM)
-├─ Love-bombing: 65% (MEDIUM)
-├─ Hoovering: 72% (MEDIUM)
-├─ Triangulation: 35% (LOW)
-├─ Projection: 80% (HIGH)
-└─ Devaluation: 55% (MEDIUM)
+â”œâ”€ Gaslighting: 92% (HIGH)
+â”œâ”€ Victim Mentality: 88% (HIGH)
+â”œâ”€ Passive Aggression: 75% (MEDIUM)
+â”œâ”€ Love-bombing: 65% (MEDIUM)
+â”œâ”€ Hoovering: 72% (MEDIUM)
+â”œâ”€ Triangulation: 35% (LOW)
+â”œâ”€ Projection: 80% (HIGH)
+â””â”€ Devaluation: 55% (MEDIUM)
 
 Manipulation Tactics Identified:
-├─ Emotional Manipulation
-├─ Guilt-Tripping
-├─ Playing the Victim
-├─ Subtle Criticism
-└─ Invalidation
+â”œâ”€ Emotional Manipulation
+â”œâ”€ Guilt-Tripping
+â”œâ”€ Playing the Victim
+â”œâ”€ Subtle Criticism
+â””â”€ Invalidation
 
 Severity Score: 7/10
-├─ Emotional Impact: HIGH
-├─ Manipulation Intensity: MEDIUM-HIGH
-├─ Predictability: MEDIUM
+â”œâ”€ Emotional Impact: HIGH
+â”œâ”€ Manipulation Intensity: MEDIUM-HIGH
+â”œâ”€ Predictability: MEDIUM
 
 Key Phrases Detected:
-├─ "You're too sensitive" (Gaslighting)
-├─ "I'm the real victim here" (Victim mentality)
-├─ "Nobody understands me like you do" (Love-bombing)
-└─ [More phrases...]
+â”œâ”€ "You're too sensitive" (Gaslighting)
+â”œâ”€ "I'm the real victim here" (Victim mentality)
+â”œâ”€ "Nobody understands me like you do" (Love-bombing)
+â””â”€ [More phrases...]
 
 Recommended Response Strategy:
-├─ Primary: Grey Rock Technique
-├─ Secondary: BIFF Communication
-└─ Avoid: Direct confrontation, emotional engagement
+â”œâ”€ Primary: Grey Rock Technique
+â”œâ”€ Secondary: BIFF Communication
+â””â”€ Avoid: Direct confrontation, emotional engagement
 ```
 
 ---
@@ -174,28 +174,28 @@ Likely Narcissistic Responses (ranked by probability):
 
 1. Gaslighting Response (72% probability)
    "That's not what happened. You're misremembering again."
-   └─ Reasoning: Pattern of denying reality in past messages
-   └─ Emotional Impact: HIGH - Causes self-doubt
+   â””â”€ Reasoning: Pattern of denying reality in past messages
+   â””â”€ Emotional Impact: HIGH - Causes self-doubt
 
 2. Victim Mentality Response (65% probability)
    "After everything I've done for you, this is how you treat me?"
-   └─ Reasoning: History of playing victim when confronted
-   └─ Emotional Impact: MEDIUM - Induces guilt
+   â””â”€ Reasoning: History of playing victim when confronted
+   â””â”€ Emotional Impact: MEDIUM - Induces guilt
 
 3. Devaluation Response (58% probability)
    "You're not as special as you think you are."
-   └─ Reasoning: Pattern of sudden criticism after intimacy
-   └─ Emotional Impact: HIGH - Causes shame
+   â””â”€ Reasoning: Pattern of sudden criticism after intimacy
+   â””â”€ Emotional Impact: HIGH - Causes shame
 
 4. Hoovering Response (45% probability)
    "I miss you. I've been thinking about us. Can we talk?"
-   └─ Reasoning: Previous hoovering attempts after conflict
-   └─ Emotional Impact: MEDIUM - Confuses victim
+   â””â”€ Reasoning: Previous hoovering attempts after conflict
+   â””â”€ Emotional Impact: MEDIUM - Confuses victim
 
 Recommended Counter-Strategies:
-├─ Grey Rock: "Okay. I need to focus on other things."
-├─ BIFF: "I understand you feel that way. I'm moving forward."
-└─ No Contact: Consider limiting communication
+â”œâ”€ Grey Rock: "Okay. I need to focus on other things."
+â”œâ”€ BIFF: "I understand you feel that way. I'm moving forward."
+â””â”€ No Contact: Consider limiting communication
 ```
 
 ---
@@ -205,17 +205,17 @@ Recommended Counter-Strategies:
 **Tracks**:
 - Recurring manipulation tactics
 - Escalation patterns
-- Cycle timing (love-bombing → devaluation → hoovering)
+- Cycle timing (love-bombing â†’ devaluation â†’ hoovering)
 - Trigger identification
 - Response effectiveness
 
 **Output**:
 ```
 Narcissistic Cycle Detected:
-├─ Phase 1: Love-bombing (Days 1-7)
-├─ Phase 2: Devaluation (Days 8-21)
-├─ Phase 3: Discard (Days 22-28)
-└─ Phase 4: Hoovering (Days 29+)
+â”œâ”€ Phase 1: Love-bombing (Days 1-7)
+â”œâ”€ Phase 2: Devaluation (Days 8-21)
+â”œâ”€ Phase 3: Discard (Days 22-28)
+â””â”€ Phase 4: Hoovering (Days 29+)
 
 Cycle Duration: ~30 days
 Next Predicted Phase: Hoovering (in 3-5 days)
@@ -252,25 +252,25 @@ Recommended Preparation: Strengthen boundaries, prepare Grey Rock responses
 
 ```
 /api/narcissist-detector/
-├─ /analyze-message (POST)
-│  ├─ Input: text, context
-│  ├─ Process: Trait detection, type classification
-│  └─ Output: Analysis report
-│
-├─ /predict-response (POST)
-│  ├─ Input: conversation history, narcissist type
-│  ├─ Process: Pattern matching, probability scoring
-│  └─ Output: Predicted responses with reasoning
-│
-├─ /detect-type (POST)
-│  ├─ Input: conversation or description
-│  ├─ Process: Type classification
-│  └─ Output: Type with confidence scores
-│
-└─ /analyze-conversation (POST)
-   ├─ Input: full conversation thread
-   ├─ Process: Pattern analysis, cycle detection
-   └─ Output: Comprehensive analysis report
+â”œâ”€ /analyze-message (POST)
+â”‚  â”œâ”€ Input: text, context
+â”‚  â”œâ”€ Process: Trait detection, type classification
+â”‚  â””â”€ Output: Analysis report
+â”‚
+â”œâ”€ /predict-response (POST)
+â”‚  â”œâ”€ Input: conversation history, narcissist type
+â”‚  â”œâ”€ Process: Pattern matching, probability scoring
+â”‚  â””â”€ Output: Predicted responses with reasoning
+â”‚
+â”œâ”€ /detect-type (POST)
+â”‚  â”œâ”€ Input: conversation or description
+â”‚  â”œâ”€ Process: Type classification
+â”‚  â””â”€ Output: Type with confidence scores
+â”‚
+â””â”€ /analyze-conversation (POST)
+   â”œâ”€ Input: full conversation thread
+   â”œâ”€ Process: Pattern analysis, cycle detection
+   â””â”€ Output: Comprehensive analysis report
 ```
 
 ### 3.2 AI Prompting Strategy

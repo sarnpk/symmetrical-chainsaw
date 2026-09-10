@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Client-side transcription polling utility
  * Handles checking transcription status and updating UI accordingly
  */
@@ -54,7 +54,7 @@ export class TranscriptionPoller {
       return
     }
 
-    console.log('🚀 Starting transcription polling', {
+    console.log('ðŸš€ Starting transcription polling', {
       evidenceFileId: this.options.evidenceFileId,
       jobId: this.options.jobId
     })
@@ -65,7 +65,7 @@ export class TranscriptionPoller {
   }
 
   stop(): void {
-    console.log('🛑 Stopping transcription polling')
+    console.log('ðŸ›‘ Stopping transcription polling')
     this.isPolling = false
     if (this.timeoutId) {
       clearTimeout(this.timeoutId)
@@ -77,7 +77,7 @@ export class TranscriptionPoller {
     if (!this.isPolling) return
 
     this.attempts++
-    console.log(`🔍 Transcription poll attempt ${this.attempts}/${this.options.maxAttempts}`)
+    console.log(`ðŸ” Transcription poll attempt ${this.attempts}/${this.options.maxAttempts}`)
 
     try {
       const response = await fetch('/api/transcribe-status', {
@@ -98,20 +98,20 @@ export class TranscriptionPoller {
       }
 
       const status: TranscriptionStatus = await response.json()
-      console.log('📊 Transcription status:', status)
+      console.log('ðŸ“Š Transcription status:', status)
 
       // Notify status update
       this.options.onStatusUpdate(status)
 
       if (status.status === 'completed' && status.transcription) {
-        console.log('✅ Transcription completed:', status.transcription)
+        console.log('âœ… Transcription completed:', status.transcription)
         this.isPolling = false
         this.options.onComplete(status.transcription, status.language)
         return
       }
 
       if (status.status === 'failed') {
-        console.error('❌ Transcription failed:', status.error)
+        console.error('âŒ Transcription failed:', status.error)
         this.isPolling = false
         this.options.onError(status.error || 'Transcription failed')
         return
@@ -119,7 +119,7 @@ export class TranscriptionPoller {
 
       // Still processing - schedule next poll
       if (this.attempts >= this.options.maxAttempts) {
-        console.error('❌ Transcription polling timed out')
+        console.error('âŒ Transcription polling timed out')
         this.isPolling = false
         this.options.onError('Transcription timed out after maximum attempts')
         return
@@ -131,11 +131,11 @@ export class TranscriptionPoller {
         this.options.maxDelay
       )
 
-      console.log(`⏱️ Scheduling next poll in ${delay}ms`)
+      console.log(`â±ï¸ Scheduling next poll in ${delay}ms`)
       this.timeoutId = setTimeout(() => this.poll(), delay)
 
     } catch (error: any) {
-      console.error('❌ Transcription poll error:', error)
+      console.error('âŒ Transcription poll error:', error)
       
       // Retry on network errors, but not on auth errors
       if (error.message.includes('401') || error.message.includes('403')) {
@@ -152,7 +152,7 @@ export class TranscriptionPoller {
 
       // Retry with longer delay on error
       const delay = Math.min(this.options.initialDelay * 2, this.options.maxDelay)
-      console.log(`⏱️ Retrying poll in ${delay}ms after error`)
+      console.log(`â±ï¸ Retrying poll in ${delay}ms after error`)
       this.timeoutId = setTimeout(() => this.poll(), delay)
     }
   }

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -64,7 +64,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
   const categories = [
     {
       id: 'journaling',
-      name: '📝 Journaling',
+      name: 'ðŸ“ Journaling',
       items: [
         { name: 'New Entry', href: '/journal/new', icon: Plus, color: 'indigo', featured: true },
         { name: 'Journal', href: '/journal', icon: BookOpen, color: 'blue' },
@@ -74,7 +74,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
     },
     {
       id: 'protection',
-      name: '🛡️ Protection',
+      name: 'ðŸ›¡ï¸ Protection',
       items: [
         { name: 'Grey Rock', href: '/grey-rock-templates', icon: FileText, color: 'gray', featured: true },
         { name: 'BIFF Assistant', href: '/biff-assistant', icon: MessageSquare, color: 'indigo' },
@@ -84,7 +84,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
     },
     {
       id: 'recovery',
-      name: '🧠 Recovery',
+      name: 'ðŸ§  Recovery',
       items: [
         { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle, color: 'red', featured: true },
         { name: 'Belief Reframe', href: '/belief-reframe', icon: Brain, color: 'green', featured: true },
@@ -94,7 +94,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
     },
     {
       id: 'analysis',
-      name: '🎯 Analysis',
+      name: 'ðŸŽ¯ Analysis',
       items: [
         { name: 'Narcissist Detector', href: '/narcissist-detector', icon: AlertTriangle, color: 'red', featured: true },
         { name: 'Narcissist Simulator', href: '/narcissist-simulator', icon: Target, color: 'purple', featured: true },
@@ -107,7 +107,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
     },
     {
       id: 'support',
-      name: '💬 Support',
+      name: 'ðŸ’¬ Support',
       items: [
         { name: 'AI Coach', href: '/ai-coach', icon: Brain, color: 'purple', featured: true },
         { name: 'Wellness', href: '/wellness', icon: Heart, color: 'pink' }
@@ -203,7 +203,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
                   <CardHeader>
                     <CardTitle className="text-base line-clamp-1">{entry.title}</CardTitle>
                     <div className="text-xs text-gray-500">
-                      {new Date(entry.incident_date).toLocaleDateString()} • Safety: {entry.safety_rating}/5
+                      {new Date(entry.incident_date).toLocaleDateString()} â€¢ Safety: {entry.safety_rating}/5
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -286,7 +286,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
               <p className="text-xs text-red-700">In immediate danger? Call 911 or National Domestic Violence Hotline: 1-800-799-7233</p>
             </div>
             <Link href="/safety-plan" className="text-xs text-red-600 hover:text-red-700 font-medium whitespace-nowrap">
-              Safety Plan →
+              Safety Plan â†’
             </Link>
           </div>
         </CardContent>

@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase-server';
+﻿import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
 
 const MILESTONES = [1, 3, 7, 14, 30, 60, 90, 180, 365];

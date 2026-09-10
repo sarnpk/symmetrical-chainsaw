@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { generateAIResponse } from '@/lib/gemini-ai'
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
 LATEST SESSION:
 Urge Type: ${latestSession.urge_type}
 Trigger: ${latestSession.trigger_description}
-Intensity: ${latestSession.urge_intensity_start} → ${latestSession.urge_intensity_peak || 'N/A'} → ${latestSession.urge_intensity_end || 'N/A'}
+Intensity: ${latestSession.urge_intensity_start} â†’ ${latestSession.urge_intensity_peak || 'N/A'} â†’ ${latestSession.urge_intensity_end || 'N/A'}
 Body Sensations: ${latestSession.body_sensations || 'Not recorded'}
 Duration: ${latestSession.duration_minutes || 'N/A'} minutes
 Gave In: ${latestSession.gave_in ? 'Yes' : 'No'}

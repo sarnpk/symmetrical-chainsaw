@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -55,7 +55,7 @@ export default function ReviewPage() {
       <main className="flex-1 overflow-y-auto px-4 py-4">
         {/* Summary Card */}
         <MobileFormCard 
-          title="📋 Entry Summary"
+          title="ðŸ“‹ Entry Summary"
           description="Review your entry before submitting"
         >
           <div className="space-y-6">
@@ -131,7 +131,7 @@ export default function ReviewPage() {
         </MobileFormCard>
 
         {/* Submission Options */}
-        <MobileFormCard title="💾 Save Options">
+        <MobileFormCard title="ðŸ’¾ Save Options">
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <input

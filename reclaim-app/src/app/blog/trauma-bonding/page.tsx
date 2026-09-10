@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Metadata } from "next"
 import { ArrowLeft, Clock, User, BookOpen, ExternalLink, Heart, Zap, Phone } from "lucide-react"
 import QuizShell from "@/components/marketing/QuizShell"
@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   title: "Trauma Bonding: Why You Can Not Leave (And How to Break Free)",
   description: "Trauma bonding keeps you attached to your abuser. Understand the science, recognize the signs, and start breaking free.",
   alternates: {
-    canonical: "https://www.reclaim.app/blog/trauma-bonding",
+    canonical: "https://reclaimyourlife.app/blog/trauma-bonding",
   },
   openGraph: {
     title: "Trauma Bonding: Why You Can Not Leave (And How to Break Free)",
     description: "Trauma bonding keeps you attached to your abuser. Understand the science, recognize the signs, and start breaking free.",
     type: "article",
-    url: "https://www.reclaim.app/blog/trauma-bonding",
+    url: "https://reclaimyourlife.app/blog/trauma-bonding",
   },
 }
 

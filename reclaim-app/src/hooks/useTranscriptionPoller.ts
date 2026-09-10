@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+﻿import { useState, useEffect, useCallback, useRef } from 'react'
 import { TranscriptionPoller, TranscriptionStatus } from '@/lib/transcription-poller'
 
 export interface UseTranscriptionPollerOptions {
@@ -47,17 +47,17 @@ export function useTranscriptionPoller(
       jobId: options.jobId,
       maxAttempts: options.maxAttempts,
       onStatusUpdate: (newStatus) => {
-        console.log('📊 Transcription status update:', newStatus)
+        console.log('ðŸ“Š Transcription status update:', newStatus)
         setStatus(newStatus)
       },
       onComplete: (completedTranscription, language) => {
-        console.log('✅ Transcription completed:', completedTranscription)
+        console.log('âœ… Transcription completed:', completedTranscription)
         setTranscription(completedTranscription)
         setIsPolling(false)
         setError(null)
       },
       onError: (errorMessage) => {
-        console.error('❌ Transcription error:', errorMessage)
+        console.error('âŒ Transcription error:', errorMessage)
         setError(errorMessage)
         setIsPolling(false)
       }

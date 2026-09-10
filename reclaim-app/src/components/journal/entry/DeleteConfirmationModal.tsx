@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Trash2 } from 'lucide-react'
 import type { JournalEntry } from '@/lib/supabase'

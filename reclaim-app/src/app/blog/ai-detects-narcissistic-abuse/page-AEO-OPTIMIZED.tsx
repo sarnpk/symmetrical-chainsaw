@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+﻿import { Metadata } from 'next'
 import { Shield, Brain, MessageSquare, AlertTriangle } from 'lucide-react'
 import AuthButton from '@/components/AuthButton'
 
@@ -52,7 +52,7 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             </div>
 
             <p className="text-lg text-gray-700 mb-4">
-              <strong>How accurate is AI abuse detection?</strong> Stanford researchers analyzed 50,000 abuse cases and found AI identifies manipulation with 94% accuracy—higher than untrained therapists.
+              <strong>How accurate is AI abuse detection?</strong> Stanford researchers analyzed 50,000 abuse cases and found AI identifies manipulation with 94% accuracyâ€”higher than untrained therapists.
             </p>
 
             <p className="text-lg text-gray-700 mb-6">
@@ -60,7 +60,7 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             </p>
 
             <p className="text-lg text-gray-700 mb-6">
-              <strong>Why does recognition take so long?</strong> Narcissists use intermittent reinforcement—mixing abuse with affection—which creates trauma bonding stronger than healthy relationships.
+              <strong>Why does recognition take so long?</strong> Narcissists use intermittent reinforcementâ€”mixing abuse with affectionâ€”which creates trauma bonding stronger than healthy relationships.
             </p>
 
             <p className="text-xl font-semibold text-indigo-600 mb-8">
@@ -92,10 +92,10 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
           <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
             <h3 className="text-lg font-semibold text-red-900 mb-2">The Shocking Reality:</h3>
             <ul className="text-red-800 space-y-2">
-              <li>• Average victim endures <strong>7 years</strong> before recognizing abuse</li>
-              <li>• <strong>84% of survivors</strong> wish they identified patterns sooner</li>
-              <li>• Abusers make victims question their own reality 47 times per day</li>
-              <li>• <strong>91% of narcissists</strong> use gaslighting as primary control tactic</li>
+              <li>â€¢ Average victim endures <strong>7 years</strong> before recognizing abuse</li>
+              <li>â€¢ <strong>84% of survivors</strong> wish they identified patterns sooner</li>
+              <li>â€¢ Abusers make victims question their own reality 47 times per day</li>
+              <li>â€¢ <strong>91% of narcissists</strong> use gaslighting as primary control tactic</li>
             </ul>
           </div>
 
@@ -113,7 +113,7 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
               <MessageSquare className="h-8 w-8 text-green-600 mb-4" />
               <h3 className="text-xl font-semibold text-green-900 mb-3">Real-Time Analysis</h3>
               <p className="text-green-800">
-                Paste any conversation—text, email, or transcribed call—and get instant analysis of manipulation tactics, severity level, and safety concerns.
+                Paste any conversationâ€”text, email, or transcribed callâ€”and get instant analysis of manipulation tactics, severity level, and safety concerns.
               </p>
             </div>
           </div>
@@ -123,20 +123,20 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
           <div className="bg-gray-50 p-6 rounded-lg mb-8">
             <h4 className="font-semibold text-gray-900 mb-3">Gaslighting Phrases AI Flags:</h4>
             <ul className="text-gray-700 space-y-2 mb-4">
-              <li>• "You're being too sensitive" → <span className="text-red-600 font-medium">Emotional invalidation</span></li>
-              <li>• "That never happened" → <span className="text-red-600 font-medium">Reality distortion</span></li>
-              <li>• "You're imagining things" → <span className="text-red-600 font-medium">Perception undermining</span></li>
-              <li>• "Everyone agrees with me" → <span className="text-red-600 font-medium">False consensus</span></li>
-              <li>• "You're crazy/unstable" → <span className="text-red-600 font-medium">Character assassination</span></li>
+              <li>â€¢ "You're being too sensitive" â†’ <span className="text-red-600 font-medium">Emotional invalidation</span></li>
+              <li>â€¢ "That never happened" â†’ <span className="text-red-600 font-medium">Reality distortion</span></li>
+              <li>â€¢ "You're imagining things" â†’ <span className="text-red-600 font-medium">Perception undermining</span></li>
+              <li>â€¢ "Everyone agrees with me" â†’ <span className="text-red-600 font-medium">False consensus</span></li>
+              <li>â€¢ "You're crazy/unstable" â†’ <span className="text-red-600 font-medium">Character assassination</span></li>
             </ul>
             
             <h4 className="font-semibold text-gray-900 mb-3">Advanced Tactics AI Recognizes:</h4>
             <ul className="text-gray-700 space-y-2">
-              <li>• <strong>Triangulation:</strong> Using others to create jealousy or validate their position</li>
-              <li>• <strong>Projection:</strong> Accusing you of behaviors they're actually doing</li>
-              <li>• <strong>Future Faking:</strong> Making false promises to maintain control</li>
-              <li>• <strong>Word Salad:</strong> Confusing circular arguments that go nowhere</li>
-              <li>• <strong>Hoovering:</strong> Attempts to suck you back in after separation</li>
+              <li>â€¢ <strong>Triangulation:</strong> Using others to create jealousy or validate their position</li>
+              <li>â€¢ <strong>Projection:</strong> Accusing you of behaviors they're actually doing</li>
+              <li>â€¢ <strong>Future Faking:</strong> Making false promises to maintain control</li>
+              <li>â€¢ <strong>Word Salad:</strong> Confusing circular arguments that go nowhere</li>
+              <li>â€¢ <strong>Hoovering:</strong> Attempts to suck you back in after separation</li>
             </ul>
           </div>
 
@@ -149,7 +149,7 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             </p>
             <AuthButton variant="primary" />
             <p className="text-sm text-indigo-700 mt-4">
-              ✓ Completely confidential ✓ No credit card required ✓ Start immediately
+              âœ“ Completely confidential âœ“ No credit card required âœ“ Start immediately
             </p>
           </div>
 
@@ -160,21 +160,21 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
               <p className="text-gray-700 italic mb-4">
                 "I thought I was going crazy. The AI analysis showed me 23 gaslighting instances in one conversation. Seeing it objectively changed everything."
               </p>
-              <p className="text-sm text-gray-600">— Sarah M., used Reclaim for 2 weeks</p>
+              <p className="text-sm text-gray-600">â€” Sarah M., used Reclaim for 2 weeks</p>
             </div>
 
             <div className="bg-white border-2 border-gray-200 p-6 rounded-lg">
               <p className="text-gray-700 italic mb-4">
                 "For 5 years I made excuses for his behavior. The manipulation decoder identified patterns I couldn't see. I left within a month."
               </p>
-              <p className="text-sm text-gray-600">— James T., identified covert narcissism</p>
+              <p className="text-sm text-gray-600">â€” James T., identified covert narcissism</p>
             </div>
 
             <div className="bg-white border-2 border-gray-200 p-6 rounded-lg">
               <p className="text-gray-700 italic mb-4">
-                "My therapist couldn't pinpoint what was wrong. The AI flagged 'future faking' and 'intermittent reinforcement'—terms I'd never heard but perfectly described my relationship."
+                "My therapist couldn't pinpoint what was wrong. The AI flagged 'future faking' and 'intermittent reinforcement'â€”terms I'd never heard but perfectly described my relationship."
               </p>
-              <p className="text-sm text-gray-600">— Maria L., escaped trauma bond</p>
+              <p className="text-sm text-gray-600">â€” Maria L., escaped trauma bond</p>
             </div>
           </div>
 
@@ -226,21 +226,21 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             <div>
               <h4 className="font-semibold text-gray-900 mb-3">Human Limitations:</h4>
               <ul className="text-gray-700 space-y-2">
-                <li>• Emotional attachment clouds judgment</li>
-                <li>• Hope for change creates denial</li>
-                <li>• Trauma bonding feels like love</li>
-                <li>• Gaslighting erodes confidence</li>
-                <li>• Isolation removes reality checks</li>
+                <li>â€¢ Emotional attachment clouds judgment</li>
+                <li>â€¢ Hope for change creates denial</li>
+                <li>â€¢ Trauma bonding feels like love</li>
+                <li>â€¢ Gaslighting erodes confidence</li>
+                <li>â€¢ Isolation removes reality checks</li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-3">AI Advantages:</h4>
               <ul className="text-gray-700 space-y-2">
-                <li>• Objective pattern recognition</li>
-                <li>• No emotional investment</li>
-                <li>• Instant analysis of thousands of data points</li>
-                <li>• Consistent evaluation criteria</li>
-                <li>• Identifies subtle escalation</li>
+                <li>â€¢ Objective pattern recognition</li>
+                <li>â€¢ No emotional investment</li>
+                <li>â€¢ Instant analysis of thousands of data points</li>
+                <li>â€¢ Consistent evaluation criteria</li>
+                <li>â€¢ Identifies subtle escalation</li>
               </ul>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             </p>
             <AuthButton variant="primary" />
             <p className="text-sm text-green-700 mt-4">
-              No credit card • No commitment • Results in 5 minutes
+              No credit card â€¢ No commitment â€¢ Results in 5 minutes
             </p>
           </div>
 
@@ -306,7 +306,7 @@ export default function AIDetectsNarcissisticAbusePageOptimized() {
             </p>
             <AuthButton variant="primary" />
             <p className="text-sm text-indigo-200 mt-4">
-              Trusted by 50,000+ abuse survivors • 4.8/5 rating • Featured in Psychology Today
+              Trusted by 50,000+ abuse survivors â€¢ 4.8/5 rating â€¢ Featured in Psychology Today
             </p>
           </div>
         </div>

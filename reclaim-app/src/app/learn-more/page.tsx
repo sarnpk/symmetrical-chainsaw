@@ -1,4 +1,4 @@
-import { Shield, Heart, Brain, Lock, CheckCircle, ArrowRight, Star } from 'lucide-react'
+﻿import { Shield, Heart, Brain, Lock, CheckCircle, ArrowRight, Star } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import AuthButton from '@/components/AuthButton'
 import QuizShell from '@/components/marketing/QuizShell'
@@ -262,44 +262,44 @@ export default function LearnMorePage() {
           
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <Card className="p-6 border-green-200">
-              <div className="text-green-600 text-2xl mb-4">⚖️</div>
+              <div className="text-green-600 text-2xl mb-4">âš–ï¸</div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Divorce Proceedings</h3>
               <p className="text-gray-600 mb-4">
                 Document financial manipulation, emotional abuse patterns, and gaslighting incidents. 
                 Our timestamped evidence helps prove grounds for divorce and protects your interests.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Financial control documentation</li>
-                <li>• Emotional abuse evidence</li>
-                <li>• Communication pattern analysis</li>
+                <li>â€¢ Financial control documentation</li>
+                <li>â€¢ Emotional abuse evidence</li>
+                <li>â€¢ Communication pattern analysis</li>
               </ul>
             </Card>
 
             <Card className="p-6 border-blue-200">
-              <div className="text-blue-600 text-2xl mb-4">👨‍👩‍👧‍👦</div>
+              <div className="text-blue-600 text-2xl mb-4">ðŸ‘¨â€ðŸ‘©â€ðŸ‘§â€ðŸ‘¦</div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Child Custody Cases</h3>
               <p className="text-gray-600 mb-4">
                 Prove parental alienation, document unsafe environments, and show manipulation of children. 
                 Critical evidence for custody evaluations and court decisions.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Parental alienation proof</li>
-                <li>• Child safety documentation</li>
-                <li>• Co-parenting violations</li>
+                <li>â€¢ Parental alienation proof</li>
+                <li>â€¢ Child safety documentation</li>
+                <li>â€¢ Co-parenting violations</li>
               </ul>
             </Card>
 
             <Card className="p-6 border-purple-200">
-              <div className="text-purple-600 text-2xl mb-4">🏢</div>
+              <div className="text-purple-600 text-2xl mb-4">ðŸ¢</div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Workplace Harassment</h3>
               <p className="text-gray-600 mb-4">
                 Document workplace manipulation, hostile environments, and discriminatory behavior. 
                 Build strong cases for HR complaints and legal action.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Hostile work environment proof</li>
-                <li>• Discrimination documentation</li>
-                <li>• Retaliation evidence</li>
+                <li>â€¢ Hostile work environment proof</li>
+                <li>â€¢ Discrimination documentation</li>
+                <li>â€¢ Retaliation evidence</li>
               </ul>
             </Card>
           </div>
@@ -310,19 +310,19 @@ export default function LearnMorePage() {
               <div>
                 <h4 className="font-semibold text-gray-900 mb-3">Court-Ready Evidence</h4>
                 <ul className="space-y-2 text-gray-600">
-                  <li>✓ Automatic timestamps and GPS data</li>
-                  <li>✓ Tamper-proof digital signatures</li>
-                  <li>✓ Audio transcription with metadata</li>
-                  <li>✓ Pattern analysis reports</li>
+                  <li>âœ“ Automatic timestamps and GPS data</li>
+                  <li>âœ“ Tamper-proof digital signatures</li>
+                  <li>âœ“ Audio transcription with metadata</li>
+                  <li>âœ“ Pattern analysis reports</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-900 mb-3">Legal Integration</h4>
                 <ul className="space-y-2 text-gray-600">
-                  <li>✓ Export to legal document formats</li>
-                  <li>✓ Attorney-client privilege protection</li>
-                  <li>✓ Audit trails for all evidence</li>
-                  <li>✓ Expert witness AI analysis</li>
+                  <li>âœ“ Export to legal document formats</li>
+                  <li>âœ“ Attorney-client privilege protection</li>
+                  <li>âœ“ Audit trails for all evidence</li>
+                  <li>âœ“ Expert witness AI analysis</li>
                 </ul>
               </div>
             </div>
@@ -402,7 +402,7 @@ export default function LearnMorePage() {
           
           <div className="grid md:grid-cols-2 gap-8">
             <Card className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">🧠 Find Your Therapist</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">ðŸ§  Find Your Therapist</h3>
               <p className="text-gray-600 mb-4">
                 Connect with trauma-informed therapists specializing in narcissistic abuse recovery. 
                 Our AI helps match you with the right professional for your healing journey.
@@ -413,7 +413,7 @@ export default function LearnMorePage() {
             </Card>
 
             <Card className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">⚖️ Legal Resources</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">âš–ï¸ Legal Resources</h3>
               <p className="text-gray-600 mb-4">
                 Access family law attorneys experienced in narcissistic abuse cases. 
                 Get legal guidance for divorce, custody, and protection orders.
@@ -484,7 +484,7 @@ export default function LearnMorePage() {
           
           <div className="text-center mt-12">
             <p className="text-gray-600 mb-4">Have more questions?</p>
-            <a href="mailto:support@reclaim.app" className="text-indigo-600 hover:text-indigo-700 font-medium">
+            <a href="mailto:support@reclaimyourlife.app" className="text-indigo-600 hover:text-indigo-700 font-medium">
               Contact our support team
             </a>
           </div>

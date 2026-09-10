@@ -1,11 +1,11 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 
 export default function FreeToolsMenu({ currentTool }: { currentTool?: string }) {
   const tools = [
-    { href: '/free-narcissist-test', label: '🔍 Free Narcissist Test', id: 'narcissist-test' },
-    { href: '/gaslighting-reality-check', label: '👁️ Gaslighting Reality Check', id: 'gaslighting' },
-    { href: '/discard-stage-test', label: '💔 Discard Stage Test', id: 'discard' },
-    { href: '/relationship-health-check', label: '❤️ Relationship Health Check', id: 'relationship-health' },
+    { href: '/free-narcissist-test', label: 'ðŸ” Free Narcissist Test', id: 'narcissist-test' },
+    { href: '/gaslighting-reality-check', label: 'ðŸ‘ï¸ Gaslighting Reality Check', id: 'gaslighting' },
+    { href: '/discard-stage-test', label: 'ðŸ’” Discard Stage Test', id: 'discard' },
+    { href: '/relationship-health-check', label: 'â¤ï¸ Relationship Health Check', id: 'relationship-health' },
   ]
 
   return (

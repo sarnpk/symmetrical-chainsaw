@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -102,7 +102,7 @@ export default function RoleReframingPage() {
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <div className="border rounded-lg p-6 bg-green-50">
-            <h2 className="text-xl font-bold mb-4 text-green-800">✓ My Responsibilities</h2>
+            <h2 className="text-xl font-bold mb-4 text-green-800">âœ“ My Responsibilities</h2>
             <ul className="space-y-2">
               {myResponsibilities.map(b => (
                 <li key={b.id} className="flex items-start justify-between p-3 bg-white rounded">
@@ -110,14 +110,14 @@ export default function RoleReframingPage() {
                     <div className="font-medium">{b.responsibility_area}</div>
                     {b.notes && <div className="text-sm text-gray-600 mt-1">{b.notes}</div>}
                   </div>
-                  <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-800 ml-2">×</button>
+                  <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-800 ml-2">Ã—</button>
                 </li>
               ))}
             </ul>
           </div>
 
           <div className="border rounded-lg p-6 bg-red-50">
-            <h2 className="text-xl font-bold mb-4 text-red-800">✗ NOT My Responsibilities</h2>
+            <h2 className="text-xl font-bold mb-4 text-red-800">âœ— NOT My Responsibilities</h2>
             <ul className="space-y-2">
               {notMyResponsibilities.map(b => (
                 <li key={b.id} className="flex items-start justify-between p-3 bg-white rounded">
@@ -125,7 +125,7 @@ export default function RoleReframingPage() {
                     <div className="font-medium">{b.responsibility_area}</div>
                     {b.notes && <div className="text-sm text-gray-600 mt-1">{b.notes}</div>}
                   </div>
-                  <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-800 ml-2">×</button>
+                  <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-800 ml-2">Ã—</button>
                 </li>
               ))}
             </ul>
@@ -193,7 +193,7 @@ export default function RoleReframingPage() {
                   <h4 className="font-semibold text-sm mb-2 text-red-900">Red Flags</h4>
                   <ul className="text-sm text-red-800 space-y-1">
                     {aiAnalysis.red_flags.map((flag: string, idx: number) => (
-                      <li key={idx}>• {flag}</li>
+                      <li key={idx}>â€¢ {flag}</li>
                     ))}
                   </ul>
                 </div>
@@ -204,7 +204,7 @@ export default function RoleReframingPage() {
                   <h4 className="font-semibold text-sm mb-2">Action Steps</h4>
                   <ul className="text-sm text-gray-700 space-y-1">
                     {aiAnalysis.action_steps.map((step: string, idx: number) => (
-                      <li key={idx}>• {step}</li>
+                      <li key={idx}>â€¢ {step}</li>
                     ))}
                   </ul>
                 </div>

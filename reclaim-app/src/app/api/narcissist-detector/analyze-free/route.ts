@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { geminiAI, DEFAULT_FREE_TIER_MODEL } from '@/lib/gemini-ai'
 import { createClient } from '@supabase/supabase-js'
 

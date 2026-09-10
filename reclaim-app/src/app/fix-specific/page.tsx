@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
 
@@ -11,7 +11,7 @@ export default function FixSpecificPage() {
     setResult(null)
 
     try {
-      console.log('🔧 Fixing specific job: 497c4410-d286-421e-904e-32a262e6b05b')
+      console.log('ðŸ”§ Fixing specific job: 497c4410-d286-421e-904e-32a262e6b05b')
       
       const response = await fetch('/api/fix-stuck-v2', {
         method: 'POST',
@@ -22,16 +22,16 @@ export default function FixSpecificPage() {
       })
 
       const data = await response.json()
-      console.log('📊 Fix result:', data)
+      console.log('ðŸ“Š Fix result:', data)
       setResult(data)
       
       if (data.success && data.status === 'completed') {
-        alert(`✅ FIXED! Transcription: "${data.transcription}"`)
+        alert(`âœ… FIXED! Transcription: "${data.transcription}"`)
       } else if (data.status === 'extraction_failed') {
-        alert(`⚠️ Gladia completed but extraction failed. Check the debug info below.`)
+        alert(`âš ï¸ Gladia completed but extraction failed. Check the debug info below.`)
       }
     } catch (err: any) {
-      console.error('❌ Fix error:', err)
+      console.error('âŒ Fix error:', err)
       setResult({ error: err.message })
     } finally {
       setLoading(false)
@@ -42,7 +42,7 @@ export default function FixSpecificPage() {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-          <h1 className="text-2xl font-bold mb-6">🎯 Fix Specific Job</h1>
+          <h1 className="text-2xl font-bold mb-6">ðŸŽ¯ Fix Specific Job</h1>
           
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <h3 className="font-semibold text-blue-800 mb-2">Target Job:</h3>
@@ -57,7 +57,7 @@ export default function FixSpecificPage() {
             disabled={loading}
             className="w-full px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400 font-semibold mb-6"
           >
-            {loading ? '🔧 Fixing...' : '🔧 Fix This Specific Job'}
+            {loading ? 'ðŸ”§ Fixing...' : 'ðŸ”§ Fix This Specific Job'}
           </button>
 
           {/* Loading */}
@@ -88,12 +88,12 @@ export default function FixSpecificPage() {
               
               {result.transcription && (
                 <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-                  <h4 className="font-semibold text-green-800 mb-2">✅ TRANSCRIPTION EXTRACTED:</h4>
+                  <h4 className="font-semibold text-green-800 mb-2">âœ… TRANSCRIPTION EXTRACTED:</h4>
                   <p className="text-green-700 text-lg font-mono">"{result.transcription}"</p>
                   
                   {result.fixed && (
                     <p className="text-sm text-green-600 mt-2">
-                      🎉 Database updated! Your journal should now show this transcription.
+                      ðŸŽ‰ Database updated! Your journal should now show this transcription.
                     </p>
                   )}
                 </div>
@@ -101,7 +101,7 @@ export default function FixSpecificPage() {
               
               {result.status === 'extraction_failed' && (
                 <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-                  <h4 className="font-semibold text-yellow-800 mb-2">⚠️ EXTRACTION FAILED</h4>
+                  <h4 className="font-semibold text-yellow-800 mb-2">âš ï¸ EXTRACTION FAILED</h4>
                   <p className="text-yellow-700 mb-2">
                     Gladia says the job is "done" but we couldn't extract the transcription text.
                   </p>
@@ -110,10 +110,10 @@ export default function FixSpecificPage() {
                     <div className="text-xs text-yellow-600">
                       <strong>Debug Info:</strong>
                       <ul className="list-disc list-inside ml-4 mt-1">
-                        <li>Has transcription object: {result.debug_info.has_transcription_object ? '✅' : '❌'}</li>
-                        <li>Has full_transcript: {result.debug_info.has_full_transcript ? '✅' : '❌'}</li>
+                        <li>Has transcription object: {result.debug_info.has_transcription_object ? 'âœ…' : 'âŒ'}</li>
+                        <li>Has full_transcript: {result.debug_info.has_full_transcript ? 'âœ…' : 'âŒ'}</li>
                         <li>Full transcript value: "{result.debug_info.full_transcript_value}"</li>
-                        <li>Has utterances: {result.debug_info.has_utterances ? '✅' : '❌'}</li>
+                        <li>Has utterances: {result.debug_info.has_utterances ? 'âœ…' : 'âŒ'}</li>
                         <li>Utterances length: {result.debug_info.utterances_length}</li>
                       </ul>
                     </div>

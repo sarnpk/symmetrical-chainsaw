@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -43,7 +43,7 @@ export default function PhotoEvidenceCard({ evidenceFiles, evidenceUrls }: Photo
       <Card>
         <CardHeader className="pb-3 sm:pb-4">
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            📸 Photo Evidence
+            ðŸ“¸ Photo Evidence
           </CardTitle>
           <CardDescription className="text-xs sm:text-sm">
             {photoFiles.length} {photoFiles.length === 1 ? 'image' : 'images'} attached to this entry
@@ -80,7 +80,7 @@ export default function PhotoEvidenceCard({ evidenceFiles, evidenceUrls }: Photo
                     {file.caption?.trim() || file.file_name?.trim() || file.storage_path?.split('/').pop() || 'Photo'}
                   </p>
                   <p className="text-xs text-gray-500">
-                    📅 {new Date(file.uploaded_at).toLocaleString()}
+                    ðŸ“… {new Date(file.uploaded_at).toLocaleString()}
                   </p>
                   {/* Quick debug open link */}
                   {evidenceUrls[file.id] && (
@@ -144,7 +144,7 @@ export default function PhotoEvidenceCard({ evidenceFiles, evidenceUrls }: Photo
                 {photoFiles[selectedImage].caption?.trim() || photoFiles[selectedImage].file_name?.trim() || photoFiles[selectedImage].storage_path?.split('/').pop() || 'Photo'}
               </p>
               <p className="text-sm opacity-75">
-                📅 {new Date(photoFiles[selectedImage].uploaded_at).toLocaleString()}
+                ðŸ“… {new Date(photoFiles[selectedImage].uploaded_at).toLocaleString()}
               </p>
               {photoFiles.length > 1 && (
                 <p className="text-sm opacity-75 mt-1">

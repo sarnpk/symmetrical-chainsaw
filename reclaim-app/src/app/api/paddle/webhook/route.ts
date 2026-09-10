@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
   if (!signature || !process.env.PADDLE_WEBHOOK_SECRET || process.env.PADDLE_WEBHOOK_SECRET === 'whsec_your_paddle_webhook_secret_here') {
     if (process.env.PADDLE_WEBHOOK_SECRET === 'whsec_your_paddle_webhook_secret_here') {
-      console.warn('Paddle webhook secret not configured — processing without verification')
+      console.warn('Paddle webhook secret not configured â€” processing without verification')
     } else {
       return NextResponse.json({ error: 'Missing signature' }, { status: 400 })
     }

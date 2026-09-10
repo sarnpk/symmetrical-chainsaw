@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Create a server client using service role (required for usage RPC + bypassing RLS when needed)
@@ -140,7 +140,7 @@ export async function POST(request: Request) {
 Task: Suggest ${Math.min(Math.max(Number.isFinite(n) ? n : 5, 3), 7)} concise, specific, and compassionate incident titles that reflect the core pattern or theme present in the text.
 
 Style constraints:
-- 4–10 words each, neutral and non-blaming.
+- 4â€“10 words each, neutral and non-blaming.
 - Prefer clear pattern words when appropriate (e.g., "Gaslighting", "Blame Shifting", "DARVO Response", "Invalidation", "Stonewalling", "Love Bombing").
 - Avoid names or sensitive identifiers. No diagnosis or labels about a person.
 - No emojis, no quotes, no markdown.

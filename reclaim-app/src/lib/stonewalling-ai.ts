@@ -1,4 +1,4 @@
-import { geminiAI } from './gemini-ai'
+﻿import { geminiAI } from './gemini-ai'
 
 interface StonewallIncident {
   shutdown_type: string

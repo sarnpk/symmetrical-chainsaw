@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -328,7 +328,7 @@ export default function NewJournalEntryPage() {
       }
       if (!res.ok) {
         if (data?.code === 'LIMIT_EXCEEDED' || data?.upgrade_required) {
-          setSuggestError('You’ve reached your monthly AI limit on the current plan. Consider upgrading to continue using AI features.')
+          setSuggestError('Youâ€™ve reached your monthly AI limit on the current plan. Consider upgrading to continue using AI features.')
         } else {
           setSuggestError(data?.error || 'Failed to get suggestions')
         }
@@ -399,7 +399,7 @@ export default function NewJournalEntryPage() {
           if (data?.upgrade_required) {
             setAiError('AI Assist is available on Recovery+ plans.')
           } else if (data?.code === 'LIMIT_EXCEEDED') {
-            setAiError('You’ve reached your monthly AI limit for your plan.')
+            setAiError('Youâ€™ve reached your monthly AI limit for your plan.')
           } else {
             setAiError(data?.error || 'Failed to get AI suggestions')
           }
@@ -1117,7 +1117,7 @@ export default function NewJournalEntryPage() {
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-              <span className="text-purple-600 font-bold text-sm">✨</span>
+              <span className="text-purple-600 font-bold text-sm">âœ¨</span>
             </div>
           </div>
           <div className="flex-1">
@@ -1132,7 +1132,7 @@ export default function NewJournalEntryPage() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
             >
               Upgrade to {upgradeInfo.tier}
-              <span className="text-xs">→</span>
+              <span className="text-xs">â†’</span>
             </Link>
           </div>
         </div>
@@ -1216,7 +1216,7 @@ export default function NewJournalEntryPage() {
           {/* What Happened - wrapped in Section */}
           <Section
             id="basicInfo"
-            title="📝 What Happened"
+            title="ðŸ“ What Happened"
             description="Tell your story in your own words"
             isOpen={openSections.basicInfo}
             onToggle={handleSectionToggle}
@@ -1237,7 +1237,7 @@ export default function NewJournalEntryPage() {
                     disabled={suggesting}
                     aria-label="Suggest title"
                   >
-                    {suggesting ? 'Getting suggestions…' : 'Suggest title'}
+                    {suggesting ? 'Getting suggestionsâ€¦' : 'Suggest title'}
                   </button>
                 </div>
                 <input
@@ -1455,7 +1455,7 @@ export default function NewJournalEntryPage() {
                     )}
 
                     {aiLoading && (
-                      <div className="text-xs text-gray-600">Analyzing your description…</div>
+                      <div className="text-xs text-gray-600">Analyzing your descriptionâ€¦</div>
                     )}
                   </div>
                 )}
@@ -1467,7 +1467,7 @@ export default function NewJournalEntryPage() {
           {/* Behavior Assessment - wrapped in Section */}
           <Section
             id="behavior"
-            title="🎭 Behavior Assessment"
+            title="ðŸŽ­ Behavior Assessment"
             description="Select all patterns that apply (optional)"
             isOpen={openSections.behavior}
             onToggle={handleSectionToggle}
@@ -1504,7 +1504,7 @@ export default function NewJournalEntryPage() {
           {/* Safety Assessment - wrapped in Section */}
           <Section
             id="safety"
-            title="🛡️ Safety Assessment"
+            title="ðŸ›¡ï¸ Safety Assessment"
             description="How safe did you feel during this experience?"
             isOpen={openSections.safety}
             onToggle={handleSectionToggle}
@@ -1534,7 +1534,7 @@ export default function NewJournalEntryPage() {
           {/* Impact Assessment - wrapped in Section */}
           <Section
             id="impact"
-            title="💟 Impact Assessment"
+            title="ðŸ’Ÿ Impact Assessment"
             description="Mood and trigger level (optional)"
             isOpen={openSections.impact}
             onToggle={handleSectionToggle}
@@ -1560,7 +1560,7 @@ export default function NewJournalEntryPage() {
           {/* Detailed Analysis - wrapped in Section */}
           <Section
             id="detailed"
-            title="🔍 Detailed Analysis"
+            title="ðŸ” Detailed Analysis"
             description="Help identify patterns and behaviors (optional)"
             isOpen={openSections.detailed}
             onToggle={handleSectionToggle}
@@ -1667,7 +1667,7 @@ export default function NewJournalEntryPage() {
           {/* Evidence Documentation - wrapped in Section */}
           <Section
             id="evidence"
-            title="📋 Evidence Documentation"
+            title="ðŸ“‹ Evidence Documentation"
             description="Document evidence and important details"
             isOpen={openSections.evidence}
             onToggle={handleSectionToggle}
@@ -1773,7 +1773,7 @@ export default function NewJournalEntryPage() {
             <Card className="border-l-4 border-l-orange-500">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                  🛡️ How This Affected You
+                  ðŸ›¡ï¸ How This Affected You
                 </CardTitle>
                 <CardDescription>Your safety and emotional wellbeing matter</CardDescription>
               </CardHeader>
@@ -1831,7 +1831,7 @@ export default function NewJournalEntryPage() {
           <Card className={`border-l-4 ${!areMandatoryFieldsFilled() ? 'border-l-gray-300 opacity-60' : 'border-l-blue-500'} mb-4 md:mb-6`}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                📸 Photo Evidence
+                ðŸ“¸ Photo Evidence
               </CardTitle>
               <CardDescription>
                 {!areMandatoryFieldsFilled() 
@@ -1911,7 +1911,7 @@ export default function NewJournalEntryPage() {
           <Card className={`border-l-4 ${!areMandatoryFieldsFilled() ? 'border-l-gray-300 opacity-60' : 'border-l-purple-500'} mt-2 md:mt-4`}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                🎙️ Audio Evidence
+                ðŸŽ™ï¸ Audio Evidence
               </CardTitle>
               <CardDescription>
                 {!areMandatoryFieldsFilled() 
@@ -1968,7 +1968,7 @@ export default function NewJournalEntryPage() {
                 {/* Transcription usage badge */}
                 <div className="mt-2">
                   {txUsageLoading ? (
-                    <span className="text-xs text-gray-500">Checking transcription usage…</span>
+                    <span className="text-xs text-gray-500">Checking transcription usageâ€¦</span>
                   ) : txUsageError ? (
                     <span className="text-xs text-red-600">{txUsageError}</span>
                   ) : txUsage ? (
@@ -1976,7 +1976,7 @@ export default function NewJournalEntryPage() {
                       <span className="text-xs text-gray-600">Transcription is not available on Foundation.</span>
                     ) : (
                       <span className={`text-xs font-medium px-2 py-1 rounded-full ${typeof txUsage.remainingMinutes === 'number' && txUsage.remainingMinutes <= 20 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}>
-                        {`Transcription quota: ${txUsage.usedMinutes} min used · ${txUsage.limitMinutes === 'unlimited' ? 'unlimited' : txUsage.remainingMinutes + ' min'} left this month`}
+                        {`Transcription quota: ${txUsage.usedMinutes} min used Â· ${txUsage.limitMinutes === 'unlimited' ? 'unlimited' : txUsage.remainingMinutes + ' min'} left this month`}
                       </span>
                     )
                   ) : null}
@@ -2009,7 +2009,7 @@ export default function NewJournalEntryPage() {
                                 disabled
                                 className="px-3 py-1.5 text-xs rounded-md bg-gray-200 text-gray-700"
                               >
-                                Transcribing…
+                                Transcribingâ€¦
                               </button>
                             )}
                             <button
@@ -2063,7 +2063,7 @@ export default function NewJournalEntryPage() {
           <Card className="border-l-4 border-l-green-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                📍 Additional Context
+                ðŸ“ Additional Context
               </CardTitle>
               <CardDescription>These details can be helpful but are optional</CardDescription>
             </CardHeader>
@@ -2230,12 +2230,12 @@ export default function NewJournalEntryPage() {
                 </div>
 
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-blue-900 mb-2">💡 Remember</h3>
+                  <h3 className="font-semibold text-blue-900 mb-2">ðŸ’¡ Remember</h3>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• You don't need to select every behavior that applies</li>
-                    <li>• This section is completely optional</li>
-                    <li>• Your entries are private and secure</li>
-                    <li>• Documenting patterns can help you and professionals understand your situation</li>
+                    <li>â€¢ You don't need to select every behavior that applies</li>
+                    <li>â€¢ This section is completely optional</li>
+                    <li>â€¢ Your entries are private and secure</li>
+                    <li>â€¢ Documenting patterns can help you and professionals understand your situation</li>
                   </ul>
                 </div>
 
@@ -2280,7 +2280,7 @@ export default function NewJournalEntryPage() {
               </ul>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-800">
                 <div className="text-xs font-medium text-gray-600 mb-1">Example</div>
-                <p>Partner denied saying hurtful things I have in messages, insisted I “imagined it,” and said I’m too sensitive. I started doubting my memory despite the proof.</p>
+                <p>Partner denied saying hurtful things I have in messages, insisted I â€œimagined it,â€ and said Iâ€™m too sensitive. I started doubting my memory despite the proof.</p>
               </div>
               <p className="text-xs text-gray-600">Tip: Longer, concrete details improve AI suggestions. Minimum ~20 characters.</p>
             </div>

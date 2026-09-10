@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -70,7 +70,7 @@ export default function PatternsHelpPage() {
               <h2 className="text-lg font-medium text-gray-900">Tips</h2>
             </div>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-              <li>Keep entries consistent (even short check‑ins improve signal).</li>
+              <li>Keep entries consistent (even short checkâ€‘ins improve signal).</li>
               <li>Tag entries to group by context (sleep, work, relationships).</li>
               <li>Revisit monthly to adjust strategies that work vs. drain.</li>
             </ul>
@@ -82,7 +82,7 @@ export default function PatternsHelpPage() {
               <h2 className="text-lg font-medium text-gray-900">Safety & Limits</h2>
             </div>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-              <li>Insights are informational only—not a diagnosis.</li>
+              <li>Insights are informational onlyâ€”not a diagnosis.</li>
               <li>If trends raise concern about safety, consider contacting support or a professional.</li>
             </ul>
           </section>

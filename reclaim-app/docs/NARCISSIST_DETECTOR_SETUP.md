@@ -1,8 +1,8 @@
-# Narcissist Detector MVP - Setup & Deployment
+﻿# Narcissist Detector MVP - Setup & Deployment
 
 ## What's Been Built
 
-### ✅ Completed Components
+### âœ… Completed Components
 
 1. **Frontend Page** (`/narcissist-detector`)
    - Tab interface for Message vs Conversation analysis
@@ -130,7 +130,7 @@ Them: That's not what it means. You're misinterpreting it.
 ```
 
 **Output:**
-- Cycle Detected: Gaslighting → Victim Mentality → Reality Distortion
+- Cycle Detected: Gaslighting â†’ Victim Mentality â†’ Reality Distortion
 - Recurring Tactics: Denial, Contradiction, Reality Distortion
 - Escalation Indicators: Increasing intensity, Defensive language
 - Likely Next Response: "You're the problem here, not me" (72% probability)

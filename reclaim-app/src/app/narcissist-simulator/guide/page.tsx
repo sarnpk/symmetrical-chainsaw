@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -16,7 +16,7 @@ export default function NarcissistSimulatorGuidePage() {
         </Link>
 
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Custom Context Guide — Narcissist Simulator
+          Custom Context Guide â€” Narcissist Simulator
         </h1>
 
         <article className="prose prose-gray max-w-none">
@@ -91,7 +91,7 @@ Ex: The custody agreement is ridiculous. You know that.`}</code></pre>
 
           <h3>DO:</h3>
           <ul>
-            <li>Include at least 5–10 message exchanges</li>
+            <li>Include at least 5â€“10 message exchanges</li>
             <li>Include their typical manipulation tactics</li>
             <li>Include examples of them escalating</li>
             <li>Include examples of them reacting to boundaries</li>
@@ -100,7 +100,7 @@ Ex: The custody agreement is ridiculous. You know that.`}</code></pre>
 
           <h3>DON&apos;T:</h3>
           <ul>
-            <li>Include just 1–2 messages (not enough to learn from)</li>
+            <li>Include just 1â€“2 messages (not enough to learn from)</li>
             <li>Edit or clean up their messages (keep it real)</li>
             <li>Include only &quot;good&quot; conversations (include the manipulation)</li>
             <li>Include conversations from years ago (patterns may have changed)</li>
@@ -160,7 +160,7 @@ Me: Fine`}</code></pre>
 
           <h3>Emotional Safety</h3>
           <ul>
-            <li>This can be triggering — take breaks if needed</li>
+            <li>This can be triggering â€” take breaks if needed</li>
             <li>You can stop at any time</li>
             <li>This is practice, not real interaction</li>
             <li>You&apos;re in control</li>
@@ -179,10 +179,10 @@ Me: Fine`}</code></pre>
           <h2>What Happens Next</h2>
           <p>After you paste your conversation:</p>
           <ol>
-            <li><strong>AI Analysis</strong> (2–3 seconds) — Identifies their narcissist type, maps their manipulation tactics, learns their communication style</li>
-            <li><strong>Simulation Starts</strong> — AI generates next message in their style, stays true to their established patterns, reacts how THEY would react</li>
-            <li><strong>You Practice</strong> — Try grey rock technique, try BIFF responses, try boundary setting, get real-time feedback</li>
-            <li><strong>AI Adapts</strong> — If you grey rock, they escalate (like they do). If you engage emotionally, they exploit it. If you set boundaries, they violate them.</li>
+            <li><strong>AI Analysis</strong> (2â€“3 seconds) â€” Identifies their narcissist type, maps their manipulation tactics, learns their communication style</li>
+            <li><strong>Simulation Starts</strong> â€” AI generates next message in their style, stays true to their established patterns, reacts how THEY would react</li>
+            <li><strong>You Practice</strong> â€” Try grey rock technique, try BIFF responses, try boundary setting, get real-time feedback</li>
+            <li><strong>AI Adapts</strong> â€” If you grey rock, they escalate (like they do). If you engage emotionally, they exploit it. If you set boundaries, they violate them.</li>
           </ol>
 
           <hr />
@@ -208,7 +208,7 @@ Me: Fine`}</code></pre>
           A: Only you can decide. If it&apos;s too triggering, use standard scenarios instead.</p>
 
           <p><strong>Q: Can I save my practice sessions?</strong><br />
-          A: Not yet — this is a planned feature. Currently sessions are temporary.</p>
+          A: Not yet â€” this is a planned feature. Currently sessions are temporary.</p>
 
           <hr />
 
@@ -226,7 +226,7 @@ Me: Fine`}</code></pre>
 
           <h2>Need Help?</h2>
           <ul>
-            <li><strong>Formatting</strong>: Just paste it naturally — the AI is smart</li>
+            <li><strong>Formatting</strong>: Just paste it naturally â€” the AI is smart</li>
             <li><strong>Triggering content</strong>: Use standard scenarios instead</li>
             <li><strong>Technical issues</strong>: Contact support</li>
             <li><strong>Emotional distress</strong>: Take a break, use crisis resources</li>

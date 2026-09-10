@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { Check } from 'lucide-react'
 
 interface PricingCardProps {

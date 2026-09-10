@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -147,7 +147,7 @@ export default function WhatHappenedPage() {
       
       <main className="flex-1 overflow-y-auto px-4 py-4">
         <MobileFormCard 
-          title="📝 Tell Your Story"
+          title="ðŸ“ Tell Your Story"
           description="Share what happened in your own words"
           required={true}
         >
@@ -359,7 +359,7 @@ export default function WhatHappenedPage() {
           <div className="flex">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <span className="text-green-600 font-bold text-sm">✍️</span>
+                <span className="text-green-600 font-bold text-sm">âœï¸</span>
               </div>
             </div>
             <div className="ml-3">
@@ -387,7 +387,7 @@ export default function WhatHappenedPage() {
             </button>
             <div className="text-sm text-gray-800 flex items-center gap-2">
               <span className={`inline-block h-2 w-2 rounded-full ${isDictating ? 'bg-red-500 animate-pulse' : 'bg-gray-400'}`}></span>
-              {isDictating ? 'Dictating…' : (speechSupported ? 'Tap mic to dictate' : 'Dictation not supported')}
+              {isDictating ? 'Dictatingâ€¦' : (speechSupported ? 'Tap mic to dictate' : 'Dictation not supported')}
             </div>
             <button
               type="button"
@@ -402,7 +402,7 @@ export default function WhatHappenedPage() {
               value={editorText}
               onChange={(e) => setEditorText(e.target.value)}
               className="w-full h-full resize-none outline-none text-base"
-              placeholder="Speak or type what happened…"
+              placeholder="Speak or type what happenedâ€¦"
             />
           </div>
           <div className="p-4 border-t flex items-center justify-between">
@@ -463,14 +463,14 @@ export default function WhatHappenedPage() {
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="font-medium text-blue-900 mb-1">💡 Tip:</p>
+                  <p className="font-medium text-blue-900 mb-1">ðŸ’¡ Tip:</p>
                   <p className="text-blue-700">
                     Longer, concrete details improve AI suggestions. Minimum ~20 characters for analysis.
                   </p>
                 </div>
 
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                  <p className="font-medium text-green-900 mb-1">✅ Remember:</p>
+                  <p className="font-medium text-green-900 mb-1">âœ… Remember:</p>
                   <p className="text-green-700">
                     This is your safe space. Write honestly and include as much detail as you're comfortable with. 
                     You can always edit or add more later.

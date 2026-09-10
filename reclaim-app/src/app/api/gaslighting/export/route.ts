@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
@@ -53,7 +53,7 @@ h1{color:#dc2626;border-bottom:3px solid #dc2626;padding-bottom:10px}
 <div class="stat"><div class="stat-label">With Evidence</div><div class="stat-value">${statements.filter(s => s.has_evidence).length}</div></div>
 </div>
 
-${statements.length > 5 ? '<div class="warning"><strong>⚠️ Pattern Alert:</strong> Multiple documented gaslighting incidents detected.</div>' : ''}
+${statements.length > 5 ? '<div class="warning"><strong>âš ï¸ Pattern Alert:</strong> Multiple documented gaslighting incidents detected.</div>' : ''}
 
 <h2>Documented Statements</h2>
 ${statements.map(s => `
@@ -64,7 +64,7 @@ ${statements.map(s => `
 </div>
 <div class="claim"><strong>THEIR CLAIM:</strong><br>"${s.their_claim}"</div>
 <div class="truth"><strong>ACTUAL TRUTH:</strong><br>${s.actual_truth}</div>
-${s.has_evidence ? `<p style="color:#059669"><strong>✓ Evidence:</strong> ${s.evidence_type}</p>` : ''}
+${s.has_evidence ? `<p style="color:#059669"><strong>âœ“ Evidence:</strong> ${s.evidence_type}</p>` : ''}
 </div>
 `).join('')}
 

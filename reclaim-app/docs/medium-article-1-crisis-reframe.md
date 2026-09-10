@@ -1,16 +1,16 @@
-# The Text Message That Almost Broke Me (And the Tool That Saved My Sanity)
+﻿# The Text Message That Almost Broke Me (And the Tool That Saved My Sanity)
 
 It was 2:47 AM when my phone lit up. 
 
 "You're a terrible mother. The kids are crying because of you."
 
-My hands started shaking. Heart racing. That familiar panic—the one that makes you want to text back immediately, explain yourself, prove you're not the monster they're painting you as.
+My hands started shaking. Heart racing. That familiar panicâ€”the one that makes you want to text back immediately, explain yourself, prove you're not the monster they're painting you as.
 
 I'd been here before. Too many times. And every time I responded, it got worse.
 
 ## The 2 AM Panic Spiral
 
-If you've been discarded by a narcissist, you know this feeling. That moment when they reach out—not to reconcile, but to destabilize. To remind you they still have power.
+If you've been discarded by a narcissist, you know this feeling. That moment when they reach outâ€”not to reconcile, but to destabilize. To remind you they still have power.
 
 My therapist called it "trauma bonding." I called it hell.
 
@@ -28,11 +28,11 @@ It's called Crisis Reframe, and it does something different than anything I'd tr
 
 Instead of telling me to "just breathe" or "think positive," it walked me through what was actually happening:
 
-**First, it gave me back control.** Not over him—over myself. "You are in control right now. You don't have to respond. This feeling will pass."
+**First, it gave me back control.** Not over himâ€”over myself. "You are in control right now. You don't have to respond. This feeling will pass."
 
 **Then it validated the panic.** "What you're feeling is real. This is a normal response to abnormal behavior."
 
-**Then—and this is the part that got me—it reframed the whole situation using a metaphor I couldn't ignore:**
+**Thenâ€”and this is the part that got meâ€”it reframed the whole situation using a metaphor I couldn't ignore:**
 
 "Would you stay in a car that's about to crash because the driver refuses to use the brakes?"
 
@@ -42,7 +42,7 @@ Suddenly, I wasn't the bad guy for wanting to get out. I was the sane one trying
 
 Turns out, when you're in panic mode, your prefrontal cortex (the logical part) goes offline. You literally can't think your way out.
 
-But metaphors? They bypass that. They hit a different part of your brain—the part that processes stories and meaning.
+But metaphors? They bypass that. They hit a different part of your brainâ€”the part that processes stories and meaning.
 
 The tool gave me:
 - Powerful metaphors that challenged my thinking
@@ -56,7 +56,7 @@ I didn't text back.
 
 For the first time in three years, I didn't engage. I read the reframe three times. I checked the boxes on my commitment list. I watched the "survived" timer tick up.
 
-By morning, the panic had passed. And I had proof—actual, visible proof—that I could survive his manipulation without falling apart.
+By morning, the panic had passed. And I had proofâ€”actual, visible proofâ€”that I could survive his manipulation without falling apart.
 
 He sent four more messages. I didn't read them until I was ready.
 
@@ -76,13 +76,13 @@ The Crisis Reframe tool is free. You describe what happened, and it gives you a 
 
 I've used it probably 20 times now. Each time, it gets a little easier to not react. To remember I'm not crazy. To survive the crisis without making it worse.
 
-If you're reading this at 2 AM, shaking and wanting to text back—try it first. Give yourself 10 minutes. Read the reframe. Check the boxes.
+If you're reading this at 2 AM, shaking and wanting to text backâ€”try it first. Give yourself 10 minutes. Read the reframe. Check the boxes.
 
 You might be surprised at how much stronger you are than you think.
 
 ---
 
-*The Crisis Reframe tool is available free at Reclaim.app/crisis-reframe. No signup required for first use.*
+*The Crisis Reframe tool is available free at reclaimyourlife.app/crisis-reframe. No signup required for first use.*
 
 **Other tools that helped me:**
 - Narcissist Detector (paste their message, get instant analysis)

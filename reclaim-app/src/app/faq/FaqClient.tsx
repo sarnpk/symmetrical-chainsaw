@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { ChevronDown, Check, Scale, Search, Zap, ShieldCheck, CreditCard, Wrench } from 'lucide-react'
@@ -263,27 +263,27 @@ export default function FaqClient() {
                 evidence for divorce, custody, and harassment cases that attorneys use to win.
               </p>
               <ul className="mt-2 space-y-2 text-sm text-white/95">
-                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Timestamped documentation — court-admissible evidence</li>
-                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> AI pattern analysis — prove manipulation tactics</li>
-                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Audio transcription — convert conversations to legal text</li>
-                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Secure evidence storage — tamper-proof documentation</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Timestamped documentation â€” court-admissible evidence</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> AI pattern analysis â€” prove manipulation tactics</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Audio transcription â€” convert conversations to legal text</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Secure evidence storage â€” tamper-proof documentation</li>
               </ul>
             </div>
 
             <div className="flex flex-col gap-3 rounded-panel bg-gradient-to-br from-hope-600 to-brand-600 p-7 text-white shadow-lift">
               <div className="flex items-center gap-2">
                 <Search className="h-6 w-6" aria-hidden="true" />
-                <h2 className="font-display text-2xl font-semibold text-white">Discover if you're being abused — free</h2>
+                <h2 className="font-display text-2xl font-semibold text-white">Discover if you're being abused â€” free</h2>
               </div>
               <p className="text-[15px] leading-relaxed text-white/90">
                 Not sure if you're experiencing narcissistic abuse? The free Foundation tier gives you
                 enough AI conversations and analysis tools to recognize manipulation patterns.
               </p>
               <ul className="mt-2 space-y-2 text-sm text-white/95">
-                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 15 AI conversations / month — get professional insights</li>
-                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 3 manipulation analyses / month — decode messages</li>
-                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Basic safety tools — essential protection features</li>
-                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 10 journal entries / month — document and reflect</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 15 AI conversations / month â€” get professional insights</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 3 manipulation analyses / month â€” decode messages</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> Basic safety tools â€” essential protection features</li>
+                <li className="flex gap-2"><Check className="h-5 w-5 shrink-0" aria-hidden="true" /> 10 journal entries / month â€” document and reflect</li>
               </ul>
             </div>
           </div>
@@ -360,7 +360,7 @@ export default function FaqClient() {
                 Get started
               </a>
               <a
-                href="mailto:support@reclaim.app"
+                href="mailto:support@reclaimyourlife.app"
                 className="inline-flex items-center justify-center rounded-lg bg-ink-100 px-8 py-3 font-semibold text-ink-700 transition-colors hover:bg-ink-200"
               >
                 Contact support

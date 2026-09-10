@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
@@ -49,9 +49,9 @@ export default function JournalEntryCard({ entry, viewMode, onDelete }: JournalE
   }
 
   const getMoodEmoji = (rating: number) => {
-    if (rating <= 3) return '😔'
-    if (rating <= 6) return '😐'
-    return '😊'
+    if (rating <= 3) return 'ðŸ˜”'
+    if (rating <= 6) return 'ðŸ˜'
+    return 'ðŸ˜Š'
   }
 
   const getTimeAgo = (date: string) => {
@@ -103,7 +103,7 @@ export default function JournalEntryCard({ entry, viewMode, onDelete }: JournalE
                 <span className="hidden sm:inline">{new Date(entryDate).toLocaleDateString()}</span>
                 <span className="sm:hidden">{new Date(entryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
               </span>
-              <span className="text-gray-300">•</span>
+              <span className="text-gray-300">â€¢</span>
               <span>{getTimeAgo(entryDate)}</span>
             </div>
           </CardHeader>

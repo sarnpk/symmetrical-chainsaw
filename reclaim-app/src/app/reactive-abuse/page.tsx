@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -279,11 +279,11 @@ export default function ReactiveAbusePage() {
                   </select>
                   {formData.reaction_type && (
                     <p className="text-xs text-gray-600 mt-2 italic">
-                      {formData.reaction_type === 'darvo' && '🔄 Deny, Attack, Reverse Victim & Offender - "I never did that, YOU\'RE the abusive one!"'}
-                      {formData.reaction_type === 'victim_reversal' && '😢 Flipping the script to make themselves the victim - "You\'re hurting ME by bringing this up"'}
-                      {formData.reaction_type === 'counter_accusation' && '👉 Accusing you of the same or worse - "Well YOU do this all the time!"'}
-                      {formData.reaction_type === 'deflection' && '↪️ Changing the subject or bringing up your past mistakes to avoid accountability'}
-                      {formData.reaction_type === 'gaslighting' && '🤯 Making you question your reality - "That never happened, you\'re imagining things"'}
+                      {formData.reaction_type === 'darvo' && 'ðŸ”„ Deny, Attack, Reverse Victim & Offender - "I never did that, YOU\'RE the abusive one!"'}
+                      {formData.reaction_type === 'victim_reversal' && 'ðŸ˜¢ Flipping the script to make themselves the victim - "You\'re hurting ME by bringing this up"'}
+                      {formData.reaction_type === 'counter_accusation' && 'ðŸ‘‰ Accusing you of the same or worse - "Well YOU do this all the time!"'}
+                      {formData.reaction_type === 'deflection' && 'â†ªï¸ Changing the subject or bringing up your past mistakes to avoid accountability'}
+                      {formData.reaction_type === 'gaslighting' && 'ðŸ¤¯ Making you question your reality - "That never happened, you\'re imagining things"'}
                     </p>
                   )}
                 </div>
@@ -418,7 +418,7 @@ export default function ReactiveAbusePage() {
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
           <CardHeader className="cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-purple-800">💡 What is Reactive Abuse?</CardTitle>
+              <CardTitle className="text-purple-800">ðŸ’¡ What is Reactive Abuse?</CardTitle>
               {showInfo ? <ChevronUp className="h-5 w-5 text-purple-600" /> : <ChevronDown className="h-5 w-5 text-purple-600" />}
             </div>
           </CardHeader>
@@ -426,9 +426,9 @@ export default function ReactiveAbusePage() {
             <CardContent className="space-y-2 text-sm text-purple-900">
               <p>When you try to address a concern and they flip it around, making YOU the problem instead.</p>
               <div className="space-y-1">
-                <div><strong>✓ DARVO:</strong> Deny, Attack, Reverse Victim & Offender</div>
-                <div><strong>✓ Track patterns:</strong> Topics you can't discuss without being blamed</div>
-                <div><strong>✓ Reality check:</strong> See how often you apologize for their behavior</div>
+                <div><strong>âœ“ DARVO:</strong> Deny, Attack, Reverse Victim & Offender</div>
+                <div><strong>âœ“ Track patterns:</strong> Topics you can't discuss without being blamed</div>
+                <div><strong>âœ“ Reality check:</strong> See how often you apologize for their behavior</div>
               </div>
             </CardContent>
           )}

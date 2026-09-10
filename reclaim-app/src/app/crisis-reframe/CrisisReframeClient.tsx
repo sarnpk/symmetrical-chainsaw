@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -389,7 +389,7 @@ function ContextQuestions({ crisisType, context, setContext, onSubmit, onBack }:
       {crisisType === 'custom' && (
         <div className="mt-4 p-4 bg-teal-50 border border-teal-200 rounded-lg">
           <p className="text-sm text-teal-900">
-            <strong>💡 Tip:</strong> The more details you share, the more personalized your reframe will be. 
+            <strong>ðŸ’¡ Tip:</strong> The more details you share, the more personalized your reframe will be. 
             The AI will analyze your situation and turn it into hope, control, and encouragement.
           </p>
         </div>
@@ -443,7 +443,7 @@ function ControlConfirmation({ onConfirm, onBack, generating }: any) {
         disabled={generating || confirmed}
         className="w-full max-w-md mx-auto px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 text-lg font-semibold transition-all transform hover:scale-105"
       >
-        {generating ? 'Generating your reframe...' : confirmed ? 'Confirmed ✓' : "I'm in control"}
+        {generating ? 'Generating your reframe...' : confirmed ? 'Confirmed âœ“' : "I'm in control"}
       </button>
 
       <button
@@ -535,7 +535,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
 
       {/* Pattern */}
       <div className="bg-white border rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-3">🎯 What This Actually Is</h3>
+        <h3 className="text-lg font-semibold mb-3">ðŸŽ¯ What This Actually Is</h3>
         <p className="text-gray-800 leading-relaxed whitespace-pre-line">
           {renderMarkdownText(reframe.pattern)}
         </p>
@@ -543,7 +543,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
 
       {/* Reframe */}
       <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-3 text-purple-900">💡 The Reframe</h3>
+        <h3 className="text-lg font-semibold mb-3 text-purple-900">ðŸ’¡ The Reframe</h3>
         <p className="text-purple-900 leading-relaxed whitespace-pre-line">
           {renderMarkdownText(reframe.reframe)}
         </p>
@@ -551,7 +551,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
 
       {/* Hope Narrative */}
       <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-3 text-amber-900">🌅 Your Future</h3>
+        <h3 className="text-lg font-semibold mb-3 text-amber-900">ðŸŒ… Your Future</h3>
         <p className="text-amber-900 leading-relaxed whitespace-pre-line text-lg">
           {renderMarkdownText(reframe.hope)}
         </p>
@@ -559,7 +559,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
 
       {/* Actions */}
       <div className="bg-white border rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-3">🛡️ Right Now, You Need To...</h3>
+        <h3 className="text-lg font-semibold mb-3">ðŸ›¡ï¸ Right Now, You Need To...</h3>
         <ul className="space-y-3">
           {reframe.actions.map((action: string, idx: number) => (
             <li key={idx} className="flex items-start gap-3">
@@ -573,7 +573,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
       {/* Coping Strategies */}
       {reframe.coping && reframe.coping.length > 0 && (
         <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-3 text-blue-900">🌟 How To Pass Through This Hard Time Successfully</h3>
+          <h3 className="text-lg font-semibold mb-3 text-blue-900">ðŸŒŸ How To Pass Through This Hard Time Successfully</h3>
           <p className="text-sm text-blue-800 mb-4">
             These positive activities and expert psychological techniques will help you be patient and get through this:
           </p>
@@ -592,7 +592,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
 
       {/* Power Statement */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg p-6">
-        <h3 className="text-xl font-bold mb-3">💪 Your Power In This Moment</h3>
+        <h3 className="text-xl font-bold mb-3">ðŸ’ª Your Power In This Moment</h3>
         <p className="text-lg leading-relaxed whitespace-pre-line">
           {renderMarkdownText(reframe.power)}
         </p>
@@ -600,7 +600,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
 
       {/* Control Checklist */}
       <div className="bg-white border-2 border-green-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-4">✅ My Commitments (Check what you'll do)</h3>
+        <h3 className="text-lg font-semibold mb-4">âœ… My Commitments (Check what you'll do)</h3>
         <div className="space-y-3">
           {[
             { key: 'no_contact', label: 'I will not text/call them for the next hour' },
@@ -632,7 +632,7 @@ function ReframeDisplay({ reframe, reframeId, onRestart }: any) {
               onClick={() => handleRate(rating)}
               className="px-4 py-2 border rounded-lg hover:bg-indigo-50 hover:border-indigo-300"
             >
-              {'⭐'.repeat(rating)}
+              {'â­'.repeat(rating)}
             </button>
           ))}
         </div>

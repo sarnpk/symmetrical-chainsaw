@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { CheckCircle2 } from 'lucide-react'
 
 const trustPoints = [
@@ -21,7 +21,7 @@ export default function Hero() {
           {/* Copy */}
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-xs font-semibold text-brand-700 uppercase tracking-wide">
-              Free AI assessment — 30 seconds
+              Free AI assessment â€” 30 seconds
             </p>
 
             <h1 className="mt-6 text-balance">
@@ -34,7 +34,7 @@ export default function Hero() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-600">
               Reclaim is a private, AI-assisted journal and evidence platform for survivors of emotional and
               narcissistic abuse. Document what happened, learn the manipulation patterns, and build records that
-              are secure — and admissibly formatted if you ever need them.
+              are secure â€” and admissibly formatted if you ever need them.
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
@@ -69,22 +69,22 @@ export default function Hero() {
                 <span className="h-2.5 w-2.5 rounded-full bg-dawn-300" />
                 <span className="h-2.5 w-2.5 rounded-full bg-ink-200" />
                 <span className="h-2.5 w-2.5 rounded-full bg-ink-200" />
-                <span className="ml-3 text-xs font-medium text-ink-400">Reality Log · Evidence</span>
+                <span className="ml-3 text-xs font-medium text-ink-400">Reality Log Â· Evidence</span>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between rounded-lg bg-brand-50 px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm text-white">•</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm text-white">â€¢</span>
                     <div>
-                      <p className="text-sm font-semibold text-ink-900">March 12 · 9:41 PM</p>
-                      <p className="text-xs text-ink-500">Gaslighting · silent treatment</p>
+                      <p className="text-sm font-semibold text-ink-900">March 12 Â· 9:41 PM</p>
+                      <p className="text-xs text-ink-500">Gaslighting Â· silent treatment</p>
                     </div>
                   </div>
                   <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-brand-700">Recorded</span>
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-hope-50 px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-hope-600 text-sm text-white">•</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-hope-600 text-sm text-white">â€¢</span>
                     <div>
                       <p className="text-sm font-semibold text-ink-900">Manipulation decoded</p>
                       <p className="text-xs text-ink-500">Hoovering pattern detected</p>
@@ -102,13 +102,13 @@ export default function Hero() {
             </div>
 
             <span className="absolute -left-6 -bottom-5 float-c rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-xs font-medium text-ink-700 shadow-soft">
-              🔒 AES-256 encrypted
+              ðŸ”’ AES-256 encrypted
             </span>
             <span className="absolute -right-4 -top-5 float-a rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-xs font-medium text-ink-700 shadow-soft">
-              📄 Court-ready export
+              ðŸ“„ Court-ready export
             </span>
             <span className="absolute left-10 -bottom-7 float-b rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-xs font-medium text-ink-700 shadow-soft">
-              🌍 70+ languages
+              ðŸŒ 70+ languages
             </span>
           </div>
         </div>

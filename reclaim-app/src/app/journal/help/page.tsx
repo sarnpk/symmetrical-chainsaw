@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -70,9 +70,9 @@ export default function JournalHelpPage() {
               <h2 className="text-lg font-medium text-gray-900">Tips</h2>
             </div>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-              <li>Short notes are enough—aim for consistency over perfection.</li>
+              <li>Short notes are enoughâ€”aim for consistency over perfection.</li>
               <li>Tag entries and add a mood rating to improve Pattern Analysis.</li>
-              <li>Use drafts for sensitive thoughts you’re not ready to publish.</li>
+              <li>Use drafts for sensitive thoughts youâ€™re not ready to publish.</li>
             </ul>
           </section>
 

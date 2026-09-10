@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { MessageCircle, Users, X, Send, AlertCircle, Reply } from 'lucide-react'
@@ -90,10 +90,10 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
     if (sessionNames[userId]) return sessionNames[userId]
     
     const names = [
-      'Butterfly 🦋', 'Phoenix 🔥', 'Moonlight 🌙', 'Warrior ⚔️', 'Sunrise 🌅',
-      'Ocean 🌊', 'Mountain ⛰️', 'Star ⭐', 'Rainbow 🌈', 'Lotus 🪷',
-      'Eagle 🦅', 'Rose 🌹', 'Thunder ⚡', 'Willow 🌿', 'Crystal 💎',
-      'Dove 🕊️', 'Flame 🔥', 'River 🏞️', 'Cloud ☁️', 'Breeze 🍃'
+      'Butterfly ðŸ¦‹', 'Phoenix ðŸ”¥', 'Moonlight ðŸŒ™', 'Warrior âš”ï¸', 'Sunrise ðŸŒ…',
+      'Ocean ðŸŒŠ', 'Mountain â›°ï¸', 'Star â­', 'Rainbow ðŸŒˆ', 'Lotus ðŸª·',
+      'Eagle ðŸ¦…', 'Rose ðŸŒ¹', 'Thunder âš¡', 'Willow ðŸŒ¿', 'Crystal ðŸ’Ž',
+      'Dove ðŸ•Šï¸', 'Flame ðŸ”¥', 'River ðŸžï¸', 'Cloud â˜ï¸', 'Breeze ðŸƒ'
     ]
     
     const usedNames = Object.values(sessionNames)
@@ -202,10 +202,10 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
 
   const getCapacityStatus = (count: number, max: number) => {
     const percent = (count / max) * 100
-    if (percent >= 90) return { color: 'text-red-600', bg: 'bg-red-50', label: '🔥 Almost Full!' }
-    if (percent >= 70) return { color: 'text-orange-600', bg: 'bg-orange-50', label: '⚡ Filling Fast' }
-    if (percent >= 50) return { color: 'text-yellow-600', bg: 'bg-yellow-50', label: '✨ Active' }
-    return { color: 'text-green-600', bg: 'bg-green-50', label: '✓ Available' }
+    if (percent >= 90) return { color: 'text-red-600', bg: 'bg-red-50', label: 'ðŸ”¥ Almost Full!' }
+    if (percent >= 70) return { color: 'text-orange-600', bg: 'bg-orange-50', label: 'âš¡ Filling Fast' }
+    if (percent >= 50) return { color: 'text-yellow-600', bg: 'bg-yellow-50', label: 'âœ¨ Active' }
+    return { color: 'text-green-600', bg: 'bg-green-50', label: 'âœ“ Available' }
   }
 
   if (selectedRoom) {
@@ -315,12 +315,12 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
               {/* Level lock badge */}
               {isLocked && (
                 <div className="absolute top-0 right-0 bg-gray-600 text-white px-3 py-1 text-xs font-semibold rounded-bl-lg flex items-center gap-1">
-                  🔒 Level {room.level_required}
+                  ðŸ”’ Level {room.level_required}
                 </div>
               )}
               
               {/* Urgency badge */}
-              {!isLocked && status.label !== '✓ Available' && (
+              {!isLocked && status.label !== 'âœ“ Available' && (
                 <div className={`absolute top-0 right-0 ${status.bg} ${status.color} px-3 py-1 text-xs font-semibold rounded-bl-lg`}>
                   {status.label}
                 </div>
@@ -339,7 +339,7 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
                         {room.participant_count}/{room.max_participants}
                       </span>
                       {room.participant_count > 0 && (
-                        <span className="text-gray-500">• {room.participant_count} active</span>
+                        <span className="text-gray-500">â€¢ {room.participant_count} active</span>
                       )}
                     </div>
                   </div>
@@ -352,7 +352,7 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
               {/* Recent activity indicator */}
               {recentJoin && recentJoin > 0 && (
                 <div className="mb-3 flex items-center gap-1 text-xs text-indigo-600 bg-indigo-50 px-2 py-1 rounded">
-                  <span className="animate-pulse">🔴</span>
+                  <span className="animate-pulse">ðŸ”´</span>
                   <span className="font-medium">{recentJoin} {recentJoin === 1 ? 'person' : 'people'} joined recently</span>
                 </div>
               )}
@@ -371,7 +371,7 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
                   disabled={loading || room.participant_count >= room.max_participants}
                   className="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
                 >
-                  {room.participant_count >= room.max_participants ? '🔒 Room Full' : 'Join Room'}
+                  {room.participant_count >= room.max_participants ? 'ðŸ”’ Room Full' : 'Join Room'}
                 </button>
               )}
             </div>

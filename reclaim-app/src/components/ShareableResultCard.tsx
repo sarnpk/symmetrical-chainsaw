@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Download, Instagram } from 'lucide-react'
 import { useRef } from 'react'
@@ -46,7 +46,7 @@ export default function ShareableResultCard({ resultType, score, mainText }: Sha
         
         <div className="text-center">
           <div className="text-xs opacity-75 mb-1">Free AI Analysis Tool</div>
-          <div className="font-bold">Reclaim.app</div>
+          <div className="font-bold">reclaimyourlife.app</div>
         </div>
       </div>
 

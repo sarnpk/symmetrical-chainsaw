@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Metadata } from "next"
 import { ArrowLeft, Clock, User, BookOpen, ExternalLink, FileText, Clipboard, Phone } from "lucide-react"
 import QuizShell from "@/components/marketing/QuizShell"
@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   title: "Workplace Gaslighting: What to Do When Your Boss Denies Reality",
   description: "Workplace gaslighting damages your career and mental health. Learn to identify it, document it, and protect yourself.",
   alternates: {
-    canonical: "https://www.reclaim.app/blog/workplace-gaslighting",
+    canonical: "https://reclaimyourlife.app/blog/workplace-gaslighting",
   },
   openGraph: {
     title: "Workplace Gaslighting: What to Do When Your Boss Denies Reality",
     description: "Workplace gaslighting damages your career and mental health. Learn to identify it, document it, and protect yourself.",
     type: "article",
-    url: "https://www.reclaim.app/blog/workplace-gaslighting",
+    url: "https://reclaimyourlife.app/blog/workplace-gaslighting",
   },
 }
 

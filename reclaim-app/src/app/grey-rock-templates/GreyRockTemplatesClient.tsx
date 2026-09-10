@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -108,12 +108,12 @@ export default function GreyRockTemplatesClient() {
         <p className="text-gray-600 mb-8">Copy/paste responses for real-world communication. Keep it brief, boring, and neutral.</p>
 
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-          <h3 className="font-semibold text-amber-900 mb-2">💡 How to Use</h3>
+          <h3 className="font-semibold text-amber-900 mb-2">ðŸ’¡ How to Use</h3>
           <ul className="text-sm text-amber-800 space-y-1">
-            <li>• Click "Copy" to copy the template to your clipboard</li>
-            <li>• Paste into your text/email and customize if needed</li>
-            <li>• Keep responses short - don't over-explain or justify</li>
-            <li>• Use variations to avoid sounding robotic</li>
+            <li>â€¢ Click "Copy" to copy the template to your clipboard</li>
+            <li>â€¢ Paste into your text/email and customize if needed</li>
+            <li>â€¢ Keep responses short - don't over-explain or justify</li>
+            <li>â€¢ Use variations to avoid sounding robotic</li>
           </ul>
         </div>
 

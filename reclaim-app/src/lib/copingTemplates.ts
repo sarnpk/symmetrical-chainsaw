@@ -1,4 +1,4 @@
-export type CopingTemplate = {
+﻿export type CopingTemplate = {
   strategy_name: string
   description: string
   category: 'breathing' | 'grounding' | 'physical' | 'creative' | 'emotional' | 'other'
@@ -16,7 +16,7 @@ export const copingTemplates: CopingTemplate[] = [
   },
   {
     strategy_name: '4-7-8 Breathing',
-    description: 'Inhale 4, hold 7, exhale 8. Repeat 3–4 times to reduce stress and help sleep.',
+    description: 'Inhale 4, hold 7, exhale 8. Repeat 3â€“4 times to reduce stress and help sleep.',
     category: 'breathing',
     effectiveness_rating: 4,
     tags: ['sleep', 'stress']

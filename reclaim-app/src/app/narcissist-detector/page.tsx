@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState, useEffect } from 'react'
 import { AlertCircle, Send, Copy, Trash2, Download, Loader, MessageSquare, MessageCircle, HelpCircle } from 'lucide-react'
@@ -332,7 +332,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Analysis Details</h2>
                 <p className="text-sm text-gray-500">
-                  {new Date(selectedHistoryItem.created_at).toLocaleString()} • {selectedHistoryItem.input_type}
+                  {new Date(selectedHistoryItem.created_at).toLocaleString()} â€¢ {selectedHistoryItem.input_type}
                 </p>
               </div>
               <button
@@ -483,7 +483,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
                   <div className="space-y-2">
                     {selectedHistoryItem.recommended_strategies.map((strategy: string, idx: number) => (
                       <div key={idx} className="p-3 bg-green-50 rounded-lg border border-green-200 flex gap-2">
-                        <span className="text-green-600 font-bold">✓</span>
+                        <span className="text-green-600 font-bold">âœ“</span>
                         <span className="text-sm text-green-900">{strategy}</span>
                       </div>
                     ))}
@@ -571,7 +571,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
                 : 'border-transparent text-gray-600 hover:text-gray-900'
             }`}
           >
-            ✓ Trait Checklist
+            âœ“ Trait Checklist
           </button>
           <button
             onClick={() => setTab('behavior')}
@@ -581,7 +581,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
                 : 'border-transparent text-gray-600 hover:text-gray-900'
             }`}
           >
-            📝 Behavior Description
+            ðŸ“ Behavior Description
           </button>
           <button
             onClick={() => setTab('message')}
@@ -775,7 +775,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
                         {item.primary_type || item.analysis_result?.primaryType}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {item.input_type} • Severity: {item.severity_score || item.analysis_result?.severityScore}/10
+                        {item.input_type} â€¢ Severity: {item.severity_score || item.analysis_result?.severityScore}/10
                       </div>
                     </button>
                     <button
@@ -858,7 +858,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
                 <div className="space-y-2">
                   {traitAnalysis.recommendations.map((rec: string, idx: number) => (
                     <div key={idx} className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-900">
-                      ✓ {rec}
+                      âœ“ {rec}
                     </div>
                   ))}
                 </div>
@@ -967,7 +967,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
                 <div className="space-y-2">
                   {behaviorAnalysis.recommendations.map((rec: string, idx: number) => (
                     <div key={idx} className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-900">
-                      ✓ {rec}
+                      âœ“ {rec}
                     </div>
                   ))}
                 </div>
@@ -1105,7 +1105,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
                 <div className="space-y-2">
                   {analysis.recommendedStrategies.map((strategy, idx) => (
                     <div key={idx} className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-900">
-                      ✓ {strategy}
+                      âœ“ {strategy}
                     </div>
                   ))}
                 </div>

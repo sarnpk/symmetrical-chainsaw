@@ -1,4 +1,4 @@
-# I Took a 10-Question Test. It Told Me My "Perfect" Relationship Was Toxic.
+﻿# I Took a 10-Question Test. It Told Me My "Perfect" Relationship Was Toxic.
 
 We looked perfect on Instagram.
 
@@ -91,7 +91,7 @@ Therapists cost money. Many of us can't afford it, especially when we're being f
 
 These free tests aren't perfect. They can't diagnose abuse. But they can do something crucial: **They give you permission to trust your gut.**
 
-When you're being gaslit, you lose faith in your own perception. An objective assessment—even a simple one—can break that spell.
+When you're being gaslit, you lose faith in your own perception. An objective assessmentâ€”even a simple oneâ€”can break that spell.
 
 ## The Comments I Know Are Coming
 
@@ -101,7 +101,7 @@ Yes. They can. But if a test says your relationship is unhealthy, and your gut a
 
 "This is just fear-mongering!"
 
-20,000+ people have taken this test. The average score is 7.2/10. Most relationships are healthy. The test isn't designed to find problems—it's designed to identify patterns.
+20,000+ people have taken this test. The average score is 7.2/10. Most relationships are healthy. The test isn't designed to find problemsâ€”it's designed to identify patterns.
 
 "What if my partner sees I took this?"
 
@@ -135,7 +135,7 @@ But I'm grateful I took it when I did. Because it gave me the clarity I needed t
 
 ---
 
-**Free Relationship Health Check:** Reclaim.app/relationship-health-check
+**Free Relationship Health Check:** reclaimyourlife.app/relationship-health-check
 - 10 questions, 2 minutes
 - Anonymous, no signup required
 - Instant results with specific patterns identified
@@ -147,6 +147,6 @@ But I'm grateful I took it when I did. Because it gave me the clarity I needed t
 
 ---
 
-*Have you taken a relationship health test? What did you learn? Share in the comments—your story might be the push someone else needs.*
+*Have you taken a relationship health test? What did you learn? Share in the commentsâ€”your story might be the push someone else needs.*
 
 #Relationships #ToxicRelationships #EmotionalAbuse #RedFlags #Dating #MentalHealth #SelfLove #Boundaries #Gaslighting #Narcissist #Healing #Recovery #Love #Therapy #RelationshipAdvice

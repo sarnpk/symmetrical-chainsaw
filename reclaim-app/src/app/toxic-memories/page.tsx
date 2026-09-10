@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -341,13 +341,13 @@ export default function ToxicMemoriesPage() {
             <div className="p-6 space-y-6">
               <div className="bg-blue-50 border-l-4 border-blue-500 p-4">
                 <p className="text-sm text-blue-900">
-                  The discard phase is a predictable pattern in narcissistic relationships. Understanding which stage you're in helps you recognize it's not your fault—it's their pattern.
+                  The discard phase is a predictable pattern in narcissistic relationships. Understanding which stage you're in helps you recognize it's not your faultâ€”it's their pattern.
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div className="border-l-4 border-yellow-500 pl-4">
-                  <h3 className="font-bold text-lg text-gray-900 mb-2">🔻 Stage 1: Devaluation</h3>
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">ðŸ”» Stage 1: Devaluation</h3>
                   <p className="text-gray-700 mb-2">The shift from idealization to criticism. You notice:</p>
                   <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
                     <li>Increasing criticism and nitpicking</li>
@@ -360,7 +360,7 @@ export default function ToxicMemoriesPage() {
                 </div>
 
                 <div className="border-l-4 border-red-500 pl-4">
-                  <h3 className="font-bold text-lg text-gray-900 mb-2">💔 Stage 2: Discard</h3>
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">ðŸ’” Stage 2: Discard</h3>
                   <p className="text-gray-700 mb-2">The sudden or gradual abandonment. Signs include:</p>
                   <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
                     <li>Abrupt ending or ghosting</li>
@@ -373,7 +373,7 @@ export default function ToxicMemoriesPage() {
                 </div>
 
                 <div className="border-l-4 border-purple-500 pl-4">
-                  <h3 className="font-bold text-lg text-gray-900 mb-2">🌱 Stage 3: Post-Discard</h3>
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">ðŸŒ± Stage 3: Post-Discard</h3>
                   <p className="text-gray-700 mb-2">Your healing phase. You may experience:</p>
                   <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
                     <li>Confusion and self-doubt</li>
@@ -386,7 +386,7 @@ export default function ToxicMemoriesPage() {
                 </div>
 
                 <div className="border-l-4 border-orange-500 pl-4">
-                  <h3 className="font-bold text-lg text-gray-900 mb-2">🪝 Hoovering Attempts</h3>
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">ðŸª Hoovering Attempts</h3>
                   <p className="text-gray-700 mb-2">When they try to pull you back in:</p>
                   <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
                     <li>Sudden apologies or love bombing</li>
@@ -400,12 +400,12 @@ export default function ToxicMemoriesPage() {
               </div>
 
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 className="font-bold text-green-900 mb-2">💪 How to Use These Tags</h4>
+                <h4 className="font-bold text-green-900 mb-2">ðŸ’ª How to Use These Tags</h4>
                 <ul className="text-sm text-green-800 space-y-1">
-                  <li>• Tag your memories to track which stage you're experiencing</li>
-                  <li>• Recognize patterns—this helps you see it's their cycle, not your failure</li>
-                  <li>• Document hoovering attempts to resist going back</li>
-                  <li>• Use for therapy or legal documentation</li>
+                  <li>â€¢ Tag your memories to track which stage you're experiencing</li>
+                  <li>â€¢ Recognize patternsâ€”this helps you see it's their cycle, not your failure</li>
+                  <li>â€¢ Document hoovering attempts to resist going back</li>
+                  <li>â€¢ Use for therapy or legal documentation</li>
                 </ul>
               </div>
             </div>
@@ -616,7 +616,7 @@ export default function ToxicMemoriesPage() {
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
           <CardHeader className="cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-purple-800">💡 About Toxic Memory Journal</CardTitle>
+              <CardTitle className="text-purple-800">ðŸ’¡ About Toxic Memory Journal</CardTitle>
               {showInfo ? <ChevronUp className="h-5 w-5 text-purple-600" /> : <ChevronDown className="h-5 w-5 text-purple-600" />}
             </div>
           </CardHeader>
@@ -627,11 +627,11 @@ export default function ToxicMemoriesPage() {
                 Think of it as "evidence snapshots" - brief notes with optional media proof.
               </p>
               <div className="space-y-2">
-                <div><strong>✓ Quick capture:</strong> Jot down what happened in a few sentences</div>
-                <div><strong>✓ Add evidence:</strong> Attach audio, video, or images as proof</div>
-                <div><strong>✓ AI analysis:</strong> Identify manipulation tactics (gaslighting, DARVO, etc.)</div>
-                <div><strong>✓ Pattern tracking:</strong> See recurring abuse patterns over time</div>
-                <div><strong>✓ Legal/therapeutic use:</strong> Timestamped evidence for professionals</div>
+                <div><strong>âœ“ Quick capture:</strong> Jot down what happened in a few sentences</div>
+                <div><strong>âœ“ Add evidence:</strong> Attach audio, video, or images as proof</div>
+                <div><strong>âœ“ AI analysis:</strong> Identify manipulation tactics (gaslighting, DARVO, etc.)</div>
+                <div><strong>âœ“ Pattern tracking:</strong> See recurring abuse patterns over time</div>
+                <div><strong>âœ“ Legal/therapeutic use:</strong> Timestamped evidence for professionals</div>
               </div>
               <p className="text-xs italic mt-2">
                 Tip: Keep entries brief and factual. For deeper reflection, use your main journal.
@@ -786,7 +786,7 @@ export default function ToxicMemoriesPage() {
 
         <Card className="bg-gradient-to-r from-red-50 to-orange-50 border-red-200">
           <CardHeader>
-            <CardTitle className="text-red-800">💡 Tip</CardTitle>
+            <CardTitle className="text-red-800">ðŸ’¡ Tip</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm sm:text-base text-red-700">

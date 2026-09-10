@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
 
@@ -17,7 +17,7 @@ export default function TestStoragePage() {
     setResult(null)
 
     try {
-      console.log('🔍 Testing signed URL access for:', storagePath)
+      console.log('ðŸ” Testing signed URL access for:', storagePath)
 
       // Test creating signed URL
       const response = await fetch('/api/test-storage', {
@@ -30,31 +30,31 @@ export default function TestStoragePage() {
       })
 
       const data = await response.json()
-      console.log('📊 Signed URL test result:', data)
+      console.log('ðŸ“Š Signed URL test result:', data)
 
       if (data.signed_url) {
         // Test if the signed URL is actually accessible
-        console.log('🌐 Testing signed URL accessibility...')
+        console.log('ðŸŒ Testing signed URL accessibility...')
         
         try {
           const urlResponse = await fetch(data.signed_url, { method: 'HEAD' })
           data.url_accessible = urlResponse.ok
           data.url_status = urlResponse.status
           data.url_headers = Object.fromEntries(urlResponse.headers.entries())
-          console.log('📡 URL accessibility test:', {
+          console.log('ðŸ“¡ URL accessibility test:', {
             accessible: urlResponse.ok,
             status: urlResponse.status
           })
         } catch (urlError: any) {
           data.url_accessible = false
           data.url_error = urlError.message
-          console.error('❌ URL accessibility error:', urlError)
+          console.error('âŒ URL accessibility error:', urlError)
         }
       }
 
       setResult(data)
     } catch (error: any) {
-      console.error('❌ Storage test error:', error)
+      console.error('âŒ Storage test error:', error)
       setResult({ error: error.message })
     } finally {
       setLoading(false)
@@ -71,7 +71,7 @@ export default function TestStoragePage() {
     setResult(null)
 
     try {
-      console.log('🤖 Testing Gladia API access to signed URL...')
+      console.log('ðŸ¤– Testing Gladia API access to signed URL...')
 
       const response = await fetch('/api/test-storage', {
         method: 'POST',
@@ -83,10 +83,10 @@ export default function TestStoragePage() {
       })
 
       const data = await response.json()
-      console.log('📊 Gladia access test result:', data)
+      console.log('ðŸ“Š Gladia access test result:', data)
       setResult(data)
     } catch (error: any) {
-      console.error('❌ Gladia access test error:', error)
+      console.error('âŒ Gladia access test error:', error)
       setResult({ error: error.message })
     } finally {
       setLoading(false)
@@ -97,7 +97,7 @@ export default function TestStoragePage() {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-          <h1 className="text-2xl font-bold mb-6">🗄️ Storage Access Test</h1>
+          <h1 className="text-2xl font-bold mb-6">ðŸ—„ï¸ Storage Access Test</h1>
           
           <p className="text-gray-600 mb-6">
             This page tests if Supabase signed URLs are accessible by external services like Gladia API.
@@ -167,7 +167,7 @@ export default function TestStoragePage() {
                     <p className="mt-2 text-sm">
                       <strong>Accessible:</strong> 
                       <span className={result.url_accessible ? 'text-green-600' : 'text-red-600'}>
-                        {result.url_accessible ? ' ✅ Yes' : ' ❌ No'}
+                        {result.url_accessible ? ' âœ… Yes' : ' âŒ No'}
                       </span>
                       {result.url_status && ` (Status: ${result.url_status})`}
                     </p>
@@ -182,7 +182,7 @@ export default function TestStoragePage() {
             <h3 className="font-semibold text-yellow-800 mb-2">How to get a storage path:</h3>
             <ol className="list-decimal list-inside text-sm text-yellow-700 space-y-1">
               <li>Upload an audio file in your journal</li>
-              <li>Check your Supabase database → evidence_files table</li>
+              <li>Check your Supabase database â†’ evidence_files table</li>
               <li>Copy the storage_path value from a recent upload</li>
               <li>Paste it above and run the tests</li>
             </ol>

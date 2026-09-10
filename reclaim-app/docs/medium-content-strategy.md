@@ -1,4 +1,4 @@
-# Medium Content Strategy - 30-Day Traffic Plan
+﻿# Medium Content Strategy - 30-Day Traffic Plan
 
 ## Articles Created (5 Total)
 
@@ -142,7 +142,7 @@
 
 **Conservative Estimate:**
 - 5,000-10,000 total views
-- 500-1,000 clicks to Reclaim.app
+- 500-1,000 clicks to reclaimyourlife.app
 - 50-100 new signups
 
 **Optimistic Estimate (if one goes viral):**
@@ -169,7 +169,7 @@ Monitor these metrics:
 - Views per article
 - Read ratio (how many finish reading)
 - Comments and engagement
-- Clicks to Reclaim.app (use UTM parameters)
+- Clicks to reclaimyourlife.app (use UTM parameters)
 - Signups from Medium traffic
 - Which articles get shared most
 

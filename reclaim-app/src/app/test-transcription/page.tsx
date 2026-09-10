@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
 import { TranscriptionExample } from '@/components/TranscriptionExample'
@@ -77,9 +77,9 @@ export default function TestTranscriptionPage() {
             <div>
               <strong>Expected Flow:</strong>
               <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
-                <li>Start transcription → Get job_id</li>
-                <li>Poll status → "processing"</li>
-                <li>Continue polling → "completed" + transcription</li>
+                <li>Start transcription â†’ Get job_id</li>
+                <li>Poll status â†’ "processing"</li>
+                <li>Continue polling â†’ "completed" + transcription</li>
                 <li>Or get error if something fails</li>
               </ul>
             </div>
@@ -87,10 +87,10 @@ export default function TestTranscriptionPage() {
             <div>
               <strong>Common Issues:</strong>
               <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
-                <li>401 errors → Authentication problems</li>
-                <li>404 errors → Job/file not found</li>
-                <li>500 errors → Server/API issues</li>
-                <li>Timeout → Long audio files or API delays</li>
+                <li>401 errors â†’ Authentication problems</li>
+                <li>404 errors â†’ Job/file not found</li>
+                <li>500 errors â†’ Server/API issues</li>
+                <li>Timeout â†’ Long audio files or API delays</li>
               </ul>
             </div>
           </div>

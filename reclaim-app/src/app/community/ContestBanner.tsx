@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { Trophy, TrendingUp, Award, Gift } from 'lucide-react'
@@ -86,7 +86,7 @@ export default function ContestBanner({ currentUserId }: { currentUserId: string
             <div className="space-y-1">
               <div className="flex justify-between text-xs">
                 <span className="text-gray-600">Rank:</span>
-                <span className="font-bold text-indigo-600">#{myRank || '—'}</span>
+                <span className="font-bold text-indigo-600">#{myRank || 'â€”'}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-gray-600">Score:</span>
@@ -115,7 +115,7 @@ export default function ContestBanner({ currentUserId }: { currentUserId: string
               <div key={entry.user_id} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
                   <span className={`font-bold ${idx === 0 ? 'text-amber-500' : idx === 1 ? 'text-gray-400' : 'text-orange-600'}`}>
-                    {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
+                    {idx === 0 ? 'ðŸ¥‡' : idx === 1 ? 'ðŸ¥ˆ' : 'ðŸ¥‰'}
                   </span>
                   <span className="text-gray-700">Member #{entry.user_id.slice(0, 8)}</span>
                 </div>
@@ -140,7 +140,7 @@ export default function ContestBanner({ currentUserId }: { currentUserId: string
       {!myEntry && (
         <div className="mt-3 bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-center">
           <p className="text-sm text-indigo-900 font-medium">
-            🎯 Start posting helpful content to enter the contest automatically!
+            ðŸŽ¯ Start posting helpful content to enter the contest automatically!
           </p>
         </div>
       )}

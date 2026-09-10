@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+﻿import { Metadata } from 'next'
 import { Shield, Anchor, Brain, Heart } from 'lucide-react'
 import AuthButton from '@/components/AuthButton'
 
@@ -56,10 +56,10 @@ export default function RealityAnchorStopsGaslightingPage() {
           <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
             <h3 className="text-lg font-semibold text-red-900 mb-2">Gaslighting by the Numbers:</h3>
             <ul className="text-red-800 space-y-2">
-              <li>• <strong>83% of abuse survivors</strong> report questioning their own sanity</li>
-              <li>• Average victim loses confidence in their memory within <strong>6 months</strong></li>
-              <li>• <strong>91% say</strong> gaslighting was the most damaging part of their abuse</li>
-              <li>• Recovery from gaslighting takes <strong>2-5 years</strong> without intervention</li>
+              <li>â€¢ <strong>83% of abuse survivors</strong> report questioning their own sanity</li>
+              <li>â€¢ Average victim loses confidence in their memory within <strong>6 months</strong></li>
+              <li>â€¢ <strong>91% say</strong> gaslighting was the most damaging part of their abuse</li>
+              <li>â€¢ Recovery from gaslighting takes <strong>2-5 years</strong> without intervention</li>
             </ul>
           </div>
 
@@ -70,19 +70,19 @@ export default function RealityAnchorStopsGaslightingPage() {
               <div>
                 <h4 className="font-semibold text-gray-800 mb-3">Memory Attacks:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
-                  <li>• "That never happened"</li>
-                  <li>• "You're imagining things"</li>
-                  <li>• "I never said that"</li>
-                  <li>• "You're remembering it wrong"</li>
+                  <li>â€¢ "That never happened"</li>
+                  <li>â€¢ "You're imagining things"</li>
+                  <li>â€¢ "I never said that"</li>
+                  <li>â€¢ "You're remembering it wrong"</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-800 mb-3">Emotional Invalidation:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
-                  <li>• "You're being too sensitive"</li>
-                  <li>• "You're overreacting"</li>
-                  <li>• "You're crazy"</li>
-                  <li>• "No one else has a problem with me"</li>
+                  <li>â€¢ "You're being too sensitive"</li>
+                  <li>â€¢ "You're overreacting"</li>
+                  <li>â€¢ "You're crazy"</li>
+                  <li>â€¢ "No one else has a problem with me"</li>
                 </ul>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function RealityAnchorStopsGaslightingPage() {
                     and the manipulation tactics you're facing.
                   </p>
                   <div className="bg-amber-100 p-3 rounded text-sm text-amber-700">
-                    <strong>Examples:</strong> "I am not responsible for their emotions" • "My boundaries matter" • 
+                    <strong>Examples:</strong> "I am not responsible for their emotions" â€¢ "My boundaries matter" â€¢ 
                     "I deserve respect and kindness"
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export default function RealityAnchorStopsGaslightingPage() {
                 "After 3 weeks of Reality Anchor, I stopped questioning my sanity. When he said 'that never happened,' 
                 I had my log to prove it did. The gaslighting lost its power over me."
               </p>
-              <p className="text-sm text-gray-600">— Maria S., recovered after 4 years of abuse</p>
+              <p className="text-sm text-gray-600">â€” Maria S., recovered after 4 years of abuse</p>
             </div>
             
             <div className="border-l-4 border-green-400 pl-6">
@@ -197,7 +197,7 @@ export default function RealityAnchorStopsGaslightingPage() {
                 "The morning intentions were game-changing. Instead of starting each day anxious and confused, 
                 I felt grounded and clear about my reality. It gave me strength to face the manipulation."
               </p>
-              <p className="text-sm text-gray-600">— David L., using Reality Anchor for 6 months</p>
+              <p className="text-sm text-gray-600">â€” David L., using Reality Anchor for 6 months</p>
             </div>
 
             <div className="border-l-4 border-purple-400 pl-6">
@@ -205,7 +205,7 @@ export default function RealityAnchorStopsGaslightingPage() {
                 "The decompression ritual helped me separate their chaos from my peace. I learned to observe their 
                 disorder without absorbing it. My mental health improved dramatically."
               </p>
-              <p className="text-sm text-gray-600">— Jennifer K., now helping other survivors</p>
+              <p className="text-sm text-gray-600">â€” Jennifer K., now helping other survivors</p>
             </div>
           </div>
 
@@ -250,10 +250,10 @@ export default function RealityAnchorStopsGaslightingPage() {
           <div className="bg-amber-50 border border-amber-200 p-6 rounded-lg mb-8">
             <h4 className="font-semibold text-amber-900 mb-3">Free Resources to Get Started:</h4>
             <ul className="text-amber-800 space-y-2">
-              <li>• Download our Reality Anchor Quick Start Guide</li>
-              <li>• Access 15 free AI conversations to practice the technique</li>
-              <li>• Join our survivor community for support and accountability</li>
-              <li>• Get personalized mantras based on your specific situation</li>
+              <li>â€¢ Download our Reality Anchor Quick Start Guide</li>
+              <li>â€¢ Access 15 free AI conversations to practice the technique</li>
+              <li>â€¢ Join our survivor community for support and accountability</li>
+              <li>â€¢ Get personalized mantras based on your specific situation</li>
             </ul>
           </div>
 

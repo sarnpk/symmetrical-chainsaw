@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -67,12 +67,12 @@ export default function WellnessHelpPage() {
           <section className="bg-white border rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Heart className="h-5 w-5 text-pink-600" />
-              <h2 className="text-lg font-medium text-gray-900">Mood Check‑in</h2>
+              <h2 className="text-lg font-medium text-gray-900">Mood Checkâ€‘in</h2>
             </div>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
               <li>Record your current mood and quick notes to track patterns.</li>
               <li>View gentle trends to notice what helps you feel better.</li>
-              <li>Keep entries brief—consistency matters more than length.</li>
+              <li>Keep entries briefâ€”consistency matters more than length.</li>
             </ul>
           </section>
 
@@ -82,9 +82,9 @@ export default function WellnessHelpPage() {
               <h2 className="text-lg font-medium text-gray-900">Coping Strategies</h2>
             </div>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-              <li>Browse ideas grouped by need (grounding, self‑soothing, connection, etc.).</li>
+              <li>Browse ideas grouped by need (grounding, selfâ€‘soothing, connection, etc.).</li>
               <li>Save your favorites to build a personal toolkit.</li>
-              <li>Use the simplest skill that works—no perfection needed.</li>
+              <li>Use the simplest skill that worksâ€”no perfection needed.</li>
             </ul>
           </section>
 
@@ -94,7 +94,7 @@ export default function WellnessHelpPage() {
               <h2 className="text-lg font-medium text-gray-900">Daily Affirmations</h2>
             </div>
             <p className="text-sm text-gray-700">
-              A short message rotates daily to encourage gentle self‑talk. You can shuffle to view another when you need it.
+              A short message rotates daily to encourage gentle selfâ€‘talk. You can shuffle to view another when you need it.
             </p>
           </section>
 
@@ -104,7 +104,7 @@ export default function WellnessHelpPage() {
               <h2 className="text-lg font-medium text-gray-900">Safety</h2>
             </div>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-              <li>If you’re in immediate danger or considering self‑harm, call 911 (US) or your local emergency number.</li>
+              <li>If youâ€™re in immediate danger or considering selfâ€‘harm, call 911 (US) or your local emergency number.</li>
               <li>US Crisis lines: 988 (Suicide & Crisis Lifeline), text HOME to 741741 (Crisis Text Line).</li>
             </ul>
           </section>

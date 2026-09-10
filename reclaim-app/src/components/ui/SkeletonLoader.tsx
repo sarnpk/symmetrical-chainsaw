@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Skeleton Loader Components
  * Modern loading states to replace spinners
  */

@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
+﻿import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse } from 'next/server'
 import { checkAndRecordAIUsage } from '@/lib/usage-tracking'
 
@@ -70,7 +70,7 @@ Provide a JSON response with this exact structure:
 
 Analyze the conversation for:
 1. Recurring manipulation tactics
-2. Narcissistic cycles (love-bombing → devaluation → hoovering)
+2. Narcissistic cycles (love-bombing â†’ devaluation â†’ hoovering)
 3. Escalation patterns
 4. Emotional triggers
 5. Likely next responses based on patterns

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -323,7 +323,7 @@ export default function RealityAnchorIntegration({ userId, subscriptionTier }: R
                     href={`/journal/${entry.id}`}
                     className="text-sm text-indigo-600 hover:text-indigo-700"
                   >
-                    View entry →
+                    View entry â†’
                   </Link>
                 </div>
               ))
@@ -365,7 +365,7 @@ export default function RealityAnchorIntegration({ userId, subscriptionTier }: R
                   href={`/npd-traits/${trait.id}`}
                   className="text-xs text-indigo-600 hover:text-indigo-700 mt-1 block"
                 >
-                  Learn more →
+                  Learn more â†’
                 </Link>
               </div>
             ))}
@@ -376,7 +376,7 @@ export default function RealityAnchorIntegration({ userId, subscriptionTier }: R
               href="/npd-traits"
               className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              View all NPD traits →
+              View all NPD traits â†’
             </Link>
           </div>
         </CardContent>

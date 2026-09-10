@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -153,7 +153,7 @@ export default function BeliefReframePage() {
                                   Strength: {belief.current_strength}/10
                                   {strengthChange > 0 && (
                                     <span className="text-green-600 ml-2">
-                                      ↓ {strengthChange} from {belief.initial_strength}
+                                      â†“ {strengthChange} from {belief.initial_strength}
                                     </span>
                                   )}
                                 </CardDescription>
@@ -190,7 +190,7 @@ export default function BeliefReframePage() {
                             </div>
                             <div className="flex items-center gap-4 text-sm text-gray-600">
                               <span>{evidenceCount} counter-evidence</span>
-                              <span>•</span>
+                              <span>â€¢</span>
                               <span>Last updated {new Date(belief.updated_at).toLocaleDateString()}</span>
                             </div>
                           </CardContent>
@@ -216,7 +216,7 @@ export default function BeliefReframePage() {
                           <div className="flex-1">
                             <CardTitle className="text-lg text-green-900">{belief.belief_text}</CardTitle>
                             <CardDescription className="text-green-700">
-                              Final strength: {belief.current_strength}/10 • 
+                              Final strength: {belief.current_strength}/10 â€¢ 
                               Resolved {new Date(belief.updated_at).toLocaleDateString()}
                             </CardDescription>
                           </div>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -207,7 +207,7 @@ export default function UrgeSurfingPage() {
       toast.error('Failed to save session')
     } else {
       await updateStreak(!formData.gave_in)
-      toast.success(formData.gave_in ? 'Session saved' : '🎉 Success! Streak updated!')
+      toast.success(formData.gave_in ? 'Session saved' : 'ðŸŽ‰ Success! Streak updated!')
       setShowForm(false)
       setSurfing(false)
       setTimer(0)
@@ -307,7 +307,7 @@ export default function UrgeSurfingPage() {
                   <HelpCircle className="h-6 w-6" />
                 </Link>
               </div>
-              <p className="text-sm text-gray-600 mt-1">Ride the wave—urges are temporary</p>
+              <p className="text-sm text-gray-600 mt-1">Ride the waveâ€”urges are temporary</p>
             </div>
             {streak && (
               <div className="flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-lg">
@@ -546,7 +546,7 @@ export default function UrgeSurfingPage() {
                       <div className="text-4xl font-bold text-blue-600">{formatTime(timer)}</div>
                     </div>
                     <p className="text-sm text-blue-800 mb-3">You're riding the wave. Keep breathing.</p>
-                    {speaking && <div className="text-xs text-blue-600 animate-pulse">🎙️ Voice guidance playing...</div>}
+                    {speaking && <div className="text-xs text-blue-600 animate-pulse">ðŸŽ™ï¸ Voice guidance playing...</div>}
                   </div>
                   <button
                     onClick={stopSurfing}
@@ -641,7 +641,7 @@ export default function UrgeSurfingPage() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm">
                       <Target className="h-4 w-4 text-gray-500" />
-                      <span className="font-bold">{session.urge_intensity_start} → {session.urge_intensity_peak || '?'} → {session.urge_intensity_end || '?'}</span>
+                      <span className="font-bold">{session.urge_intensity_start} â†’ {session.urge_intensity_peak || '?'} â†’ {session.urge_intensity_end || '?'}</span>
                     </div>
                     {session.duration_minutes > 0 && (
                       <div className="flex items-center gap-2 text-sm">

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -831,7 +831,7 @@ export default function AdminDashboard() {
                         {[...Array(5)].map((_, i) => (
                           <span key={i} className={`text-sm ${
                             i < f.rating ? 'text-yellow-400' : 'text-gray-300'
-                          }`}>★</span>
+                          }`}>â˜…</span>
                         ))}
                       </div>
                     </div>
@@ -1064,7 +1064,7 @@ export default function AdminDashboard() {
                       <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Recovery</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">7 days</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0/∞</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0/âˆž</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
                     </td>
@@ -1094,7 +1094,7 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{code.trial_duration_days} days</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {code.current_uses}/{code.max_uses === -1 ? '∞' : code.max_uses}
+                        {code.current_uses}/{code.max_uses === -1 ? 'âˆž' : code.max_uses}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${
@@ -1133,19 +1133,19 @@ export default function AdminDashboard() {
               <div>
                 <h4 className="font-medium text-indigo-900 mb-2">YouTube Strategy</h4>
                 <ul className="text-sm text-indigo-700 space-y-1">
-                  <li>• Use codes in video descriptions</li>
-                  <li>• Mention in video content</li>
-                  <li>• Pin comments with codes</li>
-                  <li>• Create urgency with limited uses</li>
+                  <li>â€¢ Use codes in video descriptions</li>
+                  <li>â€¢ Mention in video content</li>
+                  <li>â€¢ Pin comments with codes</li>
+                  <li>â€¢ Create urgency with limited uses</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-medium text-purple-900 mb-2">Social Media Tips</h4>
                 <ul className="text-sm text-purple-700 space-y-1">
-                  <li>• Share in Instagram stories</li>
-                  <li>• Use in TikTok captions</li>
-                  <li>• Facebook group exclusives</li>
-                  <li>• Twitter thread promotions</li>
+                  <li>â€¢ Share in Instagram stories</li>
+                  <li>â€¢ Use in TikTok captions</li>
+                  <li>â€¢ Facebook group exclusives</li>
+                  <li>â€¢ Twitter thread promotions</li>
                 </ul>
               </div>
             </div>

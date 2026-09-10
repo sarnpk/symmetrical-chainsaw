@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 
 export default function UnifiedFooter() {
   return (
@@ -10,11 +10,11 @@ export default function UnifiedFooter() {
           <Link href="/pricing" className="hover:text-indigo-600 transition-colors">Pricing</Link>
           <Link href="/blog" className="hover:text-indigo-600 transition-colors">Blog</Link>
           <Link href="/faq" className="hover:text-indigo-600 transition-colors">FAQ</Link>
-          <Link href="/donate" className="text-purple-600 hover:text-purple-700 font-semibold transition-colors">💜 Donate</Link>
+          <Link href="/donate" className="text-purple-600 hover:text-purple-700 font-semibold transition-colors">ðŸ’œ Donate</Link>
           <Link href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy</Link>
           <Link href="/terms" className="hover:text-indigo-600 transition-colors">Terms</Link>
           <Link href="/cookies" className="hover:text-indigo-600 transition-colors">Cookies</Link>
-          <Link href="mailto:support@reclaim.app" className="hover:text-indigo-600 transition-colors">Contact</Link>
+          <Link href="mailto:support@reclaimyourlife.app" className="hover:text-indigo-600 transition-colors">Contact</Link>
         </div>
       </div>
     </footer>

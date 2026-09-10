@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Metadata } from "next"
 import { ArrowLeft, Clock, User, BookOpen, ExternalLink, Shield, Zap, Phone } from "lucide-react"
 import QuizShell from "@/components/marketing/QuizShell"
@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   title: "Grey Rock Method: Complete Guide to Dealing with a Narcissist",
   description: "The grey rock method makes you boring to narcissists. Learn the technique, see examples, and practice with our free simulator.",
   alternates: {
-    canonical: "https://www.reclaim.app/blog/grey-rock-method",
+    canonical: "https://reclaimyourlife.app/blog/grey-rock-method",
   },
   openGraph: {
     title: "Grey Rock Method: Complete Guide to Dealing with a Narcissist",
     description: "The grey rock method makes you boring to narcissists. Learn the technique, see examples, and practice with our free simulator.",
     type: "article",
-    url: "https://www.reclaim.app/blog/grey-rock-method",
+    url: "https://reclaimyourlife.app/blog/grey-rock-method",
   },
 }
 

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -226,7 +226,7 @@ export default function MorningIntentionPage() {
             <CardContent className="pt-6">
               <p className="text-sm text-gray-600">Current Streak</p>
               <p className="text-4xl font-bold text-indigo-600 mt-2">
-                🔥 {streak?.current_streak || 0}
+                ðŸ”¥ {streak?.current_streak || 0}
               </p>
               <p className="text-xs text-gray-600 mt-1">days</p>
             </CardContent>
@@ -235,7 +235,7 @@ export default function MorningIntentionPage() {
             <CardContent className="pt-6">
               <p className="text-sm text-gray-600">Longest Streak</p>
               <p className="text-4xl font-bold text-purple-600 mt-2">
-                🏆 {streak?.longest_streak || 0}
+                ðŸ† {streak?.longest_streak || 0}
               </p>
               <p className="text-xs text-gray-600 mt-1">days</p>
             </CardContent>

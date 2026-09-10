@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 
 interface BreadcrumbItem {
@@ -18,7 +18,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
       '@type': 'ListItem',
       position: index + 1,
       name: item.label,
-      ...(item.href ? { item: `https://reclaim.app${item.href}` } : {}),
+      ...(item.href ? { item: `https://reclaimyourlife.app${item.href}` } : {}),
     })),
   }
 

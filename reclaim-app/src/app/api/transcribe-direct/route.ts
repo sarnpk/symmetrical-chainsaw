@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Service-role client for privileged operations
@@ -34,7 +34,7 @@ interface GladiaResponse {
 
 // Extract transcription text from any Gladia response format
 function extractTranscriptionText(result: GladiaResponse): string | null {
-  console.log('🔍 Extracting transcription from:', JSON.stringify(result, null, 2))
+  console.log('ðŸ” Extracting transcription from:', JSON.stringify(result, null, 2))
   
   const candidates = [
     result?.transcription?.full_transcript,
@@ -45,12 +45,12 @@ function extractTranscriptionText(result: GladiaResponse): string | null {
   for (const candidate of candidates) {
     if (candidate && typeof candidate === 'string' && candidate.trim()) {
       const text = candidate.trim()
-      console.log('✅ Found transcription:', text)
+      console.log('âœ… Found transcription:', text)
       return text
     }
   }
   
-  console.log('❌ No transcription text found')
+  console.log('âŒ No transcription text found')
   return null
 }
 
@@ -59,7 +59,7 @@ async function startGladiaTranscription(audioUrl: string): Promise<string> {
   const gladiaApiKey = process.env.GLADIA_API_KEY
   if (!gladiaApiKey) throw new Error('GLADIA_API_KEY not configured')
 
-  console.log('🚀 Starting Gladia transcription...')
+  console.log('ðŸš€ Starting Gladia transcription...')
   
   const response = await fetch('https://api.gladia.io/v2/transcription', {
     method: 'POST',
@@ -77,7 +77,7 @@ async function startGladiaTranscription(audioUrl: string): Promise<string> {
   }
 
   const result = await response.json()
-  console.log('✅ Gladia job started:', result.id)
+  console.log('âœ… Gladia job started:', result.id)
   return result.id
 }
 
@@ -86,7 +86,7 @@ async function checkGladiaStatus(jobId: string): Promise<GladiaResponse> {
   const gladiaApiKey = process.env.GLADIA_API_KEY
   if (!gladiaApiKey) throw new Error('GLADIA_API_KEY not configured')
 
-  console.log(`🔍 Checking Gladia status for job: ${jobId}`)
+  console.log(`ðŸ” Checking Gladia status for job: ${jobId}`)
   
   const response = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
     headers: { 'x-gladia-key': gladiaApiKey },
@@ -97,7 +97,7 @@ async function checkGladiaStatus(jobId: string): Promise<GladiaResponse> {
   }
 
   const result = await response.json()
-  console.log(`📊 Gladia response:`, JSON.stringify(result, null, 2))
+  console.log(`ðŸ“Š Gladia response:`, JSON.stringify(result, null, 2))
   return result
 }
 
@@ -108,14 +108,14 @@ async function pollUntilComplete(jobId: string, maxWaitMs = 300000): Promise<str
   
   while (Date.now() - startTime < maxWaitMs) {
     attempt++
-    console.log(`⏳ Poll attempt ${attempt} for job ${jobId}`)
+    console.log(`â³ Poll attempt ${attempt} for job ${jobId}`)
     
     const result = await checkGladiaStatus(jobId)
     
     // Try to extract transcription
     const transcription = extractTranscriptionText(result)
     if (transcription) {
-      console.log(`✅ Transcription completed: "${transcription}"`)
+      console.log(`âœ… Transcription completed: "${transcription}"`)
       return transcription
     }
     
@@ -126,7 +126,7 @@ async function pollUntilComplete(jobId: string, maxWaitMs = 300000): Promise<str
     
     // Calculate next delay (exponential backoff: 1s, 2s, 4s, 8s, then 10s max)
     const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000)
-    console.log(`⏱️ Waiting ${delay}ms before next check...`)
+    console.log(`â±ï¸ Waiting ${delay}ms before next check...`)
     await new Promise(resolve => setTimeout(resolve, delay))
   }
   
@@ -158,7 +158,7 @@ async function recordUsage(userId: string, duration?: number) {
 
 export async function POST(request: Request) {
   try {
-    console.log('🎯 Direct transcription API called')
+    console.log('ðŸŽ¯ Direct transcription API called')
     
     // Get auth token
     const authHeader = request.headers.get('authorization')
@@ -183,7 +183,7 @@ export async function POST(request: Request) {
       }, { status: 400 })
     }
     
-    console.log(`📁 Processing file ${evidence_file_id} for user ${user.id}`)
+    console.log(`ðŸ“ Processing file ${evidence_file_id} for user ${user.id}`)
     
     // Update status to processing
     await supabaseAdmin
@@ -233,7 +233,7 @@ export async function POST(request: Request) {
     // Record usage
     await recordUsage(user.id)
     
-    console.log(`🎉 Transcription completed successfully: "${transcription}"`)
+    console.log(`ðŸŽ‰ Transcription completed successfully: "${transcription}"`)
     
     return NextResponse.json({
       success: true,
@@ -242,7 +242,7 @@ export async function POST(request: Request) {
     })
     
   } catch (error: any) {
-    console.error('❌ Direct transcription error:', error)
+    console.error('âŒ Direct transcription error:', error)
     
     return NextResponse.json({
       error: error.message || 'Transcription failed'

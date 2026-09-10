@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -749,7 +749,7 @@ export default function MindResetContent() {
             <div className="md:ml-auto flex items-center gap-3 w-full md:w-auto">
               <div className="text-sm text-gray-600 flex-1 md:flex-none">
                 <span className="font-medium">Time left:</span> {formatSeconds(totalLeftSec)}
-                <span className="mx-2">•</span>
+                <span className="mx-2">â€¢</span>
                 <span className="font-medium">Breaths:</span> {breathsCompleted}
               </div>
               <button

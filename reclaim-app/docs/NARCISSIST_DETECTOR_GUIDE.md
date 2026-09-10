@@ -1,4 +1,4 @@
-# Narcissist Detector - User Guide
+﻿# Narcissist Detector - User Guide
 
 ## What is the Narcissist Detector?
 
@@ -8,7 +8,7 @@ The Narcissist Detector is an AI-powered tool that analyzes text, behavior descr
 
 ## Four Ways to Analyze
 
-### 1. ✓ Trait Checklist
+### 1. âœ“ Trait Checklist
 
 **Best for:** Quick assessment when you know their behaviors
 
@@ -32,7 +32,7 @@ The Narcissist Detector is an AI-powered tool that analyzes text, behavior descr
 
 ---
 
-### 2. 📝 Behavior Description
+### 2. ðŸ“ Behavior Description
 
 **Best for:** When you want to describe what they do in your own words
 
@@ -58,7 +58,7 @@ nothing happened and expect me to be fine."
 
 ---
 
-### 3. 💬 Single Message Analysis
+### 3. ðŸ’¬ Single Message Analysis
 
 **Best for:** Analyzing a specific message or statement
 
@@ -89,7 +89,7 @@ I guess I'm just not important to you anymore."
 
 ---
 
-### 4. 💬 Full Conversation Analysis
+### 4. ðŸ’¬ Full Conversation Analysis
 
 **Best for:** Understanding patterns across multiple exchanges
 
@@ -257,7 +257,7 @@ Them: This is exactly why we can't communicate.
 
 ## Tips for Best Results
 
-### ✅ DO:
+### âœ… DO:
 
 - **Be specific**: Include actual quotes and examples
 - **Provide context**: Explain the situation
@@ -265,12 +265,12 @@ Them: This is exactly why we can't communicate.
 - **Be honest**: Don't minimize or exaggerate
 - **Use recent examples**: Current behavior is most relevant
 
-### ❌ DON'T:
+### âŒ DON'T:
 
 - **Self-diagnose**: This is educational, not diagnostic
 - **Share results with them**: It will escalate conflict
 - **Use as legal evidence**: Consult professionals
-- **Expect them to change**: Understanding ≠ fixing
+- **Expect them to change**: Understanding â‰  fixing
 - **Blame yourself**: Narcissistic abuse is not your fault
 
 ---
@@ -279,17 +279,17 @@ Them: This is exactly why we can't communicate.
 
 ### Your Data
 
-- ✅ Analyses are saved to your account only
-- ✅ Not shared with anyone
-- ✅ You can delete anytime
-- ✅ Encrypted and secure
+- âœ… Analyses are saved to your account only
+- âœ… Not shared with anyone
+- âœ… You can delete anytime
+- âœ… Encrypted and secure
 
 ### Emotional Safety
 
-- ⚠️ This can be triggering
-- ⚠️ Take breaks if needed
-- ⚠️ Reach out for support
-- ⚠️ Consider professional help
+- âš ï¸ This can be triggering
+- âš ï¸ Take breaks if needed
+- âš ï¸ Reach out for support
+- âš ï¸ Consider professional help
 
 ### When to Seek Professional Help
 
@@ -425,4 +425,4 @@ Get help crafting Brief, Informative, Friendly, Firm responses.
 6. Practice in the simulator
 7. Track your progress
 
-You've got this. Understanding is the first step to protection and healing. 💪
+You've got this. Understanding is the first step to protection and healing. ðŸ’ª

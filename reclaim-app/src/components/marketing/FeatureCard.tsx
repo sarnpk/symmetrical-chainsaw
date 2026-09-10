@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import type { LucideIcon } from 'lucide-react'
 
 interface FeatureCardProps {
@@ -34,7 +34,7 @@ export default function FeatureCard({ icon: Icon, title, description, href, badg
       {href && (
         <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
           Learn more
-          <span aria-hidden="true">→</span>
+          <span aria-hidden="true">â†’</span>
         </span>
       )}
     </div>

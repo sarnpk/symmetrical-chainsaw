@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
 
@@ -20,7 +20,7 @@ export default function FixTranscriptionPage() {
     setResult(null)
 
     try {
-      console.log('🔧 Fixing stuck transcription...')
+      console.log('ðŸ”§ Fixing stuck transcription...')
       
       // Get auth token (you'll need to implement this based on your auth system)
       const token = await getAuthToken()
@@ -38,7 +38,7 @@ export default function FixTranscriptionPage() {
       })
 
       const data = await response.json()
-      console.log('📊 Fix result:', data)
+      console.log('ðŸ“Š Fix result:', data)
 
       if (!response.ok) {
         throw new Error(data.error || `HTTP ${response.status}`)
@@ -47,10 +47,10 @@ export default function FixTranscriptionPage() {
       setResult(data)
       
       if (data.success && data.status === 'completed') {
-        alert(`✅ Fixed! Transcription: "${data.transcription.substring(0, 100)}..."`)
+        alert(`âœ… Fixed! Transcription: "${data.transcription.substring(0, 100)}..."`)
       }
     } catch (err: any) {
-      console.error('❌ Fix error:', err)
+      console.error('âŒ Fix error:', err)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -83,7 +83,7 @@ export default function FixTranscriptionPage() {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
-          <h1 className="text-2xl font-bold mb-6">🔧 Fix Stuck Transcription</h1>
+          <h1 className="text-2xl font-bold mb-6">ðŸ”§ Fix Stuck Transcription</h1>
           
           <p className="text-gray-600 mb-6">
             This tool fixes transcriptions that are stuck on "processing" by checking Gladia directly and updating the database.
@@ -131,7 +131,7 @@ export default function FixTranscriptionPage() {
             disabled={loading || (!evidenceFileId && !jobId)}
             className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? '🔧 Fixing...' : '🔧 Fix Stuck Transcription'}
+            {loading ? 'ðŸ”§ Fixing...' : 'ðŸ”§ Fix Stuck Transcription'}
           </button>
 
           {/* Loading */}
@@ -162,7 +162,7 @@ export default function FixTranscriptionPage() {
               
               {result.transcription && (
                 <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-                  <h4 className="font-semibold text-green-800 mb-2">✅ Fixed! Transcription:</h4>
+                  <h4 className="font-semibold text-green-800 mb-2">âœ… Fixed! Transcription:</h4>
                   <p className="text-green-700">{result.transcription}</p>
                 </div>
               )}

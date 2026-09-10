@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -20,7 +20,7 @@ export default function CrisisToolkitCard() {
           <h3 className="text-xl font-bold mb-1">Crisis Toolkit</h3>
           <p className="text-blue-100 text-sm">Quick support when you need it</p>
         </div>
-        <div className="text-3xl">🆘</div>
+        <div className="text-3xl">ðŸ†˜</div>
       </div>
 
       {stats && stats.totalUses > 0 ? (

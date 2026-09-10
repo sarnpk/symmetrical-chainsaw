@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase-server';
+﻿import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
 import { geminiAI } from '@/lib/gemini-ai';
 
@@ -64,11 +64,11 @@ Focus on:
           {target: 'self', action: 'Practice daily self-compassion', why: 'You deserve the same kindness you give others'},
           {target: 'children', action: 'Focus emotional energy on being present with kids', why: 'They need a stable, emotionally available parent'}
         ],
-        guilt_buster: 'Detaching from your ex is not cruel—it\'s survival. Your children need you emotionally healthy.',
+        guilt_buster: 'Detaching from your ex is not cruelâ€”it\'s survival. Your children need you emotionally healthy.',
         affirmations: [
           'I deserve to redirect my empathy to those who reciprocate',
           'Protecting my peace is protecting my children',
-          'I am not abandoning anyone—I am choosing myself'
+          'I am not abandoning anyoneâ€”I am choosing myself'
         ],
         next_steps: ['Set one boundary this week', 'Practice saying no without explanation']
       }

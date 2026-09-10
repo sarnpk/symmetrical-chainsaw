@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { generateAIResponse } from '@/lib/gemini-ai';
 
 export async function POST(request: NextRequest) {

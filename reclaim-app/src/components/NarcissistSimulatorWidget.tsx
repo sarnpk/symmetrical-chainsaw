@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Bot, Target, TrendingUp, Play } from 'lucide-react'
@@ -57,7 +57,7 @@ export default function NarcissistSimulatorWidget() {
 
         {/* Tip */}
         <div className="text-xs text-purple-600 bg-purple-100 p-2 rounded">
-          💡 <strong>Tip:</strong> Use "Custom Context" to paste your real conversations for the most realistic practice
+          ðŸ’¡ <strong>Tip:</strong> Use "Custom Context" to paste your real conversations for the most realistic practice
         </div>
       </CardContent>
     </Card>

@@ -1,4 +1,4 @@
-# I Started Recording Everything. It Saved My Custody Case.
+﻿# I Started Recording Everything. It Saved My Custody Case.
 
 "That never happened. You're making things up again."
 
@@ -28,7 +28,7 @@ I called him. "I never said I'd pick her up. You're always trying to make me loo
 
 I was sure he'd said it. 90% sure. But that 10% doubt? That's what gaslighting does. It makes you question everything.
 
-That night, I started a journal. Not a feelings journal—a facts journal.
+That night, I started a journal. Not a feelings journalâ€”a facts journal.
 
 **Date. Time. What was said. What actually happened.**
 
@@ -100,7 +100,7 @@ The AI even detects patterns you might miss. Like how he always gaslights on Sun
 
 Having documentation changed everything:
 
-**In court:** I had proof. Not feelings, not memories—proof.
+**In court:** I had proof. Not feelings, not memoriesâ€”proof.
 
 **In therapy:** My therapist could see the patterns I couldn't articulate.
 
@@ -143,12 +143,12 @@ Start documenting today. Not tomorrow. Today.
 
 Because the moment you think "Did that really happen?" is the moment you need proof that yes, it did.
 
-Your future self—the one in court, in therapy, or just trying to trust their own memory—will thank you.
+Your future selfâ€”the one in court, in therapy, or just trying to trust their own memoryâ€”will thank you.
 
 ---
 
 **Free Documentation Tools:**
-- Gaslighting Truth Journal: Reclaim.app/gaslighting-tracker
+- Gaslighting Truth Journal: reclaimyourlife.app/gaslighting-tracker
 - Evidence Upload (photos, audio, screenshots): Secure storage included
 - Pattern Detection: AI identifies contradictions automatically
 

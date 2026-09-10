@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ export default function CrisisToolkitWidget() {
           <div className="flex justify-between items-start mb-3">
             <h3 className="font-bold text-gray-900">Need support?</h3>
             <button onClick={() => setIsExpanded(false)} className="text-gray-400 hover:text-gray-600">
-              ✕
+              âœ•
             </button>
           </div>
           <p className="text-sm text-gray-600 mb-4">
@@ -33,7 +33,7 @@ export default function CrisisToolkitWidget() {
         className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full w-14 h-14 shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center text-2xl"
         aria-label="Crisis Toolkit"
       >
-        🆘
+        ðŸ†˜
       </button>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { Scale, ExternalLink, Shield } from 'lucide-react';
 
@@ -184,7 +184,7 @@ export default function LegalReferralButton({
     return (
       <div className={`${getContainerStyles()} ${className}`}>
         <div className="text-center">
-          <div className="text-green-600 text-2xl mb-2">⚖️</div>
+          <div className="text-green-600 text-2xl mb-2">âš–ï¸</div>
           <p className="text-green-800 font-medium">Connecting you to legal experts...</p>
         </div>
       </div>
@@ -209,7 +209,7 @@ export default function LegalReferralButton({
       </button>
 
       <div className="mt-2 text-xs text-gray-500 text-center">
-        Court-ready evidence • Family law specialists • Confidential consultation
+        Court-ready evidence â€¢ Family law specialists â€¢ Confidential consultation
       </div>
     </div>
   );

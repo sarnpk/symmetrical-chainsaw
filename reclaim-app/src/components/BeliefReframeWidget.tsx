@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -89,7 +89,7 @@ export default function BeliefReframeWidget({ userId }: BeliefReframeWidgetProps
                 {strengthChange > 0 && (
                   <>
                     <TrendingDown className="h-3 w-3" />
-                    <span>↓ {strengthChange}</span>
+                    <span>â†“ {strengthChange}</span>
                   </>
                 )}
               </div>

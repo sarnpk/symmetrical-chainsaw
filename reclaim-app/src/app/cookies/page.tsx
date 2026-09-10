@@ -1,4 +1,4 @@
-export default function CookiePolicy() {
+﻿export default function CookiePolicy() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8">
@@ -127,10 +127,10 @@ export default function CookiePolicy() {
           <h3>5.2 Browser Settings</h3>
           <p>You can also manage cookies through your browser settings:</p>
           <ul>
-            <li><strong>Chrome:</strong> Settings → Privacy and Security → Cookies</li>
-            <li><strong>Firefox:</strong> Settings → Privacy & Security → Cookies</li>
-            <li><strong>Safari:</strong> Preferences → Privacy → Cookies</li>
-            <li><strong>Edge:</strong> Settings → Cookies and Site Permissions</li>
+            <li><strong>Chrome:</strong> Settings â†’ Privacy and Security â†’ Cookies</li>
+            <li><strong>Firefox:</strong> Settings â†’ Privacy & Security â†’ Cookies</li>
+            <li><strong>Safari:</strong> Preferences â†’ Privacy â†’ Cookies</li>
+            <li><strong>Edge:</strong> Settings â†’ Cookies and Site Permissions</li>
           </ul>
 
           <h3>5.3 Update Preferences</h3>
@@ -140,7 +140,7 @@ export default function CookiePolicy() {
           <ul>
             <li>Visiting your <a href="/gdpr" className="text-indigo-600 hover:underline">Data Rights</a> page</li>
             <li>Clearing your browser cookies and revisiting our site</li>
-            <li>Contacting us at <a href="mailto:privacy@reclaim.app" className="text-indigo-600">privacy@reclaim.app</a></li>
+            <li>Contacting us at <a href="mailto:privacy@reclaimyourlife.app" className="text-indigo-600">privacy@reclaimyourlife.app</a></li>
           </ul>
 
           <h2>6. Impact of Disabling Cookies</h2>
@@ -186,9 +186,9 @@ export default function CookiePolicy() {
           <div className="bg-gray-50 p-4 rounded-lg">
             <p>If you have questions about our use of cookies:</p>
             <ul className="mt-2">
-              <li><strong>Email:</strong> <a href="mailto:privacy@reclaim.app" className="text-indigo-600">privacy@reclaim.app</a></li>
+              <li><strong>Email:</strong> <a href="mailto:privacy@reclaimyourlife.app" className="text-indigo-600">privacy@reclaimyourlife.app</a></li>
               <li><strong>Data Rights:</strong> <a href="/gdpr" className="text-indigo-600 hover:underline">Visit GDPR Page</a></li>
-              <li><strong>General Support:</strong> <a href="mailto:support@reclaim.app" className="text-indigo-600">support@reclaim.app</a></li>
+              <li><strong>General Support:</strong> <a href="mailto:support@reclaimyourlife.app" className="text-indigo-600">support@reclaimyourlife.app</a></li>
             </ul>
           </div>
         </div>

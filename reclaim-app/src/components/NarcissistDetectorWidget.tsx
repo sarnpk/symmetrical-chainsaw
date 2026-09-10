@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -88,7 +88,7 @@ export default function NarcissistDetectorWidget() {
             Narcissist Detector
           </CardTitle>
           <Link href="/narcissist-detector" className="text-xs text-red-600 hover:text-red-700 font-medium">
-            View All →
+            View All â†’
           </Link>
         </div>
       </CardHeader>

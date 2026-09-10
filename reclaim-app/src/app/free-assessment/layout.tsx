@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+﻿import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Free Relationship Health Assessment | Reclaim Recovery Platform',
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: 'Free Relationship Health Check - Evaluate Your Relationship',
     description: 'Quick 8-question assessment to evaluate relationship dynamics and identify areas of concern. Get personalized insights and professional resources.',
     type: 'website',
-    url: 'https://reclaim.app/free-assessment',
+    url: 'https://reclaimyourlife.app/free-assessment',
     images: [{
       url: '/logo.png',
       width: 1200,
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     description: 'Evaluate your relationship dynamics with our free assessment tool. Get insights and resources for healthier relationships.',
   },
   robots: 'index, follow',
-  canonical: 'https://reclaim.app/free-assessment'
+  canonical: 'https://reclaimyourlife.app/free-assessment'
 }
 
 export default function FreeAssessmentLayout({
@@ -41,7 +41,7 @@ export default function FreeAssessmentLayout({
             "@type": "WebApplication",
             "name": "Free Relationship Health Assessment",
             "description": "Evaluate relationship dynamics and identify areas of concern with our free assessment tool",
-            "url": "https://reclaim.app/free-assessment",
+            "url": "https://reclaimyourlife.app/free-assessment",
             "applicationCategory": "HealthApplication",
             "operatingSystem": "Web",
             "offers": {
@@ -52,7 +52,7 @@ export default function FreeAssessmentLayout({
             "provider": {
               "@type": "Organization",
               "name": "Reclaim",
-              "url": "https://reclaim.app"
+              "url": "https://reclaimyourlife.app"
             }
           })
         }}

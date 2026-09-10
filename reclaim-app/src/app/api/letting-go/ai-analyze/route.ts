@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { generateAIResponse } from '@/lib/gemini-ai'
@@ -91,7 +91,7 @@ Step 3 (Mindfulness): ${latestEntry.present_moment_focus ? 'Completed' : 'Skippe
 Step 4 (Pattern Interrupt): ${latestEntry.pattern_interrupt_action ? 'Completed' : 'Skipped'}
 Step 5 (Third Person): ${latestEntry.third_person_perspective ? 'Completed' : 'Skipped'}
 
-MOOD SHIFT: ${latestEntry.emotional_state_before} → ${latestEntry.emotional_state_after} (${latestEntry.emotional_state_after - latestEntry.emotional_state_before > 0 ? '+' : ''}${latestEntry.emotional_state_after - latestEntry.emotional_state_before})
+MOOD SHIFT: ${latestEntry.emotional_state_before} â†’ ${latestEntry.emotional_state_after} (${latestEntry.emotional_state_after - latestEntry.emotional_state_before > 0 ? '+' : ''}${latestEntry.emotional_state_after - latestEntry.emotional_state_before})
 
 RAW THOUGHTS ANALYSIS:
 ${latestEntry.raw_thoughts || 'Not provided'}

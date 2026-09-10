@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { AlertTriangle, CheckCircle, Shield, Brain, TrendingDown } from 'lucide-react'
@@ -80,7 +80,7 @@ export default function DiscardStageTestPage() {
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <div className="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            💔 Free Test - No Signup Required
+            ðŸ’” Free Test - No Signup Required
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Which <span className="text-red-600">Discard Stage</span> Are You In?

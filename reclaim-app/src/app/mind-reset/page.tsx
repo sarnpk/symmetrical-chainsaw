@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -61,7 +61,7 @@ export default function MindResetPage() {
             href="/wellness" 
             className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
           >
-            ← Back to Wellness
+            â† Back to Wellness
           </Link>
         </div>
         <MindResetContent />

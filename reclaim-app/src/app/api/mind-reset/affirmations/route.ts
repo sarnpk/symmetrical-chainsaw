@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 
 // Phase 2: For now, return a curated default set. Favorites and prefs are handled by sibling routes.
 // Playlists can later be stored in DB; this endpoint stays stateless for caching simplicity.

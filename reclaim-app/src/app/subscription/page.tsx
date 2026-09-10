@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -76,7 +76,7 @@ export default function SubscriptionPage() {
         <div className="text-gray-700">{name}</div>
         {TIERS.map((t) => (
           <div key={t} className="text-gray-900">
-            {limits ? fmt(limits[t as TierKey][k] ?? -1) : '—'}
+            {limits ? fmt(limits[t as TierKey][k] ?? -1) : 'â€”'}
           </div>
         ))}
       </div>
@@ -132,20 +132,20 @@ export default function SubscriptionPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 text-sm">
-                  <div>AI Coach: <strong>{limits ? withPerMonth(limits[tier]['ai_interactions:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Patterns: <strong>{limits ? withPerMonth(limits[tier]['pattern_analysis:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Journal entries: <strong>{limits ? withPerMonth(limits[tier]['journal_entries:monthly_count'] ?? -1) : '—'}</strong>
+                  <div>AI Coach: <strong>{limits ? withPerMonth(limits[tier]['ai_interactions:monthly_count'] ?? -1) : 'â€”'}</strong></div>
+                  <div>Patterns: <strong>{limits ? withPerMonth(limits[tier]['pattern_analysis:monthly_count'] ?? -1) : 'â€”'}</strong></div>
+                  <div>Journal entries: <strong>{limits ? withPerMonth(limits[tier]['journal_entries:monthly_count'] ?? -1) : 'â€”'}</strong>
                     {tier === 'foundation' && (
                       <span className="ml-2 text-xs text-gray-600">(Basic fields)</span>
                     )}
                   </div>
-                  <div>Mind Reset: <strong>{limits ? withPerMonth(limits[tier]['mind_reset_sessions:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Boundary Builder: <strong>{limits ? withPerMonth(limits[tier]['boundary_builder:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Grey Rock: <strong>{limits ? withPerMonth(limits[tier]['grey_rock_messages:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Community posts: <strong>{limits ? withPerMonth(limits[tier]['community_posts:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Wellness: <strong>{limits ? withPerMonth(limits[tier]['wellness:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Transcription minutes: <strong>{limits ? withPerMonth(limits[tier]['transcription_minutes:minutes'] ?? -1) : '—'}</strong></div>
-                  <div>Evidence storage: <strong>{limits ? present(limits[tier]['storage:storage_mb'] ?? -1, (n) => `${n} MB`) : '—'}</strong></div>
+                  <div>Mind Reset: <strong>{limits ? withPerMonth(limits[tier]['mind_reset_sessions:monthly_count'] ?? -1) : 'â€”'}</strong></div>
+                  <div>Boundary Builder: <strong>{limits ? withPerMonth(limits[tier]['boundary_builder:monthly_count'] ?? -1) : 'â€”'}</strong></div>
+                  <div>Grey Rock: <strong>{limits ? withPerMonth(limits[tier]['grey_rock_messages:monthly_count'] ?? -1) : 'â€”'}</strong></div>
+                  <div>Community posts: <strong>{limits ? withPerMonth(limits[tier]['community_posts:monthly_count'] ?? -1) : 'â€”'}</strong></div>
+                  <div>Wellness: <strong>{limits ? withPerMonth(limits[tier]['wellness:monthly_count'] ?? -1) : 'â€”'}</strong></div>
+                  <div>Transcription minutes: <strong>{limits ? withPerMonth(limits[tier]['transcription_minutes:minutes'] ?? -1) : 'â€”'}</strong></div>
+                  <div>Evidence storage: <strong>{limits ? present(limits[tier]['storage:storage_mb'] ?? -1, (n) => `${n} MB`) : 'â€”'}</strong></div>
                 </div>
                 {tier !== currentTier && tier !== 'foundation' && (
                   <button

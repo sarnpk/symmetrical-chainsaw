@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { Shield, Plus, Trash2, AlertTriangle, TrendingDown, Calendar, HelpCircle } from 'lucide-react'
@@ -117,7 +117,7 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
       body: JSON.stringify(urgeForm)
     })
     if (res.ok) {
-      toast.success('Urge logged - You resisted! 💪')
+      toast.success('Urge logged - You resisted! ðŸ’ª')
       setShowUrgeForm(false)
       setUrgeForm({ urge_intensity: 5, withdrawal_symptoms: [], trigger_description: '', how_resisted: '' })
       loadData()
@@ -157,9 +157,9 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
         {stats && stats.daysNoContact > 0 && (
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg p-6 text-center">
             <div className="text-5xl font-bold mb-2">{stats.daysNoContact}</div>
-            <div className="text-xl">Days No Contact 🛡️</div>
+            <div className="text-xl">Days No Contact ðŸ›¡ï¸</div>
             <div className="mt-4 text-sm opacity-90">
-              {stats.totalUrgesLogged} urges logged • Avg intensity: {stats.avgUrgeIntensity}/10
+              {stats.totalUrgesLogged} urges logged â€¢ Avg intensity: {stats.avgUrgeIntensity}/10
             </div>
             {milestones?.nextMilestone && (
               <div className="mt-3 text-sm opacity-90">
@@ -171,13 +171,13 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
 
         {milestones && milestones.milestones.length > 0 && (
           <div className="bg-white rounded-lg p-6 border border-gray-200">
-            <h2 className="text-xl font-bold mb-4">🏆 Milestones Achieved</h2>
+            <h2 className="text-xl font-bold mb-4">ðŸ† Milestones Achieved</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {milestones.milestones.map(days => (
                 <div key={days} className="bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-lg p-4 text-center">
                   <div className="text-3xl font-bold mb-1">{days}</div>
                   <div className="text-sm">Days</div>
-                  <div className="text-2xl mt-2">🏆</div>
+                  <div className="text-2xl mt-2">ðŸ†</div>
                 </div>
               ))}
             </div>
@@ -223,7 +223,7 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
 
         {withdrawals.length > 0 && (
           <div className="bg-white rounded-lg p-6 border border-gray-200">
-            <h2 className="text-xl font-bold mb-4">📉 Urge Intensity Trend</h2>
+            <h2 className="text-xl font-bold mb-4">ðŸ“‰ Urge Intensity Trend</h2>
             <div className="relative h-64 mb-6">
               <svg className="w-full h-full" viewBox="0 0 800 200" preserveAspectRatio="none">
                 <defs>
@@ -288,7 +288,7 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
               </div>
             ))}
             {withdrawals.length === 0 && (
-              <p className="text-gray-500 text-center py-4">No urges logged yet. Stay strong! 💪</p>
+              <p className="text-gray-500 text-center py-4">No urges logged yet. Stay strong! ðŸ’ª</p>
             )}
           </div>
         </div>
@@ -303,10 +303,10 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
         {showCrisis && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
-              <h2 className="text-3xl font-bold text-red-600 mb-4">⚠️ BEFORE YOU CONTACT THEM</h2>
+              <h2 className="text-3xl font-bold text-red-600 mb-4">âš ï¸ BEFORE YOU CONTACT THEM</h2>
               
               <div className="bg-red-50 border-l-4 border-red-600 p-4 mb-6">
-                <p className="font-bold text-red-900 mb-2">🚨 STOP: This is Trauma Bond Withdrawal</p>
+                <p className="font-bold text-red-900 mb-2">ðŸš¨ STOP: This is Trauma Bond Withdrawal</p>
                 <p className="text-sm text-red-800">The anxiety, panic, and longing you feel right now is a <strong>withdrawal symptom</strong>, not a sign you made a mistake. You cannot heal if you keep taking small doses of the drug. Every contact re-triggers the dependency.</p>
               </div>
 
@@ -318,7 +318,7 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
               )}
 
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">📝 Why You Left (Your "Why I Left" List):</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">ðŸ“ Why You Left (Your "Why I Left" List):</h3>
                 <p className="text-sm text-gray-600 mb-3">In moments of weakness, you only remember the "good times." Here's the reality:</p>
                 <div className="space-y-3">
                   {memories.slice(0, 5).map((memory, idx) => (
@@ -334,7 +334,7 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
               </div>
 
               <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
-                <p className="font-bold text-yellow-900 mb-2">💡 Understanding Withdrawal</p>
+                <p className="font-bold text-yellow-900 mb-2">ðŸ’¡ Understanding Withdrawal</p>
                 <ul className="text-sm text-yellow-800 space-y-1 list-disc list-inside">
                   <li>This feeling is <strong>temporary</strong> - it will pass like a wave</li>
                   <li>Every contact resets your healing progress</li>
@@ -344,9 +344,9 @@ export default function NoContactAnchorContent({ userId }: { userId: string }) {
               </div>
 
               <div className="bg-blue-50 p-4 rounded-lg mb-6">
-                <p className="font-bold text-blue-900 mb-2">📞 Call Someone Safe Instead:</p>
+                <p className="font-bold text-blue-900 mb-2">ðŸ“ž Call Someone Safe Instead:</p>
                 <p className="text-sm text-blue-800 mb-3">Break the pattern. Reach out to your support network.</p>
-                <a href="/safety-plan" className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold">View Safety Plan Contacts →</a>
+                <a href="/safety-plan" className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold">View Safety Plan Contacts â†’</a>
               </div>
 
               <div className="flex gap-3">

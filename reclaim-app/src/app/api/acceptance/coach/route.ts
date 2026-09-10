@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase-server';
+﻿import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
 import { geminiAI } from '@/lib/gemini-ai';
 
@@ -112,7 +112,7 @@ Analyze this trigger and provide strategies:
         validation: 'Your feelings are valid. NPD is permanent, and accepting this is one of the hardest parts of healing.',
         affirmations: [
           'I am not responsible for their disorder',
-          'Accepting reality is not giving up—it\'s choosing peace',
+          'Accepting reality is not giving upâ€”it\'s choosing peace',
           'I deserve a life free from false hope'
         ],
         next_step: 'Take time to process these feelings. Healing is not linear.'

@@ -1,4 +1,4 @@
-# Custom Context Guide - Narcissist Simulator
+﻿# Custom Context Guide - Narcissist Simulator
 
 ## What is Custom Context?
 
@@ -69,14 +69,14 @@ When you paste your conversation, the AI analyzes:
 
 ## Tips for Best Results
 
-### ✅ DO:
+### âœ… DO:
 - Include at least 5-10 message exchanges
 - Include their typical manipulation tactics
 - Include examples of them escalating
 - Include examples of them reacting to boundaries
 - Use recent conversations (their current patterns)
 
-### ❌ DON'T:
+### âŒ DON'T:
 - Include just 1-2 messages (not enough to learn from)
 - Edit or clean up their messages (keep it real)
 - Include only "good" conversations (include the manipulation)
@@ -231,4 +231,4 @@ This is a **safe practice space**. You're not actually talking to them. You can:
 - Take breaks
 - Practice as many times as you need
 
-You're building skills to protect yourself. That's powerful. 💪
+You're building skills to protect yourself. That's powerful. ðŸ’ª

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -10,7 +10,7 @@ import { Profile } from '@/lib/supabase'
 import { Shield, Wind, Brain, Check } from 'lucide-react'
 
 const INTERACTION_TYPES = [
-  { value: 'live_interaction', label: '🔴 Live Interaction (Happening Now)' },
+  { value: 'live_interaction', label: 'ðŸ”´ Live Interaction (Happening Now)' },
   { value: 'pickup', label: 'Child Pickup' },
   { value: 'dropoff', label: 'Child Dropoff' },
   { value: 'phone_call', label: 'Phone Call' },
@@ -266,9 +266,9 @@ export default function MentalPausePage() {
                   <div className="text-center">
                     <div className="text-6xl font-bold text-white mb-2">{countdown}</div>
                     <div className="text-xl font-medium text-white">
-                      {breathingPhase === 'inhale' && '↑ Breathe In'}
-                      {breathingPhase === 'hold' && '⏸ Hold'}
-                      {breathingPhase === 'exhale' && '↓ Breathe Out'}
+                      {breathingPhase === 'inhale' && 'â†‘ Breathe In'}
+                      {breathingPhase === 'hold' && 'â¸ Hold'}
+                      {breathingPhase === 'exhale' && 'â†“ Breathe Out'}
                     </div>
                   </div>
                 </div>
@@ -305,19 +305,19 @@ export default function MentalPausePage() {
                 <div className="mb-6 space-y-3">
                   <div className="flex items-center justify-center gap-3">
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">↑</span>
+                      <span className="text-2xl">â†‘</span>
                     </div>
                     <p className="text-gray-700"><strong>Breathe IN</strong> through nose for <strong>4 seconds</strong></p>
                   </div>
                   <div className="flex items-center justify-center gap-3">
                     <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">⏸</span>
+                      <span className="text-2xl">â¸</span>
                     </div>
                     <p className="text-gray-700"><strong>HOLD</strong> for <strong>7 seconds</strong></p>
                   </div>
                   <div className="flex items-center justify-center gap-3">
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">↓</span>
+                      <span className="text-2xl">â†“</span>
                     </div>
                     <p className="text-gray-700"><strong>Breathe OUT</strong> through mouth for <strong>8 seconds</strong></p>
                   </div>
@@ -358,19 +358,19 @@ export default function MentalPausePage() {
             <CardContent className="space-y-6">
               <div className="bg-purple-50 p-6 rounded-lg space-y-4">
                 <div>
-                  <p className="font-medium text-purple-900 mb-2">🛡️ Visualize Your Protection</p>
+                  <p className="font-medium text-purple-900 mb-2">ðŸ›¡ï¸ Visualize Your Protection</p>
                   <p className="text-gray-700">
                     Imagine yourself wearing emotional armor. Nothing they say can penetrate it. Their words bounce off harmlessly.
                   </p>
                 </div>
                 <div>
-                  <p className="font-medium text-purple-900 mb-2">🧘 Ground Yourself</p>
+                  <p className="font-medium text-purple-900 mb-2">ðŸ§˜ Ground Yourself</p>
                   <p className="text-gray-700">
                     You are calm, detached, and focused. This is a business transaction, not a personal relationship.
                   </p>
                 </div>
                 <div>
-                  <p className="font-medium text-purple-900 mb-2">💪 Remember Your Strength</p>
+                  <p className="font-medium text-purple-900 mb-2">ðŸ’ª Remember Your Strength</p>
                   <p className="text-gray-700">
                     You have survived every difficult interaction before this. You will survive this one too.
                   </p>

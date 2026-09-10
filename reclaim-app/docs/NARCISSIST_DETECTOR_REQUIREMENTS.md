@@ -1,4 +1,4 @@
-# Narcissist Detector - Requirements & Implementation Plan
+﻿# Narcissist Detector - Requirements & Implementation Plan
 
 ## Executive Summary
 

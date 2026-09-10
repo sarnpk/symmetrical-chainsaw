@@ -1,4 +1,4 @@
-# Windows Deployment Guide for Netlify
+﻿# Windows Deployment Guide for Netlify
 
 ## Step 1: Install Netlify CLI
 
@@ -29,7 +29,7 @@ Before deploying, you need to set your environment variables in Netlify:
 ### Option A: Via Netlify Dashboard (Recommended)
 1. Go to https://app.netlify.com
 2. Select your site (or create a new one)
-3. Go to **Site settings** → **Environment variables**
+3. Go to **Site settings** â†’ **Environment variables**
 4. Add these variables:
 
 ```
@@ -82,7 +82,7 @@ After deployment, you'll get a Netlify URL like: `https://your-site.netlify.app`
 
 1. Go to your Supabase Dashboard: https://supabase.com/dashboard
 2. Select your project
-3. Go to **Authentication** → **URL Configuration**
+3. Go to **Authentication** â†’ **URL Configuration**
 4. Add your Netlify URL to:
    - **Site URL**: `https://your-site.netlify.app`
    - **Redirect URLs**: Add `https://your-site.netlify.app/**`
@@ -134,7 +134,7 @@ netlify logs
 
 ## Next Steps After Deployment
 
-1. ✅ Test your live site
-2. ✅ Set up custom domain (optional)
-3. ✅ Enable automatic deployments from Git
-4. ✅ Set up monitoring and alerts
+1. âœ… Test your live site
+2. âœ… Set up custom domain (optional)
+3. âœ… Enable automatic deployments from Git
+4. âœ… Set up monitoring and alerts

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -120,7 +120,7 @@ export default function NPDTraitsPage() {
               <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
               <div className="text-sm text-blue-800">
                 <p className="font-medium mb-1">Understanding NPD Traits</p>
-                <p>These traits help you identify patterns and objectify behavior. This isn't about hatred—it's about clarity and protection.</p>
+                <p>These traits help you identify patterns and objectify behavior. This isn't about hatredâ€”it's about clarity and protection.</p>
               </div>
             </div>
           </CardContent>
@@ -196,7 +196,7 @@ export default function NPDTraitsPage() {
                       <ul className="text-sm text-gray-600 space-y-1">
                         {trait.examples.slice(0, 2).map((example, idx) => (
                           <li key={idx} className="flex items-start gap-2">
-                            <span className="text-indigo-600 mt-1">•</span>
+                            <span className="text-indigo-600 mt-1">â€¢</span>
                             <span>{example}</span>
                           </li>
                         ))}

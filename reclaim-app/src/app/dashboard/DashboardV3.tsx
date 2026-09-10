@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -161,7 +161,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
           <div className="flex-1 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5 flex items-center justify-between gap-2">
             <span className="text-sm text-red-800"><strong className="text-red-900">911</strong> or <strong className="text-red-900">1-800-799-7233</strong></span>
             <div className="flex items-center gap-2">
-              <Link href="/safety-plan" className="text-xs font-medium text-red-600 hover:underline whitespace-nowrap">Safety Plan →</Link>
+              <Link href="/safety-plan" className="text-xs font-medium text-red-600 hover:underline whitespace-nowrap">Safety Plan â†’</Link>
               <button onClick={() => setShowSafetyBanner(false)} className="text-red-400 hover:text-red-600" aria-label="Dismiss"><X className="h-3.5 w-3.5" /></button>
             </div>
           </div>
@@ -189,7 +189,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
       <div>
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Quick Actions</h2>
-          <button onClick={() => document.getElementById('all-tools')?.scrollIntoView({ behavior: 'smooth' })} className="text-xs text-indigo-600 hover:text-indigo-700 font-medium">All Tools →</button>
+          <button onClick={() => document.getElementById('all-tools')?.scrollIntoView({ behavior: 'smooth' })} className="text-xs text-indigo-600 hover:text-indigo-700 font-medium">All Tools â†’</button>
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
           {featuredTools.map((tool) => (
@@ -229,7 +229,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
                 <div className="p-3 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer">
                   <div className="text-sm font-medium text-gray-900 line-clamp-1">{entry.title}</div>
                   <div className="text-xs text-gray-500 mt-0.5">
-                    {new Date(entry.incident_date).toLocaleDateString()} • Safety: {entry.safety_rating}/5
+                    {new Date(entry.incident_date).toLocaleDateString()} â€¢ Safety: {entry.safety_rating}/5
                   </div>
                   <p className="text-xs text-gray-600 line-clamp-1 mt-1">{entry.description}</p>
                 </div>

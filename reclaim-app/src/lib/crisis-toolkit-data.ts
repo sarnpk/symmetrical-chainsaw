@@ -1,4 +1,4 @@
-// Static crisis intervention data based on evidence-based techniques
+﻿// Static crisis intervention data based on evidence-based techniques
 
 export type ConditionType = 'anxiety' | 'depression' | 'ptsd' | 'social_anxiety' | 'ocd';
 
@@ -126,7 +126,7 @@ export const CRISIS_INTERVENTIONS: Record<ConditionType, CrisisIntervention> = {
       {
         id: 'brief_eye_contact',
         name: 'Brief Eye Contact',
-        description: 'Make brief eye contact for 1–2 seconds',
+        description: 'Make brief eye contact for 1â€“2 seconds',
         interactive: false
       },
       {

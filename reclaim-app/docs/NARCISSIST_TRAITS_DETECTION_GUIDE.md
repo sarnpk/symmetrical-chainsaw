@@ -1,4 +1,4 @@
-# Narcissist Traits Detection Guide
+﻿# Narcissist Traits Detection Guide
 
 ## Core Traits & Detection Patterns
 
@@ -673,7 +673,7 @@ I could have anyone. You should be grateful I'm with you."
 ### Base Score Calculation
 
 ```
-Total Confidence = (Trait Matches × Weight) / Total Possible Points
+Total Confidence = (Trait Matches Ã— Weight) / Total Possible Points
 
 Where:
 - Trait Matches = Number of detected traits

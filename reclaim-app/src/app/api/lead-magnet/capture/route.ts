@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 
@@ -75,15 +75,15 @@ async function sendLeadMagnetEmail(email: string, tool: string, data: any) {
     const resend = new Resend(process.env.RESEND_API_KEY)
     
     await resend.emails.send({
-      from: 'Reclaim Support <noreply@reclaim.app>',
+      from: 'Reclaim Support <noreply@reclaimyourlife.app>',
       to: email,
       subject: emailContent.subject,
       html: emailContent.body
     })
     
-    console.log('✅ Email sent successfully to:', email)
+    console.log('âœ… Email sent successfully to:', email)
   } catch (error) {
-    console.error('❌ Failed to send email:', error)
+    console.error('âŒ Failed to send email:', error)
     // Don't throw error - we still want to save the lead even if email fails
   }
 }
@@ -97,7 +97,7 @@ function getEmailContent(tool: string, data: any) {
       </div>
       <div style="text-align: center; margin-top: 20px; color: #6b7280; font-size: 14px;">
         <p>You're receiving this because you requested a guide from Reclaim.</p>
-        <p>Visit <a href="https://reclaim.app" style="color: #3b82f6;">Reclaim.app</a> for more resources.</p>
+        <p>Visit <a href="https://reclaimyourlife.app" style="color: #3b82f6;">reclaimyourlife.app</a> for more resources.</p>
       </div>
     </div>
   `
@@ -105,7 +105,7 @@ function getEmailContent(tool: string, data: any) {
   switch (tool) {
     case 'gaslighting-reality-check':
       return {
-        subject: '🎁 Your Free Reality Anchor Kit is Here!',
+        subject: 'ðŸŽ Your Free Reality Anchor Kit is Here!',
         body: baseStyle + `
           <h2 style="color: #1f2937; margin-bottom: 20px;">Your Reality Anchor Kit</h2>
           <p style="color: #374151; line-height: 1.6;">Hi there!</p>
@@ -114,22 +114,22 @@ function getEmailContent(tool: string, data: any) {
           <div style="background-color: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0;">
             <h3 style="color: #1f2937; margin-top: 0;">Your Reality Anchor Kit includes:</h3>
             <ul style="color: #374151; line-height: 1.8;">
-              <li>✓ 15 gaslighting phrases to watch for</li>
-              <li>✓ Reality validation checklist</li>
-              <li>✓ Memory documentation template</li>
-              <li>✓ Trusted person conversation guide</li>
+              <li>âœ“ 15 gaslighting phrases to watch for</li>
+              <li>âœ“ Reality validation checklist</li>
+              <li>âœ“ Memory documentation template</li>
+              <li>âœ“ Trusted person conversation guide</li>
             </ul>
           </div>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://reclaim.app/docs/reality-anchor-kit.pdf" 
+            <a href="https://reclaimyourlife.app/docs/reality-anchor-kit.pdf" 
                style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
-              📥 Download Your Reality Anchor Kit
+              ðŸ“¥ Download Your Reality Anchor Kit
             </a>
           </div>
           
           <div style="background-color: #fef3c7; padding: 15px; border-radius: 6px; border-left: 4px solid #f59e0b;">
-            <p style="margin: 0; color: #92400e; font-weight: 500;">💛 Remember: You're not crazy. Your feelings are valid.</p>
+            <p style="margin: 0; color: #92400e; font-weight: 500;">ðŸ’› Remember: You're not crazy. Your feelings are valid.</p>
           </div>
         ` + footerStyle
       }
@@ -137,7 +137,7 @@ function getEmailContent(tool: string, data: any) {
     default:
       const stageName = data.stageName || 'Survival'
       return {
-        subject: `🎁 Your Free "${stageName}" Guide is Ready`,
+        subject: `ðŸŽ Your Free "${stageName}" Guide is Ready`,
         body: baseStyle + `
           <h2 style="color: #1f2937; margin-bottom: 20px;">Your ${stageName} Guide</h2>
           <p style="color: #374151; line-height: 1.6;">Based on your assessment results, you're experiencing the <strong>${stageName.toLowerCase()}</strong> stage.</p>
@@ -145,22 +145,22 @@ function getEmailContent(tool: string, data: any) {
           <div style="background-color: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0;">
             <p style="color: #374151; margin: 0;">Your personalized guide includes:</p>
             <ul style="color: #374151; line-height: 1.8; margin-top: 10px;">
-              <li>✓ Stage-specific action plans</li>
-              <li>✓ Warning signs to watch for</li>
-              <li>✓ Coping strategies and resources</li>
-              <li>✓ Next steps for your healing journey</li>
+              <li>âœ“ Stage-specific action plans</li>
+              <li>âœ“ Warning signs to watch for</li>
+              <li>âœ“ Coping strategies and resources</li>
+              <li>âœ“ Next steps for your healing journey</li>
             </ul>
           </div>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://reclaim.app/docs/${data.stage || 'survival'}-guide.pdf" 
+            <a href="https://reclaimyourlife.app/docs/${data.stage || 'survival'}-guide.pdf" 
                style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
-              📥 Download Your ${stageName} Guide
+              ðŸ“¥ Download Your ${stageName} Guide
             </a>
           </div>
           
           <div style="background-color: #ecfdf5; padding: 15px; border-radius: 6px; border-left: 4px solid #10b981;">
-            <p style="margin: 0; color: #047857; font-weight: 500;">💚 You're taking important steps toward healing and reclaiming your life.</p>
+            <p style="margin: 0; color: #047857; font-weight: 500;">ðŸ’š You're taking important steps toward healing and reclaiming your life.</p>
           </div>
         ` + footerStyle
       }

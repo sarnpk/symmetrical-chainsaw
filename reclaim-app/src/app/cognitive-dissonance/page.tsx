@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -171,7 +171,7 @@ export default function CognitiveDissonancePage() {
                       <p className="text-blue-900">{alert.source_1_text}</p>
                     </div>
 
-                    <div className="text-center text-amber-600 font-semibold">⚠️ CONFLICTS WITH ⚠️</div>
+                    <div className="text-center text-amber-600 font-semibold">âš ï¸ CONFLICTS WITH âš ï¸</div>
 
                     <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
                       <div className="flex justify-between items-start mb-2">

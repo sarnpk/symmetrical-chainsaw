@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
@@ -39,7 +39,7 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
               FAQ
             </Link>
             <Link href="/donate" className="text-purple-600 hover:text-purple-700 font-semibold transition-colors">
-              💜 Donate
+              ðŸ’œ Donate
             </Link>
             {showAuth && (
               <>
@@ -66,13 +66,13 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
         {mobileMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 border-t pt-4 space-y-3">
             <Link href="/free-narcissist-test" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
-              🔍 Free Narcissist Test
+              ðŸ” Free Narcissist Test
             </Link>
             <Link href="/gaslighting-reality-check" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
-              👁️ Gaslighting Reality Check
+              ðŸ‘ï¸ Gaslighting Reality Check
             </Link>
             <Link href="/discard-stage-test" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
-              💔 Discard Stage Test
+              ðŸ’” Discard Stage Test
             </Link>
             <div className="border-t my-2"></div>
             <Link href="/pricing" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
@@ -85,7 +85,7 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
               FAQ
             </Link>
             <Link href="/donate" className="block py-2 text-purple-600 hover:text-purple-700 font-semibold">
-              💜 Donate
+              ðŸ’œ Donate
             </Link>
             {showAuth && (
               <>

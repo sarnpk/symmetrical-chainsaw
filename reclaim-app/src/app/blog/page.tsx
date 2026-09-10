@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -324,7 +324,7 @@ export default function BlogPage() {
                           href={`/blog/${post.slug}`}
                           className="text-indigo-600 hover:text-indigo-700 text-sm font-medium"
                         >
-                          Read →
+                          Read â†’
                         </Link>
                       </div>
                     </CardContent>

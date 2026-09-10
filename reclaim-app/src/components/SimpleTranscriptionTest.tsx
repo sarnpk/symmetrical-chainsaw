@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
 
@@ -31,7 +31,7 @@ export function SimpleTranscriptionTest() {
       setResult(null)
 
       try {
-        console.log('��� Testing with test endpoint - starting transcription')
+        console.log('ï¿½ï¿½ï¿½ Testing with test endpoint - starting transcription')
         
         const response = await fetch('/api/test-transcribe', {
           method: 'POST',
@@ -43,7 +43,7 @@ export function SimpleTranscriptionTest() {
         })
 
         const data = await response.json()
-        console.log('📊 Test API Response:', data)
+        console.log('ðŸ“Š Test API Response:', data)
 
         if (!response.ok) {
           throw new Error(data.error || `HTTP ${response.status}`)
@@ -54,7 +54,7 @@ export function SimpleTranscriptionTest() {
           setJobId(data.job_id)
         }
       } catch (err: any) {
-        console.error('❌ Test error:', err)
+        console.error('âŒ Test error:', err)
         setError(err.message)
       } finally {
         setLoading(false)
@@ -70,7 +70,7 @@ export function SimpleTranscriptionTest() {
       setResult(null)
 
       try {
-        console.log('🧪 Testing with test endpoint - checking status')
+        console.log('ðŸ§ª Testing with test endpoint - checking status')
         
         const response = await fetch('/api/test-transcribe', {
           method: 'POST',
@@ -82,7 +82,7 @@ export function SimpleTranscriptionTest() {
         })
 
         const data = await response.json()
-        console.log('📊 Test Status Response:', data)
+        console.log('ðŸ“Š Test Status Response:', data)
 
         if (!response.ok) {
           throw new Error(data.error || `HTTP ${response.status}`)
@@ -90,7 +90,7 @@ export function SimpleTranscriptionTest() {
 
         setResult(data)
       } catch (err: any) {
-        console.error('❌ Test status error:', err)
+        console.error('âŒ Test status error:', err)
         setError(err.message)
       } finally {
         setLoading(false)
@@ -129,7 +129,7 @@ export function SimpleTranscriptionTest() {
       setResult(null)
 
       try {
-        console.log('🚀 Testing with auth endpoint - starting transcription')
+        console.log('ðŸš€ Testing with auth endpoint - starting transcription')
         
         const token = await getAuthToken()
         const headers: Record<string, string> = {
@@ -150,7 +150,7 @@ export function SimpleTranscriptionTest() {
         })
 
         const data = await response.json()
-        console.log('📊 Auth API Response:', data)
+        console.log('ðŸ“Š Auth API Response:', data)
 
         if (!response.ok) {
           if (response.status === 401) {
@@ -164,7 +164,7 @@ export function SimpleTranscriptionTest() {
           setJobId(data.job_id)
         }
       } catch (err: any) {
-        console.error('❌ Auth test error:', err)
+        console.error('âŒ Auth test error:', err)
         setError(err.message)
       } finally {
         setLoading(false)
@@ -180,7 +180,7 @@ export function SimpleTranscriptionTest() {
       setResult(null)
 
       try {
-        console.log('🔍 Testing with auth endpoint - checking status')
+        console.log('ðŸ” Testing with auth endpoint - checking status')
         
         const token = await getAuthToken()
         const headers: Record<string, string> = {
@@ -201,7 +201,7 @@ export function SimpleTranscriptionTest() {
         })
 
         const data = await response.json()
-        console.log('📊 Auth Status Response:', data)
+        console.log('ðŸ“Š Auth Status Response:', data)
 
         if (!response.ok) {
           if (response.status === 401) {
@@ -212,7 +212,7 @@ export function SimpleTranscriptionTest() {
 
         setResult(data)
       } catch (err: any) {
-        console.error('❌ Auth status error:', err)
+        console.error('âŒ Auth status error:', err)
         setError(err.message)
       } finally {
         setLoading(false)
@@ -265,8 +265,8 @@ export function SimpleTranscriptionTest() {
         </div>
         <p className="text-xs text-blue-600 mt-2">
           {useTestEndpoint 
-            ? '✅ Using test endpoint - no authentication needed' 
-            : '⚠️ Using production endpoint - requires login'
+            ? 'âœ… Using test endpoint - no authentication needed' 
+            : 'âš ï¸ Using production endpoint - requires login'
           }
         </p>
       </div>
@@ -349,7 +349,7 @@ export function SimpleTranscriptionTest() {
           <p className="text-red-700">{error}</p>
           {error.includes('Authentication required') && (
             <p className="text-sm text-red-600 mt-2">
-              💡 Try switching to "Test Endpoint" mode above, or log in to your app first.
+              ðŸ’¡ Try switching to "Test Endpoint" mode above, or log in to your app first.
             </p>
           )}
         </div>

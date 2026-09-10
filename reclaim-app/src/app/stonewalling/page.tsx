@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -221,11 +221,11 @@ export default function StonewallPage() {
                 </select>
                 {formData.shutdown_type && (
                   <p className="text-xs text-gray-600 mt-2 italic">
-                    {formData.shutdown_type === 'silent_treatment' && '💬 Refusing to speak or acknowledge you, creating a wall of silence'}
-                    {formData.shutdown_type === 'physical_withdrawal' && '🚪 Leaving the room, house, or physically removing themselves from the situation'}
-                    {formData.shutdown_type === 'topic_avoidance' && '🚫 Refusing to discuss specific topics or changing the subject when brought up'}
-                    {formData.shutdown_type === 'emotional_unavailability' && '🧊 Present physically but emotionally shut down, cold, or distant'}
-                    {formData.shutdown_type === 'intimacy_withdrawal' && '💔 Withholding physical affection, intimacy, or closeness as punishment or control'}
+                    {formData.shutdown_type === 'silent_treatment' && 'ðŸ’¬ Refusing to speak or acknowledge you, creating a wall of silence'}
+                    {formData.shutdown_type === 'physical_withdrawal' && 'ðŸšª Leaving the room, house, or physically removing themselves from the situation'}
+                    {formData.shutdown_type === 'topic_avoidance' && 'ðŸš« Refusing to discuss specific topics or changing the subject when brought up'}
+                    {formData.shutdown_type === 'emotional_unavailability' && 'ðŸ§Š Present physically but emotionally shut down, cold, or distant'}
+                    {formData.shutdown_type === 'intimacy_withdrawal' && 'ðŸ’” Withholding physical affection, intimacy, or closeness as punishment or control'}
                   </p>
                 )}
               </div>
@@ -362,7 +362,7 @@ export default function StonewallPage() {
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
           <CardHeader className="cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-purple-800">💡 What is Stonewalling?</CardTitle>
+              <CardTitle className="text-purple-800">ðŸ’¡ What is Stonewalling?</CardTitle>
               {showInfo ? <ChevronUp className="h-5 w-5 text-purple-600" /> : <ChevronDown className="h-5 w-5 text-purple-600" />}
             </div>
           </CardHeader>
@@ -370,10 +370,10 @@ export default function StonewallPage() {
             <CardContent className="space-y-2 text-sm text-purple-900">
               <p>Emotional shutdown where someone refuses to communicate, creating a wall of silence.</p>
               <div className="space-y-1">
-                <div><strong>✓ Silent treatment:</strong> Ignoring you completely</div>
-                <div><strong>✓ Physical withdrawal:</strong> Leaving the room or situation</div>
-                <div><strong>✓ Topic avoidance:</strong> Refusing to discuss certain subjects</div>
-                <div><strong>✓ Track patterns:</strong> See what triggers shutdowns</div>
+                <div><strong>âœ“ Silent treatment:</strong> Ignoring you completely</div>
+                <div><strong>âœ“ Physical withdrawal:</strong> Leaving the room or situation</div>
+                <div><strong>âœ“ Topic avoidance:</strong> Refusing to discuss certain subjects</div>
+                <div><strong>âœ“ Track patterns:</strong> See what triggers shutdowns</div>
               </div>
             </CardContent>
           )}
@@ -474,7 +474,7 @@ export default function StonewallPage() {
                         )}
                         {incident.emotional_state_before && incident.emotional_state_after && (
                           <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full">
-                            {incident.emotional_state_before} → {incident.emotional_state_after}
+                            {incident.emotional_state_before} â†’ {incident.emotional_state_after}
                           </span>
                         )}
                       </div>

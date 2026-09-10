@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -218,12 +218,12 @@ export default function PositiveMomentsPage() {
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-green-800">🔥 Gratitude Streak</h3>
+                <h3 className="text-lg font-semibold text-green-800">ðŸ”¥ Gratitude Streak</h3>
                 <p className="text-green-700">Keep the momentum going!</p>
               </div>
               <div className="text-right">
                 <div className="text-3xl font-bold text-green-600">{streakData.current_streak || 0}</div>
-                <div className="text-sm text-green-600">Current • Best: {streakData.longest_streak || 0}</div>
+                <div className="text-sm text-green-600">Current â€¢ Best: {streakData.longest_streak || 0}</div>
               </div>
             </div>
           </div>
@@ -309,11 +309,11 @@ export default function PositiveMomentsPage() {
                         <div className="mt-2 p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
                           <p className="font-medium mb-2">Try these prompts:</p>
                           <ul className="space-y-1 text-xs">
-                            <li>• Someone who made me smile today...</li>
-                            <li>• A simple pleasure I enjoyed...</li>
-                            <li>• Something about my body I appreciate...</li>
-                            <li>• A challenge that helped me grow...</li>
-                            <li>• A moment of peace I experienced...</li>
+                            <li>â€¢ Someone who made me smile today...</li>
+                            <li>â€¢ A simple pleasure I enjoyed...</li>
+                            <li>â€¢ Something about my body I appreciate...</li>
+                            <li>â€¢ A challenge that helped me grow...</li>
+                            <li>â€¢ A moment of peace I experienced...</li>
                           </ul>
                         </div>
                       )}
@@ -481,8 +481,8 @@ export default function PositiveMomentsPage() {
                             moment.entry_type === 'both' ? 'bg-purple-100 text-purple-700' :
                             'bg-blue-100 text-blue-700'
                           }`}>
-                            {moment.entry_type === 'gratitude' ? '🙏 Gratitude' :
-                             moment.entry_type === 'both' ? '✨ Both' : '💫 Moment'}
+                            {moment.entry_type === 'gratitude' ? 'ðŸ™ Gratitude' :
+                             moment.entry_type === 'both' ? 'âœ¨ Both' : 'ðŸ’« Moment'}
                           </span>
                         )}
                         {moment.gratitude_category && (
@@ -525,7 +525,7 @@ export default function PositiveMomentsPage() {
         <div className="grid md:grid-cols-2 gap-4">
           <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
             <CardHeader>
-              <CardTitle className="text-blue-800">💡 Positive Moments</CardTitle>
+              <CardTitle className="text-blue-800">ðŸ’¡ Positive Moments</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-blue-700">
@@ -536,7 +536,7 @@ export default function PositiveMomentsPage() {
           
           <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
             <CardHeader>
-              <CardTitle className="text-green-800">🙏 Daily Gratitude</CardTitle>
+              <CardTitle className="text-green-800">ðŸ™ Daily Gratitude</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-green-700">

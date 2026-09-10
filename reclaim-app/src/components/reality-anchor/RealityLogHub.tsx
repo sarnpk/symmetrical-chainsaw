@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -176,7 +176,7 @@ export default function RealityLogHub({ user }: RealityLogHubProps) {
                         </span>
                         {entry.is_consistent && (
                           <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
-                            ✓ Consistent
+                            âœ“ Consistent
                           </span>
                         )}
                       </div>

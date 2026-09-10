@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Service-role client for privileged operations
@@ -9,13 +9,13 @@ const supabaseAdmin = createClient(
 
 // ROBUST transcription extraction - standardized across all components
 function extractTranscriptionText(result: any): string | null {
-  console.log('🔍 EXTRACTING TRANSCRIPTION FROM:', JSON.stringify(result, null, 2))
+  console.log('ðŸ” EXTRACTING TRANSCRIPTION FROM:', JSON.stringify(result, null, 2))
   
   // Priority 1: v2 format full_transcript (most reliable)
   if (result?.transcription?.full_transcript && typeof result.transcription.full_transcript === 'string') {
     const text = result.transcription.full_transcript.trim()
     if (text) {
-      console.log('✅ FOUND FULL_TRANSCRIPT:', text)
+      console.log('âœ… FOUND FULL_TRANSCRIPT:', text)
       return text
     }
   }
@@ -29,7 +29,7 @@ function extractTranscriptionText(result: any): string | null {
       .trim()
     
     if (text) {
-      console.log('✅ FOUND UTTERANCES TRANSCRIPTION:', text)
+      console.log('âœ… FOUND UTTERANCES TRANSCRIPTION:', text)
       return text
     }
   }
@@ -40,19 +40,19 @@ function extractTranscriptionText(result: any): string | null {
     if (prediction?.transcription && typeof prediction.transcription === 'string') {
       const text = prediction.transcription.trim()
       if (text) {
-        console.log('✅ FOUND PREDICTION TRANSCRIPTION:', text)
+        console.log('âœ… FOUND PREDICTION TRANSCRIPTION:', text)
         return text
       }
     }
   }
   
-  console.log('❌ NO TRANSCRIPTION TEXT FOUND')
+  console.log('âŒ NO TRANSCRIPTION TEXT FOUND')
   return null
 }
 
 export async function POST(request: Request) {
   try {
-    console.log('🎯 Simple transcription API called')
+    console.log('ðŸŽ¯ Simple transcription API called')
     
     // Get auth token
     const authHeader = request.headers.get('authorization')
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing audio_url' }, { status: 400 })
     }
     
-    console.log(`📁 Processing audio for user ${user.id}`)
+    console.log(`ðŸ“ Processing audio for user ${user.id}`)
     
     // Start transcription with Gladia
     const gladiaApiKey = process.env.GLADIA_API_KEY
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'GLADIA_API_KEY not configured' }, { status: 500 })
     }
 
-    console.log('🚀 Starting Gladia transcription...')
+    console.log('ðŸš€ Starting Gladia transcription...')
     
     const startResponse = await fetch('https://api.gladia.io/v2/transcription', {
       method: 'POST',
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
 
     const startResult = await startResponse.json()
     const jobId = startResult.id
-    console.log('✅ Gladia job started:', jobId)
+    console.log('âœ… Gladia job started:', jobId)
     
     // Update evidence file with job ID if provided
     if (evidence_file_id) {
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
     
     while (Date.now() - startTime < maxWaitMs) {
       attempt++
-      console.log(`⏳ Poll attempt ${attempt} for job ${jobId}`)
+      console.log(`â³ Poll attempt ${attempt} for job ${jobId}`)
       
       try {
         const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
@@ -163,13 +163,13 @@ export async function POST(request: Request) {
         consecutiveErrors = 0
 
         const result = await statusResponse.json()
-        console.log(`📊 Gladia response (attempt ${attempt}):`, JSON.stringify(result, null, 2))
+        console.log(`ðŸ“Š Gladia response (attempt ${attempt}):`, JSON.stringify(result, null, 2))
         
         // Use standardized transcription extraction
         const transcription = extractTranscriptionText(result)
         
         if (transcription) {
-          console.log(`🎉 Transcription completed: "${transcription}"`)
+          console.log(`ðŸŽ‰ Transcription completed: "${transcription}"`)
           
           // Update evidence file with completed transcription if provided
           if (evidence_file_id) {
@@ -252,7 +252,7 @@ export async function POST(request: Request) {
           delay = 10000
         }
         
-        console.log(`⏱️ Waiting ${delay}ms before next check...`)
+        console.log(`â±ï¸ Waiting ${delay}ms before next check...`)
         await new Promise(resolve => setTimeout(resolve, delay))
         
       } catch (pollError: any) {
@@ -272,7 +272,7 @@ export async function POST(request: Request) {
       }
     }
     
-    console.error('❌ Transcription timed out after 10 minutes')
+    console.error('âŒ Transcription timed out after 10 minutes')
     
     // Update evidence file with timeout if provided
     if (evidence_file_id) {
@@ -303,7 +303,7 @@ export async function POST(request: Request) {
     }, { status: 408 })
     
   } catch (error: any) {
-    console.error('❌ Simple transcription error:', error)
+    console.error('âŒ Simple transcription error:', error)
     
     return NextResponse.json({
       error: error.message || 'Transcription failed',
@@ -341,7 +341,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'GLADIA_API_KEY not configured' }, { status: 500 })
     }
     
-    console.log(`🔍 Checking status for job ${jobId}`)
+    console.log(`ðŸ” Checking status for job ${jobId}`)
     
     const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobId}`, {
       headers: { 'x-gladia-key': gladiaApiKey },
@@ -355,7 +355,7 @@ export async function GET(request: Request) {
     }
 
     const result = await statusResponse.json()
-    console.log(`📊 Status check result:`, JSON.stringify(result, null, 2))
+    console.log(`ðŸ“Š Status check result:`, JSON.stringify(result, null, 2))
     
     const transcription = extractTranscriptionText(result)
     
@@ -387,7 +387,7 @@ export async function GET(request: Request) {
     })
     
   } catch (error: any) {
-    console.error('❌ Status check error:', error)
+    console.error('âŒ Status check error:', error)
     
     return NextResponse.json({
       error: error.message || 'Status check failed',

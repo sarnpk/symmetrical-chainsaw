@@ -1,4 +1,4 @@
-interface SectionHeadingProps {
+﻿interface SectionHeadingProps {
   eyebrow?: string
   title: string
   lead?: string

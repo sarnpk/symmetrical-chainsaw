@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { Gift, Clock, Star, Users, Zap, Shield } from 'lucide-react'
@@ -10,7 +10,7 @@ export default function RedeemCodeLaunchPost() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="text-xl font-bold text-gray-900">Reclaim</Link>
           <div className="flex items-center gap-4">
-            <Link href="/blog" className="text-sm text-indigo-600 hover:underline">← Back to Blog</Link>
+            <Link href="/blog" className="text-sm text-indigo-600 hover:underline">â† Back to Blog</Link>
             <Link href="/auth" className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
               Get Started
             </Link>
@@ -34,7 +34,7 @@ export default function RedeemCodeLaunchPost() {
           </div>
 
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white mb-12">
-            <h2 className="text-2xl font-bold mb-6 text-center">🎁 Exclusive Trial Codes Available Now!</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">ðŸŽ Exclusive Trial Codes Available Now!</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
                 <div className="flex items-center gap-2 mb-3">
@@ -43,7 +43,7 @@ export default function RedeemCodeLaunchPost() {
                 </div>
                 <div className="text-2xl font-mono font-bold mb-2">YOUTUBE7DAY</div>
                 <p className="text-indigo-100 text-sm mb-3">7 days of Recovery features - Perfect for getting started</p>
-                <div className="text-xs text-indigo-200">Limited to first 100 users • Expires in 30 days</div>
+                <div className="text-xs text-indigo-200">Limited to first 100 users â€¢ Expires in 30 days</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
                 <div className="flex items-center gap-2 mb-3">
@@ -52,7 +52,7 @@ export default function RedeemCodeLaunchPost() {
                 </div>
                 <div className="text-2xl font-mono font-bold mb-2">RECOVERY30</div>
                 <p className="text-indigo-100 text-sm mb-3">30 days of full Empowerment access - Complete recovery suite</p>
-                <div className="text-xs text-indigo-200">Limited to 25 users • Perfect for serious healing journey</div>
+                <div className="text-xs text-indigo-200">Limited to 25 users â€¢ Perfect for serious healing journey</div>
               </div>
             </div>
             <div className="text-center mt-6">
@@ -114,7 +114,7 @@ export default function RedeemCodeLaunchPost() {
             </div>
 
             <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-6 my-8">
-              <h4 className="font-semibold text-indigo-900 mb-2">🎯 Take Action Today</h4>
+              <h4 className="font-semibold text-indigo-900 mb-2">ðŸŽ¯ Take Action Today</h4>
               <p className="text-indigo-700 mb-4">
                 Don't let this opportunity pass by. Recovery is a journey that deserves the best tools and support available.
               </p>

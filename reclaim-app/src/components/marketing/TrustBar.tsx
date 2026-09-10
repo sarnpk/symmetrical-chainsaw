@@ -1,4 +1,4 @@
-import { ShieldCheck, Lock, Languages, FileCheck2 } from 'lucide-react'
+﻿import { ShieldCheck, Lock, Languages, FileCheck2 } from 'lucide-react'
 
 const items = [
   { icon: ShieldCheck, label: 'AES-256 encrypted' },

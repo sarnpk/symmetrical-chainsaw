@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -231,7 +231,7 @@ export default function EmpathyAuditPage() {
                         checked={newSituation.asked_how_feeling}
                         onChange={(e) => setNewSituation({...newSituation, asked_how_feeling: e.target.checked})}
                       />
-                      <span className="text-sm">✅ Asked how I was feeling</span>
+                      <span className="text-sm">âœ… Asked how I was feeling</span>
                     </label>
                     <label className="flex items-center gap-2 p-3 border rounded hover:bg-green-50 cursor-pointer">
                       <input
@@ -239,7 +239,7 @@ export default function EmpathyAuditPage() {
                         checked={newSituation.listened_without_interrupting}
                         onChange={(e) => setNewSituation({...newSituation, listened_without_interrupting: e.target.checked})}
                       />
-                      <span className="text-sm">✅ Listened without interrupting</span>
+                      <span className="text-sm">âœ… Listened without interrupting</span>
                     </label>
                     <label className="flex items-center gap-2 p-3 border rounded hover:bg-green-50 cursor-pointer">
                       <input
@@ -247,7 +247,7 @@ export default function EmpathyAuditPage() {
                         checked={newSituation.validated_emotions}
                         onChange={(e) => setNewSituation({...newSituation, validated_emotions: e.target.checked})}
                       />
-                      <span className="text-sm">✅ Validated my emotions</span>
+                      <span className="text-sm">âœ… Validated my emotions</span>
                     </label>
                     <label className="flex items-center gap-2 p-3 border rounded hover:bg-green-50 cursor-pointer">
                       <input
@@ -255,7 +255,7 @@ export default function EmpathyAuditPage() {
                         checked={newSituation.offered_comfort}
                         onChange={(e) => setNewSituation({...newSituation, offered_comfort: e.target.checked})}
                       />
-                      <span className="text-sm">✅ Offered comfort or support</span>
+                      <span className="text-sm">âœ… Offered comfort or support</span>
                     </label>
                     <label className="flex items-center gap-2 p-3 border rounded hover:bg-red-50 cursor-pointer">
                       <input
@@ -263,7 +263,7 @@ export default function EmpathyAuditPage() {
                         checked={newSituation.made_it_about_themselves}
                         onChange={(e) => setNewSituation({...newSituation, made_it_about_themselves: e.target.checked})}
                       />
-                      <span className="text-sm">❌ Made it about themselves</span>
+                      <span className="text-sm">âŒ Made it about themselves</span>
                     </label>
                     <label className="flex items-center gap-2 p-3 border rounded hover:bg-red-50 cursor-pointer">
                       <input
@@ -271,7 +271,7 @@ export default function EmpathyAuditPage() {
                         checked={newSituation.minimized_experience}
                         onChange={(e) => setNewSituation({...newSituation, minimized_experience: e.target.checked})}
                       />
-                      <span className="text-sm">❌ Minimized my experience</span>
+                      <span className="text-sm">âŒ Minimized my experience</span>
                     </label>
                     <label className="flex items-center gap-2 p-3 border rounded hover:bg-red-50 cursor-pointer">
                       <input
@@ -279,7 +279,7 @@ export default function EmpathyAuditPage() {
                         checked={newSituation.blamed_for_feelings}
                         onChange={(e) => setNewSituation({...newSituation, blamed_for_feelings: e.target.checked})}
                       />
-                      <span className="text-sm">❌ Blamed me for my feelings</span>
+                      <span className="text-sm">âŒ Blamed me for my feelings</span>
                     </label>
                     <label className="flex items-center gap-2 p-3 border rounded hover:bg-red-50 cursor-pointer">
                       <input
@@ -287,7 +287,7 @@ export default function EmpathyAuditPage() {
                         checked={newSituation.got_angry}
                         onChange={(e) => setNewSituation({...newSituation, got_angry: e.target.checked})}
                       />
-                      <span className="text-sm">❌ Got angry at me for needing support</span>
+                      <span className="text-sm">âŒ Got angry at me for needing support</span>
                     </label>
                   </div>
                 </div>
@@ -509,13 +509,13 @@ export default function EmpathyAuditPage() {
             </div>
 
             <div className="border rounded-lg p-6 bg-amber-50">
-              <h3 className="font-semibold mb-3">💡 Guilt-Busting Affirmations</h3>
+              <h3 className="font-semibold mb-3">ðŸ’¡ Guilt-Busting Affirmations</h3>
               <ul className="space-y-2 text-sm">
-                <li>• Detaching from her is not cruel—it's survival</li>
-                <li>• My children need a stable parent, not one drained by her chaos</li>
-                <li>• I'm not abandoning her—she's an adult responsible for herself</li>
-                <li>• Protecting my peace is protecting my children</li>
-                <li>• I deserve to redirect my empathy to those who reciprocate</li>
+                <li>â€¢ Detaching from her is not cruelâ€”it's survival</li>
+                <li>â€¢ My children need a stable parent, not one drained by her chaos</li>
+                <li>â€¢ I'm not abandoning herâ€”she's an adult responsible for herself</li>
+                <li>â€¢ Protecting my peace is protecting my children</li>
+                <li>â€¢ I deserve to redirect my empathy to those who reciprocate</li>
               </ul>
             </div>
           </div>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -516,7 +516,7 @@ export default function AcceptancePage() {
                   <div className="flex-shrink-0">
                     {isCompleted(module.id) ? (
                       <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
-                        ✓ Complete
+                        âœ“ Complete
                       </span>
                     ) : (
                       <button
@@ -625,7 +625,7 @@ export default function AcceptancePage() {
                             <div className="text-sm font-medium mb-2">Affirmations</div>
                             <ul className="text-sm text-gray-700 space-y-1">
                               {aiCoaching.affirmations.map((aff: string, idx: number) => (
-                                <li key={idx}>• {aff}</li>
+                                <li key={idx}>â€¢ {aff}</li>
                               ))}
                             </ul>
                           </div>
@@ -688,22 +688,22 @@ export default function AcceptancePage() {
 
         {/* Acceptance Tips */}
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-blue-800 mb-3">💡 Daily Acceptance Tips</h3>
+          <h3 className="text-lg font-semibold text-blue-800 mb-3">ðŸ’¡ Daily Acceptance Tips</h3>
           <div className="space-y-4 text-sm text-blue-700">
             <div>
               <h4 className="font-medium mb-2">When Hope Resurfaces:</h4>
               <ul className="space-y-1 text-xs">
-                <li>• Remember: NPD is permanent</li>
-                <li>• The mask was never real</li>
-                <li>• Your healing matters more than their change</li>
+                <li>â€¢ Remember: NPD is permanent</li>
+                <li>â€¢ The mask was never real</li>
+                <li>â€¢ Your healing matters more than their change</li>
               </ul>
             </div>
             <div>
               <h4 className="font-medium mb-2">Reality Anchors:</h4>
               <ul className="space-y-1 text-xs">
-                <li>• Read your journal entries</li>
-                <li>• Talk to your support network</li>
-                <li>• Review documented abuse patterns</li>
+                <li>â€¢ Read your journal entries</li>
+                <li>â€¢ Talk to your support network</li>
+                <li>â€¢ Review documented abuse patterns</li>
               </ul>
             </div>
           </div>

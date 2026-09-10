@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -94,7 +94,7 @@ export default function AudioEvidenceCard({ evidenceFiles, evidenceUrls }: Audio
           const isUser = Boolean(s.is_user ?? s.speaker?.is_user)
           const name = (s.speaker_name || s.speaker_label || s.speaker || (isUser ? 'You' : 'Speaker')).toString()
           const txt = String(s.text ?? s.transcript ?? '').trim()
-          if (txt) lines.push(`${name} [${mmss(start)}–${mmss(end)}]: ${txt}`)
+          if (txt) lines.push(`${name} [${mmss(start)}â€“${mmss(end)}]: ${txt}`)
         }
         if (lines.length) return lines.join('\n')
       }
@@ -155,7 +155,7 @@ export default function AudioEvidenceCard({ evidenceFiles, evidenceUrls }: Audio
     <Card>
       <CardHeader className="pb-3 sm:pb-4">
         <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-          🎙️ Audio Evidence
+          ðŸŽ™ï¸ Audio Evidence
         </CardTitle>
         <CardDescription className="text-xs sm:text-sm">
           {audioFiles.length} audio {audioFiles.length === 1 ? 'recording' : 'recordings'} and transcriptions
@@ -168,12 +168,12 @@ export default function AudioEvidenceCard({ evidenceFiles, evidenceUrls }: Audio
               {/* Audio Header */}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  🎵
+                  ðŸŽµ
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-gray-900 text-sm sm:text-base">Audio Recording</p>
                   <p className="text-xs sm:text-sm text-gray-500">
-                    📅 {new Date(file.uploaded_at).toLocaleString()}
+                    ðŸ“… {new Date(file.uploaded_at).toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -252,7 +252,7 @@ export default function AudioEvidenceCard({ evidenceFiles, evidenceUrls }: Audio
                   <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full">Completed</span>
                 )}
                 {file.transcription_status === 'processing' && (
-                  <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">Processing…</span>
+                  <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">Processingâ€¦</span>
                 )}
                 {file.transcription_status === 'failed' && (
                   <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full">Failed</span>
@@ -277,7 +277,7 @@ export default function AudioEvidenceCard({ evidenceFiles, evidenceUrls }: Audio
                                 {segs.map((seg, idx) => (
                                   <div key={idx}>
                                     <span className="font-medium text-gray-900">{seg.speaker}</span>
-                                    <span className="text-gray-500"> {'['}{fmtMmSs(seg.start)}{'–'}{fmtMmSs(seg.end)}{']'}:</span>
+                                    <span className="text-gray-500"> {'['}{fmtMmSs(seg.start)}{'â€“'}{fmtMmSs(seg.end)}{']'}:</span>
                                     <div className="mt-0.5">{seg.text}</div>
                                   </div>
                                 ))}

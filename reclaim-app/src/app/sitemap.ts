@@ -1,7 +1,7 @@
-import { MetadataRoute } from 'next'
+﻿import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://reclaim.app'
+  const base = 'https://reclaimyourlife.app'
   const routes: { path: string; priority: number; weekly?: boolean }[] = [
     { path: '', priority: 1 },
     { path: '/free-assessment', priority: 0.9 },

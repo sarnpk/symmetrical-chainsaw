@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Metadata } from "next"
 import { ArrowLeft, Clock, User, BookOpen, ExternalLink, Shield, Eye, Phone } from "lucide-react"
 import QuizShell from "@/components/marketing/QuizShell"
@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   title: "What Is DARVO? The Narcissist's Favorite Trick",
   description: "DARVO stands for Deny, Attack, Reverse Victim and Offender. Learn how narcissists use this tactic and how to defend against it.",
   alternates: {
-    canonical: "https://www.reclaim.app/blog/darvo",
+    canonical: "https://reclaimyourlife.app/blog/darvo",
   },
   openGraph: {
     title: "What Is DARVO? The Narcissist's Favorite Trick",
     description: "DARVO stands for Deny, Attack, Reverse Victim and Offender. Learn how narcissists use this tactic and how to defend against it.",
     type: "article",
-    url: "https://www.reclaim.app/blog/darvo",
+    url: "https://reclaimyourlife.app/blog/darvo",
   },
 }
 

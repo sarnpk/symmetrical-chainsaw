@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -47,9 +47,9 @@ export default function SafetyPlanHelpPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Shield className="h-7 w-7 text-rose-600" />
-            <h1 className="ml-3 text-2xl font-bold text-gray-900">Safety Plan — Help</h1>
+            <h1 className="ml-3 text-2xl font-bold text-gray-900">Safety Plan â€” Help</h1>
           </div>
-          <Link href="/safety-plan" className="text-sm text-indigo-600 hover:text-indigo-700">Back to Safety Plan →</Link>
+          <Link href="/safety-plan" className="text-sm text-indigo-600 hover:text-indigo-700">Back to Safety Plan â†’</Link>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 space-y-3">

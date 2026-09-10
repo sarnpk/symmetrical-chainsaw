@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Metadata } from "next"
 import { ArrowLeft, Clock, User, BookOpen, ExternalLink, Heart, Star, Phone } from "lucide-react"
 import QuizShell from "@/components/marketing/QuizShell"
@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   title: "Signs You Have a Narcissistic Parent",
   description: "Growing up with a narcissistic parent leaves lasting wounds. Recognize the signs and start your healing journey.",
   alternates: {
-    canonical: "https://www.reclaim.app/blog/narcissistic-parent",
+    canonical: "https://reclaimyourlife.app/blog/narcissistic-parent",
   },
   openGraph: {
     title: "Signs You Have a Narcissistic Parent",
     description: "Growing up with a narcissistic parent leaves lasting wounds. Recognize the signs and start your healing journey.",
     type: "article",
-    url: "https://www.reclaim.app/blog/narcissistic-parent",
+    url: "https://reclaimyourlife.app/blog/narcissistic-parent",
   },
 }
 

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
 
@@ -20,7 +20,7 @@ export default function QuickFixPage() {
     setResult(null)
 
     try {
-      console.log('🔧 Quick fixing stuck transcription...')
+      console.log('ðŸ”§ Quick fixing stuck transcription...')
       
       const response = await fetch('/api/fix-stuck-test', {
         method: 'POST',
@@ -32,7 +32,7 @@ export default function QuickFixPage() {
       })
 
       const data = await response.json()
-      console.log('📊 Quick fix result:', data)
+      console.log('ðŸ“Š Quick fix result:', data)
 
       if (!response.ok) {
         throw new Error(data.error || `HTTP ${response.status}`)
@@ -41,10 +41,10 @@ export default function QuickFixPage() {
       setResult(data)
       
       if (data.success && data.status === 'completed') {
-        alert(`✅ FIXED! Your transcription is ready!\n\n"${data.transcription.substring(0, 200)}..."`)
+        alert(`âœ… FIXED! Your transcription is ready!\n\n"${data.transcription.substring(0, 200)}..."`)
       }
     } catch (err: any) {
-      console.error('❌ Quick fix error:', err)
+      console.error('âŒ Quick fix error:', err)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -52,7 +52,7 @@ export default function QuickFixPage() {
   }
 
   const directTest = async () => {
-    console.log('🚨 DIRECT TEST - Making raw fetch call')
+    console.log('ðŸš¨ DIRECT TEST - Making raw fetch call')
     try {
       const response = await fetch('/api/fix-stuck-test', {
         method: 'POST',
@@ -62,13 +62,13 @@ export default function QuickFixPage() {
         })
       })
       
-      console.log('🚨 DIRECT TEST - Response status:', response.status)
+      console.log('ðŸš¨ DIRECT TEST - Response status:', response.status)
       const data = await response.json()
-      console.log('🚨 DIRECT TEST - Response data:', data)
+      console.log('ðŸš¨ DIRECT TEST - Response data:', data)
       
       alert(`Direct test result:\nStatus: ${response.status}\nSuccess: ${data.success}\nTranscription: ${data.transcription ? 'FOUND!' : 'Not found'}\nError: ${data.error || 'None'}`)
     } catch (error: any) {
-      console.error('🚨 DIRECT TEST - Error:', error)
+      console.error('ðŸš¨ DIRECT TEST - Error:', error)
       alert(`Direct test error: ${error.message}`)
     }
   }
@@ -77,7 +77,7 @@ export default function QuickFixPage() {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
-          <h1 className="text-2xl font-bold mb-6">⚡ Quick Fix (No Auth Required)</h1>
+          <h1 className="text-2xl font-bold mb-6">âš¡ Quick Fix (No Auth Required)</h1>
           
           <p className="text-gray-600 mb-6">
             This tool fixes your stuck transcription without requiring authentication.
@@ -85,7 +85,7 @@ export default function QuickFixPage() {
 
           {/* Direct Test Button */}
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <h3 className="font-semibold text-red-800 mb-3">🚨 Emergency Fix</h3>
+            <h3 className="font-semibold text-red-800 mb-3">ðŸš¨ Emergency Fix</h3>
             <p className="text-sm text-red-700 mb-3">
               Click this to immediately fix your stuck transcription:
             </p>
@@ -93,7 +93,7 @@ export default function QuickFixPage() {
               onClick={directTest}
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-semibold"
             >
-              🚨 Fix Job: 0ba287cb-094f-4bfe-9c2a-f0a0ff04a588
+              ðŸš¨ Fix Job: 0ba287cb-094f-4bfe-9c2a-f0a0ff04a588
             </button>
           </div>
 
@@ -139,7 +139,7 @@ export default function QuickFixPage() {
             disabled={loading || (!jobId && !evidenceFileId)}
             className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed mb-6"
           >
-            {loading ? '⚡ Fixing...' : '⚡ Quick Fix'}
+            {loading ? 'âš¡ Fixing...' : 'âš¡ Quick Fix'}
           </button>
 
           {/* Loading */}
@@ -177,12 +177,12 @@ export default function QuickFixPage() {
               
               {result.transcription && (
                 <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-                  <h4 className="font-semibold text-green-800 mb-2">✅ TRANSCRIPTION RECOVERED:</h4>
+                  <h4 className="font-semibold text-green-800 mb-2">âœ… TRANSCRIPTION RECOVERED:</h4>
                   <p className="text-green-700">{result.transcription}</p>
                   
                   {result.fixed && (
                     <p className="text-sm text-green-600 mt-2">
-                      🎉 Database has been updated! Your journal should now show this transcription.
+                      ðŸŽ‰ Database has been updated! Your journal should now show this transcription.
                     </p>
                   )}
                 </div>

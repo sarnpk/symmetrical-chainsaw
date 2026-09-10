@@ -1,4 +1,4 @@
-// Gladia API Integration for Audio Transcription
+﻿// Gladia API Integration for Audio Transcription
 // Handles audio file transcription for evidence files
 
 interface GladiaTranscriptionRequest {

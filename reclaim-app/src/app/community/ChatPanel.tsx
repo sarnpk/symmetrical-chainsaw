@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useRef } from 'react'
 import { MessageCircle, Send, X, AlertCircle, Settings, Shield } from 'lucide-react'
@@ -214,7 +214,7 @@ export default function ChatPanel({ currentUserId }: { currentUserId: string }) 
         <>
           <div className="p-3 border-b border-gray-200 flex items-center gap-2">
             <button onClick={() => setActiveConv(null)} className="text-indigo-600 hover:text-indigo-700">
-              ← Back
+              â† Back
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">

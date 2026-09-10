@@ -1,4 +1,4 @@
-export default function TermsOfService() {
+﻿export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8">
@@ -74,16 +74,16 @@ export default function TermsOfService() {
           </ul>
 
           <div className="bg-purple-50 border-2 border-purple-600 p-6 rounded-lg my-6">
-            <h3 className="text-purple-900 font-bold text-lg mb-3">🛡️ YOUR DATA RIGHTS - CRYSTAL CLEAR</h3>
+            <h3 className="text-purple-900 font-bold text-lg mb-3">ðŸ›¡ï¸ YOUR DATA RIGHTS - CRYSTAL CLEAR</h3>
             <p className="text-purple-800 mb-3">
               We believe abuse survivors deserve absolute clarity about their data:
             </p>
             <ul className="text-purple-800 space-y-2">
-              <li><strong>✓ You own your data</strong> - We're just the secure storage</li>
-              <li><strong>✓ We process it only to serve you</strong> - AI analysis, pattern detection, etc.</li>
-              <li><strong>✓ We NEVER train AI models on your personal content</strong></li>
-              <li><strong>✓ We NEVER sell, license, or share your data</strong></li>
-              <li><strong>✓ You can export or delete everything anytime</strong></li>
+              <li><strong>âœ“ You own your data</strong> - We're just the secure storage</li>
+              <li><strong>âœ“ We process it only to serve you</strong> - AI analysis, pattern detection, etc.</li>
+              <li><strong>âœ“ We NEVER train AI models on your personal content</strong></li>
+              <li><strong>âœ“ We NEVER sell, license, or share your data</strong></li>
+              <li><strong>âœ“ You can export or delete everything anytime</strong></li>
             </ul>
             <p className="text-purple-800 mt-3 font-semibold">
               Your healing journey is private. Your data stays yours.
@@ -194,9 +194,9 @@ export default function TermsOfService() {
 
           <h2>14. Contact Information</h2>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <p><strong>Legal Inquiries:</strong> legal@reclaim.app</p>
-            <p><strong>General Support:</strong> support@reclaim.app</p>
-            <p><strong>Data Protection:</strong> privacy@reclaim.app</p>
+            <p><strong>Legal Inquiries:</strong> legal@reclaimyourlife.app</p>
+            <p><strong>General Support:</strong> support@reclaimyourlife.app</p>
+            <p><strong>Data Protection:</strong> privacy@reclaimyourlife.app</p>
           </div>
 
           <h2>15. Severability</h2>

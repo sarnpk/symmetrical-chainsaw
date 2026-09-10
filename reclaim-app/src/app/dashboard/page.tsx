@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -20,7 +20,7 @@ export default function DashboardPage() {
     let cancelled = false
 
     const load = async () => {
-      // Local-only session read — no network round trip before first paint.
+      // Local-only session read â€” no network round trip before first paint.
       const { data: { session } } = await supabase.auth.getSession()
       if (cancelled) return
 

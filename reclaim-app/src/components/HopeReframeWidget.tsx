@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { Lightbulb, Heart, ArrowRight } from 'lucide-react'
@@ -37,7 +37,7 @@ export default function HopeReframeWidget() {
 
         <div className="bg-amber-100 border border-amber-300 rounded-lg p-3 text-center">
           <p className="text-sm font-semibold text-amber-900">
-            💛 Shift perspective without denying pain
+            ðŸ’› Shift perspective without denying pain
           </p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-export default function PrivacyPolicy() {
+﻿export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8">
@@ -12,16 +12,16 @@ export default function PrivacyPolicy() {
           </p>
 
           <div className="bg-green-50 border-2 border-green-600 p-6 rounded-lg my-6">
-            <h3 className="text-green-900 font-bold text-lg mb-3">🔒 WE DO NOT USE YOUR PERSONAL DATA FOR AI TRAINING</h3>
+            <h3 className="text-green-900 font-bold text-lg mb-3">ðŸ”’ WE DO NOT USE YOUR PERSONAL DATA FOR AI TRAINING</h3>
             <p className="text-green-800 mb-3">
               <strong>Your privacy is absolute.</strong> We want to be crystal clear about what we DO NOT do with your data:
             </p>
             <ul className="text-green-800 space-y-2">
-              <li><strong>✗ We DO NOT</strong> use your journal entries to train AI models</li>
-              <li><strong>✗ We DO NOT</strong> use your conversations to improve language models</li>
-              <li><strong>✗ We DO NOT</strong> share your personal stories with third-party AI companies</li>
-              <li><strong>✗ We DO NOT</strong> feed your documentation into machine learning systems</li>
-              <li><strong>✗ We DO NOT</strong> sell or license your data to anyone for any purpose</li>
+              <li><strong>âœ— We DO NOT</strong> use your journal entries to train AI models</li>
+              <li><strong>âœ— We DO NOT</strong> use your conversations to improve language models</li>
+              <li><strong>âœ— We DO NOT</strong> share your personal stories with third-party AI companies</li>
+              <li><strong>âœ— We DO NOT</strong> feed your documentation into machine learning systems</li>
+              <li><strong>âœ— We DO NOT</strong> sell or license your data to anyone for any purpose</li>
             </ul>
             <p className="text-green-800 mt-3">
               When we process your content with AI (like analyzing manipulation patterns), it happens in real-time and is never stored or used for training. Your data is yours alone.
@@ -133,7 +133,7 @@ export default function PrivacyPolicy() {
           </ul>
 
           <h3>6.2 Exercising Rights</h3>
-          <p>Contact us at <a href="mailto:privacy@reclaim.app" className="text-indigo-600">privacy@reclaim.app</a> to exercise any of these rights. We will respond within 30 days.</p>
+          <p>Contact us at <a href="mailto:privacy@reclaimyourlife.app" className="text-indigo-600">privacy@reclaimyourlife.app</a> to exercise any of these rights. We will respond within 30 days.</p>
 
           <h2>7. Data Retention</h2>
           <ul>
@@ -165,8 +165,8 @@ export default function PrivacyPolicy() {
 
           <h2>11. Contact Information</h2>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <p><strong>Data Protection Officer:</strong> privacy@reclaim.app</p>
-            <p><strong>General Inquiries:</strong> support@reclaim.app</p>
+            <p><strong>Data Protection Officer:</strong> privacy@reclaimyourlife.app</p>
+            <p><strong>General Inquiries:</strong> support@reclaimyourlife.app</p>
             <p><strong>Mailing Address:</strong> [Company Address]</p>
           </div>
 

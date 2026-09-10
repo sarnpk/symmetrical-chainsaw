@@ -1,10 +1,10 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 
 export default function DonationAsk() {
   return (
     <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border-2 border-purple-200">
       <div className="flex items-start gap-3">
-        <div className="text-3xl">💜</div>
+        <div className="text-3xl">ðŸ’œ</div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 mb-2">Did this tool help you?</h3>
           <p className="text-sm text-gray-700 mb-3">
@@ -12,7 +12,7 @@ export default function DonationAsk() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/donate" className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 text-sm">
-              💜 Donate $5
+              ðŸ’œ Donate $5
             </Link>
             <Link href="/donate" className="px-4 py-2 border-2 border-purple-600 text-purple-600 rounded-lg font-semibold hover:bg-purple-50 text-sm">
               Learn More

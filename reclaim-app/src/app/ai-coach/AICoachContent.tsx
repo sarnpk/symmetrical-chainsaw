@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
 import {
@@ -777,7 +777,7 @@ export default function AICoachContent() {
               <div className="flex items-center gap-1 text-xs text-gray-600">
                 <Zap className="h-3 w-3 text-indigo-600" />
                 <span className="hidden sm:inline">
-                  {usageInfo.monthly_limit === -1 ? '∞' : `${usageInfo.remaining}/${usageInfo.monthly_limit}`}
+                  {usageInfo.monthly_limit === -1 ? 'âˆž' : `${usageInfo.remaining}/${usageInfo.monthly_limit}`}
                 </span>
                 <span className="sm:hidden">{usageInfo.remaining}</span>
               </div>
@@ -936,14 +936,14 @@ export default function AICoachContent() {
                       <button
                         onClick={() => handleFeedback(message.id, true)}
                         className={`p-1 rounded-sm ${message.helpful === true ? 'bg-green-100 text-green-600' : 'hover:bg-gray-100'}`}
-                        title="👍"
+                        title="ðŸ‘"
                       >
                         <ThumbsUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       </button>
                       <button
                         onClick={() => handleFeedback(message.id, false)}
                         className={`p-1 rounded-sm ${message.helpful === false ? 'bg-red-100 text-red-600' : 'hover:bg-gray-100'}`}
-                        title="👎"
+                        title="ðŸ‘Ž"
                       >
                         <ThumbsDown className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       </button>
@@ -1026,7 +1026,7 @@ export default function AICoachContent() {
                     }}
                     className="px-2 py-1.5 sm:px-3 sm:py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm text-left"
                   >
-                    <strong>Balanced</strong> - Moderate detail ⭐
+                    <strong>Balanced</strong> - Moderate detail â­
                   </button>
                   <button
                     onClick={() => {
@@ -1048,7 +1048,7 @@ export default function AICoachContent() {
                 className="text-blue-400 hover:text-blue-600 p-1 flex-shrink-0"
                 aria-label="Dismiss"
               >
-                ×
+                Ã—
               </button>
             </div>
           </div>

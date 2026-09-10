@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Service-role client for privileged operations
@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: Request) {
   try {
-    console.log('🔍 Transcription status check API called')
+    console.log('ðŸ” Transcription status check API called')
     
     // Get auth token
     const authHeader = request.headers.get('authorization')
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing evidence_file_id or job_id' }, { status: 400 })
     }
     
-    console.log(`📋 Checking status for evidence_file_id: ${evidence_file_id}, job_id: ${job_id}`)
+    console.log(`ðŸ“‹ Checking status for evidence_file_id: ${evidence_file_id}, job_id: ${job_id}`)
     
     // Get evidence file if ID provided
     let evidenceFile = null
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'GLADIA_API_KEY not configured' }, { status: 500 })
     }
     
-    console.log(`🔍 Checking Gladia status for job ${jobIdToCheck}`)
+    console.log(`ðŸ” Checking Gladia status for job ${jobIdToCheck}`)
     
     const statusResponse = await fetch(`https://api.gladia.io/v2/transcription/${jobIdToCheck}`, {
       headers: { 'x-gladia-key': gladiaApiKey },
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
     }
     
     const result = await statusResponse.json()
-    console.log(`📊 Gladia response:`, JSON.stringify(result, null, 2))
+    console.log(`ðŸ“Š Gladia response:`, JSON.stringify(result, null, 2))
     
     // Extract transcription using the same logic as the Edge function
     let transcription = null
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
       const text = result.transcription.full_transcript.trim()
       if (text) {
         transcription = text
-        console.log('✅ FOUND FULL_TRANSCRIPT:', transcription)
+        console.log('âœ… FOUND FULL_TRANSCRIPT:', transcription)
       }
     }
     
@@ -104,7 +104,7 @@ export async function POST(request: Request) {
       
       if (text) {
         transcription = text
-        console.log('✅ FOUND UTTERANCES TRANSCRIPTION:', transcription)
+        console.log('âœ… FOUND UTTERANCES TRANSCRIPTION:', transcription)
       }
     }
     
@@ -115,13 +115,13 @@ export async function POST(request: Request) {
         const text = prediction.transcription.trim()
         if (text) {
           transcription = text
-          console.log('✅ FOUND PREDICTION TRANSCRIPTION:', transcription)
+          console.log('âœ… FOUND PREDICTION TRANSCRIPTION:', transcription)
         }
       }
     }
     
     if (transcription) {
-      console.log(`🎉 Transcription completed: "${transcription}"`)
+      console.log(`ðŸŽ‰ Transcription completed: "${transcription}"`)
       
       // Update evidence file with completed transcription
       if (evidence_file_id) {
@@ -145,7 +145,7 @@ export async function POST(request: Request) {
             .eq('id', evidence_file_id)
             .eq('user_id', user.id)
           
-          console.log(`✅ Updated evidence file ${evidence_file_id} with completed transcription`)
+          console.log(`âœ… Updated evidence file ${evidence_file_id} with completed transcription`)
         } catch (dbError) {
           console.error('Failed to update evidence file:', dbError)
         }
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
             .eq('id', evidence_file_id)
             .eq('user_id', user.id)
           
-          console.log(`❌ Updated evidence file ${evidence_file_id} with error`)
+          console.log(`âŒ Updated evidence file ${evidence_file_id} with error`)
         } catch (dbError) {
           console.error('Failed to update evidence file with error:', dbError)
         }
@@ -200,7 +200,7 @@ export async function POST(request: Request) {
     }
     
     // Still processing
-    console.log(`⏳ Job ${jobIdToCheck} still processing (status: ${result.status})`)
+    console.log(`â³ Job ${jobIdToCheck} still processing (status: ${result.status})`)
     return NextResponse.json({
       success: true,
       status: 'processing',
@@ -209,7 +209,7 @@ export async function POST(request: Request) {
     })
     
   } catch (error: any) {
-    console.error('❌ Status check error:', error)
+    console.error('âŒ Status check error:', error)
     
     return NextResponse.json({
       error: error.message || 'Status check failed',

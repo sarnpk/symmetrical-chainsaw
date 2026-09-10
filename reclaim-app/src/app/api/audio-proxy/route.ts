@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseAdmin = createClient(
@@ -6,7 +6,7 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-const ALLOWED_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL || 'https://reclaim.app'
+const ALLOWED_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL || 'https://reclaimyourlife.app'
 
 export async function GET(request: Request) {
   try {
