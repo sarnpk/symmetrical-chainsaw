@@ -8,28 +8,22 @@ import {
   Heart,
   BookOpen,
   BarChart3,
-  FileCheck2,
-  MessageSquare,
-  AlertTriangle,
   Wind,
-  Anchor,
-  Sparkles,
   Lock,
-  ArrowRight,
   Check,
 } from 'lucide-react'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import SiteHeader from '@/components/marketing/SiteHeader'
-import SiteFooter from '@/components/marketing/SiteFooter'
+import ComplianceFooter from '@/components/marketing/ComplianceFooter'
 
 export const metadata: Metadata = {
-  title: 'Reclaim - Private AI Recovery Journal for Abuse Survivors',
+  title: 'Reclaim - Private Recovery Journal for Healing and Clarity',
   description:
-    'Turn your history into evidence. A private AI-assisted journal for survivors of narcissistic abuse  free assessment, gaslighting tracker, and trauma-informed support in 70+ languages.',
+    'A secure, private journaling platform with education-based tools and multilingual AI support for people healing from difficult relationships. Private, encrypted, and always in your control.',
   openGraph: {
-    title: 'Reclaim - Turn your history into evidence.',
+    title: 'Reclaim - Your journey to clarity starts here',
     description:
-      'Private AI-assisted journal for survivors of narcissistic abuse. Free assessment and recovery tools.',
+      'A secure, private platform for journaling, understanding relationship patterns, and rebuilding emotional boundaries.',
     type: 'website',
     url: 'https://reclaimyourlife.app',
     images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Reclaim' }],
@@ -39,29 +33,29 @@ export const metadata: Metadata = {
 }
 
 const features = [
-  { icon: HeartPulse, title: 'Reality Anchor Routine', description: 'Daily emotional detachment practice with Morning Intentions, Mental Pause, and Decompression Rituals.', color: 'amber', isNew: true },
-  { icon: Brain, title: 'Belief Reframe System', description: 'Challenge false beliefs from abuse with gentle reframing exercises, AI-guided perspective checking, and counter-evidence tracking.', color: 'green', isNew: true },
-  { icon: Heart, title: 'Positive Moments Journal', description: 'Capture good experiences to build counter-evidence against false beliefs and track your healing progress.', color: 'blue', isNew: true },
-  { icon: Brain, title: 'Multilingual AI Coach', description: 'Get trauma-informed support in 70+ languages including Urdu, Arabic, Hindi, Spanish, and more.', color: 'purple' },
-  { icon: BookOpen, title: 'Reality Log & Journal', description: 'Document incidents objectively and track emotional patterns with structured templates.', color: 'indigo' },
-  { icon: BarChart3, title: 'Manipulation Decoder', description: 'Analyze messages and conversations to identify NPD tactics and get Grey Rock responses.', color: 'green' },
-  { icon: Heart, title: 'Mind Reset & Wellness', description: 'Guided breathing, thought reframing, and personalized coping strategies.', color: 'pink' },
-  { icon: Shield, title: 'Safety & Boundaries', description: 'Emergency planning, Grey Rock techniques, and boundary-setting tools.', color: 'blue' },
+  { icon: HeartPulse, title: 'Reality Anchor Routine', description: 'Daily grounding practice with Morning Intentions, Mental Pause, and Decompression Rituals to help steady your day.', color: 'amber', isNew: true },
+  { icon: Brain, title: 'Guided Perspective Reframing', description: 'Work through unhelpful beliefs with gentle, structured exercises and evidence-based journaling prompts.', color: 'green', isNew: true },
+  { icon: Heart, title: 'Positive Moments Journal', description: 'Capture small wins and good experiences to restore balance and track gradual progress.', color: 'blue', isNew: true },
+  { icon: BarChart3, title: 'Multilingual AI Coach', description: 'Get caring, education-based support in 70+ languages including Urdu, Arabic, Hindi, Spanish, and more.', color: 'purple' },
+  { icon: BookOpen, title: 'Reality Log & Journal', description: 'Document experiences objectively with structured templates and track emotional patterns over time.', color: 'indigo' },
+  { icon: BarChart3, title: 'Communication Analyzer', description: 'Review phrases and conversations to build awareness of patterns and explore clearer ways to respond.', color: 'green' },
+  { icon: Wind, title: 'Mind Reset & Wellness', description: 'Guided breathing, gentle thought reframing, and personalized coping strategies for stressful moments.', color: 'pink' },
+  { icon: Shield, title: 'Safety & Boundaries', description: 'Practical tools for planning, setting boundaries, and staying grounded when you need it most.', color: 'blue' },
 ]
 
 const pricingTiers = [
   {
     name: 'Foundation',
     price: 'Free',
-    description: 'Basic access to get started',
+    description: 'Everything you need to begin',
     color: 'green',
     features: [
       'Reality Anchor: Morning Intentions & Mental Pause',
       'Journal & Reality Log: up to 3 entries per day',
       'Multilingual AI Coach: up to 5 chats per day',
-      'Manipulation Decoder: 1 analysis per day',
+      'Communication Analyzer: 1 review per day',
       'Mind Reset & Wellness: 1 exercise per day',
-      'Safety Plan & Grey Rock: full access',
+      'Safety Plan & Grounding Tools: full access',
       '100 MB secure file storage',
     ],
     cta: { label: 'Start free', href: '/auth' },
@@ -70,18 +64,18 @@ const pricingTiers = [
     name: 'Recovery',
     price: '$15',
     period: '/mo',
-    description: 'AI-powered recovery tools',
+    description: 'Deeper tools for steady progress',
     color: 'indigo',
     popular: true,
     features: [
       'Reality Anchor: Complete routine with streak tracking',
       'Journal & Reality Log: plenty of entries daily',
-      'Belief Reframe: AI-guided perspective reframing',
-      'Positive Moments: Counter-evidence journal',
+      'Guided Perspective Reframing: structured exercises',
+      'Positive Moments: Balance & progress journal',
       'Multilingual AI Coach: frequent daily conversations',
-      'Manipulation Decoder: multiple analyses per day',
+      'Communication Analyzer: multiple reviews per day',
       'Mind Reset & Wellness: several exercises daily',
-      'Advanced behavioral library & pattern insights',
+      'Education library on common relationship patterns',
       '60 minutes of audio transcription monthly',
       '10 GB secure file storage',
       'Priority support & early feature access',
@@ -92,17 +86,17 @@ const pricingTiers = [
     name: 'Empowered',
     price: '$24.99',
     period: '/mo',
-    description: 'Complete recovery suite',
+    description: 'The complete recovery suite',
     color: 'purple',
     features: [
-      'Reality Anchor: Unlimited with advanced analytics',
+      'Reality Anchor: Unlimited with advanced insights',
       'Journal & Reality Log: unlimited daily entries',
-      'Belief Reframe: Unlimited AI reality testing',
+      'Guided Perspective Reframing: unlimited exercises',
       'Positive Moments: Unlimited entries',
       'Multilingual AI Coach: unlimited conversations',
-      'Manipulation Decoder: unlimited analyses',
+      'Communication Analyzer: unlimited reviews',
       'Mind Reset & Wellness: unlimited exercises',
-      'Advanced behavior pattern dashboard',
+      'Advanced pattern awareness dashboard',
       '300 minutes of audio transcription monthly',
       '100 GB secure file storage',
       '24/7 priority support & beta features',
@@ -138,18 +132,19 @@ export default async function HomePage() {
         <section className="py-20 px-4">
           <div className="container mx-auto text-center">
             <h1 className="text-5xl font-bold text-gray-900 mb-6">
-              Your Journey to <span className="text-indigo-600">Recovery</span> Starts Here
+              Your Journey to <span className="text-indigo-600">Clarity</span> Starts Here
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              A secure, private platform designed specifically for survivors of narcissistic abuse.
-              Build emotional boundaries, get multilingual AI support, and heal at your own pace.
+              A secure, private platform for journaling, understanding relationship patterns,
+              and rebuilding emotional boundaries. Education-based tools and multilingual AI
+              support to help you heal at your own pace.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/auth"
                 className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg"
               >
-                Get Started  Free
+                Get Started  Free
               </Link>
               <Link
                 href="/learn-more"
@@ -165,7 +160,7 @@ export default async function HomePage() {
         <section className="py-16 px-4">
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-              Powerful Tools for Your Recovery
+              Thoughtful Tools for Your Healing
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
               {features.map((feature) => {
@@ -196,7 +191,7 @@ export default async function HomePage() {
         <section className="py-16 px-4 bg-white/60">
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-              Choose Your Recovery Plan
+              Choose Your Plan
             </h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {pricingTiers.map((tier) => (
@@ -242,13 +237,13 @@ export default async function HomePage() {
             </div>
             <div className="text-center mt-8">
               <Link href="/pricing" className="text-indigo-600 hover:text-indigo-700 font-medium inline-flex items-center gap-1">
-                View full comparison<ArrowRight className="h-4 w-4" />
+                View full comparison
               </Link>
             </div>
           </div>
         </section>
 
-        {/* Trust */}
+        {/* Privacy */}
         <section className="py-16 px-4">
           <div className="container mx-auto max-w-3xl text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
@@ -260,7 +255,7 @@ export default async function HomePage() {
             </h2>
             <p className="text-gray-600 mb-8">
               AES-256 encryption. We can't read your entries. No one can. Not us, not advertisers, not anyone.
-              Your healing stays private  always.
+              Your healing stays private  always.
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
               <div className="flex items-center gap-2">
@@ -273,14 +268,14 @@ export default async function HomePage() {
               </div>
               <div className="flex items-center gap-2">
                 <Heart className="h-4 w-4 text-green-600" />
-                <span>Trauma-informed</span>
+                <span>Privacy-focused design</span>
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      <SiteFooter />
+      <ComplianceFooter />
     </div>
   )
 }
