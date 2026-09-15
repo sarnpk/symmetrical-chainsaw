@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 
 const features = [
   { icon: HeartPulse, title: 'Reality Anchor Routine', description: 'Daily emotional detachment practice with Morning Intentions, Mental Pause, and Decompression Rituals.', color: 'amber', isNew: true },
-  { icon: Brain, title: 'Belief Reframe System', description: 'Challenge false beliefs from abuse with CBT techniques, AI-guided reality testing, and counter-evidence tracking.', color: 'green', isNew: true },
+  { icon: Brain, title: 'Belief Reframe System', description: 'Challenge false beliefs from abuse with gentle reframing exercises, AI-guided perspective checking, and counter-evidence tracking.', color: 'green', isNew: true },
   { icon: Heart, title: 'Positive Moments Journal', description: 'Capture good experiences to build counter-evidence against false beliefs and track your healing progress.', color: 'blue', isNew: true },
   { icon: Brain, title: 'Multilingual AI Coach', description: 'Get trauma-informed support in 70+ languages including Urdu, Arabic, Hindi, Spanish, and more.', color: 'purple' },
   { icon: BookOpen, title: 'Reality Log & Journal', description: 'Document incidents objectively and track emotional patterns with structured templates.', color: 'indigo' },
@@ -76,12 +76,12 @@ const pricingTiers = [
     features: [
       'Reality Anchor: Complete routine with streak tracking',
       'Journal & Reality Log: plenty of entries daily',
-      'Belief Reframe: AI-guided CBT reality testing',
+      'Belief Reframe: AI-guided perspective reframing',
       'Positive Moments: Counter-evidence journal',
       'Multilingual AI Coach: frequent daily conversations',
       'Manipulation Decoder: multiple analyses per day',
       'Mind Reset & Wellness: several exercises daily',
-      'Advanced NPD trait library & pattern insights',
+      'Advanced behavioral library & pattern insights',
       '60 minutes of audio transcription monthly',
       '10 GB secure file storage',
       'Priority support & early feature access',

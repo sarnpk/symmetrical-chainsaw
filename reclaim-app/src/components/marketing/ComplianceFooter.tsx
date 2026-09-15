@@ -35,7 +35,7 @@ export default function ComplianceFooter() {
               <span className="font-display text-lg font-semibold text-ink-900 tracking-tight">Reclaim</span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-ink-500 max-w-xs">
-              A private, AI-assisted journal and evidence platform that helps people
+              A private, AI-assisted journal and personal clarity platform that helps people
               document their experiences, understand relationship patterns, and
               rebuild clarity — in 70+ languages.
             </p>
