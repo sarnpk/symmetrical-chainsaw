@@ -76,7 +76,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
       id: 'protection',
       name: 'Protection',
       items: [
-        { name: 'Grey Rock', href: '/grey-rock-templates', icon: FileText, color: 'gray', featured: true },
+        { name: 'Grey Rock', href: '/grey-rock', icon: FileText, color: 'gray', featured: true },
         { name: 'BIFF Assistant', href: '/biff-assistant', icon: MessageSquare, color: 'indigo' },
         { name: 'Stonewalling', href: '/stonewalling', icon: Shield, color: 'slate' },
         { name: 'Reactive Abuse', href: '/reactive-abuse', icon: RotateCcw, color: 'purple' }

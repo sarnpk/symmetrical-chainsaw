@@ -27,7 +27,7 @@ interface UsageData {
 const quickActions = [
   { name: 'Document', desc: 'Record an incident', href: '/journal/new', icon: Plus, color: 'bg-indigo-100 text-indigo-600' },
   { name: 'AI Coach', desc: 'Get support now', href: '/ai-coach', icon: Brain, color: 'bg-purple-100 text-purple-600' },
-  { name: 'Grey Rock', desc: 'Response templates', href: '/grey-rock-templates', icon: FileText, color: 'bg-gray-100 text-gray-600' },
+  { name: 'Grey Rock', desc: 'Response templates', href: '/grey-rock', icon: FileText, color: 'bg-gray-100 text-gray-600' },
   { name: 'Crisis Help', desc: 'When you are spiraling', href: '/crisis-reframe', icon: AlertTriangle, color: 'bg-red-100 text-red-600' },
 ]
 

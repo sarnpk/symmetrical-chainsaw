@@ -55,7 +55,8 @@ export default function GreyRockPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="pt-4 sm:pt-6">
-        <div className="flex items-center justify-end mb-3">
+        <div className="flex items-center justify-between mb-3">
+          <Link href="/grey-rock-templates" className="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Browse Templates</Link>
           <Link href="/grey-rock/help" className="text-sm text-indigo-600 hover:text-indigo-700">Help</Link>
         </div>
         <GreyRockContent userId={user.id} subscriptionTier={profile.subscription_tier} />
