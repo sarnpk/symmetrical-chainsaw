@@ -179,7 +179,7 @@ export default function LearnMorePage() {
                 <div className="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full inline-block mb-4">
                   AI-Powered
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Multilingual AI Companion</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Multilingual AI Coach</h3>
                 <p className="text-gray-600 mb-6">
                   Get trauma-informed support in over 70 languages. Our AI is specifically trained to understand 
                   narcissistic abuse patterns and provide appropriate responses that validate your experience 
