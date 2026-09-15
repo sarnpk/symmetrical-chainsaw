@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import CookieBanner from "../components/CookieBanner"
 import CrisisToolkitWidget from "../components/CrisisToolkitWidget"
 import GoogleAnalytics from "../components/GoogleAnalytics"
+import ScrollToTop from "../components/ScrollToTop"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -115,6 +116,7 @@ export default function RootLayout({
         <main className="min-h-screen">
           {children}
         </main>
+        <ScrollToTop />
         <CrisisToolkitWidget />
         <CookieBanner />
         <Toaster 

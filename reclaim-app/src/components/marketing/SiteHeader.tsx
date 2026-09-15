@@ -114,7 +114,7 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
 
       {/* Mobile slide-over */}
       <div
-        className={`fixed inset-0 z-50 lg:hidden ${menuOpen ? '' : 'pointer-events-none'}`}
+        className={`fixed inset-0 z-[60] lg:hidden ${menuOpen ? '' : 'pointer-events-none'}`}
         aria-hidden={!menuOpen}
       >
         <div
