@@ -40,7 +40,7 @@ export default function NoContactWidget() {
         </div>
         <div className="text-center">
           <div className="text-5xl font-bold mb-2">{stats.daysNoContact}</div>
-          <div className="text-lg opacity-90">Days Strong ðŸ›¡ï¸</div>
+          <div className="text-lg opacity-90">Days Strong</div>
           {stats.totalUrgesLogged > 0 && (
             <div className="mt-4 flex items-center justify-center gap-2 text-sm opacity-90">
               <TrendingDown className="h-4 w-4" />

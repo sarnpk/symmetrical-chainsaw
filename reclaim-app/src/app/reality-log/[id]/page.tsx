@@ -7,7 +7,7 @@ import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Edit, Trash2 } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, Calendar, Target, Clipboard, Tag, MapPin, Lightbulb } from 'lucide-react'
 import Link from 'next/link'
 
 const NPD_TRAIT_DESCRIPTIONS: Record<string, string> = {
@@ -163,7 +163,7 @@ export default function RealityLogEntryPage() {
           <CardContent className="space-y-6">
             {/* Date */}
             <div>
-              <p className="text-sm text-gray-600">📅 Date</p>
+              <p className="text-sm text-gray-600 flex items-center gap-2"><Calendar className="h-4 w-4" />Date</p>
               <p className="text-lg font-medium text-gray-900 mt-1">
                 {new Date(entry.date).toLocaleDateString('en-US', {
                   weekday: 'long',
@@ -176,27 +176,27 @@ export default function RealityLogEntryPage() {
 
             {/* Event */}
             <div>
-              <p className="text-sm text-gray-600">🎯 Event</p>
+              <p className="text-sm text-gray-600 flex items-center gap-2"><Target className="h-4 w-4" />Event</p>
               <p className="text-lg font-medium text-gray-900 mt-1">{entry.event}</p>
             </div>
 
             {/* Fact */}
             <div>
-              <p className="text-sm text-gray-600">📋 Fact</p>
+              <p className="text-sm text-gray-600 flex items-center gap-2"><Clipboard className="h-4 w-4" />Fact</p>
               <p className="text-gray-700 mt-1 leading-relaxed">{entry.fact}</p>
             </div>
 
             {/* NPD Trait */}
             <div>
-              <p className="text-sm text-gray-600">🏷️ NPD Trait</p>
+              <p className="text-sm text-gray-600 flex items-center gap-2"><Tag className="h-4 w-4" />NPD Trait</p>
               <p className="text-lg font-medium text-indigo-600 mt-1">{entry.npd_trait}</p>
             </div>
 
             {/* Pattern */}
             {entry.is_consistent && (
               <div>
-                <p className="text-sm text-gray-600">📌 Pattern</p>
-                <p className="text-gray-700 mt-1"> Consistent with past behavior</p>
+                <p className="text-sm text-gray-600 flex items-center gap-2"><MapPin className="h-4 w-4" />Pattern</p>
+                <p className="text-gray-700 mt-1"> Consistent with past behavior</p>
                 {entry.pattern_note && (
                   <p className="text-gray-600 mt-2 italic">{entry.pattern_note}</p>
                 )}
@@ -208,7 +208,7 @@ export default function RealityLogEntryPage() {
         {/* Reality Check */}
         <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
           <CardHeader>
-            <CardTitle className="text-blue-900">💡 Reality Check</CardTitle>
+            <CardTitle className="text-blue-900 flex items-center gap-2"><Lightbulb className="h-5 w-5" />Reality Check</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -223,7 +223,7 @@ export default function RealityLogEntryPage() {
             </div>
 
             <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-green-900 font-medium"> Remember:</p>
+              <p className="text-green-900 font-medium"> Remember:</p>
               <p className="text-green-800 mt-2">
                 This is NOT your fault. This is her pattern. You are not crazy. You documented this.
               </p>

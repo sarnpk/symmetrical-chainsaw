@@ -122,9 +122,9 @@ export async function POST(req: Request) {
 
     const model = subscriptionTier === 'foundation' ? DEFAULT_FREE_TIER_MODEL : DEFAULT_PAID_TIER_MODEL
 
-    // Server-side timeout
+    // Server-side timeout (long messages need more time for Gemini to process)
     const controller = new AbortController()
-    const TIMEOUT_MS = 18000
+    const TIMEOUT_MS = 45000
     const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS)
 
     // Rolling history cap

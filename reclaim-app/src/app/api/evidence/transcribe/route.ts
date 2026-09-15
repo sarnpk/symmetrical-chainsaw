@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+function startOfCurrentMonthUTC(): string {
+  const now = new Date()
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0)).toISOString()
+}
+
 // Service-role client for privileged DB writes
 const supabaseSrv = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,6 +24,53 @@ export async function POST(request: Request) {
     const { data: { user }, error: authError } = await supabaseSrv.auth.getUser(token)
     if (authError || !user) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+    }
+
+    // Tier gating: check transcription limit
+    const { data: profile } = await supabaseSrv
+      .from('profiles')
+      .select('subscription_tier')
+      .eq('id', user.id)
+      .single()
+    const tier = (profile?.subscription_tier || 'foundation') as string
+
+    const { data: limitRow } = await supabaseSrv
+      .from('feature_limits')
+      .select('limit_value')
+      .eq('subscription_tier', tier)
+      .eq('feature_name', 'transcription_minutes')
+      .eq('limit_type', 'monthly_count')
+      .single()
+    const monthlyLimitMin = typeof limitRow?.limit_value === 'number' ? limitRow!.limit_value : -1
+
+    if (monthlyLimitMin === 0) {
+      return NextResponse.json({
+        error: 'Audio transcription is not available on your current plan',
+        upgrade_required: 'recovery',
+      }, { status: 403 })
+    }
+
+    // Check current usage if not unlimited
+    if (monthlyLimitMin > 0) {
+      const since = startOfCurrentMonthUTC()
+      const { data: usedFiles } = await supabaseSrv
+        .from('evidence_files')
+        .select('duration_seconds')
+        .eq('user_id', user.id)
+        .gte('uploaded_at', since)
+        .in('storage_bucket', ['evidence-audio'])
+        .limit(5000)
+
+      const usedSeconds = (usedFiles || []).reduce((s: number, f: any) => s + (Number(f.duration_seconds) || 0), 0)
+      const usedMinutes = Math.ceil(usedSeconds / 60)
+      if (usedMinutes >= monthlyLimitMin) {
+        return NextResponse.json({
+          error: 'Monthly transcription limit reached',
+          limit: monthlyLimitMin,
+          used: usedMinutes,
+          upgrade_required: tier === 'foundation' ? 'recovery' : 'empowerment',
+        }, { status: 429 })
+      }
     }
 
     const body = await request.json().catch(() => ({})) as {

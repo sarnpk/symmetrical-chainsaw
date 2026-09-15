@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Send, Bot, User, RotateCcw, AlertCircle, Loader, Shield, HelpCircle, Eye, TrendingUp, History, Trash2, Clock, ArrowDown } from 'lucide-react'
+import { Send, Bot, User, RotateCcw, AlertCircle, Loader, Shield, HelpCircle, Eye, TrendingUp, History, Trash2, Clock, ArrowDown, ThumbsUp, Check, Lightbulb, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -512,7 +512,7 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3 space-y-3">
                   {/* Important Notice */}
                   <div className="p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-                    <p className="font-semibold text-yellow-900">âš ï¸ Include names: I am "Your Name" and My Wife/Husband "Their Name"</p>
+                    <p className="font-semibold text-yellow-900"><AlertTriangle className="inline w-3.5 h-3.5 text-amber-500 mr-1" /> Include names: I am "Your Name" and My Wife/Husband "Their Name"</p>
                   </div>
 
                   {/* Situation Context Field */}
@@ -558,7 +558,7 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
             <div className="bg-white rounded-lg shadow-lg p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="text-sm">
-                  <span className="font-medium">Type:</span> {NARCISSIST_TYPES.find(t => t.id === narcissistType)?.label} ⬢ 
+                  <span className="font-medium">Type:</span> {NARCISSIST_TYPES.find(t => t.id === narcissistType)?.label} - 
                   <span className="font-medium ml-2">Scenario:</span> {SCENARIOS.find(s => s.id === scenario)?.label}
                 </div>
                 <div className="flex gap-2">
@@ -691,7 +691,7 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
                           'bg-orange-100 text-orange-800 border border-orange-300'
                         }`}>
                           <div className="font-semibold mb-1">
-                            {msg.feedback.effectiveness === 'excellent' ? 'âœ…' : msg.feedback.effectiveness === 'good' ? 'ðŸ‘' : 'âš ï¸'} {msg.feedback.technique}
+                            {msg.feedback.effectiveness === 'excellent' ? <Check className="inline w-3 h-3 text-green-600 mr-1" /> : msg.feedback.effectiveness === 'good' ? <ThumbsUp className="inline w-3 h-3" /> : <AlertTriangle className="inline w-3 h-3 text-amber-500" />} {msg.feedback.technique}
                           </div>
                           <div>{msg.feedback.suggestion}</div>
                         </div>
@@ -749,8 +749,9 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
                   {loading ? <Loader className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
-              <p className="text-[10px] text-gray-500 mt-2 px-2">
-                ðŸ’¡ Try grey rock (boring, brief) or BIFF (brief, informative, friendly, firm)
+              <p className="text-[10px] text-gray-500 mt-2 px-2 flex items-center gap-1">
+                <Lightbulb className="w-3 h-3 text-amber-500" />
+                Try grey rock (boring, brief) or BIFF (brief, informative, friendly, firm)
               </p>
             </div>
         </div>
@@ -769,7 +770,7 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
                 onClick={() => setShowHistory(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
-                âœ•
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -800,14 +801,13 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
                             <span className="text-sm font-medium text-gray-700">
                               {NARCISSIST_TYPES.find(t => t.id === session.narcissist_type)?.label}
                             </span>
-                            <span className="text-sm text-gray-500">⬢</span>
                             <span className="text-sm text-gray-500">
                               {SCENARIOS.find(s => s.id === session.scenario)?.label}
                             </span>
                           </div>
 
                           <div className="text-sm text-gray-600 mb-2">
-                            <strong>{session.total_messages}</strong> messages ⬢ 
+                            <strong>{session.total_messages}</strong> messages - 
                             Started {new Date(session.created_at).toLocaleDateString()} at {new Date(session.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
 

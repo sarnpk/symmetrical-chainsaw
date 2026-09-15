@@ -8,6 +8,7 @@ import StickyActionBar from "@/components/journal/mobile/StickyActionBar";
 import MobileFormCard from "@/components/journal/mobile/MobileFormCard";
 import MobileBehaviorGrid from "@/components/journal/mobile/MobileBehaviorGrid";
 import NPDTraitTagger from "@/components/journal/NPDTraitTagger";
+import { Search } from "lucide-react";
 
 // Base abuse patterns - always available
 const baseAbuseTypes = [
@@ -73,7 +74,7 @@ export default function BehaviorAssessmentPage() {
       
       <main className="flex-1 overflow-y-auto px-4 py-4">
         <MobileFormCard 
-          title="ðŸŽ­ Behavior Patterns"
+          title="Behavior Patterns"
           description="Select all patterns that apply (optional)"
         >
           {/* AI Suggestions Section */}
@@ -144,7 +145,7 @@ export default function BehaviorAssessmentPage() {
 
         {/* NPD Trait Tagging */}
         <MobileFormCard 
-          title="ðŸŽ¯ NPD Traits Identified"
+          title="NPD Traits Identified"
           description="Tag specific narcissistic traits you observed (Recovery+ feature)"
         >
           <NPDTraitTagger
@@ -158,7 +159,7 @@ export default function BehaviorAssessmentPage() {
           <div className="flex">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                <span className="text-amber-600 font-bold text-sm">ðŸ”</span>
+                <span className="flex items-center justify-center text-amber-600"><Search className="h-4 w-4" /></span>
               </div>
             </div>
             <div className="ml-3">

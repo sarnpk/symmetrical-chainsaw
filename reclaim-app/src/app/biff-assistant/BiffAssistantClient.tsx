@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
-import { HelpCircle, Sparkles, AlertTriangle, Trash2, Maximize2, Crown, ChevronDown, ChevronUp } from 'lucide-react';
+import { HelpCircle, Sparkles, AlertTriangle, Trash2, Maximize2, Crown, ChevronDown, ChevronUp, Lightbulb, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import VoiceTextInput from '@/components/VoiceTextInput';
@@ -219,7 +219,7 @@ export default function BiffAssistantClient() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-2">BIFF Communication Assistant</h1>
-              <p className="text-gray-600 text-sm">Brief ⬢ Informative ⬢ Friendly ⬢ Firm</p>
+              <p className="text-gray-600 text-sm">Brief / Informative / Friendly / Firm</p>
               <p className="text-indigo-600 text-xs font-medium mt-1">Radical Non-Engagement Tool</p>
             </div>
             <Link href="/docs/BIFF_ASSISTANT_USER_GUIDE.html" target="_blank">
@@ -233,7 +233,7 @@ export default function BiffAssistantClient() {
 
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-indigo-200 rounded-lg shadow p-4">
           <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
-            <h2 className="font-semibold text-indigo-800">ðŸ’¡ What is BIFF & Radical Non-Engagement?</h2>
+            <h2 className="font-semibold text-indigo-800 flex items-center gap-2"><Lightbulb className="h-5 w-5" />What is BIFF & Radical Non-Engagement?</h2>
             {showInfo ? <ChevronUp className="h-5 w-5 text-indigo-600" /> : <ChevronDown className="h-5 w-5 text-indigo-600" />}
           </div>
           {showInfo && (
@@ -252,7 +252,7 @@ export default function BiffAssistantClient() {
 
         {metrics && metrics.total_communications > 0 && (
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 rounded-lg shadow p-6">
-            <h2 className="font-semibold text-green-800 mb-4">ðŸ“Š This Month's Success Metrics</h2>
+            <h2 className="font-semibold text-green-800 mb-4 flex items-center gap-2"><BookOpen className="h-5 w-5" />This Month's Success Metrics</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">{metrics.success_rate}%</div>
@@ -271,7 +271,7 @@ export default function BiffAssistantClient() {
                 <div className="text-xs text-green-700">High BIFF Scores</div>
               </div>
             </div>
-            <p className="text-xs text-green-600 text-center mt-3">ðŸŽ‰ Every successful disengagement is a victory!</p>
+            <p className="text-xs text-green-600 text-center mt-3">Every successful disengagement is a victory!</p>
           </div>
         )}
 
@@ -405,7 +405,7 @@ export default function BiffAssistantClient() {
               </div>
               {jadeWarning && (
                 <div className="text-sm text-orange-600 font-medium">
-                  âš ï¸ JADE detected - remove justifications
+                  <AlertTriangle className="h-4 w-4 inline text-orange-600" /> JADE detected - remove justifications
                 </div>
               )}
             </div>
@@ -422,7 +422,7 @@ export default function BiffAssistantClient() {
           {messageTimestamp && (
             <p className="text-xs text-gray-600">
               Time elapsed: {Math.round((new Date().getTime() - messageTimestamp.getTime()) / (1000 * 60 * 60))} hours
-              {Math.round((new Date().getTime() - messageTimestamp.getTime()) / (1000 * 60 * 60)) >= 24 && ' âœ…'}
+              {Math.round((new Date().getTime() - messageTimestamp.getTime()) / (1000 * 60 * 60)) >= 24 && ''}
             </p>
           )}
 
@@ -497,8 +497,8 @@ export default function BiffAssistantClient() {
                   <div className="text-gray-700">{c.response_text?.substring(0, 100)}...</div>
                   <div className="mt-2 text-xs text-gray-500">
                     BIFF Score: {c.biff_score}/10
-                    {c.jade_detected && ' ⬢ JADE detected'}
-                    {c.cooling_off_used && ' ⬢ Cooling-off used'}
+                    {c.jade_detected && ' JADE detected'}
+                    {c.cooling_off_used && ' Cooling-off used'}
                   </div>
                 </div>
               ))

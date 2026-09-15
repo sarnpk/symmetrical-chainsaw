@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { TrendingUp, TrendingDown, AlertCircle, Clock, Target } from 'lucide-react'
+import { Minus, TrendingUp, TrendingDown, AlertCircle, Clock, Target } from 'lucide-react'
 
 interface PatternDashboardProps {
   incidents: any[]
@@ -107,7 +107,7 @@ export default function PatternDashboard({ incidents }: PatternDashboardProps) {
               ) : trend === 'decreasing' ? (
                 <TrendingDown className="h-10 w-10 text-green-400" />
               ) : (
-                <div className="h-10 w-10 text-yellow-400">â”</div>
+                <Minus className="h-10 w-10 text-yellow-400" />
               )}
             </div>
           </CardContent>

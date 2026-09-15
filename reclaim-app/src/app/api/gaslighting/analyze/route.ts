@@ -15,6 +15,13 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+    // Tier check
+    const { data: profile } = await supabase.from('profiles').select('subscription_tier').eq('id', user.id).single()
+    const tierRank: Record<string, number> = { foundation: 0, recovery: 1, empowerment: 2 }
+    if (!profile || (tierRank[profile.subscription_tier] || 0) < 1) {
+      return NextResponse.json({ error: 'Upgrade required', requiredTier: 'recovery' }, { status: 403 })
+    }
+
     const { data: statements } = await supabase
       .from('gaslighting_statements')
       .select('*')

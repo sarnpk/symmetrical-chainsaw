@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
-import CommunityContent from './CommunityContent'
+import dynamic from 'next/dynamic'
+const CommunityContent = dynamic(() => import('./CommunityContent'), { ssr: false })
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 

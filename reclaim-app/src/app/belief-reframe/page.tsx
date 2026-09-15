@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, RefreshCw, TrendingDown, CheckCircle, Edit, Trash2, HelpCircle } from 'lucide-react'
+import { Plus, RefreshCw, TrendingDown, CheckCircle, Edit, Trash2, HelpCircle, ArrowDown } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
@@ -152,8 +152,9 @@ export default function BeliefReframePage() {
                                 <CardDescription className="mt-2">
                                   Strength: {belief.current_strength}/10
                                   {strengthChange > 0 && (
-                                    <span className="text-green-600 ml-2">
-                                      â†“ {strengthChange} from {belief.initial_strength}
+                                    <span className="text-green-600 ml-2 flex items-center gap-1">
+                                      <ArrowDown className="h-4 w-4" />
+                                      {strengthChange} from {belief.initial_strength}
                                     </span>
                                   )}
                                 </CardDescription>
@@ -190,7 +191,6 @@ export default function BeliefReframePage() {
                             </div>
                             <div className="flex items-center gap-4 text-sm text-gray-600">
                               <span>{evidenceCount} counter-evidence</span>
-                              <span>⬢</span>
                               <span>Last updated {new Date(belief.updated_at).toLocaleDateString()}</span>
                             </div>
                           </CardContent>
@@ -216,7 +216,7 @@ export default function BeliefReframePage() {
                           <div className="flex-1">
                             <CardTitle className="text-lg text-green-900">{belief.belief_text}</CardTitle>
                             <CardDescription className="text-green-700">
-                              Final strength: {belief.current_strength}/10 ⬢ 
+                              Final strength: {belief.current_strength}/10 - 
                               Resolved {new Date(belief.updated_at).toLocaleDateString()}
                             </CardDescription>
                           </div>

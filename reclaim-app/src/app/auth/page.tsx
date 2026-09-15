@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
-import { LogIn, UserPlus } from 'lucide-react'
+import { Lock, LogIn, UserPlus } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import Logo from '@/components/marketing/Logo'
@@ -114,7 +114,8 @@ function AuthForm() {
           {redirectTo !== '/dashboard' && (
             <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-800">
-                �x Please sign in to access {redirectTo.replace('/', '').replace('-', ' ')}
+                <Lock className="h-4 w-4 inline-block mr-1 -mt-0.5" />
+                Please sign in to access {redirectTo.replace('/', '').replace('-', ' ')}
               </p>
             </div>
           )}

@@ -14,7 +14,9 @@ import {
   ArrowDown,
   Trash2,
   Volume2,
-  VolumeX
+  VolumeX,
+  Star,
+  X
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import toast from 'react-hot-toast'
@@ -37,6 +39,8 @@ function decodeAndFormatText(text: string): string {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&nbsp;/g, ' ')
+    .replace(/#{1,6}\s*/g, '') // Remove markdown heading markers (##, ###, etc.)
+    .replace(/---+/g, '') // Remove markdown horizontal rules
     .replace(/[\u0000-\u0008\u000B-\u000C\u000E-\u001F\u007F-\u009F]/g, '') // Remove control characters
     .replace(/\r\n/g, '\n') // Normalize line breaks
     .replace(/\r/g, '\n')
@@ -303,7 +307,7 @@ export default function AICoachContent() {
     loadUsageInfo()
   }, [])
 
-  // Load initial thread list
+  // Load initial thread list and auto-resume last active thread
   useEffect(() => {
     const loadThreads = async () => {
       try {
@@ -314,8 +318,18 @@ export default function AICoachContent() {
         })
         if (!res.ok) return
         const json = await res.json()
-        setThreads(json.items || [])
+        const items = json.items || []
+        setThreads(items)
         setThreadsCursor(json.next_cursor || null)
+
+        // Auto-resume the most recently updated thread
+        if (items.length > 0) {
+          const mostRecent = items.sort((a: any, b: any) =>
+            new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          )[0]
+          setConversationId(mostRecent.id)
+          await loadThreadMessages(mostRecent.id)
+        }
       } catch (e) {
         console.error('Failed to load threads', e)
       }
@@ -324,6 +338,13 @@ export default function AICoachContent() {
   }, [])
 
   // Helpers to load a thread's messages (first page)
+  const GREETING_MESSAGE: Message = {
+    id: '1',
+    type: 'ai',
+    content: "Hello! I'm your AI Coach, trained specifically to support survivors of narcissistic abuse. I'm here to listen, validate your experiences, and provide guidance on your healing journey. What would you like to talk about today?",
+    timestamp: new Date()
+  }
+
   const loadThreadMessages = async (convId: string) => {
     try {
       const { data: { session } } = await supabase.auth.getSession()
@@ -342,8 +363,8 @@ export default function AICoachContent() {
         timestamp: new Date(m.created_at)
       }))
       // Include greeting if empty
-      const initial = mapped.length === 0 ? messages.slice(0, 1) : []
-      setMessages([...(initial as any), ...mapped])
+      const initial = mapped.length === 0 ? [GREETING_MESSAGE] : []
+      setMessages([...initial, ...mapped])
       setMessagesCursor(json.next_cursor || null)
     } catch (e) {
       console.error('Failed to load messages', e)
@@ -496,7 +517,7 @@ export default function AICoachContent() {
               'Authorization': `Bearer ${session.access_token}`
             },
             body: JSON.stringify(payload)
-          }, 20000)
+          }, 50000)
           data = await response.json()
           break
         } catch (err: any) {
@@ -621,9 +642,13 @@ export default function AICoachContent() {
         }
       }, typingSpeed)
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('AI chat error:', error)
-      toast.error('Failed to connect to AI Coach. Please try again.')
+      if (error?.name === 'AbortError' || error?.message?.includes('timeout')) {
+        toast.error('AI response is taking too long. Try a shorter message or try again later.')
+      } else {
+        toast.error('Failed to connect to AI Coach. Please try again.')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -716,6 +741,12 @@ export default function AICoachContent() {
     }
   }, [])
 
+  // Lock body scroll when AI Coach is mounted
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
   // Keyboard shortcut to read the latest AI message (Ctrl/Cmd + R)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -740,7 +771,7 @@ export default function AICoachContent() {
   }, [messages, speakingMessageId])
 
   return (
-    <div className="fixed inset-0 lg:left-64 flex flex-col bg-gray-50">
+    <div className="fixed inset-0 lg:left-64 flex flex-col bg-gray-50 overflow-hidden">
       {/* SR-only live region for copy feedback */}
       <div className="sr-only" role="status" aria-live="polite">{copyStatus}</div>
       {/* Compact Mobile Header */}
@@ -777,7 +808,7 @@ export default function AICoachContent() {
               <div className="flex items-center gap-1 text-xs text-gray-600">
                 <Zap className="h-3 w-3 text-indigo-600" />
                 <span className="hidden sm:inline">
-                  {usageInfo.monthly_limit === -1 ? 'âˆž' : `${usageInfo.remaining}/${usageInfo.monthly_limit}`}
+                  {usageInfo.monthly_limit === -1 ? 'Unlimited' : `${usageInfo.remaining}/${usageInfo.monthly_limit}`}
                 </span>
                 <span className="sm:hidden">{usageInfo.remaining}</span>
               </div>
@@ -936,14 +967,14 @@ export default function AICoachContent() {
                       <button
                         onClick={() => handleFeedback(message.id, true)}
                         className={`p-1 rounded-sm ${message.helpful === true ? 'bg-green-100 text-green-600' : 'hover:bg-gray-100'}`}
-                        title="ðŸ‘"
+                        title="Like"
                       >
                         <ThumbsUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       </button>
                       <button
                         onClick={() => handleFeedback(message.id, false)}
                         className={`p-1 rounded-sm ${message.helpful === false ? 'bg-red-100 text-red-600' : 'hover:bg-gray-100'}`}
-                        title="ðŸ‘Ž"
+                        title="Dislike"
                       >
                         <ThumbsDown className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       </button>
@@ -1024,9 +1055,9 @@ export default function AICoachContent() {
                       setShowLengthPrompt(false)
                       toast.success('Preference saved: Balanced responses')
                     }}
-                    className="px-2 py-1.5 sm:px-3 sm:py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm text-left"
+                    className="px-2 py-1.5 sm:px-3 sm:py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm text-left inline-flex items-center gap-1"
                   >
-                    <strong>Balanced</strong> - Moderate detail ⭐
+                    <strong>Balanced</strong> - Moderate detail <Star className="h-3 w-3 inline-block text-amber-500" />
                   </button>
                   <button
                     onClick={() => {
@@ -1048,7 +1079,7 @@ export default function AICoachContent() {
                 className="text-blue-400 hover:text-blue-600 p-1 flex-shrink-0"
                 aria-label="Dismiss"
               >
-                Ã—
+                <X className="h-4 w-4" />
               </button>
             </div>
           </div>

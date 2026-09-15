@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
       .from('community_messages')
       .select('id, content, sender_id, created_at, edited_at, profiles(id, email)')
       .eq('conversation_id', conversationId)
+      .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
       .order('created_at', { ascending: false })
       .limit(limit)
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { ArrowLeft, Edit, Trash2, MoreVertical, Download } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, MoreVertical, Download, X } from 'lucide-react'
 import type { JournalEntry } from '@/lib/supabase'
 
 interface JournalEntryHeaderProps {
@@ -137,7 +137,7 @@ export default function JournalEntryHeader({ entry, onDelete }: JournalEntryHead
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Export Entry</h3>
               <button onClick={() => setShowExport(false)} className="p-2 hover:bg-gray-100 rounded-lg">
-                âœ•
+                <X className="h-4 w-4" />
               </button>
             </div>
             <div className="space-y-4">
@@ -168,7 +168,7 @@ export default function JournalEntryHeader({ entry, onDelete }: JournalEntryHead
               <div className="flex justify-end gap-2 pt-2">
                 <button onClick={() => setShowExport(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-300">Cancel</button>
                 <button onClick={handleExport} disabled={downloading} className="px-4 py-2 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60">
-                  {downloading ? 'Preparing⬦' : 'Download'}
+                  {downloading ? 'Preparing...' : 'Download'}
                 </button>
               </div>
             </div>

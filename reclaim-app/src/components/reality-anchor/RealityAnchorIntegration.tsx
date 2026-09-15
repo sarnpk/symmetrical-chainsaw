@@ -9,7 +9,8 @@ import {
   BookOpen,
   Eye,
   Plus,
-  CheckCircle
+  CheckCircle,
+  ArrowRight
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -323,7 +324,7 @@ export default function RealityAnchorIntegration({ userId, subscriptionTier }: R
                     href={`/journal/${entry.id}`}
                     className="text-sm text-indigo-600 hover:text-indigo-700"
                   >
-                    View entry â†’
+                    View entry <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
               ))
@@ -365,7 +366,7 @@ export default function RealityAnchorIntegration({ userId, subscriptionTier }: R
                   href={`/npd-traits/${trait.id}`}
                   className="text-xs text-indigo-600 hover:text-indigo-700 mt-1 block"
                 >
-                  Learn more â†’
+                  Learn more <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
             ))}
@@ -376,7 +377,7 @@ export default function RealityAnchorIntegration({ userId, subscriptionTier }: R
               href="/npd-traits"
               className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              View all NPD traits â†’
+              View all NPD traits <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </CardContent>

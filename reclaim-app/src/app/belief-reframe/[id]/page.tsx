@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Plus, TrendingDown, Brain, Sparkles, Trash2, Image, Mic, FileText, Edit3, Printer } from 'lucide-react'
+import { ArrowLeft, Plus, TrendingDown, Brain, Sparkles, Trash2, Image, Mic, FileText, Edit3, Printer, BarChart3, Lightbulb, AlertTriangle } from 'lucide-react'
 import VoiceTextInput from '@/components/VoiceTextInput'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
@@ -524,7 +524,7 @@ export default function BeliefDetailPage() {
                 </div>
                 {empoweringAnalogy.core_message && (
                   <div className="p-4 bg-purple-100 rounded-lg border-l-4 border-purple-600">
-                    <p className="text-purple-900 font-semibold">💪 {empoweringAnalogy.core_message}</p>
+                    <p className="text-purple-900 font-semibold flex items-center gap-2"><Sparkles className="h-4 w-4 text-purple-600" />{empoweringAnalogy.core_message}</p>
                   </div>
                 )}
               </div>
@@ -577,13 +577,13 @@ export default function BeliefDetailPage() {
                 </div>
                 {recoveryStory.statistic && (
                   <div className="p-3 bg-green-100 rounded-lg">
-                    <p className="text-sm font-semibold text-green-900 mb-1">📊 You're Not Alone:</p>
+                    <p className="text-sm font-semibold text-green-900 mb-1 flex items-center gap-2"><BarChart3 className="h-4 w-4 text-green-600" />You're Not Alone:</p>
                     <p className="text-green-800">{recoveryStory.statistic}</p>
                   </div>
                 )}
                 {recoveryStory.key_takeaway && (
                   <div className="p-3 bg-emerald-100 rounded-lg">
-                    <p className="text-sm font-semibold text-emerald-900 mb-1">💡 Key Takeaway:</p>
+                    <p className="text-sm font-semibold text-emerald-900 mb-1 flex items-center gap-2"><Lightbulb className="h-4 w-4 text-emerald-600" />Key Takeaway:</p>
                     <p className="text-emerald-800 font-medium">{recoveryStory.key_takeaway}</p>
                   </div>
                 )}
@@ -634,12 +634,12 @@ export default function BeliefDetailPage() {
               <>
                 {aiActionPlan.priority_action && (
                   <div className="p-4 bg-red-100 border-l-4 border-red-500 rounded-lg">
-                    <p className="text-sm font-semibold text-red-900 mb-1">🚨 Priority Action:</p>
+                    <p className="text-sm font-semibold text-red-900 mb-1 flex items-center gap-2"><AlertTriangle className="h-4 w-4 text-red-600" />Priority Action:</p>
                     <p className="text-red-800 font-medium">{aiActionPlan.priority_action}</p>
                   </div>
                 )}
                 <div className="p-4 bg-white rounded-lg border border-amber-200">
-                  <h4 className="font-semibold text-amber-900 mb-3">📝 Action Steps for Today:</h4>
+                  <h4 className="font-semibold text-amber-900 mb-3 flex items-center gap-2"><FileText className="h-4 w-4 text-amber-600" />Action Steps for Today:</h4>
                   <ul className="space-y-2">
                     {aiActionPlan.action_steps?.map((step: string, i: number) => (
                       <li key={i} className="flex items-start gap-2">

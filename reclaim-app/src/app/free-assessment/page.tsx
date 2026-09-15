@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { Heart, AlertTriangle, Shield, CheckCircle, XCircle, Info, ArrowRight, Brain } from 'lucide-react'
+import { Heart, AlertTriangle, Shield, CheckCircle, XCircle, Info, ArrowRight, ArrowLeft, Brain } from 'lucide-react'
 import Link from 'next/link'
 import QuizShell from '@/components/marketing/QuizShell'
 
@@ -144,9 +144,9 @@ export default function FreeAssessmentPage() {
                   </button>
                 </div>
                 <div className="flex justify-center items-center gap-6 text-sm opacity-90">
-                  <span>âœ“ No credit card required</span>
-                  <span>âœ“ Private & secure</span>
-                  <span>âœ“ Evidence-based tools</span>
+                  <span>No credit card required</span>
+                  <span>Private & secure</span>
+                  <span>Evidence-based tools</span>
                 </div>
               </div>
             </div>
@@ -237,7 +237,7 @@ export default function FreeAssessmentPage() {
                     : 'text-gray-700 hover:bg-white hover:shadow-md border border-gray-200'
                 }`}
               >
-                â† Previous
+                <ArrowLeft className="h-4 w-4" />Previous
               </button>
               
               <button
@@ -249,7 +249,8 @@ export default function FreeAssessmentPage() {
                     : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105'
                 }`}
               >
-                {currentQuestion === assessmentQuestions.length - 1 ? 'Get Results' : 'Next'} â†’
+                {currentQuestion === assessmentQuestions.length - 1 ? 'Get Results' : 'Next'}
+                <ArrowRight className="h-4 w-4" />
               </button>
             </div>
           </div>

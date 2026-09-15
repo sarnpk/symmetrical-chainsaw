@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { Download, Trash2, Shield, FileText, Clock, CheckCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
+import SiteHeader from '@/components/marketing/SiteHeader'
+import SiteFooter from '@/components/marketing/SiteFooter'
 
 export default function GDPRPage() {
   const [user, setUser] = useState<any>(null)
@@ -140,7 +142,9 @@ export default function GDPRPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gray-50">
+      <SiteHeader />
+      <div className="py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <div className="flex items-center gap-3 mb-6">
@@ -328,6 +332,8 @@ export default function GDPRPage() {
           </p>
         </div>
       </div>
+      </div>
+      <SiteFooter />
     </div>
   )
 }

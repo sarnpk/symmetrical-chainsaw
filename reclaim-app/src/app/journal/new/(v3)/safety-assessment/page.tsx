@@ -7,6 +7,7 @@ import MobileTopBar from "@/components/journal/mobile/MobileTopBar";
 import StickyActionBar from "@/components/journal/mobile/StickyActionBar";
 import MobileFormCard from "@/components/journal/mobile/MobileFormCard";
 import MobileRatingScale from "@/components/journal/mobile/MobileRatingScale";
+import { AlertTriangle, Lightbulb } from "lucide-react";
 
 const safetyLabels = ['Very Unsafe', 'Unsafe', 'Neutral', 'Safe', 'Very Safe'];
 const safetyColors = ['red', 'orange', 'yellow', 'blue', 'green'];
@@ -52,7 +53,7 @@ export default function SafetyAssessmentPage() {
       
       <main className="flex-1 overflow-y-auto px-4 py-4">
         <MobileFormCard 
-          title="ðŸ›¡ï¸ Safety Check"
+          title="Safety Check"
           description="How safe did you feel during this experience?"
           required={true}
         >
@@ -70,7 +71,7 @@ export default function SafetyAssessmentPage() {
             <div className="flex">
               <div className="flex-shrink-0">
                 <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                  <span className="text-red-600 font-bold text-sm">ðŸš¨</span>
+                  <span className="flex items-center justify-center text-red-600"><AlertTriangle className="h-4 w-4" /></span>
                 </div>
               </div>
               <div className="ml-3">
@@ -95,7 +96,7 @@ export default function SafetyAssessmentPage() {
           <div className="flex">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="text-blue-600 font-bold text-sm">ðŸ’¡</span>
+                <span className="flex items-center justify-center text-blue-600"><Lightbulb className="h-4 w-4" /></span>
               </div>
             </div>
             <div className="ml-3">

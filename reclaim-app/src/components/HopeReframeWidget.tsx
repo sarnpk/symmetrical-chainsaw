@@ -37,7 +37,7 @@ export default function HopeReframeWidget() {
 
         <div className="bg-amber-100 border border-amber-300 rounded-lg p-3 text-center">
           <p className="text-sm font-semibold text-amber-900">
-            ðŸ’› Shift perspective without denying pain
+            Shift perspective without denying pain
           </p>
         </div>
       </div>

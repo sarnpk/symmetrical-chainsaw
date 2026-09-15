@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { MessageCircle, Users, X, Send, AlertCircle, Reply } from 'lucide-react'
+import { useEffect, useState, useRef } from 'react'
+import { MessageCircle, Users, X, Send, AlertCircle, Reply, Lock, Circle, Bookmark, BookmarkCheck } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface ChatRoom {
@@ -34,6 +34,8 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
   const [userLevel, setUserLevel] = useState(1)
   const [sessionNames, setSessionNames] = useState<Record<string, string>>({})
   const [replyingTo, setReplyingTo] = useState<Message | null>(null)
+  const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set())
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     loadRooms()
@@ -45,10 +47,16 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
   useEffect(() => {
     if (selectedRoom) {
       loadMessages()
+      loadPins()
       const interval = setInterval(loadMessages, 3000)
       return () => clearInterval(interval)
     }
   }, [selectedRoom])
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) el.scrollTop = el.scrollHeight
+  }, [messages])
 
   const loadUserLevel = async () => {
     if (!currentUserId) return
@@ -90,10 +98,10 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
     if (sessionNames[userId]) return sessionNames[userId]
     
     const names = [
-      'Butterfly ðŸ¦‹', 'Phoenix ðŸ”¥', 'Moonlight ðŸŒ™', 'Warrior âš”ï¸', 'Sunrise ðŸŒ…',
-      'Ocean ðŸŒŠ', 'Mountain â›°ï¸', 'Star ⭐', 'Rainbow ðŸŒˆ', 'Lotus ðŸª·',
-      'Eagle ðŸ¦…', 'Rose ðŸŒ¹', 'Thunder âš¡', 'Willow ðŸŒ¿', 'Crystal ðŸ’Ž',
-      'Dove ðŸ•Šï¸', 'Flame ðŸ”¥', 'River ðŸžï¸', 'Cloud â˜ï¸', 'Breeze ðŸƒ'
+      'Butterfly', 'Phoenix', 'Moonlight', 'Warrior', 'Sunrise',
+      'Ocean', 'Mountain', 'Star', 'Rainbow', 'Lotus',
+      'Eagle', 'Rose', 'Thunder', 'Willow', 'Crystal',
+      'Dove', 'Flame', 'River', 'Cloud', 'Breeze'
     ]
     
     const usedNames = Object.values(sessionNames)
@@ -113,6 +121,53 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
       setMessages((data.messages || []).reverse())
     } catch (err) {
       console.error('loadMessages error:', err)
+    }
+  }
+
+  const loadPins = async () => {
+    if (!selectedRoom) return
+    try {
+      const res = await fetch(`/api/community/pins?room_id=${selectedRoom.id}`)
+      if (res.ok) {
+        const data = await res.json()
+        setPinnedIds(new Set((data.items || []).map((p: any) => p.original_message_id).filter(Boolean)))
+      }
+    } catch {}
+  }
+
+  const togglePin = async (msg: Message) => {
+    if (pinnedIds.has(msg.id)) {
+      // Unpin — find the pin id and delete it
+      try {
+        const res = await fetch(`/api/community/pins?room_id=${selectedRoom!.id}`)
+        if (res.ok) {
+          const data = await res.json()
+          const pin = (data.items || []).find((p: any) => p.original_message_id === msg.id)
+          if (pin) {
+            await fetch(`/api/community/pins?id=${pin.id}`, { method: 'DELETE' })
+            setPinnedIds(prev => { const next = new Set(prev); next.delete(msg.id); return next })
+            toast.success('Message unpinned')
+          }
+        }
+      } catch {}
+    } else {
+      // Pin
+      try {
+        const res = await fetch('/api/community/pins', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: msg.content,
+            room_id: selectedRoom!.id,
+            original_message_id: msg.id,
+            author_name: getSessionName(msg.user_id),
+          })
+        })
+        if (res.ok) {
+          setPinnedIds(prev => new Set(prev).add(msg.id))
+          toast.success('Message pinned')
+        }
+      } catch {}
     }
   }
 
@@ -180,7 +235,11 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
       if (!res.ok) throw new Error('Failed to send')
       setMessageText('')
       setReplyingTo(null)
-      loadMessages()
+      await loadMessages()
+      requestAnimationFrame(() => {
+        const el = scrollRef.current
+        if (el) el.scrollTop = el.scrollHeight
+      })
     } catch (err) {
       toast.error('Failed to send message')
     } finally {
@@ -202,10 +261,10 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
 
   const getCapacityStatus = (count: number, max: number) => {
     const percent = (count / max) * 100
-    if (percent >= 90) return { color: 'text-red-600', bg: 'bg-red-50', label: 'ðŸ”¥ Almost Full!' }
-    if (percent >= 70) return { color: 'text-orange-600', bg: 'bg-orange-50', label: 'âš¡ Filling Fast' }
-    if (percent >= 50) return { color: 'text-yellow-600', bg: 'bg-yellow-50', label: 'âœ¨ Active' }
-    return { color: 'text-green-600', bg: 'bg-green-50', label: 'âœ“ Available' }
+    if (percent >= 90) return { color: 'text-red-600', bg: 'bg-red-50', label: 'Almost Full!' }
+    if (percent >= 70) return { color: 'text-orange-600', bg: 'bg-orange-50', label: 'Filling Fast' }
+    if (percent >= 50) return { color: 'text-yellow-600', bg: 'bg-yellow-50', label: 'Active' }
+    return { color: 'text-green-600', bg: 'bg-green-50', label: 'Available' }
   }
 
   if (selectedRoom) {
@@ -233,26 +292,43 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 h-96 flex flex-col">
-          <div className="flex-1 overflow-y-auto space-y-3 mb-4">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-3 mb-4">
             {messages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.user_id === currentUserId ? 'justify-end' : 'justify-start'} group`}>
                 <div className="flex flex-col gap-1">
                   <span className="text-xs text-gray-500 px-2 font-medium">{getSessionName(msg.user_id)}</span>
                   <div className="flex items-start gap-2">
                     <div className={`max-w-xs px-4 py-2 rounded-lg ${msg.user_id === currentUserId ? 'bg-indigo-600' : 'bg-gray-100'}`}>
+                      {pinnedIds.has(msg.id) && (
+                        <div className="flex items-center gap-1 text-xs text-indigo-500 mb-1">
+                          <BookmarkCheck className="h-3 w-3" />
+                          <span>Pinned</span>
+                        </div>
+                      )}
                       <p className={`text-sm ${msg.user_id === currentUserId ? 'text-white' : 'text-gray-900'}`}>{msg.content}</p>
                       <p className={`text-xs mt-1 ${msg.user_id === currentUserId ? 'text-indigo-200' : 'text-gray-500'}`}>
                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                     {msg.user_id !== currentUserId && (
-                      <button
-                        onClick={() => setReplyingTo(msg)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded"
-                        title="Reply"
-                      >
-                        <Reply className="h-3 w-3 text-gray-600" />
-                      </button>
+                      <>
+                        <button
+                          onClick={() => togglePin(msg)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded"
+                          title={pinnedIds.has(msg.id) ? 'Unpin' : 'Pin'}
+                        >
+                          {pinnedIds.has(msg.id)
+                            ? <BookmarkCheck className="h-3 w-3 text-indigo-600" />
+                            : <Bookmark className="h-3 w-3 text-gray-600" />}
+                        </button>
+                        <button
+                          onClick={() => setReplyingTo(msg)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded"
+                          title="Reply"
+                        >
+                          <Reply className="h-3 w-3 text-gray-600" />
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -315,12 +391,13 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
               {/* Level lock badge */}
               {isLocked && (
                 <div className="absolute top-0 right-0 bg-gray-600 text-white px-3 py-1 text-xs font-semibold rounded-bl-lg flex items-center gap-1">
-                  ðŸ”’ Level {room.level_required}
+                  <Lock className="h-3 w-3" />
+                  Level {room.level_required}
                 </div>
               )}
               
               {/* Urgency badge */}
-              {!isLocked && status.label !== 'âœ“ Available' && (
+              {!isLocked && status.label !== 'Available' && (
                 <div className={`absolute top-0 right-0 ${status.bg} ${status.color} px-3 py-1 text-xs font-semibold rounded-bl-lg`}>
                   {status.label}
                 </div>
@@ -339,7 +416,7 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
                         {room.participant_count}/{room.max_participants}
                       </span>
                       {room.participant_count > 0 && (
-                        <span className="text-gray-500">⬢ {room.participant_count} active</span>
+                        <span className="text-gray-500">{room.participant_count} active</span>
                       )}
                     </div>
                   </div>
@@ -352,7 +429,7 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
               {/* Recent activity indicator */}
               {recentJoin && recentJoin > 0 && (
                 <div className="mb-3 flex items-center gap-1 text-xs text-indigo-600 bg-indigo-50 px-2 py-1 rounded">
-                  <span className="animate-pulse">ðŸ”´</span>
+                  <span className="animate-pulse"><Circle className="h-2 w-2 fill-red-500 text-red-500" /></span>
                   <span className="font-medium">{recentJoin} {recentJoin === 1 ? 'person' : 'people'} joined recently</span>
                 </div>
               )}
@@ -371,7 +448,7 @@ export default function GroupChatRooms({ currentUserId }: { currentUserId: strin
                   disabled={loading || room.participant_count >= room.max_participants}
                   className="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
                 >
-                  {room.participant_count >= room.max_participants ? 'ðŸ”’ Room Full' : 'Join Room'}
+                  {room.participant_count >= room.max_participants ? 'Room Full' : 'Join Room'}
                 </button>
               )}
             </div>

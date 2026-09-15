@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { LifeBuoy } from 'lucide-react';
 
 export default function CrisisToolkitCard() {
   const [stats, setStats] = useState<any>(null);
@@ -20,7 +21,7 @@ export default function CrisisToolkitCard() {
           <h3 className="text-xl font-bold mb-1">Crisis Toolkit</h3>
           <p className="text-blue-100 text-sm">Quick support when you need it</p>
         </div>
-        <div className="text-3xl">ðŸ†˜</div>
+        <div className="text-3xl"><LifeBuoy className="h-8 w-8 text-white" /></div>
       </div>
 
       {stats && stats.totalUses > 0 ? (

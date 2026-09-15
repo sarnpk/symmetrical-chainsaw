@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Calendar, Clock, MapPin, Shield, Edit, Trash2 } from 'lucide-react'
+import { Calendar, Clock, MapPin, Shield, Edit, Trash2, Frown, Meh, Smile } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import type { JournalEntry } from '@/lib/supabase'
 import DeleteConfirmationModal from './entry/DeleteConfirmationModal'
@@ -48,10 +48,10 @@ export default function JournalEntryCard({ entry, viewMode, onDelete }: JournalE
     return 'bg-green-100 text-green-800 border-green-200'
   }
 
-  const getMoodEmoji = (rating: number) => {
-    if (rating <= 3) return 'ðŸ˜”'
-    if (rating <= 6) return 'ðŸ˜'
-    return 'ðŸ˜Š'
+  const getMoodIcon = (rating: number) => {
+    if (rating <= 3) return <Frown className="h-5 w-5 text-red-500" />
+    if (rating <= 6) return <Meh className="h-5 w-5 text-yellow-500" />
+    return <Smile className="h-5 w-5 text-green-600" />
   }
 
   const getTimeAgo = (date: string) => {
@@ -103,7 +103,6 @@ export default function JournalEntryCard({ entry, viewMode, onDelete }: JournalE
                 <span className="hidden sm:inline">{new Date(entryDate).toLocaleDateString()}</span>
                 <span className="sm:hidden">{new Date(entryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
               </span>
-              <span className="text-gray-300">⬢</span>
               <span>{getTimeAgo(entryDate)}</span>
             </div>
           </CardHeader>
@@ -121,7 +120,7 @@ export default function JournalEntryCard({ entry, viewMode, onDelete }: JournalE
                 </div>
                 {moodRating !== null && (
                   <div className="flex items-center gap-1 text-sm">
-                    <span className="text-lg">{getMoodEmoji(moodRating)}</span>
+                    <span className="text-lg">{getMoodIcon(moodRating)}</span>
                     <span className="text-gray-600 hidden sm:inline">{moodRating}/10</span>
                   </div>
                 )}
@@ -228,7 +227,7 @@ export default function JournalEntryCard({ entry, viewMode, onDelete }: JournalE
             </div>
             {moodRating !== null && (
               <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-gray-100 rounded-full">
-                <span className="text-base sm:text-lg">{getMoodEmoji(moodRating)}</span>
+                <span className="text-base sm:text-lg">{getMoodIcon(moodRating)}</span>
                 <span className="text-xs sm:text-sm font-medium text-gray-700">
                   <span className="hidden sm:inline">Mood: </span>{moodRating}/10
                 </span>

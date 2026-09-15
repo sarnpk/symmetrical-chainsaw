@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
-import { Plus, Edit, Trash2, HelpCircle } from 'lucide-react'
+import { Check, Plus, Edit, Trash2, HelpCircle } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 
 interface RealityLogEntry {
@@ -175,8 +175,8 @@ export default function RealityLogHub({ user }: RealityLogHubProps) {
                           {entry.npd_trait}
                         </span>
                         {entry.is_consistent && (
-                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
-                            âœ“ Consistent
+                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium inline-flex items-center gap-1">
+                            <Check className="h-3 w-3" /> Consistent
                           </span>
                         )}
                       </div>

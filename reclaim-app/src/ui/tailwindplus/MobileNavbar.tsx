@@ -1,9 +1,11 @@
 "use client"
 
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react"
-import { Menu as MenuIcon, X as XIcon, Bell, Shield } from "lucide-react"
+import { Menu as MenuIcon, X as XIcon, Shield } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import Logo from '@/components/marketing/Logo'
+import NotificationBell from '@/components/NotificationBell'
 
 interface MobileNavbarProps {
   onMenuClick?: () => void
@@ -39,18 +41,12 @@ export default function MobileNavbar({ onMenuClick }: MobileNavbarProps) {
               </div>
 
               <div className="flex items-center">
-                <img src="/logo.png" alt="Reclaim" className="h-6 w-6" />
+                <Logo className="h-6 w-6" />
                 <span className="ml-2 text-base font-semibold text-gray-900">Reclaim</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className="relative rounded-full p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <Bell className="h-5 w-5" aria-hidden="true" />
-                </button>
+                <NotificationBell />
 
                 <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
                   <span className="sr-only">Open main menu</span>

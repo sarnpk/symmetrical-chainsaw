@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Sparkles, Calendar, TrendingUp, Award, Plus, BookOpen, HelpCircle, Mic } from 'lucide-react';
+import { Sparkles, Calendar, TrendingUp, Award, Plus, BookOpen, HelpCircle, Mic, Check, Lightbulb } from 'lucide-react';
 import VoiceTextInput from '@/components/VoiceTextInput';
 
 const modules = [
@@ -515,8 +515,8 @@ export default function AcceptancePage() {
                   </div>
                   <div className="flex-shrink-0">
                     {isCompleted(module.id) ? (
-                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
-                        âœ“ Complete
+                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs flex items-center gap-1">
+                        <Check className="h-3 w-3" />Complete
                       </span>
                     ) : (
                       <button
@@ -625,7 +625,7 @@ export default function AcceptancePage() {
                             <div className="text-sm font-medium mb-2">Affirmations</div>
                             <ul className="text-sm text-gray-700 space-y-1">
                               {aiCoaching.affirmations.map((aff: string, idx: number) => (
-                                <li key={idx}>⬢ {aff}</li>
+                                <li key={idx}>{aff}</li>
                               ))}
                             </ul>
                           </div>
@@ -688,22 +688,22 @@ export default function AcceptancePage() {
 
         {/* Acceptance Tips */}
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-blue-800 mb-3">ðŸ’¡ Daily Acceptance Tips</h3>
+          <h3 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2"><Lightbulb className="h-5 w-5" />Daily Acceptance Tips</h3>
           <div className="space-y-4 text-sm text-blue-700">
             <div>
               <h4 className="font-medium mb-2">When Hope Resurfaces:</h4>
               <ul className="space-y-1 text-xs">
-                <li>⬢ Remember: NPD is permanent</li>
-                <li>⬢ The mask was never real</li>
-                <li>⬢ Your healing matters more than their change</li>
+                <li>Remember: NPD is permanent</li>
+                <li>The mask was never real</li>
+                <li>Your healing matters more than their change</li>
               </ul>
             </div>
             <div>
               <h4 className="font-medium mb-2">Reality Anchors:</h4>
               <ul className="space-y-1 text-xs">
-                <li>⬢ Read your journal entries</li>
-                <li>⬢ Talk to your support network</li>
-                <li>⬢ Review documented abuse patterns</li>
+                <li>Read your journal entries</li>
+                <li>Talk to your support network</li>
+                <li>Review documented abuse patterns</li>
               </ul>
             </div>
           </div>

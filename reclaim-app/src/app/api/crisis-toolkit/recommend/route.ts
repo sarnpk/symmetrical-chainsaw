@@ -20,9 +20,9 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single();
 
-    if (profile?.subscription_tier !== 'recovery') {
+    if (profile?.subscription_tier !== 'recovery' && profile?.subscription_tier !== 'empowerment') {
       return NextResponse.json({ 
-        error: 'This feature requires Recovery tier',
+        error: 'This feature requires Recovery tier or higher',
         requiredTier: 'recovery'
       }, { status: 403 });
     }

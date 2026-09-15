@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Heart } from 'lucide-react'
+import { Heart, Shield } from 'lucide-react'
 
 interface EmotionalImpactCardProps {
   emotionalStateBefore?: string
@@ -39,7 +39,8 @@ export default function EmotionalImpactCard({
     <Card>
       <CardHeader className="pb-3 sm:pb-4">
         <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-          ðŸ›¡ï¸ How This Affected You
+          <Shield className="h-5 w-5" />
+          How This Affected You
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0 space-y-4">

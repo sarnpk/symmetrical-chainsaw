@@ -8,7 +8,7 @@ import { Profile } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Check } from 'lucide-react'
+import { Check, Flame, Trophy } from 'lucide-react'
 
 export default function MorningIntentionPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -225,8 +225,8 @@ export default function MorningIntentionPage() {
           <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100">
             <CardContent className="pt-6">
               <p className="text-sm text-gray-600">Current Streak</p>
-              <p className="text-4xl font-bold text-indigo-600 mt-2">
-                ðŸ”¥ {streak?.current_streak || 0}
+              <p className="text-4xl font-bold text-indigo-600 mt-2 flex items-center gap-2">
+                <Flame className="h-8 w-8" />{streak?.current_streak || 0}
               </p>
               <p className="text-xs text-gray-600 mt-1">days</p>
             </CardContent>
@@ -234,8 +234,8 @@ export default function MorningIntentionPage() {
           <Card className="bg-gradient-to-br from-purple-50 to-purple-100">
             <CardContent className="pt-6">
               <p className="text-sm text-gray-600">Longest Streak</p>
-              <p className="text-4xl font-bold text-purple-600 mt-2">
-                ðŸ† {streak?.longest_streak || 0}
+              <p className="text-4xl font-bold text-purple-600 mt-2 flex items-center gap-2">
+                <Trophy className="h-8 w-8" />{streak?.longest_streak || 0}
               </p>
               <p className="text-xs text-gray-600 mt-1">days</p>
             </CardContent>

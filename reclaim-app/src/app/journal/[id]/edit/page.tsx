@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Save, ArrowLeft, Calendar, MapPin, Users, Heart, Camera, Upload, X, Mic, MicOff, HelpCircle } from 'lucide-react'
+import { Save, ArrowLeft, Calendar, MapPin, Users, Heart, Camera, Upload, X, Mic, MicOff, HelpCircle, ArrowRight, FileText, Shield, Drama, Target, Music, Sparkles } from 'lucide-react'
 import NPDTraitTagger from '@/components/journal/NPDTraitTagger'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
@@ -235,7 +235,7 @@ export default function EditJournalEntryPage({ params }: Props) {
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-              <span className="text-purple-600 font-bold text-sm">(</span>
+              <span className="flex items-center justify-center text-purple-600"><Sparkles className="h-4 w-4" /></span>
             </div>
           </div>
           <div className="flex-1">
@@ -249,8 +249,8 @@ export default function EditJournalEntryPage({ params }: Props) {
               href="/subscription"
               className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
             >
-              Upgrade to {upgradeInfo.tier}
-              <span className="text-xs">→</span>
+Upgrade to {upgradeInfo.tier}
+              <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </div>
@@ -603,7 +603,8 @@ export default function EditJournalEntryPage({ params }: Props) {
           <Card className="border-l-4 border-l-indigo-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                📝 What Happened
+                <FileText className="h-5 w-5" />
+                What Happened
               </CardTitle>
               <CardDescription>Tell your story in your own words</CardDescription>
             </CardHeader>
@@ -670,7 +671,8 @@ export default function EditJournalEntryPage({ params }: Props) {
           <Card className="border-l-4 border-l-orange-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                🛡️ Safety Assessment
+                <Shield className="h-5 w-5" />
+                Safety Assessment
               </CardTitle>
               <CardDescription>How safe did you feel during this experience?</CardDescription>
             </CardHeader>
@@ -703,7 +705,8 @@ export default function EditJournalEntryPage({ params }: Props) {
           <Card className="border-l-4 border-l-red-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                🎭 Behavior Categories
+                <Drama className="h-5 w-5" />
+                Behavior Categories
               </CardTitle>
               <CardDescription>What types of behavior did you experience? (Select all that apply)</CardDescription>
             </CardHeader>
@@ -730,8 +733,9 @@ export default function EditJournalEntryPage({ params }: Props) {
           {/* NPD Trait Tagging */}
           <Card className="border-l-4 border-l-red-600">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                🎯 NPD Traits Identified
+<CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+                <Target className="h-5 w-5" />
+                NPD Traits Identified
               </CardTitle>
               <CardDescription>Tag specific narcissistic traits you observed (optional)</CardDescription>
             </CardHeader>
@@ -749,7 +753,7 @@ export default function EditJournalEntryPage({ params }: Props) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
                   <Heart className="h-5 w-5" />
-                  🛡️ How This Affected You
+                  How This Affected You
                 </CardTitle>
                 <CardDescription>How did you feel before and after this experience?</CardDescription>
               </CardHeader>
@@ -824,7 +828,8 @@ export default function EditJournalEntryPage({ params }: Props) {
           <Card className="border-l-4 border-l-blue-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                📍 Additional Context
+                <MapPin className="h-5 w-5" />
+                Additional Context
               </CardTitle>
               <CardDescription>Any additional details that might be important</CardDescription>
             </CardHeader>
@@ -863,7 +868,8 @@ export default function EditJournalEntryPage({ params }: Props) {
           <Card className="border-l-4 border-l-green-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                📸 Photo Evidence
+                <Camera className="h-5 w-5" />
+                Photo Evidence
               </CardTitle>
               <CardDescription>Add photos related to this entry</CardDescription>
             </CardHeader>
@@ -899,7 +905,7 @@ export default function EditJournalEntryPage({ params }: Props) {
                             <p className="text-gray-700 font-medium mb-2">{file.caption}</p>
                           )}
                           <p className="text-xs text-gray-500">
-                            📅 {new Date(file.uploaded_at).toLocaleString()}
+                            {new Date(file.uploaded_at).toLocaleString()}
                           </p>
                         </div>
                       ))}
@@ -969,7 +975,7 @@ export default function EditJournalEntryPage({ params }: Props) {
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                           />
                           <p className="text-xs text-gray-500">
-                            📅 {new Date(photo.timestamp).toLocaleString()}
+                            {new Date(photo.timestamp).toLocaleString()}
                           </p>
                         </div>
                       </div>
@@ -984,7 +990,8 @@ export default function EditJournalEntryPage({ params }: Props) {
           <Card className="border-l-4 border-l-emerald-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                🎤 Audio Evidence
+                <Mic className="h-5 w-5" />
+                Audio Evidence
               </CardTitle>
               <CardDescription>Record or upload audio. AI transcription runs for paid plans.</CardDescription>
             </CardHeader>
@@ -1000,12 +1007,12 @@ export default function EditJournalEntryPage({ params }: Props) {
                         <div key={file.id} className="border border-gray-200 rounded-lg p-4">
                           <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
                             <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                              🎵
+                              <Music className="h-4 w-4 text-green-600" />
                             </div>
                             <div className="flex-1">
                               <p className="font-medium text-gray-900">Audio Recording</p>
                               <p className="text-sm text-gray-500">
-                                📅 {new Date(file.uploaded_at).toLocaleString()}
+                                {new Date(file.uploaded_at).toLocaleString()}
                               </p>
                             </div>
                             <button
@@ -1070,12 +1077,12 @@ export default function EditJournalEntryPage({ params }: Props) {
                       <div key={index} className="border border-gray-200 rounded-lg p-4">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
                           <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                            🎵
+                            <Music className="h-4 w-4 text-green-600" />
                           </div>
                           <div className="flex-1">
                             <p className="font-medium text-gray-900">Audio Recording</p>
                             <p className="text-sm text-gray-500">
-                              📅 {new Date(recording.timestamp).toLocaleString()}
+                              {new Date(recording.timestamp).toLocaleString()}
                             </p>
                           </div>
                           <button

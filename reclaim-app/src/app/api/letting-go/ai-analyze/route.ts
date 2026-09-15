@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     const limits: Record<string, number> = {
       foundation: 0,
       recovery: 5,
-      empowered: 20
+      empowerment: 20
     }
 
     if (currentUsage >= limits[tier]) {
@@ -91,7 +91,7 @@ Step 3 (Mindfulness): ${latestEntry.present_moment_focus ? 'Completed' : 'Skippe
 Step 4 (Pattern Interrupt): ${latestEntry.pattern_interrupt_action ? 'Completed' : 'Skipped'}
 Step 5 (Third Person): ${latestEntry.third_person_perspective ? 'Completed' : 'Skipped'}
 
-MOOD SHIFT: ${latestEntry.emotional_state_before} â†’ ${latestEntry.emotional_state_after} (${latestEntry.emotional_state_after - latestEntry.emotional_state_before > 0 ? '+' : ''}${latestEntry.emotional_state_after - latestEntry.emotional_state_before})
+MOOD SHIFT: ${latestEntry.emotional_state_before} -> ${latestEntry.emotional_state_after} (${latestEntry.emotional_state_after - latestEntry.emotional_state_before > 0 ? '+' : ''}${latestEntry.emotional_state_after - latestEntry.emotional_state_before})
 
 RAW THOUGHTS ANALYSIS:
 ${latestEntry.raw_thoughts || 'Not provided'}

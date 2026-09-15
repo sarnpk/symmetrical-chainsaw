@@ -115,7 +115,6 @@ export default function AICopingInsights({ text, onActionSelect }: AICopingInsig
           <div key={idx} className="bg-white p-3 rounded-lg border border-gray-200 hover:border-purple-300 transition-colors">
             <div className="flex items-start gap-3">
               <div className="flex items-center gap-2">
-                <span className="text-lg">{strategy.icon}</span>
                 {getTypeIcon(strategy.type)}
               </div>
               <div className="flex-1">
@@ -155,7 +154,7 @@ export default function AICopingInsights({ text, onActionSelect }: AICopingInsig
 
       <div className="mt-3 pt-3 border-t border-purple-200">
         <p className="text-xs text-gray-500">
-          ðŸ’¡ These insights are generated based on your notes and are meant to support, not replace, professional help.
+          These insights are generated based on your notes and are meant to support, not replace, professional help.
         </p>
       </div>
     </div>

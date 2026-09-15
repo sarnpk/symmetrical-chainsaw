@@ -1,6 +1,11 @@
+import SiteHeader from '@/components/marketing/SiteHeader'
+import SiteFooter from '@/components/marketing/SiteFooter'
+
 export default function CookiePolicy() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gray-50">
+      <SiteHeader />
+      <div className="py-12 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Cookie Policy</h1>
         <p className="text-sm text-gray-600 mb-8">Last updated: January 27, 2025</p>
@@ -127,10 +132,10 @@ export default function CookiePolicy() {
           <h3>5.2 Browser Settings</h3>
           <p>You can also manage cookies through your browser settings:</p>
           <ul>
-            <li><strong>Chrome:</strong> Settings â†’ Privacy and Security â†’ Cookies</li>
-            <li><strong>Firefox:</strong> Settings â†’ Privacy & Security â†’ Cookies</li>
-            <li><strong>Safari:</strong> Preferences â†’ Privacy â†’ Cookies</li>
-            <li><strong>Edge:</strong> Settings â†’ Cookies and Site Permissions</li>
+            <li><strong>Chrome:</strong> Settings -> Privacy and Security -> Cookies</li>
+            <li><strong>Firefox:</strong> Settings -> Privacy & Security -> Cookies</li>
+            <li><strong>Safari:</strong> Preferences -> Privacy -> Cookies</li>
+            <li><strong>Edge:</strong> Settings -> Cookies and Site Permissions</li>
           </ul>
 
           <h3>5.3 Update Preferences</h3>
@@ -193,6 +198,8 @@ export default function CookiePolicy() {
           </div>
         </div>
       </div>
+      </div>
+      <SiteFooter />
     </div>
   )
 }

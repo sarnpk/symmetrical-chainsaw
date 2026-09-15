@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 import CommentsSection from './CommentsSection'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import DashboardLayout from '@/components/DashboardLayout'
@@ -36,7 +37,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
   if (!item) {
     return (
       <div className="max-w-3xl mx-auto p-4">
-        <Link href="/community" className="text-sm text-indigo-600 hover:text-indigo-700">← Back to Community</Link>
+        <Link href="/community" className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"><ArrowLeft className="h-4 w-4" />Back to Community</Link>
         <div className="mt-4 rounded-lg border border-gray-200 bg-white p-6">
           <div className="text-gray-600">Post not found.</div>
         </div>
@@ -65,7 +66,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           <h1 className="text-3xl font-semibold text-gray-900">Community Post</h1>
           <p className="text-sm text-gray-500">Read and discuss with the community</p>
         </header>
-        <Link href="/community" className="text-sm text-indigo-600 hover:text-indigo-700">← Back to Community</Link>
+        <Link href="/community" className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"><ArrowLeft className="h-4 w-4" />Back to Community</Link>
         <article className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>

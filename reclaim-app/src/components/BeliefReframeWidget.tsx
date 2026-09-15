@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { RefreshCw, TrendingDown } from 'lucide-react'
+import { RefreshCw, TrendingDown, ArrowDown } from 'lucide-react'
 import Link from 'next/link'
 
 interface BeliefReframeWidgetProps {
@@ -89,7 +89,7 @@ export default function BeliefReframeWidget({ userId }: BeliefReframeWidgetProps
                 {strengthChange > 0 && (
                   <>
                     <TrendingDown className="h-3 w-3" />
-                    <span>â†“ {strengthChange}</span>
+                    <span className="flex items-center gap-1"><ArrowDown className="h-3 w-3" />{strengthChange}</span>
                   </>
                 )}
               </div>

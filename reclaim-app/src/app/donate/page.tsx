@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import QuizShell from '@/components/marketing/QuizShell'
+import { ChevronDown, ChevronRight, Heart, Bot, Rocket } from 'lucide-react'
 
 export default function DonatePage() {
   const [customAmount, setCustomAmount] = useState('')
@@ -68,9 +69,9 @@ export default function DonatePage() {
         <div className="bg-white p-6 rounded-lg shadow-lg mb-12">
           <button
             onClick={() => setShowCustom(!showCustom)}
-            className="w-full text-left font-semibold text-purple-600 mb-4"
+            className="w-full text-left font-semibold text-purple-600 mb-4 flex items-center gap-2"
           >
-            {showCustom ? 'â–¼' : 'â–¶'} Donate Custom Amount
+            {showCustom ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />} Donate Custom Amount
           </button>
           {showCustom && (
             <div className="flex gap-4">
@@ -118,10 +119,10 @@ export default function DonatePage() {
         <div className="bg-white p-8 rounded-lg shadow-lg">
           <h3 className="text-2xl font-bold mb-4">Why Your Support Matters</h3>
           <div className="space-y-4 text-gray-700">
-            <p>ðŸ’œ <strong>Keep It Free:</strong> Every donation helps us keep core features free for survivors who can't afford paid subscriptions.</p>
-            <p>ðŸ¤– <strong>AI Costs Money:</strong> Each AI coaching session, pattern analysis, and audio transcription costs us real money. Your support covers these costs.</p>
-            <p>ðŸŒ <strong>Global Impact:</strong> We serve survivors worldwide, many in countries where mental health resources are scarce or unaffordable.</p>
-            <p>ðŸš€ <strong>Build New Features:</strong> Donations help us develop new tools like group support rooms, crisis intervention, and mobile apps.</p>
+            <p className="flex items-start gap-2"><Heart className="h-5 w-5 text-purple-600 shrink-0 mt-0.5" /><span><strong>Keep It Free:</strong> Every donation helps us keep core features free for survivors who can't afford paid subscriptions.</span></p>
+            <p className="flex items-start gap-2"><Bot className="h-5 w-5 text-purple-600 shrink-0 mt-0.5" /><span><strong>AI Costs Money:</strong> Each AI coaching session, pattern analysis, and audio transcription costs us real money. Your support covers these costs.</span></p>
+            <p><strong>Global Impact:</strong> We serve survivors worldwide, many in countries where mental health resources are scarce or unaffordable.</p>
+            <p className="flex items-start gap-2"><Rocket className="h-5 w-5 text-purple-600 shrink-0 mt-0.5" /><span><strong>Build New Features:</strong> Donations help us develop new tools like group support rooms, crisis intervention, and mobile apps.</span></p>
           </div>
         </div>
 

@@ -15,6 +15,8 @@ import {
   Anchor,
   Sparkles,
   Lock,
+  ArrowRight,
+  Check,
 } from 'lucide-react'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import SiteHeader from '@/components/marketing/SiteHeader'
@@ -218,7 +220,10 @@ export default async function HomePage() {
                   <div className="px-6 pb-6">
                     <ul className="space-y-2 text-sm">
                       {tier.features.map((f) => (
-                        <li key={f}> {f}</li>
+                        <li key={f} className="flex items-start gap-2">
+                          <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span>{f}</span>
+                        </li>
                       ))}
                     </ul>
                     <Link
@@ -236,8 +241,8 @@ export default async function HomePage() {
               ))}
             </div>
             <div className="text-center mt-8">
-              <Link href="/pricing" className="text-indigo-600 hover:text-indigo-700 font-medium">
-                View full comparison →
+              <Link href="/pricing" className="text-indigo-600 hover:text-indigo-700 font-medium inline-flex items-center gap-1">
+                View full comparison<ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>

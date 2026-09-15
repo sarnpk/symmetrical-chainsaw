@@ -48,6 +48,31 @@ export async function POST(req: NextRequest) {
       throw error
     }
 
+    // Notify existing room participants (fire-and-forget)
+    try {
+      const { data: room } = await supabase
+        .from('community_chat_rooms')
+        .select('name')
+        .eq('id', room_id)
+        .maybeSingle()
+
+      if (room) {
+        const joinerName = user.user_metadata?.display_name || user.user_metadata?.first_name || 'Someone'
+        const { data: participants } = await supabase
+          .from('community_room_participants')
+          .select('user_id')
+          .eq('room_id', room_id)
+          .neq('user_id', user.id)
+
+        if (participants) {
+          const { notifyGroupJoin } = await import('@/lib/notifications')
+          for (const p of participants) {
+            notifyGroupJoin(p.user_id, room.name || 'your group', joinerName).catch(() => {})
+          }
+        }
+      }
+    } catch {}
+
     return NextResponse.json({ ok: true }, { status: 201 })
   } catch (err) {
     console.error('POST /community/room-participants error:', err)

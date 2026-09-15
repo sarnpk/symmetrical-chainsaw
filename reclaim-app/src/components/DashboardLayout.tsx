@@ -27,13 +27,16 @@ import {
   TrendingUp,
   ShieldAlert,
   PieChart,
-  Crown
+  Crown,
+  Gift
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
 import toast from 'react-hot-toast'
 import Logo from '@/components/marketing/Logo'
 import MobileNavbar from '@/ui/tailwindplus/MobileNavbar'
+import RedeemCodeModal from '@/components/RedeemCodeModal'
+import AppVersion from '@/components/AppVersion'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -43,28 +46,29 @@ interface DashboardLayoutProps {
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
+  { name: 'Wellness', href: '/wellness', icon: HeartPulse },
   { name: 'Journal', href: '/journal', icon: BookOpen },
-  { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
+  { name: 'AI Coach', href: '/ai-coach', icon: Brain },
+  { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle },
   { name: 'No Contact', href: '/no-contact-anchor', icon: ShieldAlert },
-  { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
-  { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
-  { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
+  { name: 'Grey Rock', href: '/grey-rock-templates', icon: FileText },
+  { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
   { name: 'NPD Traits', href: '/npd-traits', icon: Target },
   { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
-  { name: 'Grey Rock', href: '/grey-rock-templates', icon: FileText },
-  { name: 'Mind Reset', href: '/mind-reset', icon: Brain },
+  { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
+  { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
   { name: 'Hope Reframe', href: '/hope-reframe', icon: Sparkles },
-  { name: 'Wellness', href: '/wellness', icon: HeartPulse },
-  { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle },
-  { name: 'AI Coach', href: '/ai-coach', icon: Brain },
-  { name: 'Community', href: '/community', icon: Users },
-  { name: 'Patterns', href: '/patterns', icon: TrendingUp },
+  { name: 'Mind Reset', href: '/mind-reset', icon: Brain },
+  { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
   { name: 'Letting Go', href: '/letting-go', icon: Wind },
+  { name: 'Patterns', href: '/patterns', icon: TrendingUp },
+  { name: 'Community', href: '/community', icon: Users },
   { name: 'Settings', href: '/subscription', icon: Crown },
 ]
 
 export default function DashboardLayout({ children, user, profile }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [redeemOpen, setRedeemOpen] = useState(false)
   const pathname = usePathname()
   const supabase = createClient()
 
@@ -149,6 +153,13 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
               </div>
             </div>
             <button
+              onClick={() => setRedeemOpen(true)}
+              className="flex items-center px-3 py-2 text-sm text-indigo-600 rounded-md hover:bg-indigo-50 w-full"
+            >
+              <Gift className="mr-3 h-4 w-4" />
+              Redeem Code
+            </button>
+            <button
               onClick={handleSignOut}
               className="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 w-full"
             >
@@ -167,6 +178,11 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
             {children}
           </div>
         </main>
+      </div>
+
+      <RedeemCodeModal isOpen={redeemOpen} onClose={() => setRedeemOpen(false)} onSuccess={() => window.location.reload()} />
+      <div className="fixed bottom-0 left-0 right-0 lg:left-64 z-30">
+        <AppVersion />
       </div>
     </div>
   )

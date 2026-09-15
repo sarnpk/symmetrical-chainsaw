@@ -57,7 +57,7 @@ export default function NarcissistSimulatorWidget() {
 
         {/* Tip */}
         <div className="text-xs text-purple-600 bg-purple-100 p-2 rounded">
-          ðŸ’¡ <strong>Tip:</strong> Use "Custom Context" to paste your real conversations for the most realistic practice
+          <strong>Tip:</strong> Use "Custom Context" to paste your real conversations for the most realistic practice
         </div>
       </CardContent>
     </Card>

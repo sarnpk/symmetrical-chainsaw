@@ -52,7 +52,7 @@ export async function GET(request: Request) {
       .select('limit_value')
       .eq('subscription_tier', tier)
       .eq('feature_name', 'transcription_minutes')
-      .eq('limit_type', 'minutes')
+      .eq('limit_type', 'monthly_count')
       .single()
     if (limitErr) {
       console.error('transcription limit read error:', limitErr)

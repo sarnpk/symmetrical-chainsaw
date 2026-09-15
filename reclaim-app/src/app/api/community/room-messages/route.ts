@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
       .from('community_room_messages')
       .select('*')
       .eq('room_id', roomId)
+      .gte('created_at', new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString())
       .order('created_at', { ascending: false })
       .limit(limit)
 

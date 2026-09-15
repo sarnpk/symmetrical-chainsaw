@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Heart, Check } from 'lucide-react'
+import { Heart, Check, Flame } from 'lucide-react'
 
 interface MorningIntentionCardProps {
   userId: string
@@ -71,7 +71,7 @@ export default function MorningIntentionCard({ userId }: MorningIntentionCardPro
             <Heart className="h-5 w-5 text-indigo-600" />
             <CardTitle className="text-lg">Morning Intention</CardTitle>
           </div>
-          <span className="text-sm font-bold text-indigo-600">ðŸ”¥ {streak} days</span>
+          <span className="text-sm font-bold text-indigo-600 flex items-center gap-1"><Flame className="h-4 w-4" />{streak} days</span>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">

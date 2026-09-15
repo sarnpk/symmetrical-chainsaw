@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast'
-import AppVersion from "../components/AppVersion"
 import CookieBanner from "../components/CookieBanner"
 import CrisisToolkitWidget from "../components/CrisisToolkitWidget"
 import GoogleAnalytics from "../components/GoogleAnalytics"
@@ -41,7 +40,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Reclaim â€” turn your history into evidence. Your truth into recovery.",
+        alt: "Reclaim — turn your history into evidence. Your truth into recovery.",
       },
     ],
   },
@@ -117,7 +116,6 @@ export default function RootLayout({
           {children}
         </main>
         <CrisisToolkitWidget />
-        <AppVersion />
         <CookieBanner />
         <Toaster 
           position="top-right"

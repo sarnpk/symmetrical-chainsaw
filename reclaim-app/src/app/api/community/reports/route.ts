@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 
-// POST /api/community/reports
-// body: { target_type: 'post'|'comment'|'user', target_id: string, reason: string }
+// POST /api/community/reports — report a post/user/comment
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient()
@@ -11,28 +10,52 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     const body = await req.json()
-    const target_type = String(body?.target_type || '') as 'post'|'comment'|'user'
-    const target_id = String(body?.target_id || '')
-    const reason = String(body?.reason || '').trim()
+    const { target_user_id, target_post_id, target_comment_id, target_message_id, reason, description } = body
 
-    if (!target_type || !target_id || !reason) {
-      return NextResponse.json({ error: 'target_type, target_id, and reason are required' }, { status: 400 })
-    }
+    if (!reason) return NextResponse.json({ error: 'reason is required' }, { status: 400 })
 
     const { data, error } = await supabase
       .from('community_reports')
-      .insert({ target_type, target_id, reason, reporter_id: user.id })
-      .select('*')
+      .insert({
+        reporter_id: user.id,
+        target_user_id: target_user_id || null,
+        target_post_id: target_post_id || null,
+        target_comment_id: target_comment_id || null,
+        target_message_id: target_message_id || null,
+        reason,
+        description: description || null,
+      })
+      .select()
       .single()
 
-    if (error) {
-      console.error('Create report error:', error)
-      return NextResponse.json({ error: 'Failed to submit report' }, { status: 500 })
-    }
+    if (error) throw error
 
     return NextResponse.json({ item: data }, { status: 201 })
   } catch (err) {
-    console.error('POST /community/reports exception:', err)
-    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 })
+    console.error('POST /community/reports:', err)
+    return NextResponse.json({ error: 'Failed to submit report' }, { status: 500 })
+  }
+}
+
+// GET /api/community/reports — list user's own reports
+export async function GET(req: NextRequest) {
+  try {
+    const supabase = await createServerSupabaseClient()
+    const { data: authRes } = await supabase.auth.getUser()
+    const user = authRes?.user
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    const { data, error } = await supabase
+      .from('community_reports')
+      .select('*')
+      .eq('reporter_id', user.id)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+
+    return NextResponse.json({ items: data || [] })
+  } catch (err) {
+    console.error('GET /community/reports:', err)
+    return NextResponse.json({ error: 'Failed to load reports' }, { status: 500 })
   }
 }

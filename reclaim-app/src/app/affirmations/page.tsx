@@ -8,6 +8,7 @@ import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { ArrowLeft } from 'lucide-react'
 
 export default function AffirmationsPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -89,7 +90,7 @@ export default function AffirmationsPage() {
             href="/wellness" 
             className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
           >
-            â† Back to Wellness
+            <ArrowLeft className="h-4 w-4" />Back to Wellness
           </Link>
         </div>
 

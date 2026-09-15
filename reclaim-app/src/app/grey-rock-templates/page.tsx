@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Copy, Check, Search, Sparkles, X, HelpCircle } from 'lucide-react';
+import { Copy, Check, Search, Sparkles, X, HelpCircle, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
 
 interface Template {
@@ -108,12 +108,12 @@ export default function GreyRockTemplatesPage() {
         <p className="text-gray-600 mb-8">Copy/paste responses for real-world communication. Keep it brief, boring, and neutral.</p>
 
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-          <h3 className="font-semibold text-amber-900 mb-2">ðŸ’¡ How to Use</h3>
+          <h3 className="font-semibold text-amber-900 mb-2 flex items-center gap-2"><Lightbulb className="h-5 w-5 text-amber-500" />How to Use</h3>
           <ul className="text-sm text-amber-800 space-y-1">
-            <li>⬢ Click "Copy" to copy the template to your clipboard</li>
-            <li>⬢ Paste into your text/email and customize if needed</li>
-            <li>⬢ Keep responses short - don't over-explain or justify</li>
-            <li>⬢ Use variations to avoid sounding robotic</li>
+            <li>Click "Copy" to copy the template to your clipboard</li>
+            <li>Paste into your text/email and customize if needed</li>
+            <li>Keep responses short - don't over-explain or justify</li>
+            <li>Use variations to avoid sounding robotic</li>
           </ul>
         </div>
 

@@ -8,6 +8,7 @@ import StickyActionBar from "@/components/journal/mobile/StickyActionBar";
 import MobileFormCard from "@/components/journal/mobile/MobileFormCard";
 import MobileSlider from "@/components/journal/mobile/MobileSlider";
 import Link from "next/link";
+import { Sparkles, ArrowRight, BookOpen } from "lucide-react";
 
 // Mock subscription tier - in real app, get from user context
 const subscriptionTier = 'foundation'; // 'foundation', 'recovery', 'empowerment'
@@ -33,7 +34,7 @@ const UpgradePrompt = ({ feature }: { feature: string }) => (
     <div className="flex items-start gap-3">
       <div className="flex-shrink-0">
         <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-          <span className="text-purple-600 font-bold text-sm">âœ¨</span>
+          <span className="flex items-center justify-center text-purple-600"><Sparkles className="h-4 w-4" /></span>
         </div>
       </div>
       <div className="flex-1">
@@ -48,7 +49,7 @@ const UpgradePrompt = ({ feature }: { feature: string }) => (
           className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
         >
           Upgrade to Recovery
-          <span className="text-xs">â†’</span>
+          <ArrowRight className="h-3 w-3" />
         </Link>
       </div>
     </div>
@@ -94,7 +95,7 @@ export default function ImpactAssessmentPage() {
       
       <main className="flex-1 overflow-y-auto px-4 py-4">
         <MobileFormCard 
-          title="ðŸ’Ÿ Impact Assessment"
+          title="Impact Assessment"
           description="How did this experience affect you?"
         >
           {isPaidUser() ? (
@@ -129,7 +130,7 @@ export default function ImpactAssessmentPage() {
           <div className="flex">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                <span className="text-indigo-600 font-bold text-sm">ðŸ“Š</span>
+                <span className="flex items-center justify-center text-indigo-600"><BookOpen className="h-4 w-4" /></span>
               </div>
             </div>
             <div className="ml-3">

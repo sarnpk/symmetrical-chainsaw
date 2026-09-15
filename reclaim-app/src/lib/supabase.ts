@@ -3,8 +3,12 @@ import { createBrowserClient } from '@supabase/ssr'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
+let _browserClient: ReturnType<typeof createBrowserClient> | null = null
+
 export function createClient() {
-  return createBrowserClient(supabaseUrl, supabaseAnonKey)
+  if (_browserClient) return _browserClient
+  _browserClient = createBrowserClient(supabaseUrl, supabaseAnonKey)
+  return _browserClient
 }
 
 // Grey Rock Gamification types
@@ -42,6 +46,9 @@ export interface Profile {
   children_ages?: number[]
   custody_arrangement?: string
   preferred_language?: string
+  trial_start_date?: string | null
+  trial_end_date?: string | null
+  pre_trial_tier?: 'foundation' | 'recovery' | 'empowerment'
 }
 
 export interface JournalEntry {

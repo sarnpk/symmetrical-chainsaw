@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Save, ArrowLeft } from 'lucide-react'
+import { Save, ArrowLeft, Calendar, Target, Clipboard, Tag, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -160,8 +160,8 @@ export default function EditRealityLogEntryPage() {
             <CardContent className="space-y-6">
               {/* Date */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📅 Date
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />Date
                 </label>
                 <input
                   type="date"
@@ -174,8 +174,8 @@ export default function EditRealityLogEntryPage() {
 
               {/* Event */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  🎯 Event (What happened?)
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <Target className="h-4 w-4" />Event (What happened?)
                 </label>
                 <textarea
                   value={formData.event}
@@ -189,8 +189,8 @@ export default function EditRealityLogEntryPage() {
 
               {/* Fact */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📋 Fact (What exactly happened?)
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <Clipboard className="h-4 w-4" />Fact (What exactly happened?)
                 </label>
                 <textarea
                   value={formData.fact}
@@ -204,8 +204,8 @@ export default function EditRealityLogEntryPage() {
 
               {/* NPD Trait */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  🏷️ NPD Trait (What trait is this?)
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <Tag className="h-4 w-4" />NPD Trait (What trait is this?)
                 </label>
                 <select
                   value={formData.npd_trait}
@@ -231,8 +231,8 @@ export default function EditRealityLogEntryPage() {
                     onChange={(e) => setFormData({ ...formData, is_consistent: e.target.checked })}
                     className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
-                  <span className="text-sm font-medium text-gray-700">
-                    📌 This is consistent with past behavior
+                  <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />This is consistent with past behavior
                   </span>
                 </label>
               </div>

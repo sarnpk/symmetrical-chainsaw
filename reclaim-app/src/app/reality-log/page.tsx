@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import DashboardLayout from '@/components/DashboardLayout'
-import RealityLogHub from '@/components/reality-anchor/RealityLogHub'
+const RealityLogHub = dynamic(() => import('@/components/reality-anchor/RealityLogHub'), { ssr: false })
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'

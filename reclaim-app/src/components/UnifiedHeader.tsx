@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Heart, Search, Eye, HeartCrack } from 'lucide-react'
 import FreeToolsMenu from './FreeToolsMenu'
+import Logo from '@/components/marketing/Logo'
 
 interface UnifiedHeaderProps {
   currentTool?: string
@@ -19,7 +20,7 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
+            <Logo className="h-8 w-8" />
             <div className="flex flex-col">
               <span className="text-xl font-bold text-gray-900 leading-tight">Reclaim</span>
               <span className="text-xs text-gray-500 leading-tight">Your Life</span>
@@ -38,8 +39,9 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
             <Link href="/faq" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors">
               FAQ
             </Link>
-            <Link href="/donate" className="text-purple-600 hover:text-purple-700 font-semibold transition-colors">
-              ðŸ’œ Donate
+            <Link href="/donate" className="text-purple-600 hover:text-purple-700 font-semibold transition-colors inline-flex items-center gap-2">
+              <Heart className="h-4 w-4" />
+              Donate
             </Link>
             {showAuth && (
               <>
@@ -65,14 +67,17 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 border-t pt-4 space-y-3">
-            <Link href="/free-narcissist-test" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
-              ðŸ” Free Narcissist Test
+            <Link href="/free-narcissist-test" className="flex items-center gap-2 py-2 text-gray-700 hover:text-indigo-600 font-medium">
+              <Search className="h-4 w-4" />
+              Free Narcissist Test
             </Link>
-            <Link href="/gaslighting-reality-check" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
-              ðŸ‘ï¸ Gaslighting Reality Check
+            <Link href="/gaslighting-reality-check" className="flex items-center gap-2 py-2 text-gray-700 hover:text-indigo-600 font-medium">
+              <Eye className="h-4 w-4" />
+              Gaslighting Reality Check
             </Link>
-            <Link href="/discard-stage-test" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
-              ðŸ’” Discard Stage Test
+            <Link href="/discard-stage-test" className="flex items-center gap-2 py-2 text-gray-700 hover:text-indigo-600 font-medium">
+              <HeartCrack className="h-4 w-4" />
+              Discard Stage Test
             </Link>
             <div className="border-t my-2"></div>
             <Link href="/pricing" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
@@ -84,8 +89,9 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
             <Link href="/faq" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
               FAQ
             </Link>
-            <Link href="/donate" className="block py-2 text-purple-600 hover:text-purple-700 font-semibold">
-              ðŸ’œ Donate
+            <Link href="/donate" className="flex items-center gap-2 py-2 text-purple-600 hover:text-purple-700 font-semibold">
+              <Heart className="h-4 w-4" />
+              Donate
             </Link>
             {showAuth && (
               <>

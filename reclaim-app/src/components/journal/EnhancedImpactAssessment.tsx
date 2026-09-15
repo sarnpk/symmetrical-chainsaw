@@ -1,6 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { BookOpen } from 'lucide-react'
 
 interface EnhancedImpactAssessmentProps {
   moodRating: number
@@ -51,7 +52,8 @@ export default function EnhancedImpactAssessment({
     <Card className="border-l-4 border-l-purple-500">
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-          ðŸ“Š Impact Assessment
+          <BookOpen className="h-5 w-5" />
+          Impact Assessment
         </CardTitle>
         <CardDescription className="text-sm">
           Detailed analysis of emotional and psychological impact
@@ -84,7 +86,7 @@ export default function EnhancedImpactAssessment({
             <span>Very High</span>
           </div>
           <div className="mt-3 text-sm text-gray-700 bg-gray-50 rounded-lg p-3">
-            Selected: <span className="font-medium text-purple-700">{moodRating}</span> â€” {getMoodDescriptor(moodRating)}
+            Selected: <span className="font-medium text-purple-700">{moodRating}</span> — {getMoodDescriptor(moodRating)}
           </div>
         </div>
 
@@ -114,7 +116,7 @@ export default function EnhancedImpactAssessment({
             <span>Severe</span>
           </div>
           <div className="mt-3 text-sm text-gray-700 bg-gray-50 rounded-lg p-3">
-            Selected: <span className="font-medium text-purple-700">{triggerLevel}</span> â€” {getTriggerDescriptor(triggerLevel)}
+            Selected: <span className="font-medium text-purple-700">{triggerLevel}</span> — {getTriggerDescriptor(triggerLevel)}
           </div>
         </div>
       </CardContent>

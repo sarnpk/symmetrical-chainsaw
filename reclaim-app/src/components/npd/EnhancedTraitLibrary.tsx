@@ -10,7 +10,8 @@ import {
   Calendar,
   AlertTriangle,
   BarChart3,
-  Eye
+  Eye,
+  ArrowRight
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -196,7 +197,7 @@ export default function EnhancedTraitLibrary({ userId, subscriptionTier }: Enhan
                   <div className="flex-1">
                     <div className="font-medium">{freq.trait_name}</div>
                     <div className="text-sm text-gray-600">
-                      {freq.occurrence_count} times ⬢ Avg intensity: {freq.intensity_average.toFixed(1)}/5
+                      {freq.occurrence_count} times | Avg intensity: {freq.intensity_average.toFixed(1)}/5
                     </div>
                   </div>
                   <div className="text-right">
@@ -391,7 +392,7 @@ export default function EnhancedTraitLibrary({ userId, subscriptionTier }: Enhan
                     className="text-sm text-indigo-600 hover:text-indigo-700"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    View details â†’
+                    View details <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
               )

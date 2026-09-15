@@ -174,7 +174,7 @@ export default function UsagePage() {
                         </p>
                         <p className="text-sm text-gray-500">
                           {record.usage_metadata?.feature && (
-                            <span className="capitalize">{record.usage_metadata.feature.replace('_', ' ')} ⬢ </span>
+                            <span className="capitalize">{record.usage_metadata.feature.replace('_', ' ')}</span>
                           )}
                           {new Date(record.created_at).toLocaleString()}
                         </p>
@@ -224,35 +224,35 @@ export default function UsagePage() {
               <div>
                 <h4 className="font-medium text-gray-900 mb-2">Foundation (Free)</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>⬢ 150 AI interactions/month</li>
-                  <li>⬢ No audio transcription</li>
-                  <li>⬢ 90 journal entries/month</li>
-                  <li>⬢ Basic features only</li>
-                  <li>⬢ Community support</li>
+                  <li>150 AI interactions/month</li>
+                  <li>No audio transcription</li>
+                  <li>90 journal entries/month</li>
+                  <li>Basic features only</li>
+                  <li>Community support</li>
                 </ul>
               </div>
               
               <div>
                 <h4 className="font-medium text-gray-900 mb-2">Recovery ($15.00/month)</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>⬢ 750 AI interactions/month</li>
-                  <li>⬢ 60 minutes transcription/month</li>
-                  <li>⬢ 450 journal entries/month</li>
-                  <li>⬢ Recovery tools (Grey Rock, BIFF, etc.)</li>
-                  <li>⬢ Pattern analysis (300/month)</li>
-                  <li>⬢ Priority support</li>
+                  <li>750 AI interactions/month</li>
+                  <li>60 minutes transcription/month</li>
+                  <li>450 journal entries/month</li>
+                  <li>Recovery tools (Grey Rock, BIFF, etc.)</li>
+                  <li>Pattern analysis (300/month)</li>
+                  <li>Priority support</li>
                 </ul>
               </div>
               
               <div>
                 <h4 className="font-medium text-gray-900 mb-2">Empowerment ($24.99/month)</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>⬢ Unlimited AI interactions</li>
-                  <li>⬢ 300 minutes transcription/month</li>
-                  <li>⬢ Unlimited journal entries</li>
-                  <li>⬢ All recovery + advanced tools</li>
-                  <li>⬢ Unlimited pattern analysis</li>
-                  <li>⬢ Premium support</li>
+                  <li>Unlimited AI interactions</li>
+                  <li>300 minutes transcription/month</li>
+                  <li>Unlimited journal entries</li>
+                  <li>All recovery + advanced tools</li>
+                  <li>Unlimited pattern analysis</li>
+                  <li>Premium support</li>
                 </ul>
               </div>
             </div>

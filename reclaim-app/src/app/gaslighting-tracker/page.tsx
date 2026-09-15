@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, Shield, Trash2, HelpCircle, ChevronDown, ChevronUp, X, Image, Video, Mic, Download, Filter, Edit2 } from 'lucide-react'
+import { Plus, Shield, Trash2, HelpCircle, ChevronDown, ChevronUp, X, Image, Video, Mic, Download, Filter, Edit2, Lightbulb, FileText } from 'lucide-react'
 import MediaUpload from '@/components/MediaUpload'
 import ContradictionDetector from '@/components/gaslighting/ContradictionDetector'
 import { User } from '@supabase/supabase-js'
@@ -319,7 +319,7 @@ export default function GaslightingTrackerPage() {
         <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
           <CardHeader className="cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-purple-800">ðŸ’¡ About Gaslighting Journal</CardTitle>
+              <CardTitle className="text-purple-800 flex items-center gap-2"><Lightbulb className="h-5 w-5" />About Gaslighting Journal</CardTitle>
               {showInfo ? <ChevronUp className="h-5 w-5 text-purple-600" /> : <ChevronDown className="h-5 w-5 text-purple-600" />}
             </div>
           </CardHeader>
@@ -329,11 +329,11 @@ export default function GaslightingTrackerPage() {
                 Document when they deny, distort, or contradict reality. Track their lies vs the truth with evidence.
               </p>
               <div className="space-y-2">
-                <div><strong>âœ“ Document lies:</strong> Record what they claimed vs what actually happened</div>
-                <div><strong>âœ“ Add evidence:</strong> Attach audio, video, or images as proof</div>
-                <div><strong>âœ“ AI detection:</strong> Automatically detect contradictions between statements</div>
-                <div><strong>âœ“ Pattern tracking:</strong> See which topics they gaslight about most</div>
-                <div><strong>âœ“ Export reports:</strong> Generate evidence for therapy or legal use</div>
+                <div><strong>Document lies:</strong> Record what they claimed vs what actually happened</div>
+                <div><strong>Add evidence:</strong> Attach audio, video, or images as proof</div>
+                <div><strong>AI detection:</strong> Automatically detect contradictions between statements</div>
+                <div><strong>Pattern tracking:</strong> See which topics they gaslight about most</div>
+                <div><strong>Export reports:</strong> Generate evidence for therapy or legal use</div>
               </div>
             </CardContent>
           )}
@@ -416,7 +416,7 @@ export default function GaslightingTrackerPage() {
 
                       {statement.evidence_text && (
                         <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
-                          <div className="text-xs font-semibold text-yellow-900 mb-1">ðŸ“„ EVIDENCE TEXT:</div>
+                          <div className="text-xs font-semibold text-yellow-900 mb-1 flex items-center gap-1"><FileText className="h-3 w-3" />EVIDENCE TEXT:</div>
                           <div className="text-gray-900 whitespace-pre-wrap">{statement.evidence_text}</div>
                         </div>
                       )}

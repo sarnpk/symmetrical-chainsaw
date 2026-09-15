@@ -1,5 +1,8 @@
 import { createServerSupabase } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
+import { notifyMilestone } from '@/lib/notifications';
+
+const MILESTONES = [7, 14, 30, 60, 90];
 
 export async function GET() {
   const supabase = await createServerSupabase();
@@ -15,6 +18,21 @@ export async function GET() {
   const daysNoContact = settings?.no_contact_start_date
     ? Math.floor((Date.now() - new Date(settings.no_contact_start_date).getTime()) / (1000 * 60 * 60 * 24))
     : 0;
+
+  // Check for milestone and notify (fire-and-forget)
+  if (daysNoContact > 0 && MILESTONES.includes(daysNoContact)) {
+    const { data: existing } = await supabase
+      .from('notifications')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('type', 'milestone')
+      .ilike('title', `${daysNoContact}-Day%`)
+      .maybeSingle();
+
+    if (!existing) {
+      notifyMilestone(user.id, daysNoContact).catch(() => {});
+    }
+  }
 
   const { data: urges } = await supabase
     .from('withdrawal_tracker')

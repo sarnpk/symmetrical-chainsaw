@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertCircle, Mic, X } from 'lucide-react'
+import { AlertCircle, Mic, X, Calendar, FileText, Tag } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 
 const NPD_TRAITS = [
@@ -203,7 +203,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
           </button>
           <div className="text-sm text-gray-800 flex items-center gap-2">
             <span className={`inline-block h-2 w-2 rounded-full ${isDictating ? 'bg-red-500 animate-pulse' : 'bg-gray-400'}`}></span>
-            {isDictating ? 'Dictating⬦' : speechSupported ? 'Tap mic to dictate' : 'Dictation not supported'}
+            {isDictating ? 'Dictating...' : speechSupported ? 'Tap mic to dictate' : 'Dictation not supported'}
           </div>
           <button
             type="button"
@@ -217,7 +217,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
         {/* Title */}
         <div className="px-4 py-3 border-b bg-gray-50">
           <p className="text-sm font-medium text-gray-700">
-            {editorMode === 'event' ? 'ðŸŽ¯ Event (What happened?)' : 'ðŸ“‹ Fact (What exactly happened?)'}
+            {editorMode === 'event' ? 'Event (What happened?)' : 'Fact (What exactly happened?)'}
           </p>
         </div>
 
@@ -227,7 +227,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
             value={editorText}
             onChange={(e) => setEditorText(e.target.value)}
             className="w-full h-full resize-none outline-none text-base p-4 border border-gray-300 rounded-lg"
-            placeholder={editorMode === 'event' ? 'Speak or type what happened⬦' : 'Speak or type the facts⬦'}
+            placeholder={editorMode === 'event' ? 'Speak or type what happened...' : 'Speak or type the facts...'}
             autoFocus
           />
         </div>
@@ -272,8 +272,9 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
 
           {/* Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              ðŸ“… Date
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Date
             </label>
             <input
               type="date"
@@ -287,7 +288,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
           {/* Event */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              ðŸŽ¯ Event (What happened?)
+              Event (What happened?)
             </label>
             <div
               onClick={() => openFullScreenEditor('event')}
@@ -302,8 +303,9 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
 
           {/* Fact */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              ðŸ“‹ Fact (What exactly happened?)
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Fact (What exactly happened?)
             </label>
             <div
               onClick={() => openFullScreenEditor('fact')}
@@ -318,8 +320,9 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
 
           {/* NPD Trait */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              ðŸ·ï¸ NPD Trait (What trait is this?)
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+              <Tag className="h-4 w-4" />
+              NPD Trait (What trait is this?)
             </label>
             <select
               value={formData.npd_trait}
@@ -346,7 +349,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
                 className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
               <span className="text-sm font-medium text-gray-700">
-                ðŸ“Œ This is consistent with past behavior
+                This is consistent with past behavior
               </span>
             </label>
           </div>

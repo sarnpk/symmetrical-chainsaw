@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
-import MoodCheckIn from '@/components/MoodCheckIn'
-import CopingStrategies from '@/components/CopingStrategies'
+import dynamic from 'next/dynamic'
+const MoodCheckIn = dynamic(() => import('@/components/MoodCheckIn'), { ssr: false })
+const CopingStrategies = dynamic(() => import('@/components/CopingStrategies'), { ssr: false })
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 import { 
@@ -17,7 +18,8 @@ import {
   Sun,
   Shuffle,
   Brain,
-  HelpCircle
+  HelpCircle,
+  ArrowRight
 } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -351,19 +353,19 @@ export default function WellnessPage() {
                 <div>
                   <h4 className="font-medium text-purple-900 mb-2">{getPlanData('recovery')?.display_name || 'Recovery'} (${getPlanData('recovery')?.price_monthly || 15}/month)</h4>
                   <ul className="text-sm text-purple-700 space-y-1">
-                    <li>⬢ Daily mood check-ins</li>
-                    <li>⬢ Personal coping strategies library</li>
-                    <li>⬢ 100 AI coaching interactions</li>
-                    <li>⬢ Enhanced emotional tracking</li>
+                    <li>Daily mood check-ins</li>
+                    <li>Personal coping strategies library</li>
+                    <li>100 AI coaching interactions</li>
+                    <li>Enhanced emotional tracking</li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="font-medium text-purple-900 mb-2">{getPlanData('empowerment')?.display_name || 'Empowered'} (${getPlanData('empowerment')?.price_monthly || 24.99}/month)</h4>
                   <ul className="text-sm text-purple-700 space-y-1">
-                    <li>⬢ All Recovery features</li>
-                    <li>⬢ Unlimited AI coaching</li>
-                    <li>⬢ Advanced pattern analysis</li>
-                    <li>⬢ Complete evidence documentation</li>
+                    <li>All Recovery features</li>
+                    <li>Unlimited AI coaching</li>
+                    <li>Advanced pattern analysis</li>
+                    <li>Complete evidence documentation</li>
                   </ul>
                 </div>
               </div>
@@ -372,7 +374,7 @@ export default function WellnessPage() {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors"
               >
                 Upgrade Your Plan
-                <span className="text-sm">â†’</span>
+                <ArrowRight className="h-4 w-4" />
               </a>
             </CardContent>
           </Card>

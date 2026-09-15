@@ -99,8 +99,8 @@ export default function RelationshipHealthCheckPage() {
 
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            ❤️ Free Assessment - No Signup Required
+          <div className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4 flex items-center gap-2">
+            <Heart className="h-4 w-4" />Free Assessment - No Signup Required
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Is Your Relationship <span className="text-green-600">Healthy</span>?
@@ -238,7 +238,7 @@ export default function RelationshipHealthCheckPage() {
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="text-lg font-bold text-red-900 mb-2">âš ï¸ Safety Warning</h3>
+                      <h3 className="text-lg font-bold text-red-900 mb-2"><AlertTriangle className="inline h-4 w-4 text-red-600 mr-1" />Safety Warning</h3>
                       <p className="text-red-800 mb-2">
                         Your responses indicate concerning patterns. Please reach out for help:
                       </p>

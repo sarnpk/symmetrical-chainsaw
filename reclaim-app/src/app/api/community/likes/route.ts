@@ -69,6 +69,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to like post' }, { status: 500 })
     }
 
+    // Notify post author (skip self-likes, fire-and-forget)
+    try {
+      const { data: post } = await supabase
+        .from('community_posts')
+        .select('author_id, title')
+        .eq('id', post_id)
+        .maybeSingle()
+
+      if (post && post.author_id !== user.id) {
+        const likerName = user.user_metadata?.display_name || user.user_metadata?.first_name || 'Someone'
+        const { notifyPostLike } = await import('@/lib/notifications')
+        notifyPostLike(post.author_id, post.title || 'your post', likerName).catch(() => {})
+      }
+    } catch {}
+
     return NextResponse.json({ ok: true }, { status: 201 })
   } catch (err) {
     console.error('POST /community/likes exception:', err)

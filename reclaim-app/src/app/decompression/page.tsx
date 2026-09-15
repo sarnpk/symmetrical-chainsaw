@@ -7,7 +7,7 @@ import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
-import { Activity, Music, BookOpen, Footprints, Check } from 'lucide-react'
+import { Activity, Music, BookOpen, Footprints, Check, Sun, Sparkles } from 'lucide-react'
 
 const INTERACTION_TYPES = [
   { value: 'pickup', label: 'Child Pickup' },
@@ -27,10 +27,10 @@ const INTERACTION_TYPES = [
 const RITUAL_TYPES = [
   { value: 'walk', label: 'Walk', icon: Footprints, color: 'green' },
   { value: 'exercise', label: 'Exercise', icon: Activity, color: 'blue' },
-  { value: 'meditation', label: 'Meditation', icon: 'ðŸ§˜', color: 'purple' },
+  { value: 'meditation', label: 'Meditation', icon: Sun, color: 'purple' },
   { value: 'music', label: 'Music', icon: Music, color: 'pink' },
   { value: 'journaling', label: 'Journaling', icon: BookOpen, color: 'indigo' },
-  { value: 'other', label: 'Other', icon: 'âœ¨', color: 'gray' },
+  { value: 'other', label: 'Other', icon: Sparkles, color: 'gray' },
 ]
 
 export default function DecompressionPage() {
@@ -253,7 +253,7 @@ export default function DecompressionPage() {
               {moodImprovement > 0 && (
                 <div className="bg-green-50 p-4 rounded-lg">
                   <p className="text-green-900 font-medium">
-                    âœ¨ Mood improved by {moodImprovement} points!
+                    Mood improved by {moodImprovement} points!
                   </p>
                 </div>
               )}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react'
+import { AlertTriangle, CheckCircle, TrendingUp, ArrowDown } from 'lucide-react'
 
 export default function ContradictionDetector({ statements }: { statements: any[] }) {
   const [analyzing, setAnalyzing] = useState(false)
@@ -75,7 +75,7 @@ export default function ContradictionDetector({ statements }: { statements: any[
                               {c.contradiction_type.replace('_', ' ')}
                             </div>
                             <div className="text-sm text-gray-600 mb-2">
-                              {c.days_apart} days apart ⬢ {Math.round(c.confidence * 100)}% confidence
+                              {c.days_apart} days apart | {Math.round(c.confidence * 100)}% confidence
                             </div>
                           </div>
                         </div>
@@ -88,7 +88,7 @@ export default function ContradictionDetector({ statements }: { statements: any[
                             <div className="font-medium text-gray-900">"{c.statement_1.their_claim}"</div>
                           </div>
 
-                          <div className="text-center text-red-600 font-bold">â†“ CONTRADICTS â†“</div>
+                          <div className="flex items-center justify-center gap-2 text-red-600 font-bold"><ArrowDown className="h-4 w-4" />CONTRADICTS<ArrowDown className="h-4 w-4" /></div>
 
                           <div className="bg-gray-50 p-3 rounded">
                             <div className="text-xs text-gray-500 mb-1">

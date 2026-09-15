@@ -7,6 +7,7 @@ import MobileTopBar from "@/components/journal/mobile/MobileTopBar";
 import StickyActionBar from "@/components/journal/mobile/StickyActionBar";
 import MobileFormCard from "@/components/journal/mobile/MobileFormCard";
 import { CameraIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Camera } from "lucide-react";
 
 // Mock subscription tier - in real app, get from user context
 const subscriptionTier = 'foundation'; // 'foundation', 'recovery', 'empowerment'
@@ -92,7 +93,7 @@ export default function PhotoEvidencePage() {
       
       <main className="flex-1 overflow-y-auto px-4 py-4">
         <MobileFormCard 
-          title="ðŸ“¸ Photo Evidence"
+          title="Photo Evidence"
           description={
             !areMandatoryFieldsFilled() 
               ? "Please fill in Date, Title, and Description before uploading photos"
@@ -193,7 +194,7 @@ export default function PhotoEvidencePage() {
           <div className="flex">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                <span className="text-yellow-600 font-bold text-sm">ðŸ“·</span>
+                <span className="flex items-center justify-center text-yellow-600"><Camera className="h-4 w-4" /></span>
               </div>
             </div>
             <div className="ml-3">

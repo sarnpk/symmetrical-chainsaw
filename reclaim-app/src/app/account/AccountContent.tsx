@@ -362,32 +362,32 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
             >
               <option value="auto">Auto-detect from my messages</option>
               <option value="en">English</option>
-              <option value="ur">Urdu (Ø§Ø±Ø¯Ùˆ)</option>
-              <option value="ar">Arabic (Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©)</option>
+              <option value="ur">Urdu (اردو)</option>
+              <option value="ar">Arabic (العربية)</option>
               <option value="es">Spanish (Español)</option>
               <option value="fr">French (Français)</option>
               <option value="de">German (Deutsch)</option>
               <option value="it">Italian (Italiano)</option>
               <option value="pt">Portuguese (Português)</option>
-              <option value="ru">Russian (Рђсский)</option>
-              <option value="hi">Hindi (हिन्द६)</option>
-              <option value="bn">Bengali (à¦¬à¦¾à¦‚à¦²à¦¾)</option>
-              <option value="zh">Chinese (ä¸­æ–‡)</option>
-              <option value="ja">Japanese (æ—¥æœ¬èªž)</option>
-              <option value="ko">Korean (í•œêµ­ì–´)</option>
-              <option value="th">Thai (à¹„à¸—à¸¢)</option>
-              <option value="vi">Vietnamese (Tiếng Viá»‡t)</option>
+              <option value="ru">Russian (Русский)</option>
+              <option value="hi">Hindi (हिन्दी)</option>
+              <option value="bn">Bengali (বাংলা)</option>
+              <option value="zh">Chinese (中文)</option>
+              <option value="ja">Japanese (日本語)</option>
+              <option value="ko">Korean (한국어)</option>
+              <option value="th">Thai (ไทย)</option>
+              <option value="vi">Vietnamese (Tiếng Việt)</option>
               <option value="id">Indonesian (Bahasa Indonesia)</option>
               <option value="ms">Malay (Bahasa Melayu)</option>
               <option value="tl">Filipino (Tagalog)</option>
               <option value="tr">Turkish (Türkçe)</option>
-              <option value="fa">Persian (ÙØ§Ø±Ø³ÛŒ)</option>
-              <option value="he">Hebrew (×¢×‘×¨×™×ª)</option>
+              <option value="fa">Persian (فارسی)</option>
+              <option value="he">Hebrew (עברית)</option>
               <option value="sw">Swahili (Kiswahili)</option>
-              <option value="am">Amharic (áŠ áˆ›áˆ­áŠ›)</option>
+              <option value="am">Amharic (አማርኛ)</option>
               <option value="yo">Yoruba (Yorùbá)</option>
               <option value="ig">Igbo (Asụsụ Igbo)</option>
-              <option value="ha">Hausa (HarsÉ™n Hausa)</option>
+              <option value="ha">Hausa (Harshen Hausa)</option>
               <option value="zu">Zulu (isiZulu)</option>
               <option value="xh">Xhosa (isiXhosa)</option>
               <option value="af">Afrikaans</option>
@@ -398,15 +398,15 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
               <option value="fi">Finnish (Suomi)</option>
               <option value="is">Icelandic (Íslenska)</option>
               <option value="pl">Polish (Polski)</option>
-              <option value="cs">Czech (ÄŒeština)</option>
+              <option value="cs">Czech (Čeština)</option>
               <option value="sk">Slovak (Slovenčina)</option>
               <option value="hu">Hungarian (Magyar)</option>
-              <option value="ro">Romanian (RomânĒ)</option>
-              <option value="bg">Bulgarian (Ð‘ÑŠÐ»Ð³Ð°Ñ€ÑÐºÐ¸)</option>
+              <option value="ro">Romanian (Română)</option>
+              <option value="bg">Bulgarian (Български)</option>
               <option value="hr">Croatian (Hrvatski)</option>
-              <option value="sr">Serbian (СѬпски)</option>
+              <option value="sr">Serbian (Српски)</option>
               <option value="bs">Bosnian (Bosanski)</option>
-              <option value="mk">Macedonian (ÐœÐ°ÐºÐµÐ´Ð¾Ð½ÑÐºÐ¸)</option>
+              <option value="mk">Macedonian (Македонски)</option>
               <option value="sl">Slovenian (Slovenščina)</option>
               <option value="lv">Latvian (Latviešu)</option>
               <option value="lt">Lithuanian (Lietuvių)</option>
@@ -417,28 +417,28 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
               <option value="eu">Basque (Euskera)</option>
               <option value="ca">Catalan (Català)</option>
               <option value="gl">Galician (Galego)</option>
-              <option value="el">Greek (Î•Î»Î»Î·Î½Î¹ÎºÎ¬)</option>
-              <option value="uk">Ukrainian (Ð£ÐºÑ€Ð°Ñ—Ð½ÑÑŒÐºÐ°)</option>
-              <option value="be">Belarusian (Ð‘ÐµÐ»Ð°Ñ€ÑƒÑÐºÐ°Ñ)</option>
-              <option value="kk">Kazakh (ÒšÐ°Ð·Ð°Ò› Ñ‚Ñ–Ð»Ñ–)</option>
-              <option value="ky">Kyrgyz (ÐšÑ‹Ñ€Ð³Ñ‹Ð· Ñ‚Ð¸Ð»Ð¸)</option>
+              <option value="el">Greek (Ελληνικά)</option>
+              <option value="uk">Ukrainian (Українська)</option>
+              <option value="be">Belarusian (Беларуская)</option>
+              <option value="kk">Kazakh (Қазақ тілі)</option>
+              <option value="ky">Kyrgyz (Кыргыз тили)</option>
               <option value="uz">Uzbek (Oʻzbek tili)</option>
               <option value="tg">Tajik (Тоҷикӣ)</option>
-              <option value="mn">Mongolian (ÐœÐ¾Ð½Ð³Ð¾Ð»)</option>
-              <option value="my">Burmese (á€™á€¼á€”á€ºá€™á€¬á€…á€¬)</option>
-              <option value="km">Khmer (áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš)</option>
-              <option value="lo">Lao (àºžàº²àºªàº²àº¥àº²àº§)</option>
-              <option value="si">Sinhala (à·ƒà·’à¶‚à·„à¶½)</option>
+              <option value="mn">Mongolian (Монгол)</option>
+              <option value="my">Burmese (မြန်မာစာ)</option>
+              <option value="km">Khmer (ភាសាខ្មែរ)</option>
+              <option value="lo">Lao (ພາສາລາວ)</option>
+              <option value="si">Sinhala (සිංහල)</option>
               <option value="ta">Tamil (தமிழ்)</option>
-              <option value="te">Telugu (à°¤à±†à°²à±à°—à±)</option>
-              <option value="kn">Kannada (à²•à²¨à³à²¨à²¡)</option>
-              <option value="ml">Malayalam (à´®à´²à´¯à´¾à´³à´‚)</option>
-              <option value="gu">Gujarati (àª—à«àªœàª°àª¾àª¤à«€)</option>
-              <option value="pa">Punjabi (à¨ªà©°à¨œà¨¾à¨¬à©€)</option>
-              <option value="or">Odia (à¬“à¬¡à¬¼à¬¿à¬†)</option>
-              <option value="as">Assamese (à¦…à¦¸à¦®à§€à¦¯à¦¼à¦¾)</option>
-              <option value="ne">Nepali (à¤¨à¥‡à¤ªà¤¾à¤²à¥€)</option>
-              <option value="mr">Marathi (मराठ६)</option>
+              <option value="te">Telugu (తెలుగు)</option>
+              <option value="kn">Kannada (ಕನ್ನಡ)</option>
+              <option value="ml">Malayalam (മലയാളം)</option>
+              <option value="gu">Gujarati (ગુજરાતી)</option>
+              <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+              <option value="or">Odia (ଓଡ଼ିଆ)</option>
+              <option value="as">Assamese (অসমীয়া)</option>
+              <option value="ne">Nepali (नेपाली)</option>
+              <option value="mr">Marathi (मराठी)</option>
             </select>
           </div>
 
@@ -616,7 +616,7 @@ export default function AccountContent({ user, profile }: { user: any, profile: 
             disabled={isChangingPassword}
             className="bg-gray-900 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
           >
-            {isChangingPassword ? 'Updating⬦' : 'Update Password'}
+            {isChangingPassword ? 'Updating' : 'Update Password'}
           </button>
         </div>
       </div>

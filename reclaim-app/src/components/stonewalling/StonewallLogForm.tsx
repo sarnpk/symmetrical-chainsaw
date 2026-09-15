@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Check } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -39,7 +40,7 @@ export default function StonewallLogForm({ onSuccess }: { onSuccess?: () => void
     return (
       <Card>
         <CardContent className="p-8 text-center">
-          <div className="text-green-600 text-5xl mb-4">âœ“</div>
+          <div className="text-green-600 mb-4 flex justify-center"><Check className="h-14 w-14" /></div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Incident Logged</h3>
           <p className="text-gray-600">Redirecting...</p>
         </CardContent>

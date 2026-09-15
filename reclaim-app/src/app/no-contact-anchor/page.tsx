@@ -2,7 +2,7 @@ import { createServerSupabase } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import NoContactAnchorContent from './NoContactAnchorContent';
 import DashboardLayout from '@/components/DashboardLayout';
-import { Crown } from 'lucide-react';
+import { Check, Crown } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function NoContactAnchorPage() {
@@ -32,11 +32,11 @@ export default async function NoContactAnchorPage() {
           <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-6 mb-6">
             <h2 className="font-semibold text-indigo-900 mb-2">What you'll get:</h2>
             <ul className="text-left text-indigo-800 space-y-2">
-              <li>�S& Track your no-contact streak</li>
-              <li>�S& Crisis intervention tool</li>
-              <li>�S& Urge intensity tracking & graphs</li>
-              <li>�S& Milestone badges & achievements</li>
-              <li>�S& "Why I Left" anchor list</li>
+              <li className="flex items-center gap-2"><Check className="h-4 w-4 text-indigo-800 shrink-0" /> Track your no-contact streak</li>
+              <li className="flex items-center gap-2"><Check className="h-4 w-4 text-indigo-800 shrink-0" /> Crisis intervention tool</li>
+              <li className="flex items-center gap-2"><Check className="h-4 w-4 text-indigo-800 shrink-0" /> Urge intensity tracking &amp; graphs</li>
+              <li className="flex items-center gap-2"><Check className="h-4 w-4 text-indigo-800 shrink-0" /> Milestone badges &amp; achievements</li>
+              <li className="flex items-center gap-2"><Check className="h-4 w-4 text-indigo-800 shrink-0" /> "Why I Left" anchor list</li>
             </ul>
           </div>
           <Link

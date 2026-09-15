@@ -78,7 +78,7 @@ export async function GET(req: Request) {
     }
 
     // Transcription minutes and count (evidence_files)
-    const txMinutesLimit = await getLimit('transcription_minutes', 'minutes')
+    const txMinutesLimit = await getLimit('transcription_minutes', 'monthly_count')
     const { data: audioFiles, error: filesErr } = await supabase
       .from('evidence_files')
       .select('duration_seconds, uploaded_at, storage_bucket, user_id')

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, BookOpen, Brain, Shield, Heart, Anchor, MessageSquare, AlertTriangle, Target, FileText, RotateCcw, HeartHandshake, Flame, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus, BookOpen, Brain, Shield, Heart, Anchor, MessageSquare, AlertTriangle, Target, FileText, RotateCcw, HeartHandshake, Flame, TrendingUp, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile, JournalEntry } from '@/lib/supabase'
@@ -64,7 +64,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
   const categories = [
     {
       id: 'journaling',
-      name: 'ðŸ“ Journaling',
+      name: 'Journaling',
       items: [
         { name: 'New Entry', href: '/journal/new', icon: Plus, color: 'indigo', featured: true },
         { name: 'Journal', href: '/journal', icon: BookOpen, color: 'blue' },
@@ -74,7 +74,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
     },
     {
       id: 'protection',
-      name: 'ðŸ›¡ï¸ Protection',
+      name: 'Protection',
       items: [
         { name: 'Grey Rock', href: '/grey-rock-templates', icon: FileText, color: 'gray', featured: true },
         { name: 'BIFF Assistant', href: '/biff-assistant', icon: MessageSquare, color: 'indigo' },
@@ -84,7 +84,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
     },
     {
       id: 'recovery',
-      name: 'ðŸ§  Recovery',
+      name: 'Recovery',
       items: [
         { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle, color: 'red', featured: true },
         { name: 'Belief Reframe', href: '/belief-reframe', icon: Brain, color: 'green', featured: true },
@@ -94,7 +94,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
     },
     {
       id: 'analysis',
-      name: 'ðŸŽ¯ Analysis',
+      name: 'Analysis',
       items: [
         { name: 'Narcissist Detector', href: '/narcissist-detector', icon: AlertTriangle, color: 'red', featured: true },
         { name: 'Narcissist Simulator', href: '/narcissist-simulator', icon: Target, color: 'purple', featured: true },
@@ -107,7 +107,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
     },
     {
       id: 'support',
-      name: 'ðŸ’¬ Support',
+      name: 'Support',
       items: [
         { name: 'AI Coach', href: '/ai-coach', icon: Brain, color: 'purple', featured: true },
         { name: 'Wellness', href: '/wellness', icon: Heart, color: 'pink' }
@@ -203,7 +203,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
                   <CardHeader>
                     <CardTitle className="text-base line-clamp-1">{entry.title}</CardTitle>
                     <div className="text-xs text-gray-500">
-                      {new Date(entry.incident_date).toLocaleDateString()} ⬢ Safety: {entry.safety_rating}/5
+                      {new Date(entry.incident_date).toLocaleDateString()} Safety: {entry.safety_rating}/5
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -285,8 +285,9 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
               <h3 className="font-semibold text-red-900 text-sm">Safety First</h3>
               <p className="text-xs text-red-700">In immediate danger? Call 911 or National Domestic Violence Hotline: 1-800-799-7233</p>
             </div>
-            <Link href="/safety-plan" className="text-xs text-red-600 hover:text-red-700 font-medium whitespace-nowrap">
-              Safety Plan â†’
+            <Link href="/safety-plan" className="text-xs text-red-600 hover:text-red-700 font-medium whitespace-nowrap inline-flex items-center gap-1">
+              Safety Plan
+              <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </CardContent>

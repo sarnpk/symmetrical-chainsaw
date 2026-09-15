@@ -55,7 +55,7 @@ export default function ReviewPage() {
       <main className="flex-1 overflow-y-auto px-4 py-4">
         {/* Summary Card */}
         <MobileFormCard 
-          title="ðŸ“‹ Entry Summary"
+          title="Entry Summary"
           description="Review your entry before submitting"
         >
           <div className="space-y-6">
@@ -131,7 +131,7 @@ export default function ReviewPage() {
         </MobileFormCard>
 
         {/* Submission Options */}
-        <MobileFormCard title="ðŸ’¾ Save Options">
+        <MobileFormCard title="Save Options">
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <input

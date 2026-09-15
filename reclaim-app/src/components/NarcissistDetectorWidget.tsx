@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertTriangle, TrendingUp, Eye } from 'lucide-react'
+import { AlertTriangle, TrendingUp, Eye, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 
@@ -87,8 +87,8 @@ export default function NarcissistDetectorWidget() {
             <AlertTriangle className="h-5 w-5 text-red-600" />
             Narcissist Detector
           </CardTitle>
-          <Link href="/narcissist-detector" className="text-xs text-red-600 hover:text-red-700 font-medium">
-            View All â†’
+          <Link href="/narcissist-detector" className="text-xs text-red-600 hover:text-red-700 font-medium inline-flex items-center gap-1">
+            View All <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
       </CardHeader>

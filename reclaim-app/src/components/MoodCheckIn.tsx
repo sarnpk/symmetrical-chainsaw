@@ -13,7 +13,10 @@ import {
   Smile,
   Frown,
   Meh,
-  Trash2
+  Trash2,
+  Sparkles,
+  ArrowRight,
+  Lightbulb
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -341,7 +344,7 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
                 <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-purple-600 font-bold text-sm">âœ¨</span>
+                  <span className="text-purple-600 font-bold text-sm"><Sparkles className="h-4 w-4" /></span>
                 </div>
               </div>
               <div className="flex-1">
@@ -356,7 +359,7 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
                   className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
                 >
                   Upgrade to Recovery
-                  <span className="text-xs">â†’</span>
+                  <ArrowRight className="h-3 w-3" />
                 </a>
               </div>
             </div>
@@ -386,7 +389,7 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Overall Mood (1-10)
             </label>
-            {/* Discrete slider 1â€“10 with value chip, ticks, and drag bubble */}
+            {/* Discrete slider 1–10 with value chip, ticks, and drag bubble */}
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <div className="relative w-full">
@@ -434,7 +437,7 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
                   )
                 })}
               </div>
-              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-pink-700">{moodRating}</span> â€” {descriptorMoodOrEnergy(moodRating)}</div>
+              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-pink-700">{moodRating}</span> — {descriptorMoodOrEnergy(moodRating)}</div>
             </div>
             <div className="flex justify-between text-xs text-gray-500 mt-2">
               <span>Very Low</span>
@@ -495,7 +498,7 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
                   )
                 })}
               </div>
-              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-blue-700">{energyLevel}</span> â€” {descriptorMoodOrEnergy(energyLevel)}</div>
+              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-blue-700">{energyLevel}</span> — {descriptorMoodOrEnergy(energyLevel)}</div>
             </div>
           </div>
 
@@ -552,7 +555,7 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
                   )
                 })}
               </div>
-              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-orange-700">{anxietyLevel}</span> â€” {descriptorAnxiety(anxietyLevel)}</div>
+              <div className="text-xs text-gray-600">Selected: <span className="font-medium text-orange-700">{anxietyLevel}</span> — {descriptorAnxiety(anxietyLevel)}</div>
             </div>
             <div className="flex justify-between text-xs text-gray-500 mt-2">
               <span>Very Calm</span>
@@ -590,7 +593,7 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
       {showJourney && aiSuggestions.length > 0 && (
         <Card className="border-indigo-200 bg-indigo-50">
           <CardHeader>
-            <CardTitle className="text-indigo-900 text-base">ðŸ’¡ Suggestions for You</CardTitle>
+            <CardTitle className="text-indigo-900 text-base flex items-center gap-2"><Lightbulb className="h-4 w-4" />Suggestions for You</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {aiSuggestions.map((suggestion, idx) => (
@@ -618,7 +621,7 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
                       'bg-blue-600 text-white hover:bg-blue-700'
                     }`}
                   >
-                    {suggestion.action.label} â†’
+                    {suggestion.action.label} <ArrowRight className="h-3 w-3" />
                   </a>
                 )}
               </div>

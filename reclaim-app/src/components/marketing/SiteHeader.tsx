@@ -64,23 +64,6 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-1" aria-label="Primary">
-          <div className="relative group">
-            <button className="flex items-center gap-1 rounded-lg px-3 py-2 text-[15px] font-medium text-ink-700 hover:text-brand-700 hover:bg-brand-50 transition-colors">
-              Free Tools
-              <ChevronDown className="h-4 w-4 opacity-60" />
-            </button>
-            <div className="absolute left-0 mt-1 w-64 rounded-xl border border-ink-200 bg-white p-2 shadow-lift opacity-0 invisible translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0">
-              {freeTools.map((tool) => (
-                <Link
-                  key={tool.href}
-                  href={tool.href}
-                  className="block rounded-lg px-3 py-2 text-sm font-medium text-ink-700 hover:bg-brand-50 hover:text-brand-700 transition-colors"
-                >
-                  {tool.name}
-                </Link>
-              ))}
-            </div>
-          </div>
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -161,24 +144,6 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
           </div>
 
           <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1" aria-label="Mobile">
-            <Link
-              href="/free-assessment"
-              onClick={() => setMenuOpen(false)}
-              className="block rounded-lg px-3 py-2.5 text-base font-semibold text-brand-700 hover:bg-brand-50"
-            >
-              Free Assessment
-            </Link>
-            <p className="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-wider text-ink-400">Free Tools</p>
-            {freeTools.map((tool) => (
-              <Link
-                key={tool.href}
-                href={tool.href}
-                onClick={() => setMenuOpen(false)}
-                className="block rounded-lg px-3 py-2.5 text-base font-medium text-ink-700 hover:bg-brand-50"
-              >
-                {tool.name}
-              </Link>
-            ))}
             <p className="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-wider text-ink-400">Reclaim</p>
             {navLinks.map((link) => (
               <Link

@@ -19,10 +19,14 @@ import {
   Plus,
   Search,
   AlertTriangle,
-
+  ArrowRight,
+  Flag,
+  Ban,
+  MoreVertical,
 } from 'lucide-react'
 import GroupChatRooms from './GroupChatRooms'
 import UserStatsWidget from './UserStatsWidget'
+import ChatPanel from './ChatPanel'
 
 interface CommunityPost {
   id: string
@@ -133,6 +137,54 @@ export default function CommunityContent() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [chatEnabled, setChatEnabled] = useState(true)
+  const [reportOpen, setReportOpen] = useState(false)
+  const [reportTarget, setReportTarget] = useState<{ postId: string; userId: string } | null>(null)
+  const [reportReason, setReportReason] = useState('spam')
+  const [reportDesc, setReportDesc] = useState('')
+  const [menuOpen, setMenuOpen] = useState<string | null>(null)
+  const [communityResources, setCommunityResources] = useState<any[]>([])
+
+  useEffect(() => {
+    fetch('/api/community/resources')
+      .then(r => r.json())
+      .then(d => setCommunityResources(d.items || []))
+      .catch(() => {})
+  }, [])
+
+  const reportPost = async () => {
+    if (!reportTarget) return
+    try {
+      const res = await fetch('/api/community/reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target_post_id: reportTarget.postId, target_user_id: reportTarget.userId, reason: reportReason, description: reportDesc })
+      })
+      if (res.ok) {
+        toast.success('Report submitted')
+        setReportOpen(false)
+        setReportTarget(null)
+        setReportDesc('')
+      } else {
+        toast.error('Failed to report')
+      }
+    } catch { toast.error('Failed to report') }
+  }
+
+  const blockUser = async (userId: string) => {
+    try {
+      const res = await fetch('/api/community/blocks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ blocked_id: userId })
+      })
+      if (res.ok) {
+        toast.success('User blocked')
+        setMenuOpen(null)
+        fetchPosts({ append: false })
+      }
+    } catch { toast.error('Failed to block') }
+  }
 
 
   // Load posts from API with simple search support and transform to view model
@@ -165,32 +217,21 @@ export default function CommunityContent() {
       }))
       // Set posts immediately for quick UI, then hydrate likes state for the fetched slice only
       setPosts(prev => append ? [...prev, ...mapped] : mapped)
-      // Hydrate likes and replies for new items only
-      const hydrate = async () => {
-        const slice = mapped
-        for (const p of slice) {
-          // likes
-          try {
-            const r = await fetch(`/api/community/likes?post_id=${encodeURIComponent(p.id)}`)
-            if (r.ok) {
-              const j = await r.json()
-              const count = typeof j.count === 'number' ? j.count : 0
-              const liked = !!j.liked
-              setPosts(prev => prev.map(pp => pp.id === p.id ? { ...pp, likes: count, liked } : pp))
-            }
-          } catch {}
-          // replies count
-          try {
-            const rc = await fetch(`/api/community/comments?post_id=${encodeURIComponent(p.id)}&count=1`)
-            if (rc.ok) {
-              const jj = await rc.json()
-              const c = typeof jj.count === 'number' ? jj.count : 0
-              setPosts(prev => prev.map(pp => pp.id === p.id ? { ...pp, replies: c } : pp))
-            }
-          } catch {}
-        }
+      // Hydrate likes and replies in a single batch request
+      if (mapped.length > 0) {
+        const postIds = mapped.map(p => p.id).join(',')
+        try {
+          const r = await fetch(`/api/community/counts?post_ids=${encodeURIComponent(postIds)}`)
+          if (r.ok) {
+            const { counts } = await r.json()
+            setPosts(prev => prev.map(p => {
+              const c = counts?.[p.id]
+              if (!c) return p
+              return { ...p, likes: c.likes, replies: c.comments, liked: c.liked }
+            }))
+          }
+        } catch {}
       }
-      hydrate()
       // update cursor and hasMore based on raw items
       if (items.length > 0) {
         const last = items[items.length - 1]
@@ -428,6 +469,23 @@ export default function CommunityContent() {
                     Delete
                   </button>
                 )}
+                {currentUserId && post.author_id !== currentUserId && (
+                  <div className="relative">
+                    <button onClick={() => setMenuOpen(menuOpen === post.id ? null : post.id)} className="text-gray-400 hover:text-gray-600 p-1 rounded">
+                      <MoreVertical className="h-4 w-4" />
+                    </button>
+                    {menuOpen === post.id && (
+                      <div className="absolute right-0 top-8 z-10 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-40">
+                        <button onClick={() => { setReportTarget({ postId: post.id, userId: post.author_id }); setReportOpen(true); setMenuOpen(null) }} className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                          <Flag className="h-3 w-3" /> Report
+                        </button>
+                        <button onClick={() => blockUser(post.author_id)} className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+                          <Ban className="h-3 w-3" /> Block user
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -443,7 +501,7 @@ export default function CommunityContent() {
               disabled={loadingMorePosts}
               className={`px-4 py-2 rounded-lg text-sm font-medium border ${loadingMorePosts ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'} border-gray-200`}
             >
-              {loadingMorePosts ? 'Loading⬦' : 'Load more'}
+              {loadingMorePosts ? 'Loading' : 'Load more'}
             </button>
           </div>
         )}
@@ -475,7 +533,6 @@ export default function CommunityContent() {
                     <span>{group.members} members</span>
                     {group.isPrivate && (
                       <>
-                        <span>⬢</span>
                         <Lock className="h-3 w-3" />
                         <span>Private</span>
                       </>
@@ -507,58 +564,61 @@ export default function CommunityContent() {
 
 
 
-  const renderResources = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-900">Community Resources</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-              <Shield className="h-5 w-5 text-red-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900">Crisis Resources</h3>
-          </div>
-          <p className="text-gray-600 text-sm mb-4">
-            Emergency contacts and crisis helplines for immediate support.
-          </p>
-          <button className="text-red-600 hover:text-red-700 font-medium text-sm">
-            View Resources â†’
-          </button>
-        </div>
+  const renderResources = () => {
+    const grouped = {
+      crisis: communityResources.filter(r => r.category === 'crisis'),
+      reading: communityResources.filter(r => r.category === 'reading'),
+      tools: communityResources.filter(r => r.category === 'tools'),
+      external: communityResources.filter(r => r.category === 'external'),
+      general: communityResources.filter(r => r.category === 'general'),
+    }
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Star className="h-5 w-5 text-blue-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900">Recommended Reading</h3>
-          </div>
-          <p className="text-gray-600 text-sm mb-4">
-            Books, articles, and resources recommended by the community.
-          </p>
-          <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
-            Browse Library â†’
-          </button>
-        </div>
+    const categoryConfig: Record<string, { label: string; icon: any; bg: string; iconColor: string }> = {
+      crisis: { label: 'Crisis Resources', icon: Shield, bg: 'bg-red-100', iconColor: 'text-red-600' },
+      reading: { label: 'Recommended Reading', icon: Star, bg: 'bg-blue-100', iconColor: 'text-blue-600' },
+      tools: { label: 'In-App Tools', icon: ArrowRight, bg: 'bg-green-100', iconColor: 'text-green-600' },
+      external: { label: 'External Resources', icon: ArrowRight, bg: 'bg-purple-100', iconColor: 'text-purple-600' },
+      general: { label: 'More Resources', icon: ArrowRight, bg: 'bg-gray-100', iconColor: 'text-gray-600' },
+    }
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <Video className="h-5 w-5 text-green-600" />
+    return (
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900">Community Resources</h2>
+        {Object.entries(grouped).filter(([_, items]) => items.length > 0).map(([cat, items]) => {
+          const config = categoryConfig[cat] || categoryConfig.general
+          const Icon = config.icon
+          return (
+            <div key={cat} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`w-10 h-10 ${config.bg} rounded-lg flex items-center justify-center`}>
+                  <Icon className={`h-5 w-5 ${config.iconColor}`} />
+                </div>
+                <h3 className="font-semibold text-gray-900">{config.label}</h3>
+              </div>
+              <div className="space-y-2">
+                {items.map(r => (
+                  r.link ? (
+                    <a key={r.id} href={r.link} className="block p-3 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors">
+                      <p className="font-medium text-gray-800 text-sm">{r.title}</p>
+                      {r.description && <p className="text-gray-600 text-xs">{r.description}</p>}
+                    </a>
+                  ) : (
+                    <div key={r.id} className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                      <p className="font-medium text-gray-800 text-sm">{r.title}</p>
+                      {r.description && <p className="text-gray-600 text-xs">{r.description}</p>}
+                    </div>
+                  )
+                ))}
+              </div>
             </div>
-            <h3 className="font-semibold text-gray-900">Workshops</h3>
-          </div>
-          <p className="text-gray-600 text-sm mb-4">
-            Live and recorded workshops on healing and recovery topics.
-          </p>
-          <button className="text-green-600 hover:text-green-700 font-medium text-sm">
-            View Schedule â†’
-          </button>
-        </div>
+          )
+        })}
+        {communityResources.length === 0 && (
+          <div className="text-center py-8 text-gray-500">Loading resources...</div>
+        )}
       </div>
-    </div>
-  )
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -714,7 +774,7 @@ export default function CommunityContent() {
                   disabled={submitting}
                   className={`px-4 py-2 rounded-lg text-white ${submitting ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'}`}
                 >
-                  {submitting ? 'Posting⬦' : 'Post'}
+                  {submitting ? 'Posting' : 'Post'}
                 </button>
               </div>
             </form>
@@ -759,14 +819,46 @@ export default function CommunityContent() {
                 disabled={deleting}
                 className="px-4 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-500 disabled:opacity-50"
               >
-                {deleting ? 'Deleting⬦' : 'Delete'}
+                {deleting ? 'Deleting' : 'Delete'}
               </button>
             </div>
           </DialogPanel>
         </div>
       </Dialog>
 
+      {/* Report Modal */}
+      {reportOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setReportOpen(false)} />
+          <div className="relative w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-200 p-5">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Report Post</h3>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                <select value={reportReason} onChange={e => setReportReason(e.target.value)} className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option value="spam">Spam</option>
+                  <option value="harassment">Harassment</option>
+                  <option value="hate_speech">Hate speech</option>
+                  <option value="self_harm">Self-harm content</option>
+                  <option value="inappropriate">Inappropriate</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description (optional)</label>
+                <textarea value={reportDesc} onChange={e => setReportDesc(e.target.value)} className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[80px]" placeholder="Add more details..." />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <button onClick={() => setReportOpen(false)} className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm">Cancel</button>
+              <button onClick={reportPost} className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700">Submit Report</button>
+            </div>
+          </div>
+        </div>
+      )}
 
+      {/* 1-on-1 Direct Messages */}
+      {currentUserId && <ChatPanel currentUserId={currentUserId} />}
     </div>
   )
 }

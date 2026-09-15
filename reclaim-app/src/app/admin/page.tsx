@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, Edit, Trash2, Save, X, Users, BarChart3, MessageSquare, Ban, Shield, Search, Filter, CreditCard, DollarSign, LogOut, Home, FileText } from 'lucide-react'
+import { Plus, Edit, Trash2, Save, X, Users, BarChart3, MessageSquare, Ban, Shield, Search, Filter, CreditCard, DollarSign, LogOut, Home, FileText, Star, Link as LinkIcon, GripVertical, ExternalLink } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 interface SubscriptionPlan {
   id: string
@@ -123,6 +124,9 @@ export default function AdminDashboard() {
   const [newSocial, setNewSocial] = useState({ platform: '', url: '', icon: 'link', sort_order: 0 })
   const [newsletters, setNewsletters] = useState<any[]>([])
   const [newsletterFilter, setNewsletterFilter] = useState('')
+  const [communityResources, setCommunityResources] = useState<any[]>([])
+  const [editingResource, setEditingResource] = useState<any>(null)
+  const [newResource, setNewResource] = useState({ title: '', description: '', link: '', category: 'general', icon: 'link', color: 'gray', sort_order: 0, is_active: true })
 
   const deleteRedeemCode = async (codeId: string, codeName: string) => {
     if (!confirm(`Delete code ${codeName}? This action cannot be undone.`)) return
@@ -332,6 +336,54 @@ export default function AdminDashboard() {
     }
   }
 
+  const loadCommunityResources = async () => {
+    try {
+      const res = await fetch('/api/community/resources?all=1')
+      if (res.ok) {
+        const data = await res.json()
+        setCommunityResources(data.items || [])
+      }
+    } catch (e) { console.error('Failed to load resources:', e) }
+  }
+
+  const createResource = async () => {
+    try {
+      const res = await fetch('/api/community/resources', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newResource)
+      })
+      if (!res.ok) throw new Error('Failed')
+      toast.success('Resource created')
+      setNewResource({ title: '', description: '', link: '', category: 'general', icon: 'link', color: 'gray', sort_order: 0, is_active: true })
+      loadCommunityResources()
+    } catch { toast.error('Failed to create resource') }
+  }
+
+  const saveResource = async (resource: any) => {
+    try {
+      const res = await fetch('/api/community/resources', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(resource)
+      })
+      if (!res.ok) throw new Error('Failed')
+      toast.success('Resource saved')
+      setEditingResource(null)
+      loadCommunityResources()
+    } catch { toast.error('Failed to save resource') }
+  }
+
+  const deleteResource = async (id: string) => {
+    if (!confirm('Delete this resource?')) return
+    try {
+      const res = await fetch(`/api/community/resources?id=${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed')
+      toast.success('Resource deleted')
+      loadCommunityResources()
+    } catch { toast.error('Failed to delete resource') }
+  }
+
   const createRedeemCode = async () => {
     try {
       const codeData = {
@@ -358,6 +410,7 @@ export default function AdminDashboard() {
     loadRedeemCodes()
     loadBlogData()
     loadNewsletters()
+    loadCommunityResources()
   }, [])
 
   const loadData = async () => {
@@ -576,7 +629,9 @@ export default function AdminDashboard() {
             { id: 'newsletter', name: 'Newsletter', icon: MessageSquare },
             { id: 'feedback', name: 'Feedback', icon: MessageSquare },
             { id: 'plans', name: 'Plans', icon: Shield },
-            { id: 'features', name: 'Features', icon: Edit }
+            { id: 'features', name: 'Features', icon: Edit },
+            { id: 'community-resources', name: 'Community Resources', icon: LinkIcon },
+            { id: 'moderation', name: 'Moderation', icon: ExternalLink }
           ].map(tab => (
             <button
               key={tab.id}
@@ -829,9 +884,9 @@ export default function AdminDashboard() {
                       <div className="text-sm text-gray-600">{f.user_email}</div>
                       <div className="flex items-center gap-1 mt-1">
                         {[...Array(5)].map((_, i) => (
-                          <span key={i} className={`text-sm ${
+                          <Star key={i} className={`h-4 w-4 ${
                             i < f.rating ? 'text-yellow-400' : 'text-gray-300'
-                          }`}>â˜…</span>
+                          }`} />
                         ))}
                       </div>
                     </div>
@@ -859,18 +914,49 @@ export default function AdminDashboard() {
             <div className="space-y-4">
               {plans.map((plan) => (
                 <div key={plan.id} className="border rounded p-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold">{plan.display_name}</h3>
-                      <p className="text-gray-600">{plan.description}</p>
-                      <p className="text-sm">Monthly: ${plan.price_monthly} | Yearly: ${plan.price_yearly}</p>
+                  {editingPlan === plan.id ? (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Display Name</label>
+                          <input value={plan.display_name} onChange={e => setPlans(plans.map(p => p.id === plan.id ? { ...p, display_name: e.target.value } : p))} className="w-full border rounded px-3 py-2 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Plan Name</label>
+                          <input value={plan.plan_name} onChange={e => setPlans(plans.map(p => p.id === plan.id ? { ...p, plan_name: e.target.value } : p))} className="w-full border rounded px-3 py-2 text-sm" />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Description</label>
+                          <input value={plan.description} onChange={e => setPlans(plans.map(p => p.id === plan.id ? { ...p, description: e.target.value } : p))} className="w-full border rounded px-3 py-2 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Monthly Price ($)</label>
+                          <input type="number" step="0.01" value={plan.price_monthly} onChange={e => setPlans(plans.map(p => p.id === plan.id ? { ...p, price_monthly: parseFloat(e.target.value) || 0 } : p))} className="w-full border rounded px-3 py-2 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Yearly Price ($)</label>
+                          <input type="number" step="0.01" value={plan.price_yearly} onChange={e => setPlans(plans.map(p => p.id === plan.id ? { ...p, price_yearly: parseFloat(e.target.value) || 0 } : p))} className="w-full border rounded px-3 py-2 text-sm" />
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => savePlan(plan)} className="bg-green-600 text-white px-4 py-2 rounded text-sm flex items-center gap-1"><Save className="w-3 h-3" /> Save</button>
+                        <button onClick={() => setEditingPlan(null)} className="bg-gray-600 text-white px-4 py-2 rounded text-sm flex items-center gap-1"><X className="w-3 h-3" /> Cancel</button>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <button onClick={() => setEditingPlan(plan.id)} className="bg-blue-600 text-white px-4 py-2 rounded">
-                        <Edit className="w-4 h-4" />
-                      </button>
+                  ) : (
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="font-semibold">{plan.display_name}</h3>
+                        <p className="text-gray-600">{plan.description}</p>
+                        <p className="text-sm">Monthly: ${plan.price_monthly} | Yearly: ${plan.price_yearly}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => setEditingPlan(plan.id)} className="bg-blue-600 text-white px-4 py-2 rounded">
+                          <Edit className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -1064,7 +1150,7 @@ export default function AdminDashboard() {
                       <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Recovery</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">7 days</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0/âˆž</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0/infinity</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
                     </td>
@@ -1094,7 +1180,7 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{code.trial_duration_days} days</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {code.current_uses}/{code.max_uses === -1 ? 'âˆž' : code.max_uses}
+                        {code.current_uses}/{code.max_uses === -1 ? 'infinity' : code.max_uses}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${
@@ -1133,19 +1219,19 @@ export default function AdminDashboard() {
               <div>
                 <h4 className="font-medium text-indigo-900 mb-2">YouTube Strategy</h4>
                 <ul className="text-sm text-indigo-700 space-y-1">
-                  <li>⬢ Use codes in video descriptions</li>
-                  <li>⬢ Mention in video content</li>
-                  <li>⬢ Pin comments with codes</li>
-                  <li>⬢ Create urgency with limited uses</li>
+                  <li>Use codes in video descriptions</li>
+                  <li>Mention in video content</li>
+                  <li>Pin comments with codes</li>
+                  <li>Create urgency with limited uses</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-medium text-purple-900 mb-2">Social Media Tips</h4>
                 <ul className="text-sm text-purple-700 space-y-1">
-                  <li>⬢ Share in Instagram stories</li>
-                  <li>⬢ Use in TikTok captions</li>
-                  <li>⬢ Facebook group exclusives</li>
-                  <li>⬢ Twitter thread promotions</li>
+                  <li>Share in Instagram stories</li>
+                  <li>Use in TikTok captions</li>
+                  <li>Facebook group exclusives</li>
+                  <li>Twitter thread promotions</li>
                 </ul>
               </div>
             </div>
@@ -1620,6 +1706,103 @@ export default function AdminDashboard() {
                   )}
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Community Resources Tab */}
+      {activeTab === 'community-resources' && (
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle>Community Resources</CardTitle>
+              <Link href="/community/moderation" target="_blank" className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700">
+                <ExternalLink className="w-4 h-4" /> Open Moderation Panel
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {/* Create form */}
+              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h4 className="font-medium mb-3">Add New Resource</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <input placeholder="Title" value={newResource.title} onChange={e => setNewResource({ ...newResource, title: e.target.value })} className="border rounded px-3 py-2 text-sm" />
+                  <input placeholder="Description" value={newResource.description} onChange={e => setNewResource({ ...newResource, description: e.target.value })} className="border rounded px-3 py-2 text-sm" />
+                  <input placeholder="Link (URL or path)" value={newResource.link} onChange={e => setNewResource({ ...newResource, link: e.target.value })} className="border rounded px-3 py-2 text-sm" />
+                  <select value={newResource.category} onChange={e => setNewResource({ ...newResource, category: e.target.value })} className="border rounded px-3 py-2 text-sm">
+                    <option value="crisis">Crisis</option>
+                    <option value="reading">Reading</option>
+                    <option value="tools">Tools</option>
+                    <option value="external">External</option>
+                    <option value="general">General</option>
+                  </select>
+                  <input placeholder="Icon" value={newResource.icon} onChange={e => setNewResource({ ...newResource, icon: e.target.value })} className="border rounded px-3 py-2 text-sm" />
+                  <input placeholder="Color" value={newResource.color} onChange={e => setNewResource({ ...newResource, color: e.target.value })} className="border rounded px-3 py-2 text-sm" />
+                  <input type="number" placeholder="Sort" value={newResource.sort_order} onChange={e => setNewResource({ ...newResource, sort_order: parseInt(e.target.value) || 0 })} className="border rounded px-3 py-2 text-sm" />
+                  <button onClick={createResource} disabled={!newResource.title} className="bg-indigo-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">Add</button>
+                </div>
+              </div>
+
+              {/* Resource list */}
+              <div className="space-y-2">
+                {communityResources.map(r => (
+                  <div key={r.id} className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
+                    {editingResource === r.id ? (
+                      <>
+                        <input value={r.title} onChange={e => setCommunityResources(communityResources.map(x => x.id === r.id ? { ...x, title: e.target.value } : x))} className="border rounded px-2 py-1 text-sm flex-1" />
+                        <input value={r.description || ''} onChange={e => setCommunityResources(communityResources.map(x => x.id === r.id ? { ...x, description: e.target.value } : x))} className="border rounded px-2 py-1 text-sm flex-1" />
+                        <input value={r.link || ''} onChange={e => setCommunityResources(communityResources.map(x => x.id === r.id ? { ...x, link: e.target.value } : x))} className="border rounded px-2 py-1 text-sm flex-1" />
+                        <select value={r.category} onChange={e => setCommunityResources(communityResources.map(x => x.id === r.id ? { ...x, category: e.target.value } : x))} className="border rounded px-2 py-1 text-sm">
+                          <option value="crisis">Crisis</option>
+                          <option value="reading">Reading</option>
+                          <option value="tools">Tools</option>
+                          <option value="external">External</option>
+                          <option value="general">General</option>
+                        </select>
+                        <label className="flex items-center gap-1 text-sm">
+                          <input type="checkbox" checked={r.is_active} onChange={e => setCommunityResources(communityResources.map(x => x.id === r.id ? { ...x, is_active: e.target.checked } : x))} />
+                          Active
+                        </label>
+                        <button onClick={() => saveResource(r)} className="bg-green-600 text-white px-3 py-1 rounded text-sm"><Save className="w-3 h-3" /></button>
+                        <button onClick={() => setEditingResource(null)} className="bg-gray-600 text-white px-3 py-1 rounded text-sm"><X className="w-3 h-3" /></button>
+                      </>
+                    ) : (
+                      <>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${r.category === 'crisis' ? 'bg-red-100 text-red-700' : r.category === 'reading' ? 'bg-blue-100 text-blue-700' : r.category === 'tools' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                          {r.category}
+                        </span>
+                        <span className="font-medium text-sm flex-1">{r.title}</span>
+                        <span className="text-xs text-gray-500">{r.description}</span>
+                        {r.link && <span className="text-xs text-indigo-500">{r.link}</span>}
+                        <span className={`px-2 py-0.5 rounded text-xs ${r.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {r.is_active ? 'Active' : 'Hidden'}
+                        </span>
+                        <button onClick={() => setEditingResource(r.id)} className="bg-blue-600 text-white px-3 py-1 rounded text-sm"><Edit className="w-3 h-3" /></button>
+                        <button onClick={() => deleteResource(r.id)} className="bg-red-600 text-white px-3 py-1 rounded text-sm"><Trash2 className="w-3 h-3" /></button>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Moderation Tab */}
+      {activeTab === 'moderation' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Community Moderation</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600">Manage community reports, ban users, and review flagged content.</p>
+              <Link href="/community/moderation" target="_blank" className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                <ExternalLink className="w-4 h-4" /> Open Moderation Panel
+              </Link>
             </div>
           </CardContent>
         </Card>

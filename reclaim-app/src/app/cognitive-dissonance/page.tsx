@@ -171,7 +171,9 @@ export default function CognitiveDissonancePage() {
                       <p className="text-blue-900">{alert.source_1_text}</p>
                     </div>
 
-                    <div className="text-center text-amber-600 font-semibold">âš ï¸ CONFLICTS WITH âš ï¸</div>
+                    <div className="text-center text-amber-600 font-semibold flex items-center justify-center gap-2">
+                      <AlertCircle className="h-5 w-5" /> CONFLICTS WITH <AlertCircle className="h-5 w-5" />
+                    </div>
 
                     <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
                       <div className="flex justify-between items-start mb-2">

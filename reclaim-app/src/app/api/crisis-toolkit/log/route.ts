@@ -32,8 +32,8 @@ export async function POST(request: Request) {
 
     const limits: any = {
       foundation: 10,
-      healing: 30,
-      recovery: 999999
+      recovery: 999999,
+      empowerment: 999999
     };
 
     const usageLimit = limits[tier] || 10;
@@ -101,8 +101,8 @@ export async function GET(request: Request) {
 
     const limits: any = {
       foundation: 10,
-      healing: 30,
-      recovery: 999999
+      recovery: 999999,
+      empowerment: 999999
     };
 
     const usageLimit = limits[tier] || 10;

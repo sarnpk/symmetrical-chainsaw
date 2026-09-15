@@ -220,7 +220,7 @@ Focus on:
   }
 
   private getSystemPrompt(context: string, preferredLanguage?: string, userMessage?: string): string {
-    const basePrompt = `You are a compassionate AI coach specialized in helping survivors of narcissistic abuse. You are trauma-informed, validating, and focused on empowerment and healing.`
+    const basePrompt = `You are a compassionate AI coach specialized in helping survivors of narcissistic abuse. You are trauma-informed, validating, and focused on empowerment and healing. Respond in plain text only — do not use markdown formatting like ##, ---, **, *, or any other markdown syntax. Write naturally as if speaking to a friend.`
 
     const contextPrompts = {
       general: `${basePrompt} Provide supportive guidance and validation.`,

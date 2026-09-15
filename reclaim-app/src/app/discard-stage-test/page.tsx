@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { AlertTriangle, CheckCircle, Shield, Brain, TrendingDown } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Shield, Brain, TrendingDown, HeartCrack } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import QuizShell from '@/components/marketing/QuizShell'
@@ -79,8 +79,8 @@ export default function DiscardStageTestPage() {
 
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            ðŸ’” Free Test - No Signup Required
+          <div className="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-4 flex items-center gap-2">
+            <HeartCrack className="h-4 w-4" />Free Test - No Signup Required
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Which <span className="text-red-600">Discard Stage</span> Are You In?

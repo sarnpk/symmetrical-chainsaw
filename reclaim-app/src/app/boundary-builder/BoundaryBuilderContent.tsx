@@ -305,7 +305,7 @@ export default function BoundaryBuilderContent() {
                         {boundary.statement}
                       </p>
                       <p className="text-xs sm:text-sm text-gray-500">
-                        {categoryInfo.title} ⬢ Created {new Date(boundary.createdAt).toLocaleDateString()}
+                        {categoryInfo.title} - Created {new Date(boundary.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>

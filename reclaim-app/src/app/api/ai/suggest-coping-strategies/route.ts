@@ -26,7 +26,7 @@ Return STRICT JSON with this shape:
   "suggestions": [
     {
       "strategy_name": "string",
-      "description": "1â€“3 short sentences with concrete steps",
+      "description": "1–3 short sentences with concrete steps",
       "category": "breathing|grounding|physical|creative|emotional|other",
       "effectiveness_rating": 1-5,
       "rationale": "why this may help"

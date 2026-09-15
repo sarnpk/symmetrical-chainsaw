@@ -3,10 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Save, ArrowLeft, Calendar, MapPin, Users, Heart, Shield, Camera, Mic, MicOff, Upload, X, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react'
+import { Save, ArrowLeft, Calendar, MapPin, Users, Heart, Shield, Camera, Mic, MicOff, Upload, X, ChevronDown, ChevronUp, HelpCircle, ArrowRight, Sparkles, Lightbulb, Music } from 'lucide-react'
 import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
@@ -215,11 +214,7 @@ export default function NewJournalEntryPage() {
     return null
   }
 
-  // Create admin client for storage uploads (bypasses RLS)
-  const supabaseAdmin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
+
 
   useEffect(() => {
     // Set current date and time as defaults
@@ -328,7 +323,7 @@ export default function NewJournalEntryPage() {
       }
       if (!res.ok) {
         if (data?.code === 'LIMIT_EXCEEDED' || data?.upgrade_required) {
-          setSuggestError('Youâ€™ve reached your monthly AI limit on the current plan. Consider upgrading to continue using AI features.')
+          setSuggestError('You’ve reached your monthly AI limit on the current plan. Consider upgrading to continue using AI features.')
         } else {
           setSuggestError(data?.error || 'Failed to get suggestions')
         }
@@ -399,7 +394,7 @@ export default function NewJournalEntryPage() {
           if (data?.upgrade_required) {
             setAiError('AI Assist is available on Recovery+ plans.')
           } else if (data?.code === 'LIMIT_EXCEEDED') {
-            setAiError('Youâ€™ve reached your monthly AI limit for your plan.')
+            setAiError('You’ve reached your monthly AI limit for your plan.')
           } else {
             setAiError(data?.error || 'Failed to get AI suggestions')
           }
@@ -624,7 +619,7 @@ export default function NewJournalEntryPage() {
       const ext = (recording.file.name.split('.').pop() || 'wav').toLowerCase()
       const tempPath = `temp/${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
-      const { error: upErr } = await supabaseAdmin.storage
+      const { error: upErr } = await supabase.storage
         .from('evidence-audio')
         .upload(tempPath, recording.file, { cacheControl: '3600', upsert: false })
       if (upErr) throw upErr
@@ -994,7 +989,7 @@ export default function NewJournalEntryPage() {
         
         try {
           // Use admin client for storage upload
-          const { data: photoUpload, error: photoError } = await supabaseAdmin.storage
+          const { data: photoUpload, error: photoError } = await supabase.storage
             .from('evidence-photos')
             .upload(fileName, photo.file, {
               cacheControl: '3600',
@@ -1037,7 +1032,7 @@ export default function NewJournalEntryPage() {
         
         try {
           // Use admin client for storage upload
-          const { data: audioUpload, error: audioError } = await supabaseAdmin.storage
+          const { data: audioUpload, error: audioError } = await supabase.storage
             .from('evidence-audio')
             .upload(fileName, audio.file, {
               cacheControl: '3600',
@@ -1117,7 +1112,7 @@ export default function NewJournalEntryPage() {
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-              <span className="text-purple-600 font-bold text-sm">âœ¨</span>
+              <span className="flex items-center justify-center text-purple-600"><Sparkles className="h-4 w-4" /></span>
             </div>
           </div>
           <div className="flex-1">
@@ -1132,7 +1127,7 @@ export default function NewJournalEntryPage() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
             >
               Upgrade to {upgradeInfo.tier}
-              <span className="text-xs">â†’</span>
+              <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </div>
@@ -1216,7 +1211,7 @@ export default function NewJournalEntryPage() {
           {/* What Happened - wrapped in Section */}
           <Section
             id="basicInfo"
-            title="ðŸ“ What Happened"
+            title="What Happened"
             description="Tell your story in your own words"
             isOpen={openSections.basicInfo}
             onToggle={handleSectionToggle}
@@ -1237,7 +1232,7 @@ export default function NewJournalEntryPage() {
                     disabled={suggesting}
                     aria-label="Suggest title"
                   >
-                    {suggesting ? 'Getting suggestions⬦' : 'Suggest title'}
+                    {suggesting ? 'Getting suggestions...' : 'Suggest title'}
                   </button>
                 </div>
                 <input
@@ -1455,7 +1450,7 @@ export default function NewJournalEntryPage() {
                     )}
 
                     {aiLoading && (
-                      <div className="text-xs text-gray-600">Analyzing your description⬦</div>
+                      <div className="text-xs text-gray-600">Analyzing your description...</div>
                     )}
                   </div>
                 )}
@@ -1467,7 +1462,7 @@ export default function NewJournalEntryPage() {
           {/* Behavior Assessment - wrapped in Section */}
           <Section
             id="behavior"
-            title="ðŸŽ­ Behavior Assessment"
+            title="Behavior Assessment"
             description="Select all patterns that apply (optional)"
             isOpen={openSections.behavior}
             onToggle={handleSectionToggle}
@@ -1504,7 +1499,7 @@ export default function NewJournalEntryPage() {
           {/* Safety Assessment - wrapped in Section */}
           <Section
             id="safety"
-            title="ðŸ›¡ï¸ Safety Assessment"
+            title="Safety Assessment"
             description="How safe did you feel during this experience?"
             isOpen={openSections.safety}
             onToggle={handleSectionToggle}
@@ -1534,7 +1529,7 @@ export default function NewJournalEntryPage() {
           {/* Impact Assessment - wrapped in Section */}
           <Section
             id="impact"
-            title="ðŸ’Ÿ Impact Assessment"
+            title="Impact Assessment"
             description="Mood and trigger level (optional)"
             isOpen={openSections.impact}
             onToggle={handleSectionToggle}
@@ -1560,7 +1555,7 @@ export default function NewJournalEntryPage() {
           {/* Detailed Analysis - wrapped in Section */}
           <Section
             id="detailed"
-            title="ðŸ” Detailed Analysis"
+            title="Detailed Analysis"
             description="Help identify patterns and behaviors (optional)"
             isOpen={openSections.detailed}
             onToggle={handleSectionToggle}
@@ -1667,7 +1662,7 @@ export default function NewJournalEntryPage() {
           {/* Evidence Documentation - wrapped in Section */}
           <Section
             id="evidence"
-            title="ðŸ“‹ Evidence Documentation"
+            title="Evidence Documentation"
             description="Document evidence and important details"
             isOpen={openSections.evidence}
             onToggle={handleSectionToggle}
@@ -1773,7 +1768,8 @@ export default function NewJournalEntryPage() {
             <Card className="border-l-4 border-l-orange-500">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                  ðŸ›¡ï¸ How This Affected You
+                  <Shield className="h-5 w-5" />
+                  How This Affected You
                 </CardTitle>
                 <CardDescription>Your safety and emotional wellbeing matter</CardDescription>
               </CardHeader>
@@ -1831,7 +1827,8 @@ export default function NewJournalEntryPage() {
           <Card className={`border-l-4 ${!areMandatoryFieldsFilled() ? 'border-l-gray-300 opacity-60' : 'border-l-blue-500'} mb-4 md:mb-6`}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                ðŸ“¸ Photo Evidence
+                <Camera className="h-5 w-5" />
+                Photo Evidence
               </CardTitle>
               <CardDescription>
                 {!areMandatoryFieldsFilled() 
@@ -1911,7 +1908,8 @@ export default function NewJournalEntryPage() {
           <Card className={`border-l-4 ${!areMandatoryFieldsFilled() ? 'border-l-gray-300 opacity-60' : 'border-l-purple-500'} mt-2 md:mt-4`}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                ðŸŽ™ï¸ Audio Evidence
+                <Music className="h-5 w-5" />
+                Audio Evidence
               </CardTitle>
               <CardDescription>
                 {!areMandatoryFieldsFilled() 
@@ -1968,7 +1966,7 @@ export default function NewJournalEntryPage() {
                 {/* Transcription usage badge */}
                 <div className="mt-2">
                   {txUsageLoading ? (
-                    <span className="text-xs text-gray-500">Checking transcription usage⬦</span>
+                    <span className="text-xs text-gray-500">Checking transcription usage...</span>
                   ) : txUsageError ? (
                     <span className="text-xs text-red-600">{txUsageError}</span>
                   ) : txUsage ? (
@@ -1976,7 +1974,7 @@ export default function NewJournalEntryPage() {
                       <span className="text-xs text-gray-600">Transcription is not available on Foundation.</span>
                     ) : (
                       <span className={`text-xs font-medium px-2 py-1 rounded-full ${typeof txUsage.remainingMinutes === 'number' && txUsage.remainingMinutes <= 20 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}>
-                        {`Transcription quota: ${txUsage.usedMinutes} min used · ${txUsage.limitMinutes === 'unlimited' ? 'unlimited' : txUsage.remainingMinutes + ' min'} left this month`}
+                        {`Transcription quota: ${txUsage.usedMinutes} min used - ${txUsage.limitMinutes === 'unlimited' ? 'unlimited' : txUsage.remainingMinutes + ' min'} left this month`}
                       </span>
                     )
                   ) : null}
@@ -2009,7 +2007,7 @@ export default function NewJournalEntryPage() {
                                 disabled
                                 className="px-3 py-1.5 text-xs rounded-md bg-gray-200 text-gray-700"
                               >
-                                Transcribing⬦
+                                Transcribing...
                               </button>
                             )}
                             <button
@@ -2063,7 +2061,8 @@ export default function NewJournalEntryPage() {
           <Card className="border-l-4 border-l-green-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                ðŸ“ Additional Context
+                <MapPin className="h-5 w-5" />
+                Additional Context
               </CardTitle>
               <CardDescription>These details can be helpful but are optional</CardDescription>
             </CardHeader>
@@ -2230,12 +2229,12 @@ export default function NewJournalEntryPage() {
                 </div>
 
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-blue-900 mb-2">ðŸ’¡ Remember</h3>
+                  <h3 className="font-semibold text-blue-900 mb-2 flex items-center gap-2"><Lightbulb className="h-5 w-5 text-blue-900" />Remember</h3>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>⬢ You don't need to select every behavior that applies</li>
-                    <li>⬢ This section is completely optional</li>
-                    <li>⬢ Your entries are private and secure</li>
-                    <li>⬢ Documenting patterns can help you and professionals understand your situation</li>
+                    <li>You don't need to select every behavior that applies</li>
+                    <li>This section is completely optional</li>
+                    <li>Your entries are private and secure</li>
+                    <li>Documenting patterns can help you and professionals understand your situation</li>
                   </ul>
                 </div>
 
@@ -2280,7 +2279,7 @@ export default function NewJournalEntryPage() {
               </ul>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-800">
                 <div className="text-xs font-medium text-gray-600 mb-1">Example</div>
-                <p>Partner denied saying hurtful things I have in messages, insisted I â€œimagined it,⬝ and said Iâ€™m too sensitive. I started doubting my memory despite the proof.</p>
+                <p>Partner denied saying hurtful things I have in messages, insisted I "imagined it," and said I'm too sensitive. I started doubting my memory despite the proof.</p>
               </div>
               <p className="text-xs text-gray-600">Tip: Longer, concrete details improve AI suggestions. Minimum ~20 characters.</p>
             </div>

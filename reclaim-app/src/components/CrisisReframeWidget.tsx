@@ -37,7 +37,7 @@ export default function CrisisReframeWidget() {
 
         <div className="bg-red-100 border border-red-200 rounded-lg p-3 text-center">
           <p className="text-sm font-semibold text-red-900">
-            ðŸš¨ Use when you're in panic or crisis
+            Use when you're in panic or crisis
           </p>
         </div>
       </div>

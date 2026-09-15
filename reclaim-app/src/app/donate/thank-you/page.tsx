@@ -2,6 +2,7 @@
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import { ArrowRight, Heart } from 'lucide-react'
 
 function ThankYouContent() {
   const searchParams = useSearchParams()
@@ -11,7 +12,7 @@ function ThankYouContent() {
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white flex items-center justify-center px-4">
       <div className="max-w-2xl mx-auto text-center">
         <div className="bg-white p-12 rounded-lg shadow-xl">
-          <div className="text-6xl mb-6">ðŸ’œ</div>
+          <Heart className="h-16 w-16 text-purple-600 mx-auto mb-6" aria-hidden />
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Thank You for Your Support!
           </h1>
@@ -22,10 +23,10 @@ function ThankYouContent() {
           <div className="bg-purple-50 p-6 rounded-lg mb-8">
             <h2 className="text-2xl font-bold mb-4">Your Impact</h2>
             <div className="space-y-3 text-left">
-              <p className="text-gray-700">âœ… You've helped fund AI coaching sessions for survivors</p>
-              <p className="text-gray-700">âœ… You've supported free access to recovery tools</p>
-              <p className="text-gray-700">âœ… You've contributed to building new features</p>
-              <p className="text-gray-700">âœ… You've joined a community of supporters making a difference</p>
+              <p className="text-gray-700">You've helped fund AI coaching sessions for survivors</p>
+              <p className="text-gray-700">You've supported free access to recovery tools</p>
+              <p className="text-gray-700">You've contributed to building new features</p>
+              <p className="text-gray-700">You've joined a community of supporters making a difference</p>
             </div>
           </div>
 
@@ -53,8 +54,8 @@ function ThankYouContent() {
             <p className="text-sm text-gray-500">
               Want to make a bigger impact? Consider becoming a monthly sponsor.
             </p>
-            <Link href="/sponsor" className="text-purple-600 font-semibold hover:underline">
-              Learn about monthly sponsorship â†’
+            <Link href="/sponsor" className="text-purple-600 font-semibold hover:underline inline-flex items-center gap-1">
+              Learn about monthly sponsorship<ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>

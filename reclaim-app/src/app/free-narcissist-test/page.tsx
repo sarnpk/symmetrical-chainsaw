@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { AlertTriangle, CheckCircle, Shield, Brain } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Shield, Brain, Search } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import QuizShell from '@/components/marketing/QuizShell'
@@ -75,8 +75,8 @@ export default function FreeNarcissistTestPage() {
 
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            ðŸ” Free Test - No Signup Required
+          <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium mb-4 flex items-center gap-2">
+            <Search className="h-4 w-4" />Free Test - No Signup Required
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Is Your Partner a <span className="text-purple-600">Narcissist</span>?

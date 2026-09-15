@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
-import MindResetContent from './MindResetContent'
+const MindResetContent = dynamic(() => import('./MindResetContent'), { ssr: false })
+import { ArrowLeft } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import { HelpCircle } from 'lucide-react'
@@ -61,7 +63,7 @@ export default function MindResetPage() {
             href="/wellness" 
             className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
           >
-            â† Back to Wellness
+            <ArrowLeft className="h-4 w-4" />Back to Wellness
           </Link>
         </div>
         <MindResetContent />

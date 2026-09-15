@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     const limits: Record<string, number> = {
       foundation: 0,
       recovery: 5,
-      empowered: 20
+      empowerment: 20
     }
 
     if (currentUsage >= limits[tier]) {
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
 LATEST SESSION:
 Urge Type: ${latestSession.urge_type}
 Trigger: ${latestSession.trigger_description}
-Intensity: ${latestSession.urge_intensity_start} â†’ ${latestSession.urge_intensity_peak || 'N/A'} â†’ ${latestSession.urge_intensity_end || 'N/A'}
+Intensity: ${latestSession.urge_intensity_start} -> ${latestSession.urge_intensity_peak || 'N/A'} -> ${latestSession.urge_intensity_end || 'N/A'}
 Body Sensations: ${latestSession.body_sensations || 'Not recorded'}
 Duration: ${latestSession.duration_minutes || 'N/A'} minutes
 Gave In: ${latestSession.gave_in ? 'Yes' : 'No'}

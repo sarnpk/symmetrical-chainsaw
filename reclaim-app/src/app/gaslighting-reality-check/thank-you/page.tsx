@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'
-import { CheckCircle, Clock, Download, ArrowRight, Shield, Book, FileText, Headphones } from 'lucide-react'
+import { CheckCircle, Clock, Download, ArrowRight, Shield, Book, FileText, Headphones, AlertTriangle, Star } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import Logo from '@/components/marketing/Logo'
 
 function ThankYouContent() {
   const searchParams = useSearchParams()
@@ -30,7 +31,7 @@ function ThankYouContent() {
       <header className="border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-2">
-            <img src="/logo.png" alt="Reclaim" className="h-8 w-8" />
+            <Logo className="h-8 w-8" />
             <span className="text-xl font-bold text-gray-900">Reclaim</span>
           </Link>
         </div>
@@ -44,7 +45,7 @@ function ThankYouContent() {
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              âœ… Check Your Email!
+              <CheckCircle className="h-6 w-6 text-green-600 inline-block mr-2 align-[-2px]" />Check Your Email!
             </h1>
             <p className="text-lg text-gray-600 mb-4">
               Your "Reality Anchor Kit" is on its way to:
@@ -76,7 +77,7 @@ function ThankYouContent() {
             {/* Warning Hook */}
             <div className="text-center mb-6">
               <h2 className="text-3xl md:text-4xl font-bold mb-3">
-                âš ï¸ WAIT! Your Reality Kit Is Just The Beginning...
+                <AlertTriangle className="h-6 w-6 text-amber-300 inline-block mr-2 align-[-2px]" />WAIT! Your Reality Kit Is Just The Beginning...
               </h2>
               <p className="text-xl opacity-90">
                 You've validated ONE incident. But what about the rest?
@@ -88,15 +89,12 @@ function ThankYouContent() {
               <p className="text-lg mb-4">Your free kit covers basic validation, but what about:</p>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">âŒ</span>
                   <span>Advanced manipulation tactics (50+ techniques)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">âŒ</span>
                   <span>Response scripts for every gaslighting phrase</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">âŒ</span>
                   <span>How to rebuild your reality after abuse</span>
                 </div>
               </div>
@@ -105,7 +103,7 @@ function ThankYouContent() {
             {/* Product Offer */}
             <div className="bg-white rounded-lg p-6 text-gray-900 mb-6">
               <h3 className="text-2xl font-bold mb-4 text-center">
-                ðŸŽ¯ Complete Gaslighting Defense System
+                Complete Gaslighting Defense System
               </h3>
               
               <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -160,16 +158,15 @@ function ThankYouContent() {
               </a>
 
               <p className="text-xs text-gray-500 text-center mt-3">
-                Instant download ⬢ 30-day money-back guarantee
+                Instant download - 30-day money-back guarantee
               </p>
             </div>
 
             {/* Social Proof */}
             <div className="text-center text-sm opacity-90">
-              <p className="mb-2">âœ¨ Join 2,891 people who've downloaded the Complete Defense System</p>
+              <p className="mb-2">Join 2,891 people who've downloaded the Complete Defense System</p>
               <div className="flex justify-center gap-4 text-xs">
-                <span>⭐⭐⭐⭐⭐ 4.8/5</span>
-                <span>⬢</span>
+<span className="flex items-center gap-1"><Star className="h-3 w-3 fill-amber-400 text-amber-400" />4.8/5</span>
                 <span>623 Reviews</span>
               </div>
             </div>

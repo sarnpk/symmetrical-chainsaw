@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/lib/supabase'
-import { Shield, Target, MessageCircle, Info } from 'lucide-react'
+import { Shield, Target, MessageCircle, Info, ArrowRight } from 'lucide-react'
 
 export default function BoundaryBuilderHelpPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -47,9 +47,9 @@ export default function BoundaryBuilderHelpPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Shield className="h-7 w-7 text-emerald-600" />
-            <h1 className="ml-3 text-2xl font-bold text-gray-900">Boundary Builder â€” Help</h1>
+            <h1 className="ml-3 text-2xl font-bold text-gray-900">Boundary Builder — Help</h1>
           </div>
-          <Link href="/boundary-builder" className="text-sm text-indigo-600 hover:text-indigo-700">Back to Boundary Builder â†’</Link>
+          <Link href="/boundary-builder" className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1">Back to Boundary Builder<ArrowRight className="h-4 w-4" /></Link>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 space-y-3">
@@ -68,7 +68,7 @@ export default function BoundaryBuilderHelpPage() {
             </div>
             <ul className="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
               <li>Browse templates across communication, emotional, time, physical, social, and financial needs.</li>
-              <li>Templates are examplesâ€”customize wording to fit your voice.</li>
+              <li>Templates are examples—customize wording to fit your voice.</li>
               <li>Some advanced templates may require a paid tier.</li>
             </ul>
           </div>
@@ -79,7 +79,7 @@ export default function BoundaryBuilderHelpPage() {
               <span className="ml-2">Best Practices</span>
             </div>
             <ul className="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
-              <li>Be specific and behavior-focused: â€œIf X happens, I will Y.⬝</li>
+              <li>Be specific and behavior-focused: "If X happens, I will Y."</li>
               <li>Keep it short, neutral, and repeatable.</li>
               <li>Follow through consistently; you are enforcing your limits, not controlling others.</li>
             </ul>

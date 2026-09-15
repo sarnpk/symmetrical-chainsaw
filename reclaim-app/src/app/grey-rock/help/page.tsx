@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/lib/supabase'
-import { RefreshCw, Book, Target, Lock, Info } from 'lucide-react'
+import { ArrowRight, RefreshCw, Book, Target, Lock, Info } from 'lucide-react'
 
 export default function GreyRockHelpPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -47,9 +47,9 @@ export default function GreyRockHelpPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <RefreshCw className="h-7 w-7 text-amber-600" />
-            <h1 className="ml-3 text-2xl font-bold text-gray-900">Grey Rock â€” Help</h1>
+            <h1 className="ml-3 text-2xl font-bold text-gray-900">Grey Rock — Help</h1>
           </div>
-          <Link href="/grey-rock" className="text-sm text-indigo-600 hover:text-indigo-700">Back to Grey Rock â†’</Link>
+          <Link href="/grey-rock" className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1">Back to Grey Rock <ArrowRight className="h-4 w-4" /></Link>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 space-y-3">

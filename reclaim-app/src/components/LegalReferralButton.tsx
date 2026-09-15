@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
-import { Scale, ExternalLink, Shield } from 'lucide-react';
+import { Scale, ExternalLink, Shield, Check } from 'lucide-react';
 
 interface LegalReferralProps {
   source: 'safety_plan' | 'evidence_export' | 'custody_documentation' | 'divorce_planning' | 'manipulation_detected' | 'dashboard';
@@ -184,7 +184,7 @@ export default function LegalReferralButton({
     return (
       <div className={`${getContainerStyles()} ${className}`}>
         <div className="text-center">
-          <div className="text-green-600 text-2xl mb-2">âš–ï¸</div>
+          <div className="text-green-600 text-2xl mb-2 flex items-center justify-center"><Check className="h-8 w-8" /></div>
           <p className="text-green-800 font-medium">Connecting you to legal experts...</p>
         </div>
       </div>
@@ -209,7 +209,7 @@ export default function LegalReferralButton({
       </button>
 
       <div className="mt-2 text-xs text-gray-500 text-center">
-        Court-ready evidence ⬢ Family law specialists ⬢ Confidential consultation
+        Court-ready evidence | Family law specialists | Confidential consultation
       </div>
     </div>
   );

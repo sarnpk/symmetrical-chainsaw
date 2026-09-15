@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/lib/supabase'
-import { Shield, Phone, MapPin, FileText, Info } from 'lucide-react'
+import { Shield, Phone, MapPin, FileText, Info, ArrowRight } from 'lucide-react'
 
 export default function SafetyPlanHelpPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -47,9 +47,9 @@ export default function SafetyPlanHelpPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Shield className="h-7 w-7 text-rose-600" />
-            <h1 className="ml-3 text-2xl font-bold text-gray-900">Safety Plan â€” Help</h1>
+            <h1 className="ml-3 text-2xl font-bold text-gray-900">Safety Plan — Help</h1>
           </div>
-          <Link href="/safety-plan" className="text-sm text-indigo-600 hover:text-indigo-700">Back to Safety Plan â†’</Link>
+          <Link href="/safety-plan" className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1">Back to Safety Plan<ArrowRight className="h-4 w-4" /></Link>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 space-y-3">

@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/lib/supabase'
-import { RotateCcw, Sparkles, Heart, Brain, Info } from 'lucide-react'
+import { RotateCcw, Sparkles, Heart, Brain, Info, ArrowRight } from 'lucide-react'
 
 export default function MindResetHelpPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -47,9 +47,9 @@ export default function MindResetHelpPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <RotateCcw className="h-7 w-7 text-indigo-600" />
-            <h1 className="ml-3 text-2xl font-bold text-gray-900">Mind Reset â€” Help</h1>
+            <h1 className="ml-3 text-2xl font-bold text-gray-900">Mind Reset — Help</h1>
           </div>
-          <Link href="/mind-reset" className="text-sm text-indigo-600 hover:text-indigo-700">Back to Mind Reset â†’</Link>
+          <Link href="/mind-reset" className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1">Back to Mind Reset <ArrowRight className="h-4 w-4" /></Link>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 space-y-4">
@@ -81,7 +81,7 @@ export default function MindResetHelpPage() {
             <ul className="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
               <li>Pick a playlist, favorite lines, and optionally auto-play.</li>
               <li>Your preferences are saved to continue where you left off.</li>
-              <li>Use keyboard: â†/â†’ to navigate, space to play/pause.</li>
+              <li>Use the arrow keys to navigate, space to play/pause.</li>
             </ul>
           </div>
 
@@ -100,7 +100,7 @@ export default function MindResetHelpPage() {
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <div className="text-sm text-gray-500">
-            Tip: If youâ€™re in immediate danger or crisis, use your Safety Plan or call local emergency services.
+            Tip: If you’re in immediate danger or crisis, use your Safety Plan or call local emergency services.
           </div>
         </div>
       </div>

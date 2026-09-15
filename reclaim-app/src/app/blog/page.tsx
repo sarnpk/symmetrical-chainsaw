@@ -322,9 +322,9 @@ export default function BlogPage() {
                         </div>
                         <Link
                           href={`/blog/${post.slug}`}
-                          className="text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                          className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
                         >
-                          Read â†’
+                          Read <ArrowRight className="h-4 w-4" />
                         </Link>
                       </div>
                     </CardContent>

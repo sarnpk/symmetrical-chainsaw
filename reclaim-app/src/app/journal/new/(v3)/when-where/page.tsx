@@ -7,6 +7,7 @@ import MobileTopBar from "@/components/journal/mobile/MobileTopBar";
 import StickyActionBar from "@/components/journal/mobile/StickyActionBar";
 import MobileFormCard from "@/components/journal/mobile/MobileFormCard";
 import { CalendarIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import { Lightbulb } from "lucide-react";
 
 export default function WhenWherePage() {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function WhenWherePage() {
       
       <main className="flex-1 overflow-y-auto px-4 py-4">
         <MobileFormCard 
-          title="ðŸ“… When did this happen?"
+          title="When did this happen?"
           description="Start by recording when this incident occurred"
           required={true}
         >
@@ -121,7 +122,7 @@ export default function WhenWherePage() {
           <div className="flex">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="text-blue-600 font-bold text-sm">ðŸ’¡</span>
+                <span className="flex items-center justify-center text-blue-600"><Lightbulb className="h-4 w-4" /></span>
               </div>
             </div>
             <div className="ml-3">
