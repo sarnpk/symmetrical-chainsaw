@@ -19,7 +19,6 @@ const columns = [
       { name: 'Pricing', href: '/pricing' },
       { name: 'Blog', href: '/blog' },
       { name: 'FAQ', href: '/faq' },
-      { name: 'Donate', href: '/donate' },
     ],
   },
   {
@@ -64,6 +63,7 @@ export default function SiteFooter() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
+                      scroll
                       className="text-sm text-ink-700 hover:text-brand-700 transition-colors"
                     >
                       {link.name}

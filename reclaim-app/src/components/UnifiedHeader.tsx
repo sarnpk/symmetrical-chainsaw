@@ -39,10 +39,6 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
             <Link href="/faq" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors">
               FAQ
             </Link>
-            <Link href="/donate" className="text-purple-600 hover:text-purple-700 font-semibold transition-colors inline-flex items-center gap-2">
-              <Heart className="h-4 w-4" />
-              Donate
-            </Link>
             {showAuth && (
               <>
                 <Link href="/auth" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors">
@@ -88,10 +84,6 @@ export default function UnifiedHeader({ currentTool, showAuth = true }: UnifiedH
             </Link>
             <Link href="/faq" className="block py-2 text-gray-700 hover:text-indigo-600 font-medium">
               FAQ
-            </Link>
-            <Link href="/donate" className="flex items-center gap-2 py-2 text-purple-600 hover:text-purple-700 font-semibold">
-              <Heart className="h-4 w-4" />
-              Donate
             </Link>
             {showAuth && (
               <>

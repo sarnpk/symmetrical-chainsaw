@@ -538,7 +538,7 @@ function NarcissistDetectorContent({ user }: NarcissistDetectorContentProps) {
             <div className="flex items-center gap-2">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Narcissist Detector</h1>
               <Link 
-                href="/docs/NARCISSIST_DETECTOR_GUIDE.md"
+                href="/docs/NARCISSIST_DETECTOR_GUIDE.html"
                 target="_blank"
                 className="text-indigo-600 hover:text-indigo-700"
                 title="View User Guide"

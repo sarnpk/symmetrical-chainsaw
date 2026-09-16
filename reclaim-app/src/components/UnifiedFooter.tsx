@@ -11,7 +11,6 @@ export default function UnifiedFooter() {
           <Link href="/pricing" className="hover:text-indigo-600 transition-colors">Pricing</Link>
           <Link href="/blog" className="hover:text-indigo-600 transition-colors">Blog</Link>
           <Link href="/faq" className="hover:text-indigo-600 transition-colors">FAQ</Link>
-          <Link href="/donate" className="text-purple-600 hover:text-purple-700 font-semibold transition-colors inline-flex items-center gap-2"><Heart className="h-4 w-4" />Donate</Link>
           <Link href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy</Link>
           <Link href="/terms" className="hover:text-indigo-600 transition-colors">Terms</Link>
           <Link href="/cookies" className="hover:text-indigo-600 transition-colors">Cookies</Link>

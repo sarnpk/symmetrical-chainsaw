@@ -378,9 +378,9 @@
     );
   }
 
-  /* BONUS: Smooth scroll behavior */
+  /* Smooth scroll behavior disabled to fix scroll-to-top on navigation */
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 
   /* BONUS: Better selection colors */

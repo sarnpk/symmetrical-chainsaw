@@ -28,7 +28,17 @@ import {
   ShieldAlert,
   PieChart,
   Crown,
-  Gift
+  Gift,
+  Search,
+  Compass,
+  Gauge,
+  Stethoscope,
+  Smile,
+  Waves,
+  Timer,
+  Sunrise,
+  Eye,
+  HandHeart
 } from 'lucide-react'
 import { Profile } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
@@ -46,22 +56,48 @@ interface DashboardLayoutProps {
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'NPD Traits', href: '/npd-traits', icon: Target },
-  { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
-  { name: 'Patterns', href: '/patterns', icon: TrendingUp },
-  { name: 'Letting Go', href: '/letting-go', icon: Wind },
+  { type: 'divider' as const },
+  { type: 'heading' as const, label: 'Document' },
   { name: 'Journal', href: '/journal', icon: BookOpen },
   { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
   { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
   { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
+  { type: 'heading' as const, label: 'Analyze' },
+  { name: 'Patterns', href: '/patterns', icon: TrendingUp },
+  { name: 'Cognitive Dissonance', href: '/cognitive-dissonance', icon: Gauge },
+  { name: 'Narcissist Detector', href: '/narcissist-detector', icon: Search },
+  { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
+  { name: 'Empathy Audit', href: '/empathy-audit', icon: Stethoscope },
+  { name: 'Relationship Health', href: '/relationship-health', icon: HeartPulse },
+  { name: 'Gaslighting Tracker', href: '/gaslighting-tracker', icon: Eye },
+  { name: 'AI Coach', href: '/ai-coach', icon: Brain },
+  { type: 'heading' as const, label: 'Understand' },
+  { name: 'NPD Traits', href: '/npd-traits', icon: Target },
+  { name: 'Letting Go', href: '/letting-go', icon: Wind },
+  { name: 'Narcissist Simulator', href: '/narcissist-simulator', icon: Compass },
+  { name: 'Role Reframing', href: '/role-reframing', icon: RefreshCw },
+  { type: 'heading' as const, label: 'Heal' },
   { name: 'Wellness', href: '/wellness', icon: HeartPulse },
   { name: 'Mind Reset', href: '/mind-reset', icon: Brain },
   { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
   { name: 'Hope Reframe', href: '/hope-reframe', icon: Sparkles },
+  { name: 'No Contact', href: '/no-contact-anchor', icon: ShieldAlert },
+  { name: 'Acceptance', href: '/acceptance', icon: Smile },
+  { name: 'Decompression', href: '/decompression', icon: Waves },
+  { name: 'Mental Pause', href: '/mental-pause', icon: Timer },
+  { name: 'Morning Intention', href: '/morning-intention', icon: Sunrise },
+  { name: 'Urge Surfing', href: '/urge-surfing', icon: Wind },
+  { type: 'heading' as const, label: 'Protect' },
   { name: 'Grey Rock', href: '/grey-rock', icon: FileText },
   { name: 'Crisis Reframe', href: '/crisis-reframe', icon: AlertTriangle },
-  { name: 'AI Coach', href: '/ai-coach', icon: Brain },
+  { name: 'Safety Plan', href: '/safety-plan', icon: Shield },
+  { name: 'Boundary Builder', href: '/boundary-builder', icon: HandHeart },
+  { name: 'Stonewalling', href: '/stonewalling', icon: Shield },
+  { name: 'Reactive Abuse', href: '/reactive-abuse', icon: AlertTriangle },
+  { name: 'BIFF Assistant', href: '/biff-assistant', icon: MessageSquare },
+  { type: 'heading' as const, label: 'Connect' },
   { name: 'Community', href: '/community', icon: Users },
+  { type: 'divider' as const },
   { name: 'Settings', href: '/subscription', icon: Crown },
 ]
 
@@ -111,7 +147,19 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
 
           <nav className="mt-4 px-4 flex-1 overflow-y-auto">
             <ul className="space-y-1">
-              {navigation.map((item) => {
+              {navigation.map((item, i) => {
+                if (item.type === 'heading') {
+                  return (
+                    <li key={`h-${item.label}`} className="pt-4 pb-1 px-3">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                        {item.label}
+                      </span>
+                    </li>
+                  )
+                }
+                if (item.type === 'divider') {
+                  return <li key={`d-${i}`} className="border-t border-gray-200 my-2" />
+                }
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
                 return (
                   <li key={item.name}>

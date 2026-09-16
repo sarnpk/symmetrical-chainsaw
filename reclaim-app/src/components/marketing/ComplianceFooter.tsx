@@ -12,7 +12,6 @@ const companyLinks = [
   { name: 'Pricing', href: '/pricing' },
   { name: 'Blog', href: '/blog' },
   { name: 'FAQ', href: '/faq' },
-  { name: 'Donate', href: '/donate' },
 ]
 
 const legalLinks = [
@@ -30,7 +29,7 @@ export default function ComplianceFooter() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <Link href="/" className="flex items-center gap-2.5" aria-label="Reclaim home">
+            <Link href="/" scroll className="flex items-center gap-2.5" aria-label="Reclaim home">
               <Logo className="h-9 w-9" />
               <span className="font-display text-lg font-semibold text-ink-900 tracking-tight">Reclaim</span>
             </Link>
@@ -51,7 +50,7 @@ export default function ComplianceFooter() {
             <ul className="mt-4 space-y-2.5">
               {exploreLinks.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-ink-700 hover:text-brand-700 transition-colors">
+                  <Link href={link.href} scroll className="text-sm text-ink-700 hover:text-brand-700 transition-colors">
                     {link.name}
                   </Link>
                 </li>
@@ -64,7 +63,7 @@ export default function ComplianceFooter() {
             <ul className="mt-4 space-y-2.5">
               {companyLinks.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-ink-700 hover:text-brand-700 transition-colors">
+                  <Link href={link.href} scroll className="text-sm text-ink-700 hover:text-brand-700 transition-colors">
                     {link.name}
                   </Link>
                 </li>
@@ -77,7 +76,7 @@ export default function ComplianceFooter() {
             <ul className="mt-4 space-y-2.5">
               {legalLinks.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-ink-700 hover:text-brand-700 transition-colors">
+                  <Link href={link.href} scroll className="text-sm text-ink-700 hover:text-brand-700 transition-colors">
                     {link.name}
                   </Link>
                 </li>

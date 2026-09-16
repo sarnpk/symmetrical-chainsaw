@@ -68,17 +68,12 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
             <Link
               key={link.href}
               href={link.href}
+              scroll
               className="rounded-lg px-3 py-2 text-[15px] font-medium text-ink-700 hover:text-brand-700 hover:bg-brand-50 transition-colors"
             >
               {link.name}
             </Link>
           ))}
-          <Link
-            href="/donate"
-            className="ml-1 rounded-lg px-3 py-2 text-[15px] font-semibold text-hope-600 hover:text-hope-700 hover:bg-hope-50 transition-colors"
-          >
-            Donate
-          </Link>
         </nav>
 
         {/* Desktop auth CTAs */}
@@ -123,13 +118,13 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
         />
         <div
           id="mobile-menu"
-          className={`absolute right-0 top-0 h-full w-[min(20rem,85vw)] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+          className={`fixed right-0 top-0 h-screen w-full sm:w-[min(20rem,85vw)] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-out z-[61] ${
             menuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           role="dialog"
           aria-label="Menu"
         >
-          <div className="flex items-center justify-between border-b border-ink-200/70 px-5 h-16">
+          <div className="flex items-center justify-between border-b border-ink-200/70 px-5 h-14 shrink-0">
             <div className="flex items-center gap-2">
               <Logo className="h-8 w-8" />
               <span className="font-display text-lg font-semibold text-ink-900">Reclaim</span>
@@ -143,31 +138,25 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1" aria-label="Mobile">
-            <p className="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-wider text-ink-400">Reclaim</p>
+          <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1" aria-label="Mobile">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
+                scroll
                 onClick={() => setMenuOpen(false)}
-                className="block rounded-lg px-3 py-2.5 text-base font-medium text-ink-700 hover:bg-brand-50"
+                className="block rounded-lg px-3 py-3 text-base font-medium text-ink-700 hover:bg-brand-50"
               >
                 {link.name}
               </Link>
             ))}
-            <Link
-              href="/donate"
-              onClick={() => setMenuOpen(false)}
-              className="block rounded-lg px-3 py-2.5 text-base font-medium text-hope-600 hover:bg-hope-50"
-            >
-              Donate
-            </Link>
           </nav>
 
           {showAuth && (
-            <div className="border-t border-ink-200/70 p-4 grid grid-cols-2 gap-3">
+            <div className="border-t border-ink-200/70 p-4 grid grid-cols-2 gap-3 shrink-0">
               <Link
                 href="/auth"
+                scroll
                 onClick={() => setMenuOpen(false)}
                 className="inline-flex items-center justify-center rounded-lg border border-ink-300 px-4 py-3 text-[15px] font-semibold text-ink-800 hover:bg-ink-50"
               >
@@ -175,6 +164,7 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
               </Link>
               <Link
                 href="/auth"
+                scroll
                 onClick={() => setMenuOpen(false)}
                 className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-3 text-[15px] font-semibold text-white hover:bg-brand-700"
               >

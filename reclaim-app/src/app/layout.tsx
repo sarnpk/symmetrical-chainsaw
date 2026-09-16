@@ -110,6 +110,14 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} ${fraunces.variable} antialiased bg-gray-50 min-h-screen`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.history.scrollRestoration = 'manual';
+              window.addEventListener('popstate', function() { window.scrollTo(0, 0); });
+            `,
+          }}
+        />
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
