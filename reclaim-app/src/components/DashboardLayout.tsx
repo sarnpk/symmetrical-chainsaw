@@ -191,23 +191,20 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
           </nav>
 
           <div className="p-4 border-t">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                  <span className="text-indigo-600 font-medium text-sm">
-                    {profile?.display_name?.[0] || user?.email?.[0] || 'U'}
-                  </span>
-                </div>
-                <div className="ml-3 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    {profile?.display_name || user?.email?.split('@')[0] || 'User'}
-                  </p>
-                  <p className="text-xs text-gray-500 truncate capitalize">
-                    {profile?.subscription_tier || 'foundation'}
-                  </p>
-                </div>
+            <div className="flex items-center mb-4">
+              <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                <span className="text-indigo-600 font-medium text-sm">
+                  {profile?.display_name?.[0] || user?.email?.[0] || 'U'}
+                </span>
               </div>
-              <NotificationBell />
+              <div className="ml-3 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">
+                  {profile?.display_name || user?.email?.split('@')[0] || 'User'}
+                </p>
+                <p className="text-xs text-gray-500 truncate capitalize">
+                  {profile?.subscription_tier || 'foundation'}
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setRedeemOpen(true)}
@@ -228,6 +225,11 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Desktop notification bell - top right */}
+      <div className="hidden lg:flex fixed top-3 right-6 z-[60] items-center bg-white/80 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm border border-gray-200">
+        <NotificationBell />
       </div>
 
       {/* Main content */}
