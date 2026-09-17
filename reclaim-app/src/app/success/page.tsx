@@ -8,14 +8,13 @@ import SiteHeader from '@/components/marketing/SiteHeader'
 
 function SuccessContent() {
   const searchParams = useSearchParams()
-  const checkoutId = searchParams.get('checkout_id')
-  const transactionId = searchParams.get('transaction_id')
+  const sessionId = searchParams.get('session_id')
 
   useEffect(() => {
-    if (checkoutId || transactionId) {
-      console.log('Paddle payment successful:', { checkoutId, transactionId })
+    if (sessionId) {
+      console.log('Stripe checkout successful:', { sessionId })
     }
-  }, [checkoutId, transactionId])
+  }, [sessionId])
 
   return (
     <div className="container mx-auto px-4 py-16">

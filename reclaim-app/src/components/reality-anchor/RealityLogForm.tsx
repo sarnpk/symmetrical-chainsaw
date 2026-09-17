@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertCircle, Mic, X, Calendar, FileText, Tag } from 'lucide-react'
@@ -19,6 +20,19 @@ const NPD_TRAITS = [
   'Withholding Affection/Resources',
   'Emotional Manipulation',
 ]
+
+const TRAIT_DESCRIPTIONS: Record<string, string> = {
+  'Playing the Victim': 'Twisting situations to appear wronged, deflecting responsibility onto you.',
+  'Gaslighting': 'Denying things happened or making you question your memory and perception of reality.',
+  'Triangulation': 'Bringing a third person into the dynamic to create jealousy, insecurity, or pressure.',
+  'Love-bombing': 'Overwhelming affection and attention to create dependency, then withdrawing it as control.',
+  'Hoovering': 'Attempts to suck you back in after you pull away — sudden charm, promises, or crises.',
+  'Flying Monkeys': 'Using others to do their bidding — spreading rumors, delivering messages, or pressuring you.',
+  'Covert Criticism': 'Disguised put-downs, backhanded compliments, or subtle undermining of your confidence.',
+  'Boundary Violations': 'Ignoring or testing limits you have set — showing up uninvited, pushing past "no."',
+  'Withholding Affection/Resources': 'Using love, money, information, or support as leverage to control your behavior.',
+  'Emotional Manipulation': 'Guilt-tripping, silent treatment, or playing on your emotions to get what they want.',
+}
 
 interface RealityLogFormProps {
   user?: User
@@ -337,6 +351,16 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
                 </option>
               ))}
             </select>
+            {formData.npd_trait && TRAIT_DESCRIPTIONS[formData.npd_trait] && (
+              <p className="text-sm text-gray-600 mt-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                {TRAIT_DESCRIPTIONS[formData.npd_trait]}
+              </p>
+            )}
+            <p className="text-xs text-gray-500 mt-2">
+              <Link href="/npd-traits" className="text-indigo-600 hover:text-indigo-700 underline">
+                Learn about all traits
+              </Link>
+            </p>
           </div>
 
           {/* Consistency */}

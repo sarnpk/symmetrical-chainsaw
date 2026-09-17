@@ -8,7 +8,6 @@ import SiteFooter from '@/components/marketing/SiteFooter'
 import SectionHeading from '@/components/marketing/SectionHeading'
 import CtaBanner from '@/components/marketing/CtaBanner'
 import Reveal from '@/components/marketing/Reveal'
-import { initPaddle, getPaddlePriceId } from '@/lib/paddle'
 
 interface SubscriptionPlan {
   plan_tier: string
@@ -41,17 +40,50 @@ const tierMeta: Record<string, { accent: 'green' | 'brand' | 'hope'; icon: any; 
   empowerment: { accent: 'hope', icon: Star }
 }
 
+const STRIPE_PRICES: Record<string, { monthly: string; yearly: string }> = {
+  recovery: {
+    monthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_RECOVERY_MONTHLY || '',
+    yearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_RECOVERY_YEARLY || '',
+  },
+  empowerment: {
+    monthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_EMPOWERMENT_MONTHLY || '',
+    yearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_EMPOWERMENT_YEARLY || '',
+  },
+}
+
 export default function PricingClient() {
   const [plans, setPlans] = useState<SubscriptionPlan[]>(defaultPlans)
   const [loading, setLoading] = useState(true)
   const [isYearly, setIsYearly] = useState(false)
   const [subscribing, setSubscribing] = useState<string | null>(null)
+  const [currentTier, setCurrentTier] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadUserTier = async () => {
+      try {
+        const { createClient } = await import('@/lib/supabase')
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('subscription_tier')
+            .eq('id', user.id)
+            .single()
+          if (profile?.subscription_tier) {
+            setCurrentTier(profile.subscription_tier)
+          }
+        }
+      } catch {}
+    }
+    loadUserTier()
+  }, [])
 
   const handleSubscribe = async (tier: string) => {
     setSubscribing(tier)
     try {
-      const paddle = await initPaddle()
-      const priceId = getPaddlePriceId(tier, isYearly ? 'yearly' : 'monthly')
+      const billing = isYearly ? 'yearly' : 'monthly'
+      const priceId = STRIPE_PRICES[tier]?.[billing]
 
       if (!priceId) {
         alert('Price not configured. Please try again later.')
@@ -59,11 +91,33 @@ export default function PricingClient() {
         return
       }
 
-      paddle.Checkout.open({
-        items: [{ priceId, quantity: 1 }],
+      const { createClient } = await import('@/lib/supabase')
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+
+      if (!token) {
+        alert('Please sign in to subscribe.')
+        setSubscribing(null)
+        return
+      }
+
+      const res = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId, token }),
       })
+
+      const { sessionId, url, error } = await res.json()
+      if (error || !url) {
+        alert(error || 'Failed to start checkout. Please try again.')
+        setSubscribing(null)
+        return
+      }
+
+      window.location.href = url
     } catch (error) {
-      console.error('Paddle checkout error:', error)
+      console.error('Stripe checkout error:', error)
       alert('Failed to start checkout. Please try again.')
     } finally {
       setSubscribing(null)
@@ -98,7 +152,7 @@ export default function PricingClient() {
       icon: Heart,
       features: [
         { name: 'Journal Entries', foundation: '3/day', recovery: '15/day', empowerment: 'Unlimited' },
-        { name: 'AI Coach Chats', foundation: '5/day', recovery: '25/day', empowerment: 'Unlimited' },
+        { name: 'AI Coach Chats', foundation: '5/day', recovery: '25/day', empowerment: '50/day' },
         { name: 'Pattern Analysis', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
         { name: 'Mind Reset Exercises', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
         { name: 'Safety Plan', foundation: true, recovery: true, empowerment: true }
@@ -108,9 +162,9 @@ export default function PricingClient() {
       category: 'Protection Tools',
       icon: Shield,
       features: [
-        { name: 'Grey Rock Practice', foundation: '2/day', recovery: '10/day', empowerment: 'Unlimited' },
+        { name: 'Grey Rock Practice', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
         { name: 'Grey Rock Templates', foundation: '3/day', recovery: '15/day', empowerment: 'Unlimited' },
-        { name: 'BIFF Assistant', foundation: '2/day', recovery: '10/day', empowerment: 'Unlimited' },
+        { name: 'BIFF Assistant', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
         { name: 'Boundary Builder', foundation: '5/month', recovery: '25/month', empowerment: 'Unlimited' },
         { name: 'Boundary Templates', foundation: false, recovery: true, empowerment: true }
       ]
@@ -122,7 +176,7 @@ export default function PricingClient() {
         { name: 'Mood Check-ins', foundation: false, recovery: true, empowerment: true },
         { name: 'Coping Strategies', foundation: false, recovery: '15/month', empowerment: 'Unlimited' },
         { name: 'Wellness Tracking', foundation: '2/day', recovery: '10/day', empowerment: 'Unlimited' },
-        { name: 'Crisis Reframing', foundation: '3/day', recovery: '15/day', empowerment: 'Unlimited' },
+        { name: 'Crisis Reframing', foundation: '3/day', recovery: '15/day', empowerment: '50/day' },
         { name: 'Healing Sessions', foundation: '1/day', recovery: '5/day', empowerment: 'Unlimited' }
       ]
     },
@@ -130,18 +184,18 @@ export default function PricingClient() {
       category: 'Analysis Tools',
       icon: Zap,
       features: [
-        { name: 'Narcissist Detector', foundation: '1/day', recovery: '5/day', empowerment: 'Unlimited' },
-        { name: 'Manipulation Decoder', foundation: '1/day', recovery: '5/day', empowerment: 'Unlimited' },
-        { name: 'Gaslighting Tracker', foundation: '2/day', recovery: '10/day', empowerment: 'Unlimited' },
+        { name: 'Narcissist Detector', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
+        { name: 'Manipulation Decoder', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
+        { name: 'Gaslighting Tracker', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
         { name: 'Relationship Health Check', foundation: '1/week', recovery: '3/day', empowerment: 'Unlimited' },
-        { name: 'Narcissist Simulator', foundation: false, recovery: '3/day', empowerment: 'Unlimited' }
+        { name: 'Narcissist Simulator', foundation: false, recovery: '3/day', empowerment: '10/day' }
       ]
     },
     {
       category: 'Storage & Support',
       icon: Users,
       features: [
-        { name: 'File Storage', foundation: '100 MB', recovery: '10 GB', empowerment: '100 GB' },
+        { name: 'File Storage', foundation: '100 MB', recovery: '1 GB', empowerment: '5 GB' },
         { name: 'Audio Transcription', foundation: false, recovery: '60 min/month', empowerment: '300 min/month' },
         { name: 'Priority Support', foundation: false, recovery: 'Email', empowerment: '24/7 Chat' },
         { name: 'Export Data', foundation: '1/month', recovery: '5/month', empowerment: 'Unlimited' },
@@ -242,7 +296,14 @@ export default function PricingClient() {
                         <p className="mt-1 text-sm font-medium text-success-600">Save $50/year</p>
                       )}
                       <div className="mt-7 flex-1" />
-                      {plan.plan_tier === 'foundation' ? (
+                      {currentTier === plan.plan_tier ? (
+                        <button
+                          disabled
+                          className="flex w-full items-center justify-center rounded-lg py-3 font-semibold bg-gray-200 text-gray-600 cursor-not-allowed"
+                        >
+                          Current Plan
+                        </button>
+                      ) : plan.plan_tier === 'foundation' ? (
                         <Link
                           href="/auth"
                           className={`flex w-full items-center justify-center rounded-lg py-3 text-center font-semibold transition-colors ${
@@ -263,7 +324,7 @@ export default function PricingClient() {
                               : 'bg-hope-600 text-white hover:bg-hope-700'
                           }`}
                         >
-                          {subscribing === plan.plan_tier ? 'Starting checkout...' : 'Subscribe now'}
+                          {subscribing === plan.plan_tier ? 'Starting checkout...' : currentTier && currentTier !== 'foundation' ? `Upgrade to ${name}` : 'Subscribe now'}
                         </button>
                       )}
                     </div>

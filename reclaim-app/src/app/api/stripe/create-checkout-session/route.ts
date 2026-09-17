@@ -18,7 +18,6 @@ export async function POST(req: NextRequest) {
   try {
     const { priceId, email, token } = await req.json()
 
-    // Require authentication
     if (!token) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
     }
@@ -28,7 +27,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid authentication' }, { status: 401 })
     }
 
-    // Validate price ID against known list
     if (!priceId || !ALLOWED_PRICE_IDS.includes(priceId)) {
       return NextResponse.json({ error: 'Invalid price ID' }, { status: 400 })
     }
@@ -36,15 +34,20 @@ export async function POST(req: NextRequest) {
     const stripe = getStripe()
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
-      payment_method_types: ['card'],
       customer_email: user.email,
       line_items: [{ price: priceId, quantity: 1 }],
+      allow_promotion_codes: true,
       success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get('origin')}/pricing`,
+      metadata: {
+        user_id: user.id,
+        price_id: priceId,
+      },
     })
 
-    return NextResponse.json({ sessionId: session.id })
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
+    return NextResponse.json({ sessionId: session.id, url: session.url })
+  } catch (error: any) {
+    console.error('Stripe checkout session error:', error?.message || error)
+    return NextResponse.json({ error: error?.message || 'Failed to create checkout session' }, { status: 500 })
   }
 }

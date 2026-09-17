@@ -23,13 +23,8 @@ export default function AppVersion() {
   const displayTime = iso.replace('T', ' ').replace('Z', '')
 
   return (
-    <footer className="w-full py-4 text-center text-xs text-gray-500 select-none">
-      <span className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1">
-        <span>Reclaim</span>
-        <span>version</span>
-        <code className="font-mono">{versionLabel}</code>
-        <span>{displayTime}</span>
-      </span>
-    </footer>
+    <div className="text-[11px] text-gray-400 select-none px-3 py-1">
+      v{versionLabel}
+    </div>
   )
 }

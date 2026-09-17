@@ -10,11 +10,46 @@ import { Profile } from '@/lib/supabase'
 
 const TIERS = ['foundation', 'recovery', 'empowerment'] as const
 
-type TierKey = typeof TIERS[number]
-
-interface TierLimitsResponse {
-  tiers: Record<TierKey, Record<string, number>>
+const TIER_LIMITS: Record<TierKey, Record<string, number>> = {
+  foundation: {
+    'ai_interactions:monthly_count': 150,
+    'pattern_analysis:monthly_count': 30,
+    'journal_entries:monthly_count': 90,
+    'mind_reset_sessions:monthly_count': -1,
+    'boundary_builder:monthly_count': -1,
+    'grey_rock_messages:monthly_count': -1,
+    'community_posts:monthly_count': -1,
+    'wellness:monthly_count': -1,
+    'transcription_minutes:minutes': 0,
+    'storage:storage_mb': 100,
+  },
+  recovery: {
+    'ai_interactions:monthly_count': 750,
+    'pattern_analysis:monthly_count': 300,
+    'journal_entries:monthly_count': 450,
+    'mind_reset_sessions:monthly_count': -1,
+    'boundary_builder:monthly_count': -1,
+    'grey_rock_messages:monthly_count': -1,
+    'community_posts:monthly_count': -1,
+    'wellness:monthly_count': 300,
+    'transcription_minutes:minutes': 60,
+    'storage:storage_mb': 1024,
+  },
+  empowerment: {
+    'ai_interactions:monthly_count': 1500,
+    'pattern_analysis:monthly_count': -1,
+    'journal_entries:monthly_count': -1,
+    'mind_reset_sessions:monthly_count': -1,
+    'boundary_builder:monthly_count': -1,
+    'grey_rock_messages:monthly_count': -1,
+    'community_posts:monthly_count': -1,
+    'wellness:monthly_count': -1,
+    'transcription_minutes:minutes': 300,
+    'storage:storage_mb': 5120,
+  },
 }
+
+type TierKey = typeof TIERS[number]
 
 export default function SubscriptionPage() {
   const supabase = createClient()
@@ -40,18 +75,7 @@ export default function SubscriptionPage() {
 
       const { data: p } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(p)
-
-      const { data: sessionRes } = await supabase.auth.getSession()
-      const token = sessionRes?.session?.access_token
-      if (token) {
-        const res = await fetch('/api/subscription/tiers', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        if (res.ok) {
-          const json: TierLimitsResponse = await res.json()
-          setLimits(json.tiers)
-        }
-      }
+      setLimits(TIER_LIMITS)
       setLoading(false)
     }
     run()
@@ -127,7 +151,7 @@ export default function SubscriptionPage() {
                 <CardDescription>
                   {tier === 'foundation' && 'Starter tools to begin your recovery'}
                   {tier === 'recovery' && 'Advanced features for steady progress'}
-                  {tier === 'empowerment' && 'Everything unlocked, no limits'}
+                  {tier === 'empowerment' && 'Full access with generous limits'}
                 </CardDescription>
               </CardHeader>
               <CardContent>

@@ -59,9 +59,9 @@ const navigation = [
   { type: 'divider' as const },
   { type: 'heading' as const, label: 'Document' },
   { name: 'Journal', href: '/journal', icon: BookOpen },
-  { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
   { name: 'Toxic Memories', href: '/toxic-memories', icon: AlertTriangle },
   { name: 'Positive Moments', href: '/positive-moments', icon: Heart },
+  { name: 'Reality Anchor', href: '/reality-log', icon: Anchor },
   { type: 'heading' as const, label: 'Analyze' },
   { name: 'Patterns', href: '/patterns', icon: TrendingUp },
   { name: 'Cognitive Dissonance', href: '/cognitive-dissonance', icon: Gauge },
@@ -79,13 +79,10 @@ const navigation = [
   { type: 'heading' as const, label: 'Heal' },
   { name: 'Wellness', href: '/wellness', icon: HeartPulse },
   { name: 'Mind Reset', href: '/mind-reset', icon: Brain },
+  { name: 'Acceptance', href: '/acceptance', icon: Smile },
+  { name: 'No Contact', href: '/no-contact-anchor', icon: ShieldAlert },
   { name: 'Belief Reframe', href: '/belief-reframe', icon: RefreshCw },
   { name: 'Hope Reframe', href: '/hope-reframe', icon: Sparkles },
-  { name: 'No Contact', href: '/no-contact-anchor', icon: ShieldAlert },
-  { name: 'Acceptance', href: '/acceptance', icon: Smile },
-  { name: 'Decompression', href: '/decompression', icon: Waves },
-  { name: 'Mental Pause', href: '/mental-pause', icon: Timer },
-  { name: 'Morning Intention', href: '/morning-intention', icon: Sunrise },
   { name: 'Urge Surfing', href: '/urge-surfing', icon: Wind },
   { type: 'heading' as const, label: 'Protect' },
   { name: 'Grey Rock', href: '/grey-rock', icon: FileText },
@@ -213,6 +210,9 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
               <LogOut className="mr-3 h-4 w-4" />
               Sign Out
             </button>
+            <div className="mt-4">
+              <AppVersion />
+            </div>
           </div>
         </div>
       </div>
@@ -228,9 +228,6 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
       </div>
 
       <RedeemCodeModal isOpen={redeemOpen} onClose={() => setRedeemOpen(false)} onSuccess={() => window.location.reload()} />
-      <div className="fixed bottom-0 left-0 right-0 lg:left-64 z-30">
-        <AppVersion />
-      </div>
     </div>
   )
 }
