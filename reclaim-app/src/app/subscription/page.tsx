@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Crown, CheckCircle2, ArrowUpRight, Zap, Shield, Brain, Heart, Users } from 'lucide-react'
+import { Crown, CheckCircle2, ArrowUpRight, Zap, Shield, Brain, Heart, Users, HelpCircle } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 
@@ -13,6 +13,7 @@ type TierKey = typeof TIERS[number]
 
 interface FeatureRow {
   name: string
+  description: string
   category: string
   foundation: string | boolean
   recovery: string | boolean
@@ -20,31 +21,31 @@ interface FeatureRow {
 }
 
 const FEATURES: FeatureRow[] = [
-  { name: 'Journal Entries', category: 'Core', foundation: '1/day', recovery: '15/day', empowerment: 'Unlimited' },
-  { name: 'AI Coach Chats', category: 'Core', foundation: '2/day', recovery: '25/day', empowerment: '50/day' },
-  { name: 'Pattern Analysis', category: 'Core', foundation: '1/day', recovery: '10/day', empowerment: '30/day' },
-  { name: 'Mind Reset Exercises', category: 'Core', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
-  { name: 'Safety Plan', category: 'Core', foundation: true, recovery: true, empowerment: true },
-  { name: 'Grey Rock Practice', category: 'Protection', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
-  { name: 'Grey Rock Templates', category: 'Protection', foundation: '1/day', recovery: '15/day', empowerment: 'Unlimited' },
-  { name: 'BIFF Assistant', category: 'Protection', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
-  { name: 'Boundary Builder', category: 'Protection', foundation: '5/mo', recovery: '25/mo', empowerment: 'Unlimited' },
-  { name: 'Boundary Templates', category: 'Protection', foundation: false, recovery: true, empowerment: true },
-  { name: 'Mood Check-ins', category: 'Wellness', foundation: false, recovery: true, empowerment: true },
-  { name: 'Coping Strategies', category: 'Wellness', foundation: false, recovery: '15/mo', empowerment: 'Unlimited' },
-  { name: 'Wellness Tracking', category: 'Wellness', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
-  { name: 'Crisis Reframing', category: 'Wellness', foundation: '1/day', recovery: '15/day', empowerment: '50/day' },
-  { name: 'Healing Sessions', category: 'Wellness', foundation: '1/day', recovery: '5/day', empowerment: 'Unlimited' },
-  { name: 'Narcissist Detector', category: 'Analysis', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
-  { name: 'Manipulation Decoder', category: 'Analysis', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
-  { name: 'Gaslighting Tracker', category: 'Analysis', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
-  { name: 'Relationship Health Check', category: 'Analysis', foundation: '1/week', recovery: '3/day', empowerment: 'Unlimited' },
-  { name: 'Narcissist Simulator', category: 'Analysis', foundation: false, recovery: '3/day', empowerment: '10/day' },
-  { name: 'File Storage', category: 'Storage', foundation: '100 MB', recovery: '1 GB', empowerment: '5 GB' },
-  { name: 'Audio Transcription', category: 'Storage', foundation: false, recovery: '60 min/mo', empowerment: '300 min/mo' },
-  { name: 'Priority Support', category: 'Storage', foundation: false, recovery: 'Email', empowerment: '24/7 Chat' },
-  { name: 'Export Data', category: 'Storage', foundation: '1/mo', recovery: '5/mo', empowerment: 'Unlimited' },
-  { name: 'Early Access Features', category: 'Storage', foundation: false, recovery: true, empowerment: true },
+  { name: 'Journal Entries', description: 'Document incidents with AI-powered titles and metadata', category: 'Core', foundation: '1/day', recovery: '15/day', empowerment: 'Unlimited' },
+  { name: 'AI Coach Chats', description: '24/7 supportive chat that understands narcissistic abuse', category: 'Core', foundation: '2/day', recovery: '25/day', empowerment: '50/day' },
+  { name: 'Pattern Analysis', description: 'AI detects recurring toxic behaviors across your entries', category: 'Core', foundation: '1/day', recovery: '10/day', empowerment: '30/day' },
+  { name: 'Mind Reset Exercises', description: 'Guided exercises to break free from negative thought loops', category: 'Core', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
+  { name: 'Safety Plan', description: 'Emergency contacts, safe locations, and crisis checklist', category: 'Core', foundation: true, recovery: true, empowerment: true },
+  { name: 'Grey Rock Practice', description: 'Practice emotionally unresponsive communication with AI', category: 'Protection', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
+  { name: 'Grey Rock Templates', description: 'Pre-built responses for common manipulation tactics', category: 'Protection', foundation: '1/day', recovery: '15/day', empowerment: 'Unlimited' },
+  { name: 'BIFF Assistant', description: 'Generate Brief, Informative, Firm, Friendly responses', category: 'Protection', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
+  { name: 'Boundary Builder', description: 'Create and track personal boundaries with AI guidance', category: 'Protection', foundation: '5/mo', recovery: '25/mo', empowerment: 'Unlimited' },
+  { name: 'Boundary Templates', description: 'Ready-made boundary scripts for emails, texts, and calls', category: 'Protection', foundation: false, recovery: true, empowerment: true },
+  { name: 'Mood Check-ins', description: 'Track your emotional state over time', category: 'Wellness', foundation: false, recovery: true, empowerment: true },
+  { name: 'Coping Strategies', description: 'AI-personalized coping techniques based on your mood', category: 'Wellness', foundation: false, recovery: '15/mo', empowerment: 'Unlimited' },
+  { name: 'Wellness Tracking', description: 'Daily mood, sleep, and energy tracking with insights', category: 'Wellness', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
+  { name: 'Crisis Reframing', description: 'AI helps reframe spiraling thoughts when you feel overwhelmed', category: 'Wellness', foundation: '1/day', recovery: '15/day', empowerment: '50/day' },
+  { name: 'Healing Sessions', description: 'Guided reflection exercises to process trauma', category: 'Wellness', foundation: '1/day', recovery: '5/day', empowerment: 'Unlimited' },
+  { name: 'Narcissist Detector', description: 'Paste a message — AI checks for narcissistic traits', category: 'Analysis', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
+  { name: 'Manipulation Decoder', description: 'Decode hidden manipulation tactics in conversations', category: 'Analysis', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
+  { name: 'Gaslighting Tracker', description: 'Log and verify gaslighting incidents against your memory', category: 'Analysis', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
+  { name: 'Relationship Health Check', description: 'AI-powered assessment of your relationship dynamics', category: 'Analysis', foundation: '1/week', recovery: '3/day', empowerment: 'Unlimited' },
+  { name: 'Narcissist Simulator', description: 'Practice conversations with an AI simulating narcissistic behavior', category: 'Analysis', foundation: false, recovery: '3/day', empowerment: '10/day' },
+  { name: 'File Storage', description: 'Upload evidence, audio recordings, and documents', category: 'Storage', foundation: '100 MB', recovery: '1 GB', empowerment: '5 GB' },
+  { name: 'Audio Transcription', description: 'Convert voice recordings to text for documentation', category: 'Storage', foundation: false, recovery: '60 min/mo', empowerment: '300 min/mo' },
+  { name: 'Priority Support', description: 'Get help when you need it most', category: 'Storage', foundation: false, recovery: 'Email', empowerment: '24/7 Chat' },
+  { name: 'Export Data', description: 'Download your journal and data for court or therapy', category: 'Storage', foundation: '1/mo', recovery: '5/mo', empowerment: 'Unlimited' },
+  { name: 'Early Access Features', description: 'Try new features before they launch', category: 'Storage', foundation: false, recovery: true, empowerment: true },
 ]
 
 const CATEGORIES = [
@@ -152,9 +153,18 @@ export default function SubscriptionPage() {
                         </div>
                         <div className="space-y-1">
                           {catFeatures.map((f) => (
-                            <div key={f.name} className="flex items-center justify-between text-sm">
-                              <span className="text-gray-600 truncate">{f.name}</span>
+                            <div key={f.name} className="flex items-center justify-between text-sm group relative">
+                              <span className="text-gray-600 truncate flex items-center gap-1">
+                                {f.name}
+                                <HelpCircle className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-help" />
+                              </span>
                               <span className="font-medium text-gray-900 ml-2 whitespace-nowrap">{cellValue(f[tier])}</span>
+                              <div className="absolute bottom-full left-0 mb-1 hidden group-hover:block z-50">
+                                <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 w-56 shadow-lg">
+                                  {f.description}
+                                  <div className="absolute top-full left-4 w-2 h-2 bg-gray-900 rotate-45 -mt-1" />
+                                </div>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -221,8 +231,21 @@ export default function SubscriptionPage() {
                         </td>
                       </tr>
                       {FEATURES.filter(f => f.category === cat).map((f) => (
-                        <tr key={f.name} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-2 pr-4 text-gray-700">{f.name}</td>
+                        <tr key={f.name} className="border-b border-gray-100 hover:bg-gray-50 group">
+                          <td className="py-2 pr-4 text-gray-700">
+                            <div className="flex items-center gap-1.5">
+                              {f.name}
+                              <div className="relative">
+                                <HelpCircle className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-help" />
+                                <div className="absolute bottom-full left-0 mb-1 hidden group-hover:block z-50">
+                                  <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 w-56 shadow-lg">
+                                    {f.description}
+                                    <div className="absolute top-full left-4 w-2 h-2 bg-gray-900 rotate-45 -mt-1" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
                           {TIERS.map((t) => (
                             <td key={t} className={`py-2 px-3 text-center ${t === currentTier ? 'bg-purple-50/30' : ''}`}>
                               {cellValue(f[t])}
