@@ -12,8 +12,10 @@ import {
   Save,
   Trash2,
   Download,
-  Upload
+  Upload,
+  Play
 } from 'lucide-react'
+import { resetTour } from '@/components/AppTour'
 
 export default function SettingsContent({ user, profile }: { user: any, profile: any }) {
   const [activeTab, setActiveTab] = useState<'profile' | 'privacy' | 'notifications' | 'security' | 'data'>('profile')
@@ -311,8 +313,19 @@ export default function SettingsContent({ user, profile }: { user: any, profile:
           className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"
         >
           <Save className="h-4 w-4" />
-          Update Password
+          Save Changes
         </button>
+      </div>
+
+      <div className="pt-4 border-t border-gray-200">
+        <button
+          onClick={() => { resetTour(); window.location.reload() }}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
+        >
+          <Play className="h-4 w-4" />
+          Replay App Tour
+        </button>
+        <p className="text-xs text-gray-500 mt-1">Walk through the main features again</p>
       </div>
     </div>
   )

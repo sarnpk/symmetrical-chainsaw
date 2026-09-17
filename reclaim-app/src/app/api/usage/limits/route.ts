@@ -14,9 +14,9 @@ function getServerSupabase() {
 
 // Daily limits from pricing page — multiply by 30 for monthly equivalents
 const TIER_DAILY_LIMITS: Record<string, { ai_daily: number; pattern_daily: number; tx_monthly: number; storage_mb: number }> = {
-  foundation: { ai_daily: 5, pattern_daily: 1, tx_monthly: 0, storage_mb: 100 },
+  foundation: { ai_daily: 2, pattern_daily: 1, tx_monthly: 0, storage_mb: 100 },
   recovery:   { ai_daily: 25, pattern_daily: 10, tx_monthly: 60, storage_mb: 1024 },
-  empowerment:{ ai_daily: 50, pattern_daily: -1, tx_monthly: 300, storage_mb: 5120 },
+  empowerment:{ ai_daily: 50, pattern_daily: 30, tx_monthly: 300, storage_mb: 5120 },
 }
 
 function startOfMonthISODate(): string {

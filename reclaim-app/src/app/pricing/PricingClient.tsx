@@ -151,9 +151,9 @@ export default function PricingClient() {
       category: 'Core Features',
       icon: Heart,
       features: [
-        { name: 'Journal Entries', foundation: '3/day', recovery: '15/day', empowerment: 'Unlimited' },
-        { name: 'AI Coach Chats', foundation: '5/day', recovery: '25/day', empowerment: '50/day' },
-        { name: 'Pattern Analysis', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
+        { name: 'Journal Entries', foundation: '1/day', recovery: '15/day', empowerment: 'Unlimited' },
+        { name: 'AI Coach Chats', foundation: '2/day', recovery: '25/day', empowerment: '50/day' },
+        { name: 'Pattern Analysis', foundation: '1/day', recovery: '10/day', empowerment: '30/day' },
         { name: 'Mind Reset Exercises', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
         { name: 'Safety Plan', foundation: true, recovery: true, empowerment: true }
       ]
@@ -162,9 +162,9 @@ export default function PricingClient() {
       category: 'Protection Tools',
       icon: Shield,
       features: [
-        { name: 'Grey Rock Practice', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
-        { name: 'Grey Rock Templates', foundation: '3/day', recovery: '15/day', empowerment: 'Unlimited' },
-        { name: 'BIFF Assistant', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
+        { name: 'Grey Rock Practice', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
+        { name: 'Grey Rock Templates', foundation: '1/day', recovery: '15/day', empowerment: 'Unlimited' },
+        { name: 'BIFF Assistant', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
         { name: 'Boundary Builder', foundation: '5/month', recovery: '25/month', empowerment: 'Unlimited' },
         { name: 'Boundary Templates', foundation: false, recovery: true, empowerment: true }
       ]
@@ -175,8 +175,8 @@ export default function PricingClient() {
       features: [
         { name: 'Mood Check-ins', foundation: false, recovery: true, empowerment: true },
         { name: 'Coping Strategies', foundation: false, recovery: '15/month', empowerment: 'Unlimited' },
-        { name: 'Wellness Tracking', foundation: '2/day', recovery: '10/day', empowerment: 'Unlimited' },
-        { name: 'Crisis Reframing', foundation: '3/day', recovery: '15/day', empowerment: '50/day' },
+        { name: 'Wellness Tracking', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
+        { name: 'Crisis Reframing', foundation: '1/day', recovery: '15/day', empowerment: '50/day' },
         { name: 'Healing Sessions', foundation: '1/day', recovery: '5/day', empowerment: 'Unlimited' }
       ]
     },
@@ -186,7 +186,7 @@ export default function PricingClient() {
       features: [
         { name: 'Narcissist Detector', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
         { name: 'Manipulation Decoder', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
-        { name: 'Gaslighting Tracker', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
+        { name: 'Gaslighting Tracker', foundation: '1/day', recovery: '10/day', empowerment: '50/day' },
         { name: 'Relationship Health Check', foundation: '1/week', recovery: '3/day', empowerment: 'Unlimited' },
         { name: 'Narcissist Simulator', foundation: false, recovery: '3/day', empowerment: '10/day' }
       ]

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
@@ -47,6 +47,8 @@ import Logo from '@/components/marketing/Logo'
 import MobileNavbar from '@/ui/tailwindplus/MobileNavbar'
 import RedeemCodeModal from '@/components/RedeemCodeModal'
 import AppVersion from '@/components/AppVersion'
+import NotificationBell from '@/components/NotificationBell'
+import AppTour, { isTourCompleted } from '@/components/AppTour'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -101,8 +103,16 @@ const navigation = [
 export default function DashboardLayout({ children, user, profile }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [redeemOpen, setRedeemOpen] = useState(false)
+  const [showTour, setShowTour] = useState(false)
   const pathname = usePathname()
   const supabase = createClient()
+
+  useEffect(() => {
+    if (!isTourCompleted()) {
+      const timer = setTimeout(() => setShowTour(true), 800)
+      return () => clearTimeout(timer)
+    }
+  }, [])
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()
@@ -142,7 +152,7 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
             </button>
           </div>
 
-          <nav className="mt-4 px-4 flex-1 overflow-y-auto">
+          <nav className="mt-4 px-4 flex-1 overflow-y-auto" data-tour="sidebar-nav">
             <ul className="space-y-1">
               {navigation.map((item, i) => {
                 if (item.type === 'heading') {
@@ -181,20 +191,23 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
           </nav>
 
           <div className="p-4 border-t">
-            <div className="flex items-center mb-4">
-              <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                <span className="text-indigo-600 font-medium text-sm">
-                  {profile?.display_name?.[0] || user?.email?.[0] || 'U'}
-                </span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                  <span className="text-indigo-600 font-medium text-sm">
+                    {profile?.display_name?.[0] || user?.email?.[0] || 'U'}
+                  </span>
+                </div>
+                <div className="ml-3 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {profile?.display_name || user?.email?.split('@')[0] || 'User'}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate capitalize">
+                    {profile?.subscription_tier || 'foundation'}
+                  </p>
+                </div>
               </div>
-              <div className="ml-3 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
-                  {profile?.display_name || user?.email?.split('@')[0] || 'User'}
-                </p>
-                <p className="text-xs text-gray-500 truncate capitalize">
-                  {profile?.subscription_tier || 'foundation'}
-                </p>
-              </div>
+              <NotificationBell />
             </div>
             <button
               onClick={() => setRedeemOpen(true)}
@@ -228,6 +241,7 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
       </div>
 
       <RedeemCodeModal isOpen={redeemOpen} onClose={() => setRedeemOpen(false)} onSuccess={() => window.location.reload()} />
+      {showTour && <AppTour onComplete={() => setShowTour(false)} />}
     </div>
   )
 }
