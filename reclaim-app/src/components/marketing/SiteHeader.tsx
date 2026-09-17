@@ -22,6 +22,19 @@ const navLinks = [
 export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { createClient } = await import('@/lib/supabase')
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        setIsLoggedIn(!!user)
+      } catch {}
+    }
+    checkAuth()
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -79,18 +92,29 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
         {/* Desktop auth CTAs */}
         {showAuth && (
           <div className="hidden lg:flex items-center gap-2">
-            <Link
-              href="/auth"
-              className="rounded-lg px-4 py-2 text-[15px] font-medium text-ink-700 hover:text-brand-700 transition-colors"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/auth"
-              className="inline-flex items-center rounded-lg bg-brand-600 px-5 py-2.5 text-[15px] font-semibold text-white shadow-soft transition-all duration-200 hover:bg-brand-700 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-            >
-              Get Started
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center rounded-lg bg-brand-600 px-5 py-2.5 text-[15px] font-semibold text-white shadow-soft transition-all duration-200 hover:bg-brand-700 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/auth"
+                  className="rounded-lg px-4 py-2 text-[15px] font-medium text-ink-700 hover:text-brand-700 transition-colors"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/auth"
+                  className="inline-flex items-center rounded-lg bg-brand-600 px-5 py-2.5 text-[15px] font-semibold text-white shadow-soft transition-all duration-200 hover:bg-brand-700 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         )}
 
@@ -153,23 +177,36 @@ export default function SiteHeader({ showAuth = true }: { showAuth?: boolean }) 
           </nav>
 
           {showAuth && (
-            <div className="border-t border-ink-200/70 p-4 grid grid-cols-2 gap-3 shrink-0">
-              <Link
-                href="/auth"
-                scroll
-                onClick={() => setMenuOpen(false)}
-                className="inline-flex items-center justify-center rounded-lg border border-ink-300 px-4 py-3 text-[15px] font-semibold text-ink-800 hover:bg-ink-50"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/auth"
-                scroll
-                onClick={() => setMenuOpen(false)}
-                className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-3 text-[15px] font-semibold text-white hover:bg-brand-700"
-              >
-                Get Started
-              </Link>
+            <div className="border-t border-ink-200/70 p-4 shrink-0">
+              {isLoggedIn ? (
+                <Link
+                  href="/dashboard"
+                  scroll
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-center rounded-lg bg-brand-600 px-4 py-3 text-[15px] font-semibold text-white hover:bg-brand-700"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  <Link
+                    href="/auth"
+                    scroll
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-center rounded-lg border border-ink-300 px-4 py-3 text-[15px] font-semibold text-ink-800 hover:bg-ink-50"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href="/auth"
+                    scroll
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-3 text-[15px] font-semibold text-white hover:bg-brand-700"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
             </div>
           )}
         </div>

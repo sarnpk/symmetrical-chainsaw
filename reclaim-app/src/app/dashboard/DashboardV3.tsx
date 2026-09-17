@@ -226,7 +226,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
               <div className="px-4 py-3">
                 <div className="flex items-center gap-1.5 mb-1">
                   <Zap className="h-3.5 w-3.5 text-indigo-500" />
-                  <span className="text-xs font-medium text-gray-700">AI Interactions</span>
+                  <span className="text-xs font-medium text-gray-700">AI Coach</span>
                 </div>
                 <div className="text-xs text-gray-500 mb-1.5">This month</div>
                 <div className="text-sm font-semibold text-gray-900">

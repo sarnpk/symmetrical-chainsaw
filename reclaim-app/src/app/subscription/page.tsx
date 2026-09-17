@@ -3,59 +3,75 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Crown, CheckCircle2, ArrowUpRight } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Crown, CheckCircle2, ArrowUpRight, Zap, Shield, Brain, Heart, Users } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 
 const TIERS = ['foundation', 'recovery', 'empowerment'] as const
+type TierKey = typeof TIERS[number]
 
-const TIER_LIMITS: Record<TierKey, Record<string, number>> = {
-  foundation: {
-    'ai_interactions:monthly_count': 150,
-    'pattern_analysis:monthly_count': 30,
-    'journal_entries:monthly_count': 90,
-    'mind_reset_sessions:monthly_count': -1,
-    'boundary_builder:monthly_count': -1,
-    'grey_rock_messages:monthly_count': -1,
-    'community_posts:monthly_count': -1,
-    'wellness:monthly_count': -1,
-    'transcription_minutes:minutes': 0,
-    'storage:storage_mb': 100,
-  },
-  recovery: {
-    'ai_interactions:monthly_count': 750,
-    'pattern_analysis:monthly_count': 300,
-    'journal_entries:monthly_count': 450,
-    'mind_reset_sessions:monthly_count': -1,
-    'boundary_builder:monthly_count': -1,
-    'grey_rock_messages:monthly_count': -1,
-    'community_posts:monthly_count': -1,
-    'wellness:monthly_count': 300,
-    'transcription_minutes:minutes': 60,
-    'storage:storage_mb': 1024,
-  },
-  empowerment: {
-    'ai_interactions:monthly_count': 1500,
-    'pattern_analysis:monthly_count': -1,
-    'journal_entries:monthly_count': -1,
-    'mind_reset_sessions:monthly_count': -1,
-    'boundary_builder:monthly_count': -1,
-    'grey_rock_messages:monthly_count': -1,
-    'community_posts:monthly_count': -1,
-    'wellness:monthly_count': -1,
-    'transcription_minutes:minutes': 300,
-    'storage:storage_mb': 5120,
-  },
+interface FeatureRow {
+  name: string
+  category: string
+  foundation: string | boolean
+  recovery: string | boolean
+  empowerment: string | boolean
 }
 
-type TierKey = typeof TIERS[number]
+const FEATURES: FeatureRow[] = [
+  { name: 'Journal Entries', category: 'Core', foundation: '3/day', recovery: '15/day', empowerment: 'Unlimited' },
+  { name: 'AI Coach Chats', category: 'Core', foundation: '5/day', recovery: '25/day', empowerment: '50/day' },
+  { name: 'Pattern Analysis', category: 'Core', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
+  { name: 'Mind Reset Exercises', category: 'Core', foundation: '1/day', recovery: '10/day', empowerment: 'Unlimited' },
+  { name: 'Safety Plan', category: 'Core', foundation: true, recovery: true, empowerment: true },
+  { name: 'Grey Rock Practice', category: 'Protection', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
+  { name: 'Grey Rock Templates', category: 'Protection', foundation: '3/day', recovery: '15/day', empowerment: 'Unlimited' },
+  { name: 'BIFF Assistant', category: 'Protection', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
+  { name: 'Boundary Builder', category: 'Protection', foundation: '5/mo', recovery: '25/mo', empowerment: 'Unlimited' },
+  { name: 'Boundary Templates', category: 'Protection', foundation: false, recovery: true, empowerment: true },
+  { name: 'Mood Check-ins', category: 'Wellness', foundation: false, recovery: true, empowerment: true },
+  { name: 'Coping Strategies', category: 'Wellness', foundation: false, recovery: '15/mo', empowerment: 'Unlimited' },
+  { name: 'Wellness Tracking', category: 'Wellness', foundation: '2/day', recovery: '10/day', empowerment: 'Unlimited' },
+  { name: 'Crisis Reframing', category: 'Wellness', foundation: '3/day', recovery: '15/day', empowerment: '50/day' },
+  { name: 'Healing Sessions', category: 'Wellness', foundation: '1/day', recovery: '5/day', empowerment: 'Unlimited' },
+  { name: 'Narcissist Detector', category: 'Analysis', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
+  { name: 'Manipulation Decoder', category: 'Analysis', foundation: '1/day', recovery: '5/day', empowerment: '30/day' },
+  { name: 'Gaslighting Tracker', category: 'Analysis', foundation: '2/day', recovery: '10/day', empowerment: '50/day' },
+  { name: 'Relationship Health Check', category: 'Analysis', foundation: '1/week', recovery: '3/day', empowerment: 'Unlimited' },
+  { name: 'Narcissist Simulator', category: 'Analysis', foundation: false, recovery: '3/day', empowerment: '10/day' },
+  { name: 'File Storage', category: 'Storage', foundation: '100 MB', recovery: '1 GB', empowerment: '5 GB' },
+  { name: 'Audio Transcription', category: 'Storage', foundation: false, recovery: '60 min/mo', empowerment: '300 min/mo' },
+  { name: 'Priority Support', category: 'Storage', foundation: false, recovery: 'Email', empowerment: '24/7 Chat' },
+  { name: 'Export Data', category: 'Storage', foundation: '1/mo', recovery: '5/mo', empowerment: 'Unlimited' },
+  { name: 'Early Access Features', category: 'Storage', foundation: false, recovery: true, empowerment: true },
+]
+
+const CATEGORIES = [
+  { key: 'Core', icon: Heart },
+  { key: 'Protection', icon: Shield },
+  { key: 'Wellness', icon: Brain },
+  { key: 'Analysis', icon: Zap },
+  { key: 'Storage', icon: Users },
+]
+
+const tierMeta: Record<TierKey, { accent: string; label: string }> = {
+  foundation: { accent: 'green', label: 'Foundation (Free)' },
+  recovery: { accent: 'brand', label: 'Recovery' },
+  empowerment: { accent: 'hope', label: 'Empowered' },
+}
+
+const cellValue = (value: string | boolean) => {
+  if (typeof value === 'boolean') {
+    return value ? <CheckCircle2 className="h-4 w-4 text-success-600" /> : <span className="text-ink-300">—</span>
+  }
+  return <span className="text-sm font-medium">{value}</span>
+}
 
 export default function SubscriptionPage() {
   const supabase = createClient()
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [limits, setLimits] = useState<TierLimitsResponse['tiers'] | null>(null)
   const [loading, setLoading] = useState(true)
   const [upgrading, setUpgrading] = useState<string | null>(null)
 
@@ -72,45 +88,17 @@ export default function SubscriptionPage() {
         return
       }
       setUser(user)
-
       const { data: p } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(p)
-      setLimits(TIER_LIMITS)
       setLoading(false)
     }
     run()
   }, [supabase])
 
-  // Shared formatters
-  const present = (n: number, formatter?: (n: number) => string) => {
-    if (n === -1) return 'Unlimited'
-    if (n === 0) return 'Not available'
-    return formatter ? formatter(n) : String(n)
-  }
-  const withPerMonth = (n: number, formatter?: (n: number) => string) => {
-    const base = present(n, formatter)
-    if (base === 'Unlimited' || base === 'Not available') return base
-    return `${base}/mo`
-  }
-
-  const FeatureRow = ({ name, k, formatter }: { name: string; k: string; formatter?: (n: number) => string }) => {
-    const fmt = (n: number) => present(n, formatter)
-    return (
-      <div className="grid grid-cols-4 gap-4 py-2 text-sm">
-        <div className="text-gray-700">{name}</div>
-        {TIERS.map((t) => (
-          <div key={t} className="text-gray-900">
-            {limits ? fmt(limits[t as TierKey][k] ?? -1) : '—'}
-          </div>
-        ))}
-      </div>
-    )
-  }
-
   if (loading || !user || !profile) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
       </div>
     )
   }
@@ -119,8 +107,8 @@ export default function SubscriptionPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div className="flex items-center justify-between px-4 md:px-0">
+      <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
+        <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
               <Crown className="h-6 w-6 text-purple-600" /> Subscription
@@ -132,89 +120,122 @@ export default function SubscriptionPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-4 md:px-0">
-          {TIERS.map((tier) => (
-            <Card key={tier} className={tier === currentTier ? 'border-2 border-purple-500' : ''}>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span className="capitalize">{tier}</span>
-                  {tier === currentTier ? (
-                    <span className="inline-flex items-center gap-1 text-xs text-purple-700 bg-purple-50 px-2 py-1 rounded">
-                      <CheckCircle2 className="h-3 w-3" /> Current
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 text-xs text-gray-600">
-                      <ArrowUpRight className="h-3 w-3" /> Switch
-                    </span>
-                  )}
-                </CardTitle>
-                <CardDescription>
-                  {tier === 'foundation' && 'Starter tools to begin your recovery'}
-                  {tier === 'recovery' && 'Advanced features for steady progress'}
-                  {tier === 'empowerment' && 'Full access with generous limits'}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm">
-                  <div>AI Coach: <strong>{limits ? withPerMonth(limits[tier]['ai_interactions:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Patterns: <strong>{limits ? withPerMonth(limits[tier]['pattern_analysis:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Journal entries: <strong>{limits ? withPerMonth(limits[tier]['journal_entries:monthly_count'] ?? -1) : '—'}</strong>
-                    {tier === 'foundation' && (
-                      <span className="ml-2 text-xs text-gray-600">(Basic fields)</span>
+        {/* Tier cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {TIERS.map((tier) => {
+            const meta = tierMeta[tier]
+            const isCurrent = tier === currentTier
+            return (
+              <Card key={tier} className={isCurrent ? 'border-2 border-purple-500 ring-1 ring-purple-200' : ''}>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center justify-between text-lg">
+                    <span>{meta.label}</span>
+                    {isCurrent ? (
+                      <span className="inline-flex items-center gap-1 text-xs text-purple-700 bg-purple-50 px-2 py-1 rounded-full">
+                        <CheckCircle2 className="h-3 w-3" /> Current
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                        <ArrowUpRight className="h-3 w-3" /> Switch
+                      </span>
                     )}
-                  </div>
-                  <div>Mind Reset: <strong>{limits ? withPerMonth(limits[tier]['mind_reset_sessions:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Boundary Builder: <strong>{limits ? withPerMonth(limits[tier]['boundary_builder:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Grey Rock: <strong>{limits ? withPerMonth(limits[tier]['grey_rock_messages:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Community posts: <strong>{limits ? withPerMonth(limits[tier]['community_posts:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Wellness: <strong>{limits ? withPerMonth(limits[tier]['wellness:monthly_count'] ?? -1) : '—'}</strong></div>
-                  <div>Transcription minutes: <strong>{limits ? withPerMonth(limits[tier]['transcription_minutes:minutes'] ?? -1) : '—'}</strong></div>
-                  <div>Evidence storage: <strong>{limits ? present(limits[tier]['storage:storage_mb'] ?? -1, (n) => `${n} MB`) : '—'}</strong></div>
-                </div>
-                {tier !== currentTier && tier !== 'foundation' && (
-                  <button
-                    onClick={() => handleUpgrade(tier)}
-                    disabled={upgrading === tier}
-                    className="w-full mt-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50"
-                  >
-                    {upgrading === tier ? 'Loading...' : tier === 'recovery' ? 'Upgrade to Recovery' : 'Upgrade to Empowered'}
-                  </button>
-                )}
-                {tier === currentTier && tier !== 'foundation' && (
-                  <button
-                    className="w-full mt-4 py-2 bg-gray-200 text-gray-600 rounded-lg font-semibold cursor-not-allowed"
-                    disabled
-                  >
-                    Current Plan
-                  </button>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  {CATEGORIES.map(({ key: cat, icon: Icon }) => {
+                    const catFeatures = FEATURES.filter(f => f.category === cat)
+                    return (
+                      <div key={cat}>
+                        <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">
+                          <Icon className="h-3.5 w-3.5" />
+                          {cat}
+                        </div>
+                        <div className="space-y-1">
+                          {catFeatures.map((f) => (
+                            <div key={f.name} className="flex items-center justify-between text-sm">
+                              <span className="text-gray-600 truncate">{f.name}</span>
+                              <span className="font-medium text-gray-900 ml-2 whitespace-nowrap">{cellValue(f[tier])}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                  {!isCurrent && tier !== 'foundation' && (
+                    <button
+                      onClick={() => handleUpgrade(tier)}
+                      disabled={upgrading === tier}
+                      className="w-full mt-4 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                    >
+                      {upgrading === tier ? 'Loading...' : tier === 'recovery' ? 'Upgrade to Recovery' : 'Upgrade to Empowered'}
+                    </button>
+                  )}
+                  {isCurrent && tier !== 'foundation' && (
+                    <button disabled className="w-full mt-4 py-2.5 bg-gray-200 text-gray-600 rounded-lg font-semibold cursor-not-allowed">
+                      Current Plan
+                    </button>
+                  )}
+                  {tier === 'foundation' && !isCurrent && (
+                    <button
+                      onClick={() => handleUpgrade('foundation')}
+                      className="w-full mt-4 py-2.5 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                    >
+                      Start Free
+                    </button>
+                  )}
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
 
-        <Card className="px-4 md:px-0">
+        {/* Full feature comparison table */}
+        <Card>
           <CardHeader>
-            <CardTitle>Feature comparison</CardTitle>
-            <CardDescription>Live from your Supabase feature limits</CardDescription>
+            <CardTitle className="text-lg">Full Feature Comparison</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-4 gap-4 text-xs uppercase tracking-wide text-gray-500 pb-2 border-b">
-              <div>Feature</div>
-              {TIERS.map((t) => (
-                <div key={t} className="capitalize">{t}</div>
-              ))}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left py-2 pr-4 font-medium text-gray-500">Feature</th>
+                    {TIERS.map((t) => (
+                      <th key={t} className={`text-center py-2 px-3 font-semibold ${t === currentTier ? 'text-purple-700' : 'text-gray-700'}`}>
+                        {tierMeta[t].label}
+                        {t === currentTier && <span className="block text-[10px] text-purple-500 font-normal">Current</span>}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {CATEGORIES.map(({ key: cat, icon: Icon }) => (
+                    <>
+                      <tr key={`cat-${cat}`}>
+                        <td colSpan={4} className="pt-4 pb-1">
+                          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-500">
+                            <Icon className="h-3.5 w-3.5" />
+                            {cat}
+                          </div>
+                        </td>
+                      </tr>
+                      {FEATURES.filter(f => f.category === cat).map((f) => (
+                        <tr key={f.name} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="py-2 pr-4 text-gray-700">{f.name}</td>
+                          {TIERS.map((t) => (
+                            <td key={t} className={`py-2 px-3 text-center ${t === currentTier ? 'bg-purple-50/30' : ''}`}>
+                              {cellValue(f[t])}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <FeatureRow name="AI Coach interactions (mo)" k="ai_interactions:monthly_count" />
-            <FeatureRow name="Patterns (mo)" k="pattern_analysis:monthly_count" />
-            <FeatureRow name="Journal entries (mo)" k="journal_entries:monthly_count" />
-            <FeatureRow name="Mind Reset sessions (mo)" k="mind_reset_sessions:monthly_count" />
-            <FeatureRow name="Boundary Builder (mo)" k="boundary_builder:monthly_count" />
-            <FeatureRow name="Grey Rock messages (mo)" k="grey_rock_messages:monthly_count" />
-            <FeatureRow name="Community posts (mo)" k="community_posts:monthly_count" />
-            <FeatureRow name="Wellness (mo)" k="wellness:monthly_count" />
-            <FeatureRow name="Transcription minutes (mo)" k="transcription_minutes:minutes" />
-            <FeatureRow name="Evidence storage" k="storage:storage_mb" formatter={(n) => `${n} MB`} />
+            <p className="mt-4 text-xs text-gray-500">All daily limits reset at midnight UTC. &quot;Unlimited&quot; features are subject to a fair use policy.</p>
           </CardContent>
         </Card>
       </div>
