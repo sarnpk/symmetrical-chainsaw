@@ -236,7 +236,7 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
       <div className="flex-1 lg:ml-0 overflow-x-hidden">
         <MobileNavbar onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 max-w-full overflow-x-hidden">
-          <div className="p-4 sm:p-6 lg:p-8 pt-24 lg:pt-12">
+          <div className="p-4 sm:p-6 lg:p-8 pt-[68px] lg:pt-12">
             {children}
           </div>
         </main>

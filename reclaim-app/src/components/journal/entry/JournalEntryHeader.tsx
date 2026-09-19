@@ -44,12 +44,12 @@ export default function JournalEntryHeader({ entry, onDelete }: JournalEntryHead
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Mobile Navigation */}
       <div className="flex items-center justify-between">
         <Link 
           href="/journal"
-          className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="flex items-center gap-2 p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <ArrowLeft className="h-5 w-5 text-gray-600" />
           <span className="text-sm text-gray-600 hidden sm:inline">Back to Journal</span>
@@ -105,27 +105,27 @@ export default function JournalEntryHeader({ entry, onDelete }: JournalEntryHead
       </div>
 
       {/* Mobile Actions */}
-      <div className="flex sm:hidden gap-3">
+      <div className="flex sm:hidden gap-2">
         <button
           onClick={() => setShowExport(true)}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-900 rounded-xl hover:bg-gray-200 transition-colors font-medium"
+          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
         >
           <Download className="h-4 w-4" />
           Export
         </button>
         <Link
           href={`/journal/${entry.id}/edit`}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium"
+          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium"
         >
           <Edit className="h-4 w-4" />
-          Edit Entry
+          Edit
         </Link>
         <button
           onClick={onDelete}
-          className="flex items-center justify-center gap-2 px-4 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium"
+          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
         >
           <Trash2 className="h-4 w-4" />
-          <span className="hidden xs:inline">Delete</span>
+          Delete
         </button>
       </div>
 
