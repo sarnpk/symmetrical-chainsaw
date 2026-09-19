@@ -50,7 +50,8 @@ Keep response supportive, professional, and focused on acceptance rather than ch
     }
 
     const data = await response.json();
-    const insight = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Unable to generate insights at this time.';
+    const allParts = data.candidates?.[0]?.content?.parts || [];
+    const insight = allParts.filter((p: any) => !p.thought).map((p: any) => p.text || '').join('') || 'Unable to generate insights at this time.';
 
     return NextResponse.json({ insight });
   } catch (error) {

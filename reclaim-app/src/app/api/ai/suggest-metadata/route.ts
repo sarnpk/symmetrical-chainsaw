@@ -58,8 +58,7 @@ async function geminiChat(
     body: JSON.stringify({
       contents: params.contents,
       systemInstruction: { parts: [{ text: params.systemPrompt }] },
-      responseMimeType: 'application/json',
-      generationConfig: { temperature: 0.4, maxOutputTokens: 1024 },
+      generationConfig: { temperature: 0.4, maxOutputTokens: 4096 },
       safetySettings: [
         { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
         { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
@@ -68,9 +67,15 @@ async function geminiChat(
       ],
     }),
   })
-  if (!resp.ok) throw new Error(`Gemini API error: ${resp.status} ${resp.statusText}`)
+  if (!resp.ok) {
+    const errBody = await resp.text().catch(() => '')
+    console.error('Gemini API error:', resp.status, errBody.slice(0, 300))
+    throw new Error(`Gemini API error: ${resp.status} ${resp.statusText}`)
+  }
   const json = await resp.json()
-  return json?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+  const parts = json?.candidates?.[0]?.content?.parts || []
+  const textParts = parts.filter((p: any) => !p.thought)
+  return textParts.map((p: any) => p.text || '').join('') || ''
 }
 
 // best-effort cache (per runtime instance)
@@ -110,13 +115,15 @@ export async function POST(req: NextRequest) {
       .single()
     const subscriptionTier = (profile as any)?.subscription_tier || 'foundation'
 
-    // Only for recovery or empowerment
-    if (!(subscriptionTier === 'recovery' || subscriptionTier === 'empowerment')) {
-      return NextResponse.json({
-        error: 'AI Assist is available on Recovery and Empowerment plans',
-        upgrade_required: 'recovery',
-      }, { status: 403 })
-    }
+    // Fetch limit from feature_limits
+    const { data: limitRow } = await supabase
+      .from('feature_limits')
+      .select('limit_value')
+      .eq('subscription_tier', subscriptionTier)
+      .eq('feature_name', 'ai_interactions')
+      .eq('limit_type', 'monthly_count')
+      .maybeSingle()
+    const monthlyLimit = typeof limitRow?.limit_value === 'number' ? limitRow!.limit_value : -1
 
     // Quota check — RPC returns boolean: true = allowed
     if (monthlyLimit !== -1) {
@@ -174,7 +181,7 @@ Constraints:
 - abuse_types keys must be from: ${abuseTypes.join(', ')}
 - behavior_categories keys must be from: ${behaviorCategoryOptions.join(', ')}
 - confidence is 0-1. Include short evidence quotes when possible.
-- If text is too short/ambiguous, add a warning like "LOW_CONTEXT".`
+- If text is too short/ambiguous, add a warning like "short_text" with a user-friendly message.`
 
     const contents = [
       { role: 'user' as const, parts: [{ text }] }
@@ -251,9 +258,9 @@ Constraints:
 
     memoryCache.set(key, { result, ts: Date.now() })
     return NextResponse.json(result)
-  } catch (error) {
-    console.error('App Route suggest-metadata error:', error)
-    return NextResponse.json({ error: 'Failed to generate metadata suggestions' }, { status: 500 })
+  } catch (error: any) {
+    console.error('Suggest-metadata error:', error?.message || error)
+    return NextResponse.json({ error: 'Failed to generate metadata suggestions', detail: error?.message }, { status: 500 })
   }
 }
 

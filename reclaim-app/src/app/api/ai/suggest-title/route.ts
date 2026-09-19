@@ -30,12 +30,18 @@ async function geminiChat(prompt: string, model?: string): Promise<string> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.5, maxOutputTokens: 512 },
+      generationConfig: { temperature: 0.5, maxOutputTokens: 4096 },
     }),
   })
-  if (!resp.ok) throw new Error(`Gemini API error: ${resp.status} ${resp.statusText}`)
+  if (!resp.ok) {
+    const errBody = await resp.text().catch(() => '')
+    console.error('Gemini API error:', resp.status, errBody.slice(0, 300))
+    throw new Error(`Gemini API error: ${resp.status} ${resp.statusText}`)
+  }
   const json = await resp.json()
-  return json?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+  const parts = json?.candidates?.[0]?.content?.parts || []
+  const textParts = parts.filter((p: any) => !p.thought)
+  return textParts.map((p: any) => p.text || '').join('') || ''
 }
 
 async function checkFeatureLimit(userId: string, featureName: string, limitType: string) {
@@ -95,6 +101,16 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single()
     const subscriptionTier = (profile as any)?.subscription_tier || 'foundation'
+
+    // Fetch limit from feature_limits (configurable)
+    const { data: limitRow } = await supabase
+      .from('feature_limits')
+      .select('limit_value')
+      .eq('subscription_tier', subscriptionTier)
+      .eq('feature_name', 'ai_interactions')
+      .eq('limit_type', 'monthly_count')
+      .maybeSingle()
+    const monthlyLimit = typeof limitRow?.limit_value === 'number' ? limitRow!.limit_value : -1
 
     // Quota — check via RPC (returns boolean: true = allowed)
     if (monthlyLimit !== -1) {
@@ -182,9 +198,9 @@ If context is too thin, return a safe generic like ["Journal Entry"]. Ensure str
     memoryCache.set(key, { suggestions, ts: Date.now() })
 
     return NextResponse.json({ success: true, suggestions })
-  } catch (error) {
-    console.error('Suggest-title (app route) error:', error)
-    return NextResponse.json({ error: 'Failed to generate title suggestions' }, { status: 500 })
+  } catch (error: any) {
+    console.error('Suggest-title error:', error?.message || error)
+    return NextResponse.json({ error: 'Failed to generate title suggestions', detail: error?.message }, { status: 500 })
   }
 }
 

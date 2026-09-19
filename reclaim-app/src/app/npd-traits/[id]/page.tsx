@@ -141,7 +141,7 @@ export default function TraitDetailPage() {
             <ArrowLeft className="h-5 w-5 text-gray-600" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{trait.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{trait.name}</h1>
             <div className="flex gap-2 mt-2">
               <span className="px-3 py-1 text-sm rounded-full bg-purple-100 text-purple-700">
                 {trait.category}

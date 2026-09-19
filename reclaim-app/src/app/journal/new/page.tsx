@@ -187,6 +187,14 @@ export default function NewJournalEntryPage() {
   const [showBehaviorHelp, setShowBehaviorHelp] = useState(false)
   const [showWhatHelp, setShowWhatHelp] = useState(false)
 
+  // Fullscreen description editor state
+  const [showDescriptionFullscreen, setShowDescriptionFullscreen] = useState(false)
+  const [descriptionFullscreenText, setDescriptionFullscreenText] = useState('')
+  const [isDescriptionListening, setIsDescriptionListening] = useState(false)
+  const descriptionRecognitionRef = useRef<any>(null)
+  const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null)
+  const fullscreenTextareaRef = useRef<HTMLTextAreaElement>(null)
+
   const handleSectionToggle = (id: string, open: boolean) => {
     setOpenSections(prev => ({ ...prev, [id]: open }))
   }
@@ -344,10 +352,9 @@ export default function NewJournalEntryPage() {
     }
   }
 
-  // Debounced AI Assist metadata fetch (Recovery+ only)
+  // Debounced AI Assist metadata fetch
   useEffect(() => {
     if (!aiAssistEnabled) return
-    if (!isPaidUser()) return
     const text = [title, description, content].filter(Boolean).join('\n\n') || description || content
     if (!text || text.trim().length < 20) {
       // Clear if input too short
@@ -440,6 +447,60 @@ export default function NewJournalEntryPage() {
     }
   }, [aiAssistEnabled, title, description, content, subscriptionTier])
 
+  // Setup speech recognition for fullscreen description editor
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition
+      descriptionRecognitionRef.current = new SpeechRecognition()
+      descriptionRecognitionRef.current.continuous = true
+      descriptionRecognitionRef.current.interimResults = true
+      descriptionRecognitionRef.current.onresult = (event: any) => {
+        let transcript = ''
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript
+        }
+        setDescriptionFullscreenText(prev => (prev + ' ' + transcript).trim())
+      }
+      descriptionRecognitionRef.current.onerror = () => setIsDescriptionListening(false)
+      descriptionRecognitionRef.current.onend = () => setIsDescriptionListening(false)
+    }
+    return () => {
+      if (descriptionRecognitionRef.current) descriptionRecognitionRef.current.stop()
+    }
+  }, [])
+
+  // Focus fullscreen textarea when modal opens
+  useEffect(() => {
+    if (showDescriptionFullscreen && fullscreenTextareaRef.current) {
+      fullscreenTextareaRef.current.focus()
+    }
+  }, [showDescriptionFullscreen])
+
+  const toggleDescriptionListening = () => {
+    if (!descriptionRecognitionRef.current) return
+    if (isDescriptionListening) {
+      descriptionRecognitionRef.current.stop()
+      setIsDescriptionListening(false)
+    } else {
+      descriptionRecognitionRef.current.start()
+      setIsDescriptionListening(true)
+    }
+  }
+
+  const openDescriptionFullscreen = () => {
+    setDescriptionFullscreenText(description)
+    setShowDescriptionFullscreen(true)
+  }
+
+  const closeDescriptionFullscreen = () => {
+    setDescription(descriptionFullscreenText)
+    setShowDescriptionFullscreen(false)
+    if (isDescriptionListening && descriptionRecognitionRef.current) {
+      descriptionRecognitionRef.current.stop()
+      setIsDescriptionListening(false)
+    }
+  }
+
   // Check if mandatory fields are filled
   const areMandatoryFieldsFilled = () => {
     return title.trim().length > 0 && 
@@ -448,13 +509,6 @@ export default function NewJournalEntryPage() {
   }
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Prevent file upload if mandatory fields are not filled
-    if (!areMandatoryFieldsFilled()) {
-      toast.error('Please fill in the required fields (Date, Title, and Description) before uploading photos.')
-      e.target.value = '' // Reset the input
-      return
-    }
-
     const files = Array.from(e.target.files || [])
     
     files.forEach(file => {
@@ -502,12 +556,6 @@ export default function NewJournalEntryPage() {
   }
 
   const startAudioRecording = async () => {
-    // Prevent audio recording if mandatory fields are not filled
-    if (!areMandatoryFieldsFilled()) {
-      toast.error('Please fill in the required fields (Date, Title, and Description) before recording audio.')
-      return
-    }
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       const recorder = new MediaRecorder(stream)
@@ -547,9 +595,19 @@ export default function NewJournalEntryPage() {
       setAudioStream(stream)
       recorder.start()
       setIsRecording(true)
-    } catch (error) {
-      toast.error('Failed to start recording')
+    } catch (error: any) {
       console.error('Recording error:', error)
+      if (error?.name === 'NotAllowedError' || error?.permissionState === 'denied') {
+        toast.error('Microphone permission denied. Click the lock icon in your address bar and allow microphone access, then try again.')
+      } else if (error?.name === 'NotFoundError') {
+        toast.error('No microphone found. Please connect a microphone and try again.')
+      } else if (error?.name === 'NotReadableError') {
+        toast.error('Microphone is in use by another app. Close other apps using the mic and try again.')
+      } else if (!navigator.mediaDevices?.getUserMedia) {
+        toast.error('Audio recording is not supported in this browser. Try Chrome or Edge.')
+      } else {
+        toast.error('Failed to start recording. Please allow microphone access and try again.')
+      }
     }
   }
 
@@ -567,13 +625,6 @@ export default function NewJournalEntryPage() {
   }
 
   const handleAudioFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Prevent file upload if mandatory fields are not filled
-    if (!areMandatoryFieldsFilled()) {
-      toast.error('Please fill in the required fields (Date, Title, and Description) before uploading audio files.')
-      e.target.value = '' // Reset the input
-      return
-    }
-
     const files = Array.from(e.target.files || [])
     if (!files.length) return
     const audioFiles = files.filter(f => f.type.startsWith('audio/'))
@@ -1153,6 +1204,47 @@ export default function NewJournalEntryPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
+      {/* Fullscreen Description Editor */}
+      {showDescriptionFullscreen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-0 sm:p-4">
+          <div className="bg-white rounded-none sm:rounded-lg w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">What happened?</h2>
+              <button onClick={closeDescriptionFullscreen} className="p-2 hover:bg-gray-100 rounded-lg">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
+              <textarea
+                ref={fullscreenTextareaRef}
+                value={descriptionFullscreenText}
+                onChange={(e) => setDescriptionFullscreenText(e.target.value)}
+                placeholder="Describe what happened in your own words... Be as detailed as you're comfortable sharing."
+                className="w-full h-full min-h-[250px] sm:min-h-[300px] p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-base sm:text-lg"
+              />
+            </div>
+            <div className="p-4 border-t bg-gray-50 flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3">
+              <button
+                type="button"
+                onClick={toggleDescriptionListening}
+                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                  isDescriptionListening ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {isDescriptionListening ? <><MicOff className="h-5 w-5" />Stop Recording</> : <><Mic className="h-5 w-5" />Voice Input</>}
+              </button>
+              <button
+                type="button"
+                onClick={closeDescriptionFullscreen}
+                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 px-4 md:px-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -1283,10 +1375,12 @@ export default function NewJournalEntryPage() {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  onFocus={openDescriptionFullscreen}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors resize-none text-base"
-                  placeholder="Example: Partner denied saying hurtful things I have in messages, insisted I 'imagined it,' and said I'm too sensitive. I started doubting my memory despite the proof."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors resize-none text-base cursor-pointer"
+                  placeholder="Click to describe what happened..."
                   required
+                  readOnly
                 />
               </div>
 
@@ -1306,7 +1400,7 @@ export default function NewJournalEntryPage() {
                 </div>
               )}
 
-              {/* AI Assist (Recovery+) */}
+              {/* AI Assist */}
               <div className="mt-4 border-t pt-4">
                 {/* Row 1: Heading + switch */}
                 <div className="flex items-center justify-between">
@@ -1316,9 +1410,8 @@ export default function NewJournalEntryPage() {
                     role="switch"
                     aria-checked={aiAssistEnabled}
                     aria-label="Enable AI Assist"
-                    disabled={!isPaidUser()}
                     onClick={() => setAiAssistEnabled(!aiAssistEnabled)}
-                    className={`inline-flex items-center gap-2 select-none ${!isPaidUser() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className="inline-flex items-center gap-2 select-none"
                   >
                     <span
                       className={`relative inline-flex h-6 w-11 rounded-full transition-colors duration-200 ${aiAssistEnabled ? 'bg-indigo-600' : 'bg-gray-300'}`}
@@ -1336,12 +1429,6 @@ export default function NewJournalEntryPage() {
                   Suggests a title and likely behavior patterns based on your description. You can edit everything before saving.
                 </p>
 
-                {!isPaidUser() && (
-                  <p className="mt-2 text-xs text-purple-700 bg-purple-50 border border-purple-200 rounded px-3 py-2">
-                    AI Assist is available on Recovery and Empowerment plans. Upgrade to use automatic suggestions.
-                  </p>
-                )}
-
                 {aiAssistEnabled && (
                   <div className="mt-3 space-y-3">
                     {aiError && (
@@ -1351,7 +1438,7 @@ export default function NewJournalEntryPage() {
                       <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
                         <ul className="list-disc ml-5">
                           {aiWarnings.map((w, i) => (
-                            <li key={i}>{w}</li>
+                            <li key={i}>{w === 'LOW_CONTEXT' || w === 'short_text' ? 'Your description is short — adding more detail can improve suggestions.' : w}</li>
                           ))}
                         </ul>
                       </div>

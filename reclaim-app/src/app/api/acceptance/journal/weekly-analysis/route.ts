@@ -60,7 +60,8 @@ Keep response concise and actionable.`;
     }
 
     const data = await response.json();
-    const analysis = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const allParts = data.candidates?.[0]?.content?.parts || [];
+    const analysis = allParts.filter((p: any) => !p.thought).map((p: any) => p.text || '').join('');
 
     return NextResponse.json({ 
       analysis,

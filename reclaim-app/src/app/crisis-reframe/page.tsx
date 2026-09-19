@@ -210,10 +210,10 @@ export default function CrisisReframePage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-4xl mx-auto p-6">
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-8">
           <div className="flex items-center gap-3">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Crisis Reframe</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Crisis Reframe</h1>
               <p className="text-gray-600 mt-2">Immediate support when you're in panic</p>
             </div>
             <button

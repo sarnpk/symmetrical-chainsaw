@@ -114,6 +114,12 @@ export default function DashboardLayout({ children, user, profile }: DashboardLa
     }
   }, [])
 
+  useEffect(() => {
+    const handleOpenSidebar = () => setSidebarOpen(true)
+    window.addEventListener('open-sidebar', handleOpenSidebar)
+    return () => window.removeEventListener('open-sidebar', handleOpenSidebar)
+  }, [])
+
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) {

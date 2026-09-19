@@ -232,7 +232,7 @@ export default function StonewallPage() {
 
               <div>
                 <label className="block text-sm font-medium mb-2">Duration</label>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <input
                     type="number"
                     value={durationValue}

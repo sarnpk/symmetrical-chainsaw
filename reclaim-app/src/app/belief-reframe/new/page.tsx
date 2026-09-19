@@ -107,7 +107,7 @@ export default function NewBeliefPage() {
         </Link>
 
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Add a Belief to Challenge</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Add a Belief to Challenge</h1>
           <p className="text-gray-600 mt-2">Identify a false belief you want to work on</p>
         </div>
 

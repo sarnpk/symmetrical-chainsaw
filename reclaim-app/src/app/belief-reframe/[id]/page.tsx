@@ -140,7 +140,7 @@ export default function BeliefDetailPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex justify-between items-center print:hidden">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 print:hidden">
           <Link href="/belief-reframe" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
             <ArrowLeft className="h-4 w-4" />
             Back to Beliefs
@@ -155,7 +155,7 @@ export default function BeliefDetailPage() {
         </div>
 
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{belief.belief_text}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{belief.belief_text}</h1>
           <p className="text-gray-600 mt-2">Created {new Date(belief.created_at).toLocaleDateString()}</p>
         </div>
 

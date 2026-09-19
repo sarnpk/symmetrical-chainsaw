@@ -196,7 +196,7 @@ export default function CrisisToolkitPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
         <div className="max-w-4xl mx-auto pt-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Crisis Toolkit</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Crisis Toolkit</h1>
             <p className="text-gray-600">Quick support when you need it most</p>
             <a href="/crisis-toolkit/help" className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1"><Wrench className="h-4 w-4" />How to use this toolkit</a>
             {usage && (

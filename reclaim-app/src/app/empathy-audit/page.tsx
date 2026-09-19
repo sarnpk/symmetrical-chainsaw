@@ -144,8 +144,8 @@ export default function EmpathyAuditPage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-4xl mx-auto p-6">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-3xl font-bold">Empathy Audit</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold">Empathy Audit</h1>
           <Link href="/docs/EMPATHY_AUDIT_USER_GUIDE.html" target="_blank">
             <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
               <HelpCircle className="h-5 w-5" />
@@ -155,7 +155,7 @@ export default function EmpathyAuditPage() {
         </div>
         <p className="text-gray-600 mb-6">Where is your empathy going? Redirect it toward your children and yourself.</p>
 
-        <div className="flex gap-2 mb-6 border-b">
+        <div className="flex gap-2 mb-6 border-b flex-wrap">
           <button
             onClick={() => setActiveTab('situations')}
             className={`px-4 py-2 font-medium border-b-2 transition-colors ${

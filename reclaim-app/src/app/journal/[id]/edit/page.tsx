@@ -492,6 +492,10 @@ Upgrade to {upgradeInfo.tier}
 
   const startAudioRecording = async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        toast.error('Audio recording is not supported in this browser. Try Chrome or Edge.')
+        return
+      }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       const recorder = new MediaRecorder(stream)
       const chunks: Blob[] = []
@@ -524,8 +528,17 @@ Upgrade to {upgradeInfo.tier}
       setAudioStream(stream)
       recorder.start()
       setIsRecording(true)
-    } catch (error) {
-      toast.error('Failed to start recording')
+    } catch (error: any) {
+      console.error('Recording error:', error)
+      if (error?.name === 'NotAllowedError' || error?.permissionState === 'denied') {
+        toast.error('Microphone permission denied. Click the lock icon in your address bar and allow microphone access, then try again.')
+      } else if (error?.name === 'NotFoundError') {
+        toast.error('No microphone found. Please connect a microphone and try again.')
+      } else if (error?.name === 'NotReadableError') {
+        toast.error('Microphone is in use by another app. Close other apps using the mic and try again.')
+      } else {
+        toast.error('Failed to start recording. Please allow microphone access and try again.')
+      }
     }
   }
 

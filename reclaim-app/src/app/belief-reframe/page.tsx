@@ -46,12 +46,6 @@ export default function BeliefReframePage() {
         .single()
       setProfile(profile)
 
-      if (profile?.subscription_tier === 'foundation') {
-        toast.error('Belief Reframe requires Recovery or Empowered tier')
-        router.push('/dashboard')
-        return
-      }
-
       const response = await fetch('/api/belief-reframe')
       const data = await response.json()
       setBeliefs(data.beliefs || [])
@@ -70,22 +64,6 @@ export default function BeliefReframePage() {
 
   if (!user || !profile) return null
 
-  if (profile.subscription_tier === 'foundation') {
-    return (
-      <DashboardLayout user={user} profile={profile}>
-        <Card className="text-center py-12">
-          <CardContent>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Recovery Tier Feature</h2>
-            <p className="text-gray-600 mb-6">Belief Reframe is available on Recovery and Empowered tiers.</p>
-            <Link href="/subscription">
-              <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700">Upgrade Now</button>
-            </Link>
-          </CardContent>
-        </Card>
-      </DashboardLayout>
-    )
-  }
-
   const activeBeliefs = beliefs.filter(b => b.status === 'active')
   const resolvedBeliefs = beliefs.filter(b => b.status === 'resolved')
 
@@ -95,7 +73,7 @@ export default function BeliefReframePage() {
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-3">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Belief Reframe Journey</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Belief Reframe Journey</h1>
               <p className="text-gray-600 mt-2">Challenge false beliefs installed by abuse</p>
             </div>
             <button
@@ -146,7 +124,7 @@ export default function BeliefReframePage() {
                       <Link key={belief.id} href={`/belief-reframe/${belief.id}`}>
                         <Card className="hover:shadow-lg transition-all cursor-pointer hover:border-green-300">
                           <CardHeader>
-                            <div className="flex justify-between items-start">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
                               <div className="flex-1">
                                 <CardTitle className="text-lg">{belief.belief_text}</CardTitle>
                                 <CardDescription className="mt-2">

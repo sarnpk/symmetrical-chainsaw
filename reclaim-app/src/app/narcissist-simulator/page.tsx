@@ -561,7 +561,7 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
                   <span className="font-medium">Type:</span> {NARCISSIST_TYPES.find(t => t.id === narcissistType)?.label} - 
                   <span className="font-medium ml-2">Scenario:</span> {SCENARIOS.find(s => s.id === scenario)?.label}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={predictNextMove}
                     disabled={messages.length < 2 || predictingLoading}
@@ -818,7 +818,7 @@ function NarcissistSimulatorContent({ user, profile }: { user: SupabaseUser; pro
                           )}
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-wrap">
                           <button
                             onClick={() => loadOldSession(session)}
                             className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm flex items-center gap-2"

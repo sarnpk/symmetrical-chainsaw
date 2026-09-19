@@ -11,7 +11,7 @@ function createSupabase() {
   )
 }
 
-async function requireTier(supabase: any, minTier: string = 'recovery') {
+async function requireTier(supabase: any, minTier: string = 'foundation') {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
   const { data: profile } = await supabase.from('profiles').select('subscription_tier').eq('id', user.id).single()

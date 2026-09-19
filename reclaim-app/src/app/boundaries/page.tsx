@@ -145,10 +145,10 @@ export default function BoundariesPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Boundaries</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Boundaries</h1>
             <p className="text-gray-600 mt-1">Create and track your personal boundaries</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value as any)}

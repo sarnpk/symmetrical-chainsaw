@@ -98,7 +98,7 @@ export async function POST(req: Request) {
       .eq('subscription_tier', subscriptionTier)
       .eq('feature_name', 'ai_interactions')
       .eq('limit_type', 'monthly_count')
-      .single()
+      .maybeSingle()
     const monthlyLimit = typeof limitRow?.limit_value === 'number' ? limitRow!.limit_value : -1
 
     if (monthlyLimit !== -1) {

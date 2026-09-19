@@ -320,7 +320,7 @@ export default function UrgeSurfingPage() {
             )}
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setShowForm(!showForm)}
               className="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 flex items-center justify-center gap-2 font-medium"

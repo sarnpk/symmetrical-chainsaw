@@ -58,7 +58,8 @@ Be specific and actionable.`;
     }
 
     const data = await response.json();
-    const patterns = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const allParts = data.candidates?.[0]?.content?.parts || [];
+    const patterns = allParts.filter((p: any) => !p.thought).map((p: any) => p.text || '').join('');
 
     return NextResponse.json({ 
       patterns,

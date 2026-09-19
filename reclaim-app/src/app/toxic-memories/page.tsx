@@ -159,8 +159,15 @@ export default function ToxicMemoriesPage() {
       }, 1000)
       
       toast.success('Recording started')
-    } catch (error) {
-      toast.error('Microphone access denied')
+    } catch (error: any) {
+      console.error('Recording error:', error)
+      if (error?.name === 'NotAllowedError' || error?.permissionState === 'denied') {
+        toast.error('Microphone permission denied. Click the lock icon in your address bar and allow microphone access, then try again.')
+      } else if (error?.name === 'NotFoundError') {
+        toast.error('No microphone found. Please connect a microphone and try again.')
+      } else {
+        toast.error('Failed to start recording. Please allow microphone access and try again.')
+      }
     }
   }
 
@@ -234,12 +241,6 @@ export default function ToxicMemoriesPage() {
         .single()
       setProfile(profile)
 
-      if (profile?.subscription_tier === 'foundation') {
-        toast.error('Toxic Memory Journal requires Recovery or Empowered tier')
-        router.push('/dashboard')
-        return
-      }
-
       await loadMemories()
       setLoading(false)
     }
@@ -310,22 +311,6 @@ export default function ToxicMemoriesPage() {
   }
 
   if (!user || !profile) return null
-
-  if (profile.subscription_tier === 'foundation') {
-    return (
-      <DashboardLayout user={user} profile={profile}>
-        <Card className="text-center py-12">
-          <CardContent>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Recovery Tier Feature</h2>
-            <p className="text-gray-600 mb-6">Toxic Memory Journal is available on Recovery and Empowered tiers.</p>
-            <Link href="/subscription">
-              <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700">Upgrade Now</button>
-            </Link>
-          </CardContent>
-        </Card>
-      </DashboardLayout>
-    )
-  }
 
   return (
     <DashboardLayout user={user} profile={profile}>
@@ -467,7 +452,7 @@ export default function ToxicMemoriesPage() {
               <p className="text-sm sm:text-base text-gray-600 mt-2">Quick snapshots of toxic incidents - brief notes with evidence</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setShowForm(!showForm)}
               className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-2 whitespace-nowrap"
@@ -546,7 +531,7 @@ export default function ToxicMemoriesPage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-sm font-medium text-gray-700">Add Tags (Optional)</label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <button
                       onClick={() => setShowDiscardGuide(true)}
                       className="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1"
@@ -670,7 +655,7 @@ export default function ToxicMemoriesPage() {
                           {new Date(memory.memory_date).toLocaleDateString()}
                         </span>
                         {memory.tags && memory.tags.length > 0 && (
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 flex-wrap">
                             {memory.tags.map((tag: string) => (
                               <span key={tag} className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">
                                 {tag.replace('_', ' ')}

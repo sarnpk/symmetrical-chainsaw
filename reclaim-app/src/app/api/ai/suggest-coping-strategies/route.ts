@@ -58,7 +58,8 @@ Keep items actionable and safe. Avoid clinical claims or diagnoses. Limit to 3-5
     }
 
     const data = await resp.json()
-    const text: string = data?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    const allParts = data?.candidates?.[0]?.content?.parts || []
+    const text: string = allParts.filter((p: any) => !p.thought).map((p: any) => p.text || '').join('') || ''
 
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {

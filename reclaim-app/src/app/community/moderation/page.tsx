@@ -92,7 +92,7 @@ export default function ModerationPage() {
           </div>
         </div>
 
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 flex-wrap">
           {['pending', 'reviewed', 'resolved', 'dismissed'].map(s => (
             <button key={s} onClick={() => setFilter(s)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === s ? 'bg-indigo-600 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
               {s.charAt(0).toUpperCase() + s.slice(1)}

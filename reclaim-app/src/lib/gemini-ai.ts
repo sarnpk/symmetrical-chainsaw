@@ -216,7 +216,9 @@ Focus on:
   }
 
   private extractTextFromResponse(response: GeminiResponse): string {
-    return response.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated'
+    const parts = response.candidates?.[0]?.content?.parts || []
+    const textParts = parts.filter((p: any) => !p.thought)
+    return textParts.map((p: any) => p.text || '').join('') || 'No response generated'
   }
 
   private getSystemPrompt(context: string, preferredLanguage?: string, userMessage?: string): string {

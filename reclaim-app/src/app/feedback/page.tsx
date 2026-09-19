@@ -97,7 +97,7 @@ export default function FeedbackPage() {
     <DashboardLayout user={user} profile={profile}>
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Feature Feedback</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Feature Feedback</h1>
           <p className="text-gray-600 mt-2">Help us improve by sharing your experience</p>
         </div>
 

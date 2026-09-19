@@ -10,7 +10,7 @@ export default function CrisisToolkitHelpPage() {
         </Link>
 
         <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
-          <h1 className="text-3xl font-bold text-indigo-600 border-b-3 border-indigo-600 pb-3 mb-6">Crisis Toolkit Guide</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-indigo-600 border-b-3 border-indigo-600 pb-3 mb-6">Crisis Toolkit Guide</h1>
           <p className="text-lg font-semibold text-gray-800 mb-4">Quick support when you need it most.</p>
           <p className="text-gray-600 mb-6">Evidence-based grounding techniques for anxiety, depression, PTSD, social anxiety, and OCD.</p>
 

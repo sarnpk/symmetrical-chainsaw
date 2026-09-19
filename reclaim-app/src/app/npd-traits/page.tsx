@@ -137,7 +137,7 @@ export default function NPDTraitsPage() {
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setCategoryFilter('all')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${

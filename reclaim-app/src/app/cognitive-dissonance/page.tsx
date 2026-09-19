@@ -98,9 +98,9 @@ export default function CognitiveDissonancePage() {
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-6">
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Cognitive Dissonance Alerts</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Cognitive Dissonance Alerts</h1>
             <p className="text-gray-600 mt-2">Detect conflicting beliefs across your journals</p>
           </div>
           <button

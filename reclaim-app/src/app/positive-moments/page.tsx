@@ -10,7 +10,6 @@ import VoiceTextInput from '@/components/VoiceTextInput'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
-import Link from 'next/link'
 import { useRef } from 'react'
 
 export default function PositiveMomentsPage() {
@@ -107,12 +106,6 @@ export default function PositiveMomentsPage() {
         .single()
       setProfile(profile)
 
-      if (profile?.subscription_tier === 'foundation') {
-        toast.error('Positive Moments requires Recovery or Empowered tier')
-        router.push('/dashboard')
-        return
-      }
-
       await loadMoments()
       setLoading(false)
     }
@@ -163,52 +156,36 @@ export default function PositiveMomentsPage() {
 
   if (!user || !profile) return null
 
-  if (profile.subscription_tier === 'foundation') {
-    return (
-      <DashboardLayout user={user} profile={profile}>
-        <Card className="text-center py-12">
-          <CardContent>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Recovery Tier Feature</h2>
-            <p className="text-gray-600 mb-6">Positive Moments Journal is available on Recovery and Empowered tiers.</p>
-            <Link href="/subscription">
-              <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700">Upgrade Now</button>
-            </Link>
-          </CardContent>
-        </Card>
-      </DashboardLayout>
-    )
-  }
-
   return (
     <DashboardLayout user={user} profile={profile}>
       <div className="space-y-6">
-        <div className="flex justify-between items-start">
-          <div className="flex items-center gap-3">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Positive Moments & Gratitude</h1>
-              <p className="text-gray-600 mt-2">Capture good moments and daily gratitude to build counter-evidence</p>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">Positive Moments & Gratitude</h1>
+              <p className="text-gray-600 mt-2 text-sm sm:text-base">Capture good moments and daily gratitude to build counter-evidence</p>
             </div>
             <button
               onClick={() => window.open('/docs/GRATITUDE_MOMENTS_USER_GUIDE.html', '_blank')}
-              className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
               title="View Gratitude & Moments User Guide"
             >
               <HelpCircle className="h-5 w-5" />
             </button>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0">
             <button
               onClick={() => { setEntryType('gratitude'); setShowForm(true); }}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
+              className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2 text-sm sm:text-base"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
               Daily Gratitude
             </button>
             <button
               onClick={() => { setEntryType('moment'); setShowForm(true); }}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+              className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2 text-sm sm:text-base"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
               Add Moment
             </button>
           </div>
@@ -230,8 +207,8 @@ export default function PositiveMomentsPage() {
         )}
 
         {showForm && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div className="bg-white rounded-t-lg sm:rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
               <div className="flex items-center justify-between p-4 border-b">
                 <h2 className="text-xl font-bold text-gray-900">Capture a Positive Moment</h2>
                 <button
@@ -368,7 +345,7 @@ export default function PositiveMomentsPage() {
                 </div>
               </div>
 
-              <div className="p-4 border-t bg-gray-50 flex items-center justify-between gap-3">
+              <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))] border-t bg-gray-50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                 <button
                   onClick={toggleListening}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium ${

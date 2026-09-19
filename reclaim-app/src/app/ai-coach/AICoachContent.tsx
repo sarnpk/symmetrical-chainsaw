@@ -12,12 +12,15 @@ import {
   Zap,
   ChevronRight,
   ArrowDown,
+  ArrowLeft,
+  Menu,
   Trash2,
   Volume2,
   VolumeX,
   Star,
   X
 } from 'lucide-react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 
@@ -771,51 +774,9 @@ export default function AICoachContent() {
   }, [messages, speakingMessageId])
 
   return (
-    <div className="fixed inset-0 lg:left-64 flex flex-col bg-gray-50 overflow-hidden">
+    <div className="flex flex-col bg-gray-50 overflow-hidden -m-4 sm:-m-6 lg:-m-8 lg:-mt-12 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3rem)]">
       {/* SR-only live region for copy feedback */}
       <div className="sr-only" role="status" aria-live="polite">{copyStatus}</div>
-      {/* Compact Mobile Header */}
-      <div className="bg-white border-b border-gray-200 px-3 py-2 shrink-0 mt-16 lg:mt-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
-            <Bot className="h-5 w-5 text-indigo-600 flex-shrink-0" />
-            <div className="min-w-0">
-              <h1 className="text-lg font-bold text-gray-900 flex items-center gap-1">
-                AI Coach
-                <span className="inline-flex items-center gap-1 text-xs font-medium text-green-700">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500"></span>
-                  <span className="hidden sm:inline">Online</span>
-                </span>
-              </h1>
-            </div>
-          </div>
-          
-          {/* Mobile Controls */}
-          <div className="flex items-center gap-1">
-            {/* Auto-read toggle - mobile */}
-            <label className="flex items-center cursor-pointer" title="Auto-read responses">
-              <input
-                type="checkbox"
-                checked={autoReadEnabled}
-                onChange={(e) => setAutoReadEnabled(e.target.checked)}
-                className="sr-only"
-              />
-              <Volume2 className={`w-4 h-4 ${autoReadEnabled ? 'text-indigo-600' : 'text-gray-400'}`} />
-            </label>
-            
-            {/* Usage indicator - mobile */}
-            {usageInfo && (
-              <div className="flex items-center gap-1 text-xs text-gray-600">
-                <Zap className="h-3 w-3 text-indigo-600" />
-                <span className="hidden sm:inline">
-                  {usageInfo.monthly_limit === -1 ? 'Unlimited' : `${usageInfo.remaining}/${usageInfo.monthly_limit}`}
-                </span>
-                <span className="sm:hidden">{usageInfo.remaining}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
 
       {/* Compact Toolbar */}
       <div className="bg-gray-50 border-b border-gray-200 px-3 py-2 shrink-0">
