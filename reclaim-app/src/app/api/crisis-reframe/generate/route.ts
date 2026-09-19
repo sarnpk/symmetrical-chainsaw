@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check usage limits
-    const canUse = await trackUsage(user.id, 'crisis_reframe')
+    const canUse = await trackUsage(user.id, 'ai_interactions')
     if (!canUse.allowed) {
       return NextResponse.json(
         { 

@@ -54,7 +54,7 @@ Provide confidence scores and severity rating based on the described behaviors.`
 export async function POST(request: Request) {
   try {
     // Check usage and authenticate
-    const usageCheck = await checkAndRecordAIUsage('behavior_description')
+    const usageCheck = await checkAndRecordAIUsage('ai_interactions', 'narcissist_detector')
     if ('error' in usageCheck) {
       return NextResponse.json({ error: usageCheck.error }, { status: usageCheck.status })
     }

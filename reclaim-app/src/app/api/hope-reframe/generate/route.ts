@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     // Check usage limits (non-blocking — if tracking fails, allow the request)
     let canUse = { allowed: true as boolean, upgrade_required: undefined as string | undefined }
     try {
-      const result = await trackUsage(user.id, 'hope_reframe')
+      const result = await trackUsage(user.id, 'ai_interactions')
       canUse = result
     } catch (trackingError) {
       console.error('Usage tracking error (allowing request):', trackingError)

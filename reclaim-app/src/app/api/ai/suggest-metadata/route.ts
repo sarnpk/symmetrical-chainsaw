@@ -118,23 +118,19 @@ export async function POST(req: NextRequest) {
       }, { status: 403 })
     }
 
-    // Quota check
-    const monthlyLimit = (AI_LIMITS as any)[subscriptionTier]
-    let currentUsage = 0
+    // Quota check — RPC returns boolean: true = allowed
     if (monthlyLimit !== -1) {
-      const { data: limitCheck, error: limitError } = await checkFeatureLimit(
+      const { data: allowed, error: limitError } = await checkFeatureLimit(
         user.id,
         'ai_interactions',
         'monthly_count'
       )
       if (limitError) return NextResponse.json({ error: 'Failed to check usage limits' }, { status: 500 })
-      currentUsage = (limitCheck as any)?.current_usage || 0
-      if (limitCheck && currentUsage >= monthlyLimit) {
+      if (allowed === false) {
         return NextResponse.json({
           error: 'Monthly AI interaction limit reached',
           limit: monthlyLimit,
-          current_usage: currentUsage,
-          upgrade_required: subscriptionTier === 'recovery' ? 'empowerment' : 'empowerment'
+          upgrade_required: subscriptionTier === 'foundation' ? 'recovery' : 'empowerment'
         }, { status: 429 })
       }
     }

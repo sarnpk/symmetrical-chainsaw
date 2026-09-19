@@ -5,7 +5,7 @@ import { checkAndRecordAIUsage } from '@/lib/usage-tracking';
 
 export async function POST(request: Request) {
   // Check usage and authenticate
-  const usageCheck = await checkAndRecordAIUsage('message_analysis');
+  const usageCheck = await checkAndRecordAIUsage('ai_interactions', 'manipulation_decoder');
   if ('error' in usageCheck) {
     return NextResponse.json({ error: usageCheck.error }, { status: usageCheck.status });
   }

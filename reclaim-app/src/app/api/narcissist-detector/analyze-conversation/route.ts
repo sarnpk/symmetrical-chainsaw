@@ -80,7 +80,7 @@ Be specific with examples from the conversation.`
 export async function POST(request: Request) {
   try {
     // Check usage and authenticate
-    const usageCheck = await checkAndRecordAIUsage('conversation_analysis')
+    const usageCheck = await checkAndRecordAIUsage('ai_interactions', 'narcissist_detector')
     if ('error' in usageCheck) {
       return NextResponse.json({ error: usageCheck.error }, { status: usageCheck.status })
     }

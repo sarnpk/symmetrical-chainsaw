@@ -153,7 +153,7 @@ export default function DashboardV3({ user, profile, recentEntries }: DashboardV
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2" data-tour="quick-actions">
         {quickActions.map((action) => (
           <Link key={action.href} href={action.href}>
             <div className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-all cursor-pointer">

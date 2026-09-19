@@ -52,7 +52,7 @@ const SCENARIO_CONTEXTS = {
 export async function POST(request: NextRequest) {
   try {
     // Check usage and get user
-    const usageResult = await checkAndRecordAIUsage('narcissist_simulator', 'start')
+    const usageResult = await checkAndRecordAIUsage('ai_interactions', 'narcissist_simulator')
     if ('error' in usageResult) {
       return NextResponse.json({ error: usageResult.error }, { status: usageResult.status })
     }

@@ -32,27 +32,28 @@ export async function POST(req: NextRequest) {
 
     const tier = profile?.subscription_tier || 'foundation'
     
-    const { data: usageData } = await supabase
-      .from('usage_tracking')
-      .select('usage_count')
-      .eq('user_id', user.id)
-      .eq('feature_name', 'urge_surfing_ai_analysis')
-      .gte('usage_date', new Date(new Date().setHours(0, 0, 0, 0)).toISOString())
-      .single()
+    // Check if user has reached their limit
+    const { data: allowed } = await supabase.rpc('check_feature_limit', {
+      p_user_id: user.id,
+      p_feature_name: 'ai_interactions',
+      p_limit_type: 'monthly_count'
+    })
 
-    const currentUsage = usageData?.usage_count || 0
-    const limits: Record<string, number> = {
-      foundation: 0,
-      recovery: 5,
-      empowerment: 20
-    }
-
-    if (currentUsage >= limits[tier]) {
+    if (allowed === false) {
       return NextResponse.json({ 
-        error: `Daily limit reached. ${tier === 'foundation' ? 'Upgrade to Recovery tier for AI analysis.' : `You have ${limits[tier]} analyses per day.`}`,
+        error: 'Monthly AI interaction limit reached',
         requiresUpgrade: tier === 'foundation'
       }, { status: 403 })
     }
+
+    // Record usage
+    await supabase.rpc('record_feature_usage', {
+      p_user_id: user.id,
+      p_feature_name: 'ai_interactions',
+      p_usage_type: 'monthly_count',
+      p_usage_count: 1,
+      p_metadata: { feature: 'urge_surfing_ai_analysis' }
+    })
 
     const { data: sessions } = await supabase
       .from('urge_surfing_sessions')

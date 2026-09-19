@@ -8,12 +8,6 @@ const supabase = createClient(
 )
 
 // Local constants and helpers to avoid cross-package imports
-const AI_LIMITS = {
-  foundation: 10,
-  recovery: 100,
-  empowerment: -1,
-} as const
-
 const DEFAULT_FREE_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash'
 const DEFAULT_PAID_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash'
 
@@ -102,11 +96,9 @@ export async function POST(request: Request) {
       .single()
     const subscriptionTier = (profile as any)?.subscription_tier || 'foundation'
 
-    // Quota
-    const monthlyLimit = (AI_LIMITS as any)[subscriptionTier]
-    let currentUsage = 0
+    // Quota — check via RPC (returns boolean: true = allowed)
     if (monthlyLimit !== -1) {
-      const { data: limitCheck, error: limitError } = await checkFeatureLimit(
+      const { data: allowed, error: limitError } = await checkFeatureLimit(
         user.id,
         'ai_interactions',
         'monthly_count'
@@ -114,12 +106,10 @@ export async function POST(request: Request) {
       if (limitError) {
         return NextResponse.json({ error: 'Failed to check usage limits' }, { status: 500 })
       }
-      currentUsage = (limitCheck as any)?.current_usage || 0
-      if (limitCheck && currentUsage >= monthlyLimit) {
+      if (allowed === false) {
         return NextResponse.json({
           error: 'Monthly AI interaction limit reached',
           limit: monthlyLimit,
-          current_usage: currentUsage,
           upgrade_required: subscriptionTier === 'foundation' ? 'recovery' : 'empowerment'
         }, { status: 429 })
       }

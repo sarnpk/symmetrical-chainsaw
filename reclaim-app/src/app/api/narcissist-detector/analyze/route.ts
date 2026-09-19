@@ -54,7 +54,7 @@ Be specific with examples from the text. Provide confidence scores 0-100 for all
 export async function POST(request: Request) {
   try {
     // Check usage and authenticate
-    const usageCheck = await checkAndRecordAIUsage('message_analysis')
+    const usageCheck = await checkAndRecordAIUsage('ai_interactions', 'narcissist_detector')
     if ('error' in usageCheck) {
       return NextResponse.json({ error: usageCheck.error }, { status: usageCheck.status })
     }

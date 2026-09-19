@@ -290,7 +290,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
 
   const startPractice = async () => {
     // Enforce per-tier usage limits via RPC; if no limit configured, checkFeatureLimit returns true
-    const { data: allowed, error } = await checkFeatureLimit(userId, 'grey_rock_practice', 'monthly_count')
+    const { data: allowed, error } = await checkFeatureLimit(userId, 'ai_interactions', 'monthly_count')
     if (error) {
       console.error('Grey Rock: failed to check feature limit', error)
     }
@@ -328,7 +328,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
     setSession(sessionRow || null)
 
     // Record session start (counts toward monthly usage)
-    await recordFeatureUsage(userId, 'grey_rock_practice', 'monthly_count', 1, {
+    await recordFeatureUsage(userId, 'ai_interactions', 'monthly_count', 1, {
       event: 'start',
       scenario_id: randomScenario.id,
     })
@@ -357,7 +357,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
           metadata: { scenario_title: currentScenario.title }
         })
       }
-      await recordFeatureUsage(userId, 'grey_rock_practice', 'monthly_count', 0, {
+      await recordFeatureUsage(userId, 'ai_interactions', 'monthly_count', 0, {
         event: 'attempt',
         scenario_id: currentScenario.id,
         selected: response,
@@ -396,7 +396,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
     setTipsExpanded(false)
     setShowWhyPanel(false)
     // Track moving to next scenario (no count increment)
-    await recordFeatureUsage(userId, 'grey_rock_practice', 'monthly_count', 0, {
+    await recordFeatureUsage(userId, 'ai_interactions', 'monthly_count', 0, {
       event: 'next_scenario',
       scenario_id: randomScenario.id,
     })
@@ -975,7 +975,7 @@ export default function GreyRockContent({ userId, subscriptionTier }: GreyRockCo
                     sessionStartRef.current = null
                     stopSpeech()
                     const duration = startedAt ? Date.now() - startedAt : undefined
-                    await recordFeatureUsage(userId, 'grey_rock_practice', 'monthly_count', 0, {
+                    await recordFeatureUsage(userId, 'ai_interactions', 'monthly_count', 0, {
                       event: 'end',
                       duration_ms: duration,
                       score: score,
