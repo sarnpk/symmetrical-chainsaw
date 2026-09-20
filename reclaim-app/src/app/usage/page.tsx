@@ -10,8 +10,7 @@ import {
   BarChart3, 
   Calendar, 
   Download,
-  RefreshCw,
-  Info
+  RefreshCw
 } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
@@ -208,54 +207,6 @@ export default function UsagePage() {
                 <p className="text-sm">Start using features to see your activity here</p>
               </div>
             )}
-          </CardContent>
-        </Card>
-
-        {/* Subscription Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Info className="h-5 w-5" />
-              Subscription Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <h4 className="font-medium text-gray-900 mb-2">Foundation (Free)</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>150 AI interactions/month</li>
-                  <li>No audio transcription</li>
-                  <li>90 journal entries/month</li>
-                  <li>Basic features only</li>
-                  <li>Community support</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-gray-900 mb-2">Recovery ($15.00/month)</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>750 AI interactions/month</li>
-                  <li>60 minutes transcription/month</li>
-                  <li>450 journal entries/month</li>
-                  <li>Recovery tools (Grey Rock, BIFF, etc.)</li>
-                  <li>Pattern analysis (300/month)</li>
-                  <li>Priority support</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-gray-900 mb-2">Empowerment ($24.99/month)</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>Unlimited AI interactions</li>
-                  <li>300 minutes transcription/month</li>
-                  <li>Unlimited journal entries</li>
-                  <li>All recovery + advanced tools</li>
-                  <li>Unlimited pattern analysis</li>
-                  <li>Premium support</li>
-                </ul>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>

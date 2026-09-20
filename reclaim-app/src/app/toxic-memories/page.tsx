@@ -13,6 +13,13 @@ import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { exportMemoriesToPDF } from '@/lib/pdf-export'
+import UpgradeModal from '@/components/UpgradeModal'
+import {
+  createSpeechRecognition,
+  ensureMicrophonePermission,
+  releaseMicrophonePermission,
+  micErrorMessage,
+} from '@/lib/voice-recognition'
 
 export default function ToxicMemoriesPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -35,6 +42,7 @@ export default function ToxicMemoriesPage() {
   const [recordingTime, setRecordingTime] = useState(0)
   const [suggestingTags, setSuggestingTags] = useState(false)
   const [showDiscardGuide, setShowDiscardGuide] = useState(false)
+  const [upgradeOpen, setUpgradeOpen] = useState(false)
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const router = useRouter()
   const supabase = createClient()
@@ -89,12 +97,9 @@ export default function ToxicMemoriesPage() {
   }
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition
-      recognitionRef.current = new SpeechRecognition()
-      recognitionRef.current.continuous = true
-      recognitionRef.current.interimResults = true
-
+    const recognition = createSpeechRecognition()
+    if (recognition) {
+      recognitionRef.current = recognition
       recognitionRef.current.onresult = (event: any) => {
         let transcript = ''
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -103,13 +108,22 @@ export default function ToxicMemoriesPage() {
         setMemoryText(prev => (prev + ' ' + transcript).trim())
       }
 
-      recognitionRef.current.onerror = () => setIsListening(false)
-      recognitionRef.current.onend = () => setIsListening(false)
+      recognitionRef.current.onerror = (e: any) => {
+        const msg = micErrorMessage(e)
+        if (msg) toast.error(msg)
+        setIsListening(false)
+        releaseMicrophonePermission()
+      }
+      recognitionRef.current.onend = () => {
+        setIsListening(false)
+        releaseMicrophonePermission()
+      }
     }
 
     return () => {
       if (recognitionRef.current) recognitionRef.current.stop()
       if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current)
+      releaseMicrophonePermission()
     }
   }, [])
 
@@ -119,13 +133,23 @@ export default function ToxicMemoriesPage() {
     }
   }, [showTextModal])
 
-  const toggleListening = () => {
+  const toggleListening = async () => {
     if (!recognitionRef.current) return
     if (isListening) {
       recognitionRef.current.stop()
       setIsListening(false)
-    } else {
+      releaseMicrophonePermission()
+      return
+    }
+    const permission = await ensureMicrophonePermission()
+    if (!permission.granted) {
+      toast.error(permission.error || 'Microphone permission is required for voice input.')
+      return
+    }
+    try {
       recognitionRef.current.start()
+      setIsListening(true)
+    } catch {
       setIsListening(true)
     }
   }
@@ -512,7 +536,13 @@ export default function ToxicMemoriesPage() {
                     </div>
                   ) : (
                     <button
-                      onClick={startRecording}
+                      onClick={() => {
+                        if (profile?.subscription_tier === 'foundation') {
+                          setUpgradeOpen(true)
+                          return
+                        }
+                        startRecording()
+                      }}
                       type="button"
                       className="w-full bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 flex items-center justify-center gap-2 font-medium"
                     >
@@ -781,6 +811,12 @@ export default function ToxicMemoriesPage() {
           </CardContent>
         </Card>
       </div>
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onClose={() => setUpgradeOpen(false)}
+        feature="Audio recording & auto-transcription"
+      />
     </DashboardLayout>
   )
 }

@@ -12,13 +12,6 @@ function getServerSupabase() {
   return { error: null as string | null, client: createClient(url, serviceKey) }
 }
 
-// Daily limits from pricing page — multiply by 30 for monthly equivalents
-const TIER_DAILY_LIMITS: Record<string, { ai_daily: number; pattern_daily: number; tx_monthly: number; storage_mb: number }> = {
-  foundation: { ai_daily: 2, pattern_daily: 1, tx_monthly: 0, storage_mb: 100 },
-  recovery:   { ai_daily: 25, pattern_daily: 10, tx_monthly: 60, storage_mb: 1024 },
-  empowerment:{ ai_daily: 50, pattern_daily: 30, tx_monthly: 300, storage_mb: 5120 },
-}
-
 function startOfMonthISODate(): string {
   const now = new Date()
   const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
@@ -43,12 +36,25 @@ export async function GET(req: Request) {
       .eq('id', user.id)
       .single()
     const tier = (profile?.subscription_tier as string) || 'foundation'
-    const tierLimits = TIER_DAILY_LIMITS[tier] || TIER_DAILY_LIMITS.foundation
+
+    // Query feature_limits table for this tier
+    const { data: limits } = await supabase
+      .from('feature_limits')
+      .select('feature_name, limit_type, limit_value')
+      .eq('subscription_tier', tier)
+
+    const limitMap: Record<string, number> = {}
+    for (const row of limits || []) {
+      limitMap[`${row.feature_name}:${row.limit_type}`] = row.limit_value
+    }
+
+    const getLimit = (feature: string, type: string = 'monthly_count') =>
+      limitMap[`${feature}:${type}`] ?? 0
 
     const periodStart = startOfMonthISODate()
 
-    // AI interactions: monthly usage from usage_tracking
-    const aiMonthlyLimit = tierLimits.ai_daily === -1 ? -1 : tierLimits.ai_daily * 30
+    // AI interactions: count from usage_tracking this month
+    const aiLimit = getLimit('ai_interactions')
     let aiCurrent = 0
     {
       const { data: rows } = await supabase
@@ -61,8 +67,8 @@ export async function GET(req: Request) {
       aiCurrent = (rows || []).reduce((s: number, r: any) => s + (r.usage_count || 0), 0)
     }
 
-    // Transcription: monthly minutes from evidence_files
-    const txMinutesLimit = tierLimits.tx_monthly
+    // Transcription: minutes from evidence_files this month
+    const txMinutesLimit = getLimit('transcription_minutes')
     const { data: audioFiles } = await supabase
       .from('evidence_files')
       .select('duration_seconds')
@@ -73,8 +79,8 @@ export async function GET(req: Request) {
     const usedSeconds = (audioFiles || []).reduce((s: number, f: any) => s + (Number(f.duration_seconds) || 0), 0)
     const usedMinutes = Math.ceil(usedSeconds / 60)
 
-    // Pattern analysis: monthly rows
-    const patternMonthlyLimit = tierLimits.pattern_daily === -1 ? -1 : tierLimits.pattern_daily * 30
+    // Pattern analysis: count from pattern_analysis this month
+    const patternLimit = getLimit('pattern_analysis')
     let patternCurrent = 0
     {
       const { data: pas } = await supabase
@@ -85,26 +91,29 @@ export async function GET(req: Request) {
       patternCurrent = (pas || []).length
     }
 
+    const unlimited = (v: number) => v === -1
+
     return NextResponse.json({
       ok: true,
       subscription_tier: tier,
       period_start: periodStart,
       ai_interactions: {
         current: aiCurrent,
-        limit: aiMonthlyLimit,
-        remaining: aiMonthlyLimit === -1 ? -1 : Math.max(0, aiMonthlyLimit - aiCurrent),
-        daily_limit: tierLimits.ai_daily,
+        limit: aiLimit,
+        remaining: unlimited(aiLimit) ? -1 : Math.max(0, aiLimit - aiCurrent),
       },
       audio_transcription: {
+        current: usedMinutes,
+        limit: txMinutesLimit,
+        remaining: unlimited(txMinutesLimit) ? -1 : Math.max(0, txMinutesLimit - usedMinutes),
         duration_minutes: usedMinutes,
         minutes_limit: txMinutesLimit,
-        minutes_remaining: txMinutesLimit === -1 ? -1 : Math.max(0, txMinutesLimit - usedMinutes),
+        minutes_remaining: unlimited(txMinutesLimit) ? -1 : Math.max(0, txMinutesLimit - usedMinutes),
       },
       pattern_analysis: {
         current: patternCurrent,
-        limit: patternMonthlyLimit,
-        remaining: patternMonthlyLimit === -1 ? -1 : Math.max(0, patternMonthlyLimit - patternCurrent),
-        daily_limit: tierLimits.pattern_daily,
+        limit: patternLimit,
+        remaining: unlimited(patternLimit) ? -1 : Math.max(0, patternLimit - patternCurrent),
       },
     })
   } catch (e) {

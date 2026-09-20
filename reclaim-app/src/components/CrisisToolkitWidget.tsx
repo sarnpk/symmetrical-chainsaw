@@ -2,10 +2,18 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { X, LifeBuoy } from 'lucide-react';
+
+const PUBLIC_PATHS = ['/', '/pricing', '/blog']
 
 export default function CrisisToolkitWidget() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const pathname = usePathname();
+
+  // Only show on landing/public pages, not inside the dashboard
+  const isPublic = PUBLIC_PATHS.includes(pathname) || pathname.startsWith('/blog/')
+  if (!isPublic) return null
 
   return (
     <div className="fixed bottom-6 right-6 z-50">

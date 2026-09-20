@@ -7,6 +7,7 @@ import { Lock, LogIn, UserPlus } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import Logo from '@/components/marketing/Logo'
+import GoogleIcon from '@/components/GoogleIcon'
 
 function AuthForm() {
   const searchParams = useSearchParams()
@@ -35,7 +36,7 @@ function AuthForm() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback`,
+            emailRedirectTo: 'https://reclaimyourlife.app/auth/callback',
           },
         })
         if (error) throw error
@@ -272,6 +273,25 @@ function AuthForm() {
             )}
           </button>
         </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">or continue with</span>
+            </div>
+          </div>
+
+          <a
+            href={`/api/auth/google/start?redirect=${encodeURIComponent(redirectTo)}`}
+            className="mt-4 w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+          >
+            <GoogleIcon className="h-5 w-5" />
+            Continue with Google
+          </a>
+        </div>
 
         <div className="mt-6 text-center">
           <button

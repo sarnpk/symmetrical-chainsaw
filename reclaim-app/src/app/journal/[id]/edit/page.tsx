@@ -204,56 +204,17 @@ export default function EditJournalEntryPage({ params }: Props) {
 
   const featureAccess = getFeatureAccess()
 
-  // Upgrade prompt component with tier-specific messaging
-  const UpgradePrompt = ({ feature }: { feature: string }) => {
-    const getUpgradeMessage = () => {
-      if (feature.includes('How This Affected You') || feature.includes('Enhanced Impact Assessment')) {
-        return {
-          title: `Unlock ${feature} with Recovery Plan`,
-          description: 'Track emotional impact and get enhanced documentation features starting at $9.99/month.',
-          tier: 'Recovery'
-        }
-      } else if (feature.includes('Detailed') || feature.includes('Evidence Documentation')) {
-        return {
-          title: `Unlock ${feature} with Empowerment Plan`,
-          description: 'Get complete trauma recovery toolkit with unlimited AI coaching and advanced analysis.',
-          tier: 'Empowerment'
-        }
-      } else {
-        return {
-          title: `Unlock ${feature} with Recovery or Empowerment Plan`,
-          description: 'Get access to enhanced documentation features and AI-powered insights.',
-          tier: 'Recovery'
-        }
-      }
-    }
-
-    const upgradeInfo = getUpgradeMessage()
-
+  // Upgrade prompt component — minimal inline notice
+  const UpgradePrompt = ({ feature, helpText }: { feature: string; helpText?: string }) => {
     return (
-      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4 mb-4">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0">
-            <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-              <span className="flex items-center justify-center text-purple-600"><Sparkles className="h-4 w-4" /></span>
-            </div>
-          </div>
-          <div className="flex-1">
-            <h4 className="font-medium text-purple-900 mb-1">
-              {upgradeInfo.title}
-            </h4>
-            <p className="text-sm text-purple-700 mb-3">
-              {upgradeInfo.description}
-            </p>
-            <Link
-              href="/subscription"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
-            >
-Upgrade to {upgradeInfo.tier}
-              <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
+      <div className="py-2 px-3 space-y-1">
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <Sparkles className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+          <span>{feature} — available on <Link href="/subscription" className="text-indigo-600 hover:underline">Recovery</Link> plan</span>
         </div>
+        {helpText && (
+          <p className="text-xs text-gray-400 pl-5 leading-relaxed">{helpText}</p>
+        )}
       </div>
     )
   }
@@ -834,7 +795,10 @@ Upgrade to {upgradeInfo.tier}
             </CardContent>
           </Card>
           ) : (
-            <UpgradePrompt feature="How This Affected You - Emotional Impact Tracking" />
+            <UpgradePrompt
+              feature="How This Affected You"
+              helpText="Track how you felt before and after the incident. This helps you notice shifts in your wellbeing and spot patterns across entries."
+            />
           )}
 
           {/* Additional Details */}

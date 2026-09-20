@@ -87,6 +87,7 @@ export type JournalDraft = {
   isDraft: boolean;
   currentStep: number;
   completedSteps: number[];
+  subscriptionTier: 'foundation' | 'recovery' | 'empowerment';
 };
 
 type Ctx = {
@@ -164,6 +165,10 @@ type Ctx = {
   // Validation
   isStepValid: (step: number) => boolean;
   canProceedToStep: (step: number) => boolean;
+
+  // Subscription
+  subscriptionTier: 'foundation' | 'recovery' | 'empowerment';
+  isPaidUser: () => boolean;
 };
 
 // NPD Expert AI Analysis Function
@@ -329,6 +334,7 @@ function getInitialDraft(): JournalDraft {
         isDraft: parsed.isDraft || true,
         currentStep: parsed.currentStep || 1,
         completedSteps: parsed.completedSteps || [],
+        subscriptionTier: parsed.subscriptionTier || 'foundation',
       };
     } catch {}
   }
@@ -367,6 +373,7 @@ function getInitialDraft(): JournalDraft {
     isDraft: true,
     currentStep: 1,
     completedSteps: [],
+    subscriptionTier: 'foundation',
   };
 }
 
@@ -380,6 +387,26 @@ export function JournalEntryProvider({ children }: { children: React.ReactNode }
     }, 500);
     return () => clearTimeout(id);
   }, [draft]);
+
+  // Fetch subscription tier on mount
+  useEffect(() => {
+    const fetchTier = async () => {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('subscription_tier')
+          .eq('id', user.id)
+          .single();
+        if (profile?.subscription_tier) {
+          setDraft(d => ({ ...d, subscriptionTier: profile.subscription_tier }));
+        }
+      } catch {}
+    };
+    fetchTier();
+  }, []);
 
   const api: Ctx = useMemo(() => ({
     draft,
@@ -854,6 +881,8 @@ export function JournalEntryProvider({ children }: { children: React.ReactNode }
       }
       return true;
     },
+    subscriptionTier: draft.subscriptionTier,
+    isPaidUser: () => draft.subscriptionTier === 'recovery' || draft.subscriptionTier === 'empowerment',
   }), [draft]);
 
   return (

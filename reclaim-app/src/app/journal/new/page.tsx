@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Save, ArrowLeft, Calendar, MapPin, Users, Heart, Shield, Camera, Mic, MicOff, Upload, X, ChevronDown, ChevronUp, HelpCircle, ArrowRight, Sparkles, Lightbulb, Music } from 'lucide-react'
+import { Save, ArrowLeft, Calendar, MapPin, Users, Heart, Shield, Camera, Mic, MicOff, Upload, X, ChevronDown, ChevronUp, HelpCircle, ArrowRight, Sparkles, Lightbulb, Music, Loader2, Check } from 'lucide-react'
 import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/react'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
@@ -13,6 +13,13 @@ import { Profile } from '@/lib/supabase'
 import EnhancedImpactAssessment from '@/components/journal/EnhancedImpactAssessment'
 import toast from 'react-hot-toast'
 import Section from '@/components/layout/Section'
+import UpgradeModal from '@/components/UpgradeModal'
+import {
+  createSpeechRecognition,
+  ensureMicrophonePermission,
+  releaseMicrophonePermission,
+  micErrorMessage,
+} from '@/lib/voice-recognition'
 
 const V3_MOBILE_ENABLED = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_V3_MOBILE === '1'
 
@@ -102,11 +109,28 @@ interface AIPrediction {
   evidence: string[]
 }
 
+function formatRelativeTime(dateStr: string): string {
+  const now = Date.now()
+  const then = new Date(dateStr).getTime()
+  const diffSec = Math.floor((now - then) / 1000)
+  if (diffSec < 60) return 'just now'
+  const diffMin = Math.floor(diffSec / 60)
+  if (diffMin < 60) return `${diffMin}m ago`
+  const diffHr = Math.floor(diffMin / 60)
+  if (diffHr < 24) return `${diffHr}h ago`
+  const diffDay = Math.floor(diffHr / 24)
+  if (diffDay === 1) return 'yesterday'
+  if (diffDay < 7) return `${diffDay}d ago`
+  return new Date(dateStr).toLocaleDateString()
+}
+
 export default function NewJournalEntryPage() {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [savingStatus, setSavingStatus] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<{title?: string; description?: string; date?: string}>({})
   
   // Basic form state
   const [title, setTitle] = useState('')
@@ -144,6 +168,7 @@ export default function NewJournalEntryPage() {
   // Subscription tier state
   const [subscriptionTier, setSubscriptionTier] = useState<'foundation' | 'recovery' | 'empowerment'>('foundation')
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   // AI Suggest Title state
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -191,7 +216,9 @@ export default function NewJournalEntryPage() {
   const [showDescriptionFullscreen, setShowDescriptionFullscreen] = useState(false)
   const [descriptionFullscreenText, setDescriptionFullscreenText] = useState('')
   const [isDescriptionListening, setIsDescriptionListening] = useState(false)
+  const [isInlineDescriptionListening, setIsInlineDescriptionListening] = useState(false)
   const descriptionRecognitionRef = useRef<any>(null)
+  const inlineDescriptionRecognitionRef = useRef<any>(null)
   const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null)
   const fullscreenTextareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -210,15 +237,56 @@ export default function NewJournalEntryPage() {
 
   const router = useRouter()
   const supabase = createClient()
-  
-  // Redirect to v3 mobile stepper when feature flag is enabled
+
+  // Unsaved changes guard
+  const isDirty = title.length > 0 || description.length > 0 || content.length > 0
+    || incidentDate !== '' || location.length > 0 || witnesses.length > 0
+    || selectedAbuseTypes.length > 0 || photoEvidence.length > 0 || audioEvidence.length > 0
+    || safetyRating !== 3 || moodRating !== 5 || triggerLevel !== 3
+
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
+  const [pendingNavigation, setPendingNavigation] = useState<(() => void) | null>(null)
+
   useEffect(() => {
-    if (V3_MOBILE_ENABLED) {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault()
+      }
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [isDirty])
+
+  // Intercept browser back/forward
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (isDirty) {
+        e.preventDefault()
+        window.history.pushState(null, '', window.location.href)
+        setShowLeaveConfirm(true)
+        setPendingNavigation(() => () => window.history.back())
+      }
+    }
+    window.addEventListener('popstate', handlePopState)
+    window.history.pushState(null, '', window.location.href)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [isDirty])
+  
+  // Redirect to v3 mobile stepper on small screens
+  useEffect(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+    if (V3_MOBILE_ENABLED || isMobile) {
       router.replace('/journal/new/when-where')
     }
   }, [router])
-  if (V3_MOBILE_ENABLED) {
-    // Prevent rendering legacy combined form when v3 is on
+
+  // Check if mobile on mount — show nothing while redirecting
+  const [isMobileClient, setIsMobileClient] = useState(false)
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768
+    setIsMobileClient(isMobile)
+  }, [])
+  if (V3_MOBILE_ENABLED || isMobileClient) {
     return null
   }
 
@@ -449,11 +517,9 @@ export default function NewJournalEntryPage() {
 
   // Setup speech recognition for fullscreen description editor
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition
-      descriptionRecognitionRef.current = new SpeechRecognition()
-      descriptionRecognitionRef.current.continuous = true
-      descriptionRecognitionRef.current.interimResults = true
+    const recognition = createSpeechRecognition()
+    if (recognition) {
+      descriptionRecognitionRef.current = recognition
       descriptionRecognitionRef.current.onresult = (event: any) => {
         let transcript = ''
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -461,11 +527,49 @@ export default function NewJournalEntryPage() {
         }
         setDescriptionFullscreenText(prev => (prev + ' ' + transcript).trim())
       }
-      descriptionRecognitionRef.current.onerror = () => setIsDescriptionListening(false)
-      descriptionRecognitionRef.current.onend = () => setIsDescriptionListening(false)
+      descriptionRecognitionRef.current.onerror = (e: any) => {
+        const msg = micErrorMessage(e)
+        if (msg) setAiError(msg)
+        setIsDescriptionListening(false)
+        releaseMicrophonePermission()
+      }
+      descriptionRecognitionRef.current.onend = () => {
+        setIsDescriptionListening(false)
+        releaseMicrophonePermission()
+      }
     }
     return () => {
       if (descriptionRecognitionRef.current) descriptionRecognitionRef.current.stop()
+      releaseMicrophonePermission()
+    }
+  }, [])
+
+  // Setup inline speech recognition for main description textarea
+  useEffect(() => {
+    const recognition = createSpeechRecognition()
+    if (recognition) {
+      inlineDescriptionRecognitionRef.current = recognition
+      inlineDescriptionRecognitionRef.current.onresult = (event: any) => {
+        let transcript = ''
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript
+        }
+        setDescription(prev => (prev + ' ' + transcript).trim())
+      }
+      inlineDescriptionRecognitionRef.current.onerror = (e: any) => {
+        const msg = micErrorMessage(e)
+        if (msg) setAiError(msg)
+        setIsInlineDescriptionListening(false)
+        releaseMicrophonePermission()
+      }
+      inlineDescriptionRecognitionRef.current.onend = () => {
+        setIsInlineDescriptionListening(false)
+        releaseMicrophonePermission()
+      }
+    }
+    return () => {
+      if (inlineDescriptionRecognitionRef.current) inlineDescriptionRecognitionRef.current.stop()
+      releaseMicrophonePermission()
     }
   }, [])
 
@@ -476,14 +580,45 @@ export default function NewJournalEntryPage() {
     }
   }, [showDescriptionFullscreen])
 
-  const toggleDescriptionListening = () => {
+  const toggleDescriptionListening = async () => {
     if (!descriptionRecognitionRef.current) return
     if (isDescriptionListening) {
       descriptionRecognitionRef.current.stop()
       setIsDescriptionListening(false)
-    } else {
+      releaseMicrophonePermission()
+      return
+    }
+    const permission = await ensureMicrophonePermission()
+    if (!permission.granted) {
+      setAiError(permission.error || 'Microphone permission is required for voice input.')
+      return
+    }
+    try {
       descriptionRecognitionRef.current.start()
       setIsDescriptionListening(true)
+    } catch {
+      setIsDescriptionListening(true)
+    }
+  }
+
+  const toggleInlineDescriptionListening = async () => {
+    if (!inlineDescriptionRecognitionRef.current) return
+    if (isInlineDescriptionListening) {
+      inlineDescriptionRecognitionRef.current.stop()
+      setIsInlineDescriptionListening(false)
+      releaseMicrophonePermission()
+      return
+    }
+    const permission = await ensureMicrophonePermission()
+    if (!permission.granted) {
+      setAiError(permission.error || 'Microphone permission is required for voice input.')
+      return
+    }
+    try {
+      inlineDescriptionRecognitionRef.current.start()
+      setIsInlineDescriptionListening(true)
+    } catch {
+      setIsInlineDescriptionListening(true)
     }
   }
 
@@ -498,6 +633,7 @@ export default function NewJournalEntryPage() {
     if (isDescriptionListening && descriptionRecognitionRef.current) {
       descriptionRecognitionRef.current.stop()
       setIsDescriptionListening(false)
+      releaseMicrophonePermission()
     }
   }
 
@@ -566,9 +702,11 @@ export default function NewJournalEntryPage() {
       }
 
       recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/wav' })
+        const mimeType = recorder.mimeType || 'audio/webm'
+        const blob = new Blob(chunks, { type: mimeType })
         const audioUrl = URL.createObjectURL(blob)
-        const file = new File([blob], `recording-${Date.now()}.wav`, { type: 'audio/wav' })
+        const ext = mimeType.includes('mp4') ? 'm4a' : 'webm'
+        const file = new File([blob], `recording-${Date.now()}.${ext}`, { type: mimeType })
 
         const newRecording: AudioEvidence = {
           file,
@@ -936,12 +1074,26 @@ export default function NewJournalEntryPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Validate required fields
+    const errors: typeof fieldErrors = {}
+    if (!title.trim()) errors.title = 'Title is required'
+    if (!description.trim() && !(featureAccess.draftMode && isDraft)) errors.description = 'Description is required'
+    if (!incidentDate) errors.date = 'Date is required'
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      return
+    }
+    setFieldErrors({})
+
     setSaving(true)
+    setSavingStatus('Saving entry...')
 
     try {
       if (!user) throw new Error('Not authenticated')
 
       // Enforce storage cap for foundation users before any uploads
+      setSavingStatus('Checking storage...')
       const totalIncomingBytes = [...photoEvidence.map(p => p.file.size), ...audioEvidence.map(a => a.file.size)]
         .reduce((acc, n) => acc + (n || 0), 0)
 
@@ -1035,6 +1187,7 @@ export default function NewJournalEntryPage() {
       if (entryError) throw entryError
 
       // Upload photos
+      if (photoEvidence.length > 0) setSavingStatus(`Uploading ${photoEvidence.length} photo${photoEvidence.length > 1 ? 's' : ''}...`)
       for (const [index, photo] of photoEvidence.entries()) {
         const fileName = `${savedEntry.id}/photo-${index}-${Date.now()}.jpg`
         
@@ -1078,8 +1231,10 @@ export default function NewJournalEntryPage() {
       }
 
       // Upload audio recordings
+      if (audioEvidence.length > 0) setSavingStatus(`Uploading ${audioEvidence.length} audio recording${audioEvidence.length > 1 ? 's' : ''}...`)
       for (const [index, audio] of audioEvidence.entries()) {
-        const fileName = `${savedEntry.id}/audio-${index}-${Date.now()}.wav`
+        const ext = audio.file.name.split('.').pop() || 'webm'
+        const fileName = `${savedEntry.id}/audio-${index}-${Date.now()}.${ext}`
         
         try {
           // Use admin client for storage upload
@@ -1129,59 +1284,21 @@ export default function NewJournalEntryPage() {
       toast.error('Failed to save entry: ' + error.message)
     } finally {
       setSaving(false)
+      setSavingStatus('')
     }
   }
 
   // Upgrade prompt component with tier-specific messaging
-  const UpgradePrompt = ({ feature }: { feature: string }) => {
-    const getUpgradeMessage = () => {
-      if (feature.includes('How This Affected You') || feature.includes('Impact Assessment')) {
-        return {
-          title: `Unlock ${feature} with Recovery Plan`,
-          description: 'Track emotional impact and get enhanced documentation features starting at $9.99/month.',
-          tier: 'Recovery'
-        }
-      } else if (feature.includes('Detailed') || feature.includes('Evidence Documentation')) {
-        return {
-          title: `Unlock ${feature} with Empowerment Plan`,
-          description: 'Get complete trauma recovery toolkit with unlimited AI coaching and advanced analysis.',
-          tier: 'Empowerment'
-        }
-      } else {
-        return {
-          title: `Unlock ${feature} with Recovery or Empowerment Plan`,
-          description: 'Get access to enhanced documentation features and AI-powered insights.',
-          tier: 'Recovery'
-        }
-      }
-    }
-
-    const upgradeInfo = getUpgradeMessage()
-
+  const UpgradePrompt = ({ feature, helpText, tier = 'Recovery' }: { feature: string; helpText?: string; tier?: string }) => {
     return (
-      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4 mb-4">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0">
-            <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-              <span className="flex items-center justify-center text-purple-600"><Sparkles className="h-4 w-4" /></span>
-            </div>
-          </div>
-          <div className="flex-1">
-            <h4 className="font-medium text-purple-900 mb-1">
-              {upgradeInfo.title}
-            </h4>
-            <p className="text-sm text-purple-700 mb-3">
-              {upgradeInfo.description}
-            </p>
-            <Link
-              href="/subscription"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              Upgrade to {upgradeInfo.tier}
-              <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
+      <div className="py-2 px-3 space-y-1">
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <Sparkles className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+          <span>{feature} — available on <Link href="/subscription" className="text-indigo-600 hover:underline">{tier}</Link> plan</span>
         </div>
+        {helpText && (
+          <p className="text-xs text-gray-400 pl-5 leading-relaxed">{helpText}</p>
+        )}
       </div>
     )
   }
@@ -1261,17 +1378,58 @@ export default function NewJournalEntryPage() {
           </div>
         </div>
 
+        {/* Progress Indicator */}
+        {(() => {
+          const sections = [
+            { label: 'Date', done: !!incidentDate },
+            { label: 'Title', done: title.trim().length > 0 },
+            { label: 'Story', done: description.trim().length > 0 },
+            { label: 'Safety', done: safetyRating !== 3 },
+            { label: 'Evidence', done: photoEvidence.length > 0 || audioEvidence.length > 0 },
+          ]
+          const completed = sections.filter(s => s.done).length
+          const pct = Math.round((completed / sections.length) * 100)
+          return (
+            <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Progress</span>
+                <span className="text-sm text-gray-500">{completed}/{sections.length} steps</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                <div
+                  className="bg-indigo-600 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {sections.map((s) => (
+                  <span
+                    key={s.label}
+                    className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                      s.done
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-gray-100 text-gray-500'
+                    }`}
+                  >
+                    {s.done ? '\u2713 ' : ''}{s.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )
+        })()}
+
         <form onSubmit={handleSave} className="space-y-4 md:space-y-6">
-          {/* Date and Time - First Priority */}
+          {/* Required Fields - Date, Title, Description */}
           <Card className="border-l-4 border-l-blue-500">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
                 <Calendar className="h-5 w-5" />
-                When did this happen? <span className="text-red-500">*</span>
+                What happened? <span className="text-red-500">*</span>
               </CardTitle>
-              <CardDescription>Start by recording when this incident occurred</CardDescription>
+              <CardDescription>Record the key details of this incident</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1280,10 +1438,11 @@ export default function NewJournalEntryPage() {
                   <input
                     type="date"
                     value={incidentDate}
-                    onChange={(e) => setIncidentDate(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                    onChange={(e) => { setIncidentDate(e.target.value); setFieldErrors(prev => ({ ...prev, date: undefined })) }}
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base ${fieldErrors.date ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                     required
                   />
+                  {fieldErrors.date && <p className="text-xs text-red-600 mt-1">{fieldErrors.date}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1297,47 +1456,32 @@ export default function NewJournalEntryPage() {
                   />
                 </div>
               </div>
-            </CardContent>
-          </Card>
 
-          {/* What Happened - wrapped in Section */}
-          <Section
-            id="basicInfo"
-            title="What Happened"
-            description="Tell your story in your own words"
-            isOpen={openSections.basicInfo}
-            onToggle={handleSectionToggle}
-            showChevron={true}
-            nextId="behavior"
-            onNext={handleNextSection}
-          >
-            <div className="space-y-4 md:space-y-6">
-                <div>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Title <span className="text-red-500">*</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={handleSuggestTitle}
-                    className="inline-flex items-center px-3 py-1.5 text-sm rounded-md border border-indigo-300 text-indigo-700 hover:bg-indigo-50 disabled:opacity-50"
-                    disabled={suggesting}
-                    aria-label="Suggest title"
-                  >
-                    {suggesting ? 'Getting suggestions...' : 'Suggest title'}
-                  </button>
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Title <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors text-base"
+                  onChange={(e) => { setTitle(e.target.value); setFieldErrors(prev => ({ ...prev, title: undefined })) }}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors text-base ${fieldErrors.title ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                   placeholder="Brief description of the incident"
                   required
                 />
-                {suggestError && (
-                  <p className="text-sm text-red-600 mt-2">{suggestError}</p>
-                )}
+                <div className="flex items-center gap-3 mt-1.5">
+                  <button
+                    type="button"
+                    onClick={handleSuggestTitle}
+                    className="text-xs text-indigo-600 hover:text-indigo-800 font-medium disabled:opacity-50"
+                    disabled={suggesting}
+                  >
+                    {suggesting ? 'Getting suggestions...' : 'Suggest title'}
+                  </button>
+                  {suggestError && (
+                    <p className="text-xs text-red-600">{suggestError}</p>
+                  )}
+                </div>
                 {suggestions.length > 0 && (
                   <div className="mt-3">
                     <p className="text-sm text-gray-600 mb-2">Suggestions:</p>
@@ -1359,31 +1503,84 @@ export default function NewJournalEntryPage() {
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2">
                   <label className="block text-sm font-medium text-gray-700">
                     What happened? <span className="text-red-500">*</span>
                   </label>
-                  <button
-                    type="button"
-                    onClick={() => setShowWhatHelp(true)}
-                    className="p-1 hover:bg-gray-100 rounded"
-                    aria-label="Get help writing what happened"
-                  >
-                    <HelpCircle className="h-5 w-5 text-gray-500" />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={toggleInlineDescriptionListening}
+                      className={`p-1 rounded ${isInlineDescriptionListening ? 'bg-red-100 text-red-600 animate-pulse motion-reduce:animate-none' : 'hover:bg-gray-100 text-gray-500'}`}
+                      aria-label={isInlineDescriptionListening ? 'Stop voice input' : 'Start voice input'}
+                      title={isInlineDescriptionListening ? 'Stop voice input' : 'Voice input'}
+                    >
+                      {isInlineDescriptionListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={openDescriptionFullscreen}
+                      className="p-1 hover:bg-gray-100 rounded"
+                      aria-label="Open fullscreen editor"
+                      title="Open fullscreen editor"
+                    >
+                      <svg className="h-4 w-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowWhatHelp(true)}
+                      className="p-1 hover:bg-gray-100 rounded"
+                      aria-label="Get help writing what happened"
+                    >
+                      <HelpCircle className="h-5 w-5 text-gray-500" />
+                    </button>
+                  </div>
                 </div>
                 <textarea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  onFocus={openDescriptionFullscreen}
+                  onChange={(e) => { setDescription(e.target.value); setFieldErrors(prev => ({ ...prev, description: undefined })) }}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors resize-none text-base cursor-pointer"
-                  placeholder="Click to describe what happened..."
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors resize-none text-base ${fieldErrors.description ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
+                  placeholder="Describe what happened in your own words..."
                   required
-                  readOnly
                 />
+                {fieldErrors.description && <p className="text-xs text-red-600 mt-1">{fieldErrors.description}</p>}
               </div>
 
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => handleNextSection('basicInfo')}
+                  className="px-4 py-2.5 h-10 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors"
+                >
+                  Next
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleNextSection('basicInfo')}
+                  className="px-4 py-2.5 h-10 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  Skip for now
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* AI Assist & Advanced Details */}
+          <Section
+            id="basicInfo"
+            title="AI Assist & Details"
+            description="Optional: Get AI suggestions and add detailed account"
+            isOpen={openSections.basicInfo}
+            onToggle={handleSectionToggle}
+            showChevron={true}
+            completed={content.length > 0 || aiAssistEnabled}
+            nextId="behavior"
+            onNext={handleNextSection}
+          >
+            <div className="space-y-4 md:space-y-6">
               {/* Enhanced Content Field - Paid Users Only */}
               {featureAccess.advancedFields && (
                 <div>
@@ -1401,10 +1598,12 @@ export default function NewJournalEntryPage() {
               )}
 
               {/* AI Assist */}
-              <div className="mt-4 border-t pt-4">
-                {/* Row 1: Heading + switch */}
+              <div className="border-t pt-4">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-medium text-gray-800">AI Assist</div>
+                  <div>
+                    <div className="text-sm font-medium text-gray-800">AI Assist</div>
+                    <p className="text-xs text-gray-500 mt-0.5">Auto-suggests title and behavior patterns</p>
+                  </div>
                   <button
                     type="button"
                     role="switch"
@@ -1420,14 +1619,9 @@ export default function NewJournalEntryPage() {
                         className={`inline-block h-5 w-5 bg-white rounded-full shadow transform transition-transform duration-200 mt-[2px] ${aiAssistEnabled ? 'translate-x-5' : 'translate-x-1'}`}
                       />
                     </span>
-                    <span className="text-sm text-gray-700">Enable</span>
+                    <span className="text-sm text-gray-700">{aiAssistEnabled ? 'On' : 'Off'}</span>
                   </button>
                 </div>
-
-                {/* Row 2: Description (separate row for mobile clarity) */}
-                <p className="mt-2 text-xs text-gray-600">
-                  Suggests a title and likely behavior patterns based on your description. You can edit everything before saving.
-                </p>
 
                 {aiAssistEnabled && (
                   <div className="mt-3 space-y-3">
@@ -1444,7 +1638,6 @@ export default function NewJournalEntryPage() {
                       </div>
                     )}
 
-                    {/* Title suggestions with confidence */}
                     {aiTitleSuggestions.length > 0 && (
                       <div>
                         <div className="flex items-center justify-between mb-1">
@@ -1474,7 +1667,6 @@ export default function NewJournalEntryPage() {
                       </div>
                     )}
 
-                    {/* Behavior category predictions */}
                     {aiBehaviorPreds.length > 0 && (
                       <div>
                         <p className="text-sm text-gray-700 mb-1">Suggested behavior categories</p>
@@ -1508,7 +1700,6 @@ export default function NewJournalEntryPage() {
                       </div>
                     )}
 
-                    {/* Abuse type predictions */}
                     {aiAbusePreds.length > 0 && (
                       <div>
                         <p className="text-sm text-gray-700 mb-1">Suggested abuse types</p>
@@ -1542,7 +1733,6 @@ export default function NewJournalEntryPage() {
                   </div>
                 )}
               </div>
-
             </div>
           </Section>
 
@@ -1554,6 +1744,9 @@ export default function NewJournalEntryPage() {
             isOpen={openSections.behavior}
             onToggle={handleSectionToggle}
             showChevron={true}
+            completed={selectedAbuseTypes.length > 0}
+            nextId="safety"
+            onNext={handleNextSection}
           >
             <div className="flex items-center justify-end mb-2">
               <button
@@ -1591,6 +1784,7 @@ export default function NewJournalEntryPage() {
             isOpen={openSections.safety}
             onToggle={handleSectionToggle}
             showChevron={true}
+            completed={safetyRating !== 3}
             nextId="impact"
             onNext={handleNextSection}
           >
@@ -1621,6 +1815,7 @@ export default function NewJournalEntryPage() {
             isOpen={openSections.impact}
             onToggle={handleSectionToggle}
             showChevron={true}
+            completed={moodRating !== 5 || triggerLevel !== 3}
             nextId="detailed"
             onNext={handleNextSection}
           >
@@ -1633,7 +1828,10 @@ export default function NewJournalEntryPage() {
                 onTriggerLevelChange={setTriggerLevel}
               />
             ) : (
-              <UpgradePrompt feature="Impact Assessment" />
+              <UpgradePrompt
+                feature="Impact Assessment"
+                helpText="Rate your mood (1–10) and trigger level (1–5) before and after the incident. This helps you and your therapist track emotional patterns over time."
+              />
             )}
           </Section>
 
@@ -1647,6 +1845,7 @@ export default function NewJournalEntryPage() {
             isOpen={openSections.detailed}
             onToggle={handleSectionToggle}
             showChevron={true}
+            completed={behaviorCategories.length > 0 || patternFlags.length > 0 || emotionalImpact.length > 0}
             nextId="evidence"
             onNext={handleNextSection}
           >
@@ -1741,7 +1940,11 @@ export default function NewJournalEntryPage() {
                   </div>
                 </>
               ) : (
-                <UpgradePrompt feature="Detailed Pattern Analysis" />
+                <UpgradePrompt
+                  feature="Detailed Pattern Analysis"
+                  tier="Empowerment"
+                  helpText="Select behavior categories, identify narcissistic traits, flag manipulation patterns, and track emotional impact. Helps you see the full picture of what you're dealing with."
+                />
               )}
             </div>
           </Section>
@@ -1754,6 +1957,7 @@ export default function NewJournalEntryPage() {
             isOpen={openSections.evidence}
             onToggle={handleSectionToggle}
             showChevron={true}
+            completed={evidenceType.length > 0 || evidenceNotes.length > 0 || isEvidence}
           >
             <div className="space-y-6 md:space-y-8">
               {featureAccess.evidenceDocumentation ? (
@@ -1845,7 +2049,11 @@ export default function NewJournalEntryPage() {
                   </div>
                 </>
               ) : (
-                <UpgradePrompt feature="Evidence Documentation" />
+                <UpgradePrompt
+                  feature="Evidence Documentation"
+                  tier="Empowerment"
+                  helpText="Tag what evidence you have (texts, emails, photos, recordings, etc.), add notes about where it's stored, and flag entries for potential legal use. Content warnings help keep you safe when revisiting entries."
+                />
               )}
             </div>
           </Section>
@@ -1867,13 +2075,13 @@ export default function NewJournalEntryPage() {
                       <Heart className="inline h-4 w-4 mr-1 text-blue-500" />
                       How were you feeling before?
                     </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex flex-wrap gap-2">
                       {emotionalStates.map((state) => (
                         <button
                           key={state.value}
                           type="button"
                           onClick={() => handleEmotionalStateToggle(state.value, 'before')}
-                          className={`p-3 min-h-[44px] rounded-lg border-2 transition-all text-sm font-medium ${
+                          className={`px-3 py-1.5 rounded-full border-2 transition-all text-sm font-medium ${
                             getEmotionalIntensityStyle(state.intensity, emotionalStateBefore.includes(state.value))
                           }`}
                         >
@@ -1888,13 +2096,13 @@ export default function NewJournalEntryPage() {
                       <Heart className="inline h-4 w-4 mr-1 text-red-500" />
                       How did you feel after?
                     </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex flex-wrap gap-2">
                       {emotionalStates.map((state) => (
                         <button
                           key={state.value}
                           type="button"
                           onClick={() => handleEmotionalStateToggle(state.value, 'after')}
-                          className={`p-3 min-h-[44px] rounded-lg border-2 transition-all text-sm font-medium ${
+                          className={`px-3 py-1.5 rounded-full border-2 transition-all text-sm font-medium ${
                             getEmotionalIntensityStyle(state.intensity, emotionalStateAfter.includes(state.value))
                           }`}
                         >
@@ -1907,22 +2115,23 @@ export default function NewJournalEntryPage() {
               </CardContent>
             </Card>
           ) : (
-            <UpgradePrompt feature="How This Affected You - Emotional Impact Tracking" />
+            <UpgradePrompt
+              feature="How This Affected You"
+              helpText="Track how you felt before and after the incident. Choosing from emotional states helps you notice shifts in your wellbeing and spot patterns across entries."
+            />
           )}
 
-          {/* Photo Evidence Upload */}
-          <Card className={`border-l-4 ${!areMandatoryFieldsFilled() ? 'border-l-gray-300 opacity-60' : 'border-l-blue-500'} mb-4 md:mb-6`}>
-            <CardHeader>
+          {/* Photo & Audio Evidence - only show after mandatory fields filled */}
+          {areMandatoryFieldsFilled() && (
+            <>
+              {/* Photo Evidence Upload */}
+              <Card className="border-l-4 border-l-blue-500 mb-4 md:mb-6">
+              <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
                 <Camera className="h-5 w-5" />
                 Photo Evidence
               </CardTitle>
-              <CardDescription>
-                {!areMandatoryFieldsFilled() 
-                  ? "Please fill in Date, Title, and Description before uploading photos"
-                  : "Upload photos related to this entry (optional)"
-                }
-              </CardDescription>
+              <CardDescription>Upload photos related to this entry (optional)</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 md:space-y-8">
               <div>
@@ -1931,11 +2140,7 @@ export default function NewJournalEntryPage() {
                     <Camera className="inline h-4 w-4 mr-1" />
                     Photos
                   </label>
-                  <label className={`w-full sm:w-fit px-4 py-3 h-11 rounded-lg transition-colors flex items-center gap-2 justify-center sm:justify-start ${
-                    !areMandatoryFieldsFilled() 
-                      ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
-                      : 'cursor-pointer bg-blue-600 text-white hover:bg-blue-700'
-                  }`}>
+                  <label className="w-full sm:w-fit px-4 py-3 h-11 rounded-lg transition-colors flex items-center gap-2 justify-center sm:justify-start cursor-pointer bg-blue-600 text-white hover:bg-blue-700">
                     <Upload className="h-4 w-4" />
                     Add Photos
                     <input
@@ -1944,7 +2149,6 @@ export default function NewJournalEntryPage() {
                       accept="image/*"
                       onChange={handlePhotoUpload}
                       className="hidden"
-                      disabled={!areMandatoryFieldsFilled()}
                     />
                   </label>
                 </div>
@@ -1980,7 +2184,7 @@ export default function NewJournalEntryPage() {
                             className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
                           <p className="text-xs text-gray-500">
-                            Uploaded: {new Date(photo.timestamp).toLocaleString()}
+                            {formatRelativeTime(photo.timestamp)}
                           </p>
                         </div>
                       </div>
@@ -1998,12 +2202,7 @@ export default function NewJournalEntryPage() {
                 <Music className="h-5 w-5" />
                 Audio Evidence
               </CardTitle>
-              <CardDescription>
-                {!areMandatoryFieldsFilled() 
-                  ? "Please fill in Date, Title, and Description before recording or uploading audio"
-                  : "Record or upload audio evidence (optional)"
-                }
-              </CardDescription>
+              <CardDescription>Record or upload audio evidence (optional)</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 md:space-y-8">
               <div>
@@ -2015,12 +2214,9 @@ export default function NewJournalEntryPage() {
                   <button
                     type="button"
                     onClick={isRecording ? stopAudioRecording : startAudioRecording}
-                    disabled={!areMandatoryFieldsFilled() && !isRecording}
                     className={`w-full sm:w-auto px-4 py-3 h-11 rounded-lg transition-colors flex items-center gap-2 justify-center sm:justify-start ${
-                      !areMandatoryFieldsFilled() && !isRecording
-                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                        : isRecording
-                        ? 'bg-red-600 text-white hover:bg-red-700 animate-pulse'
+                      isRecording
+                        ? 'bg-red-600 text-white hover:bg-red-700 animate-pulse motion-reduce:animate-none'
                         : 'bg-green-600 text-white hover:bg-green-700'
                     }`}
                   >
@@ -2088,6 +2284,15 @@ export default function NewJournalEntryPage() {
                                 {recording.transcriptionStatus === 'failed' ? 'Retry Transcribe' : 'Transcribe'}
                               </button>
                             )}
+                            {isFoundationUser() && (recording.transcriptionStatus === 'pending' || recording.transcriptionStatus === 'failed') && (
+                              <button
+                                type="button"
+                                onClick={() => setShowUpgradeModal(true)}
+                                className="px-3 py-1.5 text-xs rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+                              >
+                                {recording.transcriptionStatus === 'failed' ? 'Retry Transcribe' : 'Transcribe'}
+                              </button>
+                            )}
                             {recording.transcriptionStatus === 'processing' && (
                               <button
                                 type="button"
@@ -2116,7 +2321,7 @@ export default function NewJournalEntryPage() {
                         />
 
                         <div className="text-xs text-gray-500 mb-2">
-                          {new Date(recording.timestamp).toLocaleString()}
+                          {formatRelativeTime(recording.timestamp)}
                         </div>
 
                         <div className="bg-gray-50 p-3 rounded-lg">
@@ -2143,6 +2348,8 @@ export default function NewJournalEntryPage() {
               </div>
             </CardContent>
           </Card>
+            </>
+          )}
 
           {/* Context Details */}
           <Card className="border-l-4 border-l-green-500">
@@ -2185,7 +2392,7 @@ export default function NewJournalEntryPage() {
           </Card>
 
           {/* Save Section */}
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 md:p-6 rounded-xl">
+          <div className="border border-gray-200 bg-gray-50 p-4 md:p-6 rounded-xl">
             <div className="space-y-4">
               {/* Draft Mode Toggle - Paid Users Only */}
               {featureAccess.draftMode && (
@@ -2216,19 +2423,29 @@ export default function NewJournalEntryPage() {
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-                  <Link
-                    href="/journal"
-                    className="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-white transition-colors text-center"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isDirty) {
+                        setShowLeaveConfirm(true)
+                        setPendingNavigation(() => () => router.push('/journal'))
+                      } else {
+                        router.push('/journal')
+                      }
+                    }}
+                    className="px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors flex items-center justify-center gap-1.5"
+                    title="Back to journal"
                   >
-                    Cancel
-                  </Link>
+                    <ArrowLeft className="h-4 w-4" />
+                    <span className="text-sm">Back</span>
+                  </button>
                   <button
                     type="submit"
                     disabled={saving || !title || (!description && !(featureAccess.draftMode && isDraft)) || !incidentDate}
                     className="px-6 md:px-8 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg"
                   >
-                    <Save className="h-4 w-4" />
-                    {saving ? 'Saving...' : (featureAccess.draftMode && isDraft ? 'Save Draft' : 'Save Entry')}
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                    {saving ? savingStatus || 'Saving...' : (featureAccess.draftMode && isDraft ? 'Save Draft' : 'Save Entry')}
                   </button>
                 </div>
               </div>
@@ -2237,18 +2454,28 @@ export default function NewJournalEntryPage() {
           {/* Sticky bottom action bar for small screens */}
           <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t p-3 sm:hidden">
             <div className="flex items-center justify-between gap-3">
-              <Link
-                href="/journal"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 text-center hover:bg-gray-50 transition-colors"
+              <button
+                type="button"
+                onClick={() => {
+                  if (isDirty) {
+                    setShowLeaveConfirm(true)
+                    setPendingNavigation(() => () => router.push('/journal'))
+                  } else {
+                    router.push('/journal')
+                  }
+                }}
+                className="px-3 py-3 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+                title="Back to journal"
               >
-                Cancel
-              </Link>
+                <ArrowLeft className="h-5 w-5" />
+              </button>
               <button
                 type="submit"
                 disabled={saving || !title || (!description && !(featureAccess.draftMode && isDraft)) || !incidentDate}
-                className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >
-                {saving ? 'Saving...' : (featureAccess.draftMode && isDraft ? 'Save Draft' : 'Save')}
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                {saving ? savingStatus || 'Saving...' : (featureAccess.draftMode && isDraft ? 'Save Draft' : 'Save')}
               </button>
             </div>
           </div>
@@ -2381,6 +2608,42 @@ export default function NewJournalEntryPage() {
           </DialogPanel>
         </div>
       </Dialog>
+
+      <UpgradeModal
+        open={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        feature="Audio transcription"
+        requiredTier="recovery"
+      />
+
+      {/* Unsaved changes confirmation */}
+      {showLeaveConfirm && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50" onClick={() => { setShowLeaveConfirm(false); setPendingNavigation(null); }} />
+          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-white shadow-2xl p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Unsaved changes</h3>
+            <p className="text-sm text-gray-600 mb-5">You have unsaved changes. Are you sure you want to leave? Your progress will be lost.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowLeaveConfirm(false)
+                  pendingNavigation?.()
+                  setPendingNavigation(null)
+                }}
+                className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
+              >
+                Leave
+              </button>
+              <button
+                onClick={() => { setShowLeaveConfirm(false); setPendingNavigation(null); }}
+                className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Stay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   )
 }

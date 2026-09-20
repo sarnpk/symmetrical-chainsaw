@@ -99,7 +99,7 @@ export default function DashboardV2({ user, profile, recentEntries }: DashboardV
         { name: 'Narcissist Detector', href: '/narcissist-detector', icon: AlertTriangle, color: 'red', featured: true },
         { name: 'Narcissist Simulator', href: '/narcissist-simulator', icon: Target, color: 'purple', featured: true },
         { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare, color: 'green' },
-        { name: 'Relationship Health', href: '/relationship-health', icon: Heart, color: 'pink' },
+        { name: 'Relationship Health', href: '/relationship-health-check', icon: Heart, color: 'pink' },
         { name: 'NPD Traits', href: '/npd-traits', icon: Target, color: 'orange' },
         { name: 'Gaslighting', href: '/gaslighting-tracker', icon: AlertTriangle, color: 'red' },
         { name: 'Empathy Audit', href: '/empathy-audit', icon: HeartHandshake, color: 'blue' }

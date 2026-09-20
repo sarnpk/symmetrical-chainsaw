@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Bell, Trophy, Users, BookOpen, Shield, Zap, Clock, X, CheckCheck } from 'lucide-react'
+import { Bell, Trophy, Users, BookOpen, Shield, Zap, Clock, CalendarClock, X, CheckCheck } from 'lucide-react'
 import Link from 'next/link'
 
 interface Notification {
   id: string
-  type: 'milestone' | 'community' | 'journal' | 'safety' | 'system' | 'streak'
+  type: 'milestone' | 'community' | 'journal' | 'safety' | 'system' | 'streak' | 'boundary'
   title: string
   body: string
   link: string | null
@@ -21,6 +21,7 @@ const typeIcons: Record<string, typeof Bell> = {
   safety: Shield,
   system: Zap,
   streak: Clock,
+  boundary: CalendarClock,
 }
 
 const typeColors: Record<string, string> = {
@@ -30,6 +31,7 @@ const typeColors: Record<string, string> = {
   safety: 'text-red-500',
   system: 'text-indigo-500',
   streak: 'text-orange-500',
+  boundary: 'text-purple-500',
 }
 
 function timeAgo(dateStr: string): string {
@@ -51,10 +53,30 @@ export default function NotificationBell() {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    checkDueReviews()
+    checkAccountMoments()
     fetchNotifications()
-    const interval = setInterval(fetchNotifications, 60000)
+    const interval = setInterval(() => {
+      checkDueReviews()
+      checkAccountMoments()
+      fetchNotifications()
+    }, 60000)
     return () => clearInterval(interval)
   }, [])
+
+  // Fire due boundary-review reminders (idempotent server-side)
+  async function checkDueReviews() {
+    try {
+      await fetch('/api/boundary-reviews/due')
+    } catch {}
+  }
+
+  // Fire trial/payment/safety/streak/badge reminders (idempotent server-side)
+  async function checkAccountMoments() {
+    try {
+      await fetch('/api/account/notification-check')
+    } catch {}
+  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -125,7 +147,7 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+        <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-80 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <h3 className="font-semibold text-gray-900 text-sm">Notifications</h3>
             {unreadCount > 0 && (

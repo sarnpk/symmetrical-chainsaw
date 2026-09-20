@@ -70,7 +70,7 @@ const navigation = [
   { name: 'Narcissist Detector', href: '/narcissist-detector', icon: Search },
   { name: 'Manipulation Decoder', href: '/manipulation-decoder', icon: MessageSquare },
   { name: 'Empathy Audit', href: '/empathy-audit', icon: Stethoscope },
-  { name: 'Relationship Health', href: '/relationship-health', icon: HeartPulse },
+  { name: 'Relationship Health', href: '/relationship-health-check', icon: HeartPulse },
   { name: 'Gaslighting Tracker', href: '/gaslighting-tracker', icon: Eye },
   { name: 'AI Coach', href: '/ai-coach', icon: Brain },
   { type: 'heading' as const, label: 'Understand' },

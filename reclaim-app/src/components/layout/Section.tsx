@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 
 type SectionProps = {
   id: string;
@@ -11,6 +11,7 @@ type SectionProps = {
   isOpen: boolean;
   onToggle: (id: string, open: boolean) => void;
   showChevron?: boolean;
+  completed?: boolean;
   nextId?: string;
   onNext?: (nextId: string) => void;
 };
@@ -23,6 +24,7 @@ export default function Section({
   isOpen,
   onToggle,
   showChevron = true,
+  completed = false,
   nextId,
   onNext,
 }: SectionProps) {
@@ -40,14 +42,21 @@ export default function Section({
         aria-controls={`${id}-panel`}
         onClick={() => onToggle(id, !isOpen)}
       >
-        <div className="text-left">
-          <div className="text-base md:text-lg font-semibold text-gray-900">{title}</div>
-          {description && (
-            <div className="text-xs md:text-sm text-gray-600 mt-0.5">{description}</div>
+        <div className="flex items-center gap-2 text-left min-w-0">
+          {completed && (
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 flex items-center justify-center">
+              <Check className="h-3 w-3 text-green-600" />
+            </span>
           )}
+          <div className="min-w-0">
+            <div className="text-base md:text-lg font-semibold text-gray-900 truncate">{title}</div>
+            {description && (
+              <div className="text-xs md:text-sm text-gray-600 mt-0.5 truncate">{description}</div>
+            )}
+          </div>
         </div>
         {showChevron && (
-          <ChevronDown className={`h-5 w-5 text-gray-500 transition-transform ${chevronClass}`} />)
+          <ChevronDown className={`h-5 w-5 text-gray-500 transition-transform flex-shrink-0 ${chevronClass}`} />)
         }
       </button>
 
@@ -57,13 +66,20 @@ export default function Section({
       >
         {children}
         {nextId && onNext && (
-          <div className="mt-4 flex">
+          <div className="mt-4 flex items-center gap-3">
             <button
               type="button"
               onClick={() => onNext(nextId)}
-              className="w-full sm:w-auto px-4 py-3 h-11 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+              className="px-4 py-2.5 h-10 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors"
             >
               Next
+            </button>
+            <button
+              type="button"
+              onClick={() => onNext(nextId)}
+              className="px-4 py-2.5 h-10 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              Skip for now
             </button>
           </div>
         )}

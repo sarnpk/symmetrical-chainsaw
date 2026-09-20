@@ -70,9 +70,9 @@ export default function UsageTrackingDashboard({ userId, subscriptionTier }: Usa
             current: data.audio_transcription.current,
             limit: data.audio_transcription.limit,
             remaining: data.audio_transcription.remaining,
-            duration_minutes: data.audio_transcription.duration_minutes,
-            minutes_limit: data.audio_transcription.minutes_limit,
-            minutes_remaining: data.audio_transcription.minutes_remaining,
+            duration_minutes: data.audio_transcription.duration_minutes ?? data.audio_transcription.current,
+            minutes_limit: data.audio_transcription.minutes_limit ?? data.audio_transcription.limit,
+            minutes_remaining: data.audio_transcription.minutes_remaining ?? data.audio_transcription.remaining,
           },
           pattern_analysis: {
             current: data.pattern_analysis.current,

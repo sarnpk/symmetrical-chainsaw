@@ -41,6 +41,38 @@ export async function GET(request: Request) {
   }
 }
 
+export async function POST(request: Request) {
+  try {
+    const supabase = await createServerSupabase();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const body = await request.json();
+    const { type, title, body: notifBody, link } = body || {};
+
+    if (!title || !notifBody) {
+      return NextResponse.json({ error: 'Missing title or body' }, { status: 400 });
+    }
+
+    const { data, error } = await supabase
+      .from('notifications')
+      .insert({
+        user_id: user.id,
+        type: type || 'system',
+        title,
+        body: notifBody,
+        link: link || null,
+      })
+      .select('*')
+      .single();
+    if (error) throw error;
+
+    return NextResponse.json({ notification: data }, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 export async function PATCH(request: Request) {
   try {
     const supabase = await createServerSupabase();

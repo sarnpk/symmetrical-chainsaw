@@ -7,6 +7,13 @@ import { createClient } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertCircle, Mic, X, Calendar, FileText, Tag } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
+import {
+  isSpeechRecognitionSupported,
+  createSpeechRecognition,
+  ensureMicrophonePermission,
+  releaseMicrophonePermission,
+  micErrorMessage,
+} from '@/lib/voice-recognition'
 
 const NPD_TRAITS = [
   'Playing the Victim',
@@ -57,12 +64,11 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
   const [editorText, setEditorText] = useState('')
   const [isDictating, setIsDictating] = useState(false)
   const [speechSupported, setSpeechSupported] = useState(false)
+  const [dictationError, setDictationError] = useState('')
   const recognitionRef = useRef<any>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setSpeechSupported(!!((window as any).webkitSpeechRecognition || (window as any).SpeechRecognition))
-    }
+    setSpeechSupported(isSpeechRecognitionSupported())
   }, [])
 
   const openFullScreenEditor = (mode: 'event' | 'fact') => {
@@ -86,11 +92,24 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
     closeFullScreenEditor()
   }
 
-  const startDictation = () => {
+  const startDictation = async () => {
     if (!speechSupported) return
+    setDictationError('')
+    const permission = await ensureMicrophonePermission()
+    if (!permission.granted) {
+      setDictationError(permission.error || 'Microphone permission is required.')
+      return
+    }
     try {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-      const rec = new SpeechRecognition()
+      let rec = recognitionRef.current
+      if (!rec) {
+        rec = createSpeechRecognition()
+        recognitionRef.current = rec
+      }
+      if (!rec) {
+        setDictationError('Speech recognition is not supported in this browser.')
+        return
+      }
       rec.continuous = true
       rec.interimResults = true
       rec.lang = 'en-US'
@@ -109,7 +128,8 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
       }
 
       rec.onerror = (e: any) => {
-        console.warn('Speech recognition error', e)
+        const msg = micErrorMessage(e)
+        if (msg) setDictationError(msg)
       }
 
       rec.onend = () => {
@@ -120,11 +140,11 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
         }
       }
 
-      recognitionRef.current = rec
       rec.start()
       setIsDictating(true)
-    } catch (e) {
+    } catch (e: any) {
       console.warn('Failed to start dictation', e)
+      setDictationError(micErrorMessage(e))
     }
   }
 
@@ -137,6 +157,7 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
       }
     } catch {}
     setIsDictating(false)
+    releaseMicrophonePermission()
   }
 
   useEffect(() => {
@@ -265,6 +286,11 @@ export default function RealityLogForm({ user, onSuccess }: RealityLogFormProps)
             {editorText.length} characters
           </div>
         </div>
+        {dictationError && (
+          <div className="px-4 pb-3 bg-gray-50 text-xs text-amber-700 bg-amber-50 border-t border-amber-200 px-4 py-2">
+            {dictationError}
+          </div>
+        )}
       </div>
     )
   }

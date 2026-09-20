@@ -44,7 +44,7 @@ const toolGroups = [
       { name: 'Cognitive Dissonance', href: '/cognitive-dissonance', icon: Gauge },
       { name: 'Empathy Audit', href: '/empathy-audit', icon: Stethoscope },
       { name: 'Role Reframing', href: '/role-reframing', icon: RefreshCw },
-      { name: 'Relationship Health', href: '/relationship-health', icon: HeartPulse },
+      { name: 'Relationship Health', href: '/relationship-health-check', icon: HeartPulse },
     ],
   },
   {

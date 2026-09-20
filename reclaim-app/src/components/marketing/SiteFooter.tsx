@@ -19,6 +19,7 @@ const columns = [
       { name: 'Pricing', href: '/pricing' },
       { name: 'Blog', href: '/blog' },
       { name: 'FAQ', href: '/faq' },
+      { name: 'Donate', href: '/donate' },
     ],
   },
   {
@@ -26,7 +27,6 @@ const columns = [
     links: [
       { name: 'Privacy Policy', href: '/privacy' },
       { name: 'Terms of Service', href: '/terms' },
-      { name: 'Refund Policy', href: '/refund-policy' },
       { name: 'Cookie Policy', href: '/cookies' },
       { name: 'Data Rights (GDPR)', href: '/gdpr' },
       { name: 'Contact', href: 'mailto:support@reclaimyourlife.app' },
@@ -46,7 +46,7 @@ export default function SiteFooter() {
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-ink-500 max-w-xs">
               A private, AI-assisted journal and evidence platform that helps survivors of emotional abuse document
-              their reality, spot manipulation, and recover — in 70+ languages.
+              their reality, spot manipulation, and recover â€” in 70+ languages.
             </p>
             <p className="mt-6 rounded-lg border border-dawn-100 bg-dawn-50 px-4 py-3 text-xs leading-relaxed text-ink-700">
               <span className="font-semibold text-dawn-600">If you are in immediate danger,</span> call{' '}
@@ -63,7 +63,6 @@ export default function SiteFooter() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      scroll
                       className="text-sm text-ink-700 hover:text-brand-700 transition-colors"
                     >
                       {link.name}

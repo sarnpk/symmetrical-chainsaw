@@ -244,6 +244,7 @@ export default function AICoachContent() {
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null)
   const [autoReadEnabled, setAutoReadEnabled] = useState(false)
   const [userHasScrolled, setUserHasScrolled] = useState(false)
+  const [keyboardOffset, setKeyboardOffset] = useState(0)
 
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
     if (chatContainerRef.current) {
@@ -750,6 +751,26 @@ export default function AICoachContent() {
     return () => { document.body.style.overflow = '' }
   }, [])
 
+  // Detect mobile keyboard open via visualViewport and adjust input position
+  useEffect(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const onResize = () => {
+      const offset = window.innerHeight - (vv.height + vv.offsetTop)
+      setKeyboardOffset(Math.max(0, offset))
+      // Auto-scroll chat to bottom when keyboard appears
+      if (offset > 50) {
+        requestAnimationFrame(() => scrollToBottom('instant'))
+      }
+    }
+    vv.addEventListener('resize', onResize)
+    vv.addEventListener('scroll', onResize)
+    return () => {
+      vv.removeEventListener('resize', onResize)
+      vv.removeEventListener('scroll', onResize)
+    }
+  }, [])
+
   // Keyboard shortcut to read the latest AI message (Ctrl/Cmd + R)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -1076,7 +1097,10 @@ export default function AICoachContent() {
       )}
 
       {/* Input Area */}
-      <div className="border-t border-gray-200 bg-white p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] shrink-0">
+      <div
+        className="border-t border-gray-200 bg-white p-3 sm:p-6 shrink-0"
+        style={{ paddingBottom: keyboardOffset > 0 ? `${keyboardOffset + 12}px` : undefined }}
+      >
         <div className="max-w-4xl mx-auto">
           <div className="flex items-end gap-2 max-w-full">
             <div className="flex-1 min-w-0">

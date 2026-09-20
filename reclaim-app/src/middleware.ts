@@ -9,17 +9,18 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   response.headers.set('X-XSS-Protection', '1; mode=block')
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(self), geolocation=()')
 
   // Content Security Policy
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com",
-    "style-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com https://accounts.google.com https://gsi.com",
+    "style-src 'self' 'unsafe-inline' https://accounts.google.com https://gsi.com",
     "img-src 'self' data: blob: https:",
+    "media-src 'self' blob: data: https:",
     "font-src 'self'",
-    "connect-src 'self' https://*.supabase.co https://api.stripe.com https://checkout.stripe.com https://challenges.cloudflare.com https://www.google-analytics.com https://www.google.com",
-    "frame-src https://js.stripe.com https://checkout.stripe.com https://challenges.cloudflare.com",
+    "connect-src 'self' https://*.supabase.co https://api.stripe.com https://checkout.stripe.com https://challenges.cloudflare.com https://www.google-analytics.com https://www.google.com https://accounts.google.com https://gsi.com",
+    "frame-src https://js.stripe.com https://checkout.stripe.com https://challenges.cloudflare.com https://accounts.google.com https://gsi.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

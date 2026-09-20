@@ -10,6 +10,12 @@ import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
+import {
+  createSpeechRecognition,
+  ensureMicrophonePermission,
+  releaseMicrophonePermission,
+  micErrorMessage,
+} from '@/lib/voice-recognition'
 
 export default function LettingGoPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -41,6 +47,67 @@ export default function LettingGoPage() {
   })
   const router = useRouter()
   const supabase = createClient()
+
+  const applyTranscriptField = (field: string, transcript: string) => {
+    setFormData(prev => {
+      if (field.startsWith('gratitude_')) {
+        const idx = parseInt(field.split('_')[1], 10)
+        const newList = [...prev.gratitude_list]
+        newList[idx] = transcript
+        return {...prev, gratitude_list: newList}
+      }
+      return {...prev, [field]: transcript}
+    })
+  }
+
+  const handleVoiceInput = async (field: string) => {
+    if (recordingField === field) {
+      activeRecognition?.stop()
+      setActiveRecognition(null)
+      setRecordingField(null)
+      releaseMicrophonePermission()
+      return
+    }
+
+    activeRecognition?.stop()
+    const permission = await ensureMicrophonePermission()
+    if (!permission.granted) {
+      toast.error(permission.error || 'Microphone permission is required.')
+      return
+    }
+
+    const recognition = createSpeechRecognition()
+    if (!recognition) {
+      toast.error('Voice input is not supported in this browser.')
+      return
+    }
+
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.onresult = (e: any) => {
+      let transcript = ''
+      for (let i = 0; i < e.results.length; i++) {
+        transcript += e.results[i][0].transcript
+      }
+      applyTranscriptField(field, transcript)
+    }
+    recognition.onerror = (e: any) => {
+      const msg = micErrorMessage(e)
+      if (msg) toast.error(msg)
+      setActiveRecognition(null)
+      setRecordingField(null)
+      releaseMicrophonePermission()
+    }
+    recognition.onend = () => {
+      setActiveRecognition(null)
+      setRecordingField(null)
+      releaseMicrophonePermission()
+    }
+
+    recognition.start()
+    setActiveRecognition(recognition)
+    setRecordingField(field)
+  }
 
   const loadData = async (userId: string) => {
     const { data: entriesData } = await supabase
@@ -413,30 +480,7 @@ export default function LettingGoPage() {
                     />
                     <button
                       type="button"
-                      onClick={() => {
-                        if (recordingField === 'raw_thoughts') {
-                          activeRecognition?.stop()
-                          setActiveRecognition(null)
-                          setRecordingField(null)
-                        } else {
-                          if ('webkitSpeechRecognition' in window) {
-                            activeRecognition?.stop()
-                            const recognition = new (window as any).webkitSpeechRecognition()
-                            recognition.continuous = true
-                            recognition.interimResults = true
-                            recognition.onresult = (e: any) => {
-                              let transcript = ''
-                              for (let i = 0; i < e.results.length; i++) {
-                                transcript += e.results[i][0].transcript
-                              }
-                              setFormData(prev => ({...prev, raw_thoughts: transcript}))
-                            }
-                            recognition.start()
-                            setActiveRecognition(recognition)
-                            setRecordingField('raw_thoughts')
-                          }
-                        }
-                      }}
+                      onClick={() => handleVoiceInput('raw_thoughts')}
                       className={`absolute right-2 top-2 p-1.5 transition-colors ${recordingField === 'raw_thoughts' ? 'text-red-600 animate-pulse' : 'text-gray-400 hover:text-indigo-600'}`}
                       title="Voice input"
                     >
@@ -464,35 +508,7 @@ export default function LettingGoPage() {
                         />
                         <button
                           type="button"
-                          onClick={() => {
-                            const fieldName = `gratitude_${i}`
-                            if (recordingField === fieldName) {
-                              activeRecognition?.stop()
-                              setActiveRecognition(null)
-                              setRecordingField(null)
-                            } else {
-                              if ('webkitSpeechRecognition' in window) {
-                                activeRecognition?.stop()
-                                const recognition = new (window as any).webkitSpeechRecognition()
-                                recognition.continuous = true
-                                recognition.interimResults = true
-                                recognition.onresult = (e: any) => {
-                                  let transcript = ''
-                                  for (let j = 0; j < e.results.length; j++) {
-                                    transcript += e.results[j][0].transcript
-                                  }
-                                  setFormData(prev => {
-                                    const newList = [...prev.gratitude_list]
-                                    newList[i] = transcript
-                                    return {...prev, gratitude_list: newList}
-                                  })
-                                }
-                                recognition.start()
-                                setActiveRecognition(recognition)
-                                setRecordingField(fieldName)
-                              }
-                            }
-                          }}
+                          onClick={() => handleVoiceInput(`gratitude_${i}`)}
                           className={`absolute right-2 top-1/2 -translate-y-1/2 p-1 transition-colors ${recordingField === `gratitude_${i}` ? 'text-red-600 animate-pulse' : 'text-gray-400 hover:text-indigo-600'}`}
                           title="Voice input"
                         >
@@ -516,30 +532,7 @@ export default function LettingGoPage() {
                     />
                     <button
                       type="button"
-                      onClick={() => {
-                        if (recordingField === 'present_moment_focus') {
-                          activeRecognition?.stop()
-                          setActiveRecognition(null)
-                          setRecordingField(null)
-                        } else {
-                          if ('webkitSpeechRecognition' in window) {
-                            activeRecognition?.stop()
-                            const recognition = new (window as any).webkitSpeechRecognition()
-                            recognition.continuous = true
-                            recognition.interimResults = true
-                            recognition.onresult = (e: any) => {
-                              let transcript = ''
-                              for (let i = 0; i < e.results.length; i++) {
-                                transcript += e.results[i][0].transcript
-                              }
-                              setFormData(prev => ({...prev, present_moment_focus: transcript}))
-                            }
-                            recognition.start()
-                            setActiveRecognition(recognition)
-                            setRecordingField('present_moment_focus')
-                          }
-                        }
-                      }}
+                      onClick={() => handleVoiceInput('present_moment_focus')}
                       className={`absolute right-2 top-2 p-1.5 transition-colors ${recordingField === 'present_moment_focus' ? 'text-red-600 animate-pulse' : 'text-gray-400 hover:text-indigo-600'}`}
                       title="Voice input"
                     >
@@ -574,30 +567,7 @@ export default function LettingGoPage() {
                       />
                       <button
                         type="button"
-                        onClick={() => {
-                          if (recordingField === 'old_pattern') {
-                            activeRecognition?.stop()
-                            setActiveRecognition(null)
-                            setRecordingField(null)
-                          } else {
-                            if ('webkitSpeechRecognition' in window) {
-                              activeRecognition?.stop()
-                              const recognition = new (window as any).webkitSpeechRecognition()
-                              recognition.continuous = true
-                              recognition.interimResults = true
-                              recognition.onresult = (e: any) => {
-                                let transcript = ''
-                                for (let i = 0; i < e.results.length; i++) {
-                                  transcript += e.results[i][0].transcript
-                                }
-                                setFormData(prev => ({...prev, old_pattern: transcript}))
-                              }
-                              recognition.start()
-                              setActiveRecognition(recognition)
-                              setRecordingField('old_pattern')
-                            }
-                          }
-                        }}
+                        onClick={() => handleVoiceInput('old_pattern')}
                         className={`absolute right-2 top-2 p-1 transition-colors ${recordingField === 'old_pattern' ? 'text-red-600 animate-pulse' : 'text-gray-400 hover:text-indigo-600'}`}
                         title="Voice input"
                       >
@@ -614,30 +584,7 @@ export default function LettingGoPage() {
                       />
                       <button
                         type="button"
-                        onClick={() => {
-                          if (recordingField === 'pattern_interrupt_action') {
-                            activeRecognition?.stop()
-                            setActiveRecognition(null)
-                            setRecordingField(null)
-                          } else {
-                            if ('webkitSpeechRecognition' in window) {
-                              activeRecognition?.stop()
-                              const recognition = new (window as any).webkitSpeechRecognition()
-                              recognition.continuous = true
-                              recognition.interimResults = true
-                              recognition.onresult = (e: any) => {
-                                let transcript = ''
-                                for (let i = 0; i < e.results.length; i++) {
-                                  transcript += e.results[i][0].transcript
-                                }
-                                setFormData(prev => ({...prev, pattern_interrupt_action: transcript}))
-                              }
-                              recognition.start()
-                              setActiveRecognition(recognition)
-                              setRecordingField('pattern_interrupt_action')
-                            }
-                          }
-                        }}
+                        onClick={() => handleVoiceInput('pattern_interrupt_action')}
                         className={`absolute right-2 top-2 p-1 transition-colors ${recordingField === 'pattern_interrupt_action' ? 'text-red-600 animate-pulse' : 'text-gray-400 hover:text-indigo-600'}`}
                         title="Voice input"
                       >
@@ -654,30 +601,7 @@ export default function LettingGoPage() {
                       />
                       <button
                         type="button"
-                        onClick={() => {
-                          if (recordingField === 'new_response') {
-                            activeRecognition?.stop()
-                            setActiveRecognition(null)
-                            setRecordingField(null)
-                          } else {
-                            if ('webkitSpeechRecognition' in window) {
-                              activeRecognition?.stop()
-                              const recognition = new (window as any).webkitSpeechRecognition()
-                              recognition.continuous = true
-                              recognition.interimResults = true
-                              recognition.onresult = (e: any) => {
-                                let transcript = ''
-                                for (let i = 0; i < e.results.length; i++) {
-                                  transcript += e.results[i][0].transcript
-                                }
-                                setFormData(prev => ({...prev, new_response: transcript}))
-                              }
-                              recognition.start()
-                              setActiveRecognition(recognition)
-                              setRecordingField('new_response')
-                            }
-                          }
-                        }}
+                        onClick={() => handleVoiceInput('new_response')}
                         className={`absolute right-2 top-2 p-1 transition-colors ${recordingField === 'new_response' ? 'text-red-600 animate-pulse' : 'text-gray-400 hover:text-indigo-600'}`}
                         title="Voice input"
                       >
@@ -701,30 +625,7 @@ export default function LettingGoPage() {
                       />
                       <button
                         type="button"
-                        onClick={() => {
-                          if (recordingField === 'third_person_perspective') {
-                            activeRecognition?.stop()
-                            setActiveRecognition(null)
-                            setRecordingField(null)
-                          } else {
-                            if ('webkitSpeechRecognition' in window) {
-                              activeRecognition?.stop()
-                              const recognition = new (window as any).webkitSpeechRecognition()
-                              recognition.continuous = true
-                              recognition.interimResults = true
-                              recognition.onresult = (e: any) => {
-                                let transcript = ''
-                                for (let i = 0; i < e.results.length; i++) {
-                                  transcript += e.results[i][0].transcript
-                                }
-                                setFormData(prev => ({...prev, third_person_perspective: transcript}))
-                              }
-                              recognition.start()
-                              setActiveRecognition(recognition)
-                              setRecordingField('third_person_perspective')
-                            }
-                          }
-                        }}
+                        onClick={() => handleVoiceInput('third_person_perspective')}
                         className={`absolute right-2 top-2 p-1 transition-colors ${recordingField === 'third_person_perspective' ? 'text-red-600 animate-pulse' : 'text-gray-400 hover:text-indigo-600'}`}
                         title="Voice input"
                       >
@@ -741,30 +642,7 @@ export default function LettingGoPage() {
                       />
                       <button
                         type="button"
-                        onClick={() => {
-                          if (recordingField === 'objective_truth') {
-                            activeRecognition?.stop()
-                            setActiveRecognition(null)
-                            setRecordingField(null)
-                          } else {
-                            if ('webkitSpeechRecognition' in window) {
-                              activeRecognition?.stop()
-                              const recognition = new (window as any).webkitSpeechRecognition()
-                              recognition.continuous = true
-                              recognition.interimResults = true
-                              recognition.onresult = (e: any) => {
-                                let transcript = ''
-                                for (let i = 0; i < e.results.length; i++) {
-                                  transcript += e.results[i][0].transcript
-                                }
-                                setFormData(prev => ({...prev, objective_truth: transcript}))
-                              }
-                              recognition.start()
-                              setActiveRecognition(recognition)
-                              setRecordingField('objective_truth')
-                            }
-                          }
-                        }}
+                        onClick={() => handleVoiceInput('objective_truth')}
                         className={`absolute right-2 top-2 p-1 transition-colors ${recordingField === 'objective_truth' ? 'text-red-600 animate-pulse' : 'text-gray-400 hover:text-indigo-600'}`}
                         title="Voice input"
                       >

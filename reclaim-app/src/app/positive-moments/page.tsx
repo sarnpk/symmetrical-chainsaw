@@ -11,6 +11,12 @@ import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 import { useRef } from 'react'
+import {
+  createSpeechRecognition,
+  ensureMicrophonePermission,
+  releaseMicrophonePermission,
+  micErrorMessage,
+} from '@/lib/voice-recognition'
 
 export default function PositiveMomentsPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -45,12 +51,9 @@ export default function PositiveMomentsPage() {
   }
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition
-      recognitionRef.current = new SpeechRecognition()
-      recognitionRef.current.continuous = true
-      recognitionRef.current.interimResults = true
-
+    const recognition = createSpeechRecognition()
+    if (recognition) {
+      recognitionRef.current = recognition
       recognitionRef.current.onresult = (event: any) => {
         let transcript = ''
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -59,22 +62,41 @@ export default function PositiveMomentsPage() {
         setMomentText(prev => prev + ' ' + transcript)
       }
 
-      recognitionRef.current.onerror = () => setIsListening(false)
-      recognitionRef.current.onend = () => setIsListening(false)
+      recognitionRef.current.onerror = (e: any) => {
+        const msg = micErrorMessage(e)
+        if (msg) toast.error(msg)
+        setIsListening(false)
+        releaseMicrophonePermission()
+      }
+      recognitionRef.current.onend = () => {
+        setIsListening(false)
+        releaseMicrophonePermission()
+      }
     }
 
     return () => {
       if (recognitionRef.current) recognitionRef.current.stop()
+      releaseMicrophonePermission()
     }
   }, [])
 
-  const toggleListening = () => {
+  const toggleListening = async () => {
     if (!recognitionRef.current) return
     if (isListening) {
       recognitionRef.current.stop()
       setIsListening(false)
-    } else {
+      releaseMicrophonePermission()
+      return
+    }
+    const permission = await ensureMicrophonePermission()
+    if (!permission.granted) {
+      toast.error(permission.error || 'Microphone permission is required for voice input.')
+      return
+    }
+    try {
       recognitionRef.current.start()
+      setIsListening(true)
+    } catch {
       setIsListening(true)
     }
   }

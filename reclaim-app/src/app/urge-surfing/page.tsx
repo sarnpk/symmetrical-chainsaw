@@ -10,6 +10,12 @@ import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/supabase'
 import toast from 'react-hot-toast'
+import {
+  createSpeechRecognition,
+  ensureMicrophonePermission,
+  releaseMicrophonePermission,
+  micErrorMessage,
+} from '@/lib/voice-recognition'
 
 const URGE_TYPES = [
   { value: 'anger', label: 'Lashing Out & Anger', color: 'red', trigger: 'Feeling unheard, disrespected, unloved, or overstimulated', sensations: 'Heat in face, racing heart, pressure behind eyes', script: "Whoa. I am at a level 10. My face feels hot. The urge to attack is huge. This is just energy moving through me. It is important energy, but it needs to be packaged better before it's delivered. I will not speak while the wave is this high. I'm going to unclench my hands and ride this wave until it cools down to a simmer. I can understand this anger and know it's allowed to be here, without acting on it." },
@@ -126,17 +132,22 @@ export default function UrgeSurfingPage() {
     setSpeaking(false)
   }
 
-  const startVoiceTyping = (field: string) => {
-    if (!('webkitSpeechRecognition' in window)) return
-    
+  const startVoiceTyping = async (field: string) => {
     if (voiceTyping === field) {
       recognitionRef.current?.stop()
       setVoiceTyping(null)
+      releaseMicrophonePermission()
       return
     }
 
     recognitionRef.current?.stop()
-    const recognition = new (window as any).webkitSpeechRecognition()
+    const permission = await ensureMicrophonePermission()
+    if (!permission.granted) {
+      toast.error(permission.error || 'Microphone permission is required.')
+      return
+    }
+    const recognition = createSpeechRecognition()
+    if (!recognition) return
     recognition.continuous = true
     recognition.interimResults = true
     recognition.onresult = (e: any) => {
@@ -146,7 +157,16 @@ export default function UrgeSurfingPage() {
       }
       setFormData(prev => ({ ...prev, [field]: transcript }))
     }
-    recognition.onend = () => setVoiceTyping(null)
+    recognition.onerror = (e: any) => {
+      const msg = micErrorMessage(e)
+      if (msg) toast.error(msg)
+      setVoiceTyping(null)
+      releaseMicrophonePermission()
+    }
+    recognition.onend = () => {
+      setVoiceTyping(null)
+      releaseMicrophonePermission()
+    }
     recognition.start()
     recognitionRef.current = recognition
     setVoiceTyping(field)

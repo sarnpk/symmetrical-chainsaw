@@ -10,9 +10,6 @@ import EmotionalStateSelector from "@/components/journal/mobile/EmotionalStateSe
 import Link from "next/link";
 import { Sparkles, ArrowRight, AlertTriangle } from "lucide-react";
 
-// Mock subscription tier - in real app, get from user context
-const subscriptionTier = 'foundation'; // 'foundation', 'recovery', 'empowerment'
-
 const emotionalStates = [
   { label: 'Happy', intensity: 'positive', value: 'happy' },
   { label: 'Content', intensity: 'positive', value: 'content' },
@@ -28,30 +25,13 @@ const emotionalStates = [
   { label: 'Numb', intensity: 'negative', value: 'numb' },
 ] as const;
 
-const UpgradePrompt = ({ feature }: { feature: string }) => (
-  <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4">
-    <div className="flex items-start gap-3">
-      <div className="flex-shrink-0">
-        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-          <span className="flex items-center justify-center text-purple-600"><Sparkles className="h-4 w-4" /></span>
-        </div>
-      </div>
-      <div className="flex-1">
-        <h4 className="font-medium text-purple-900 mb-1">
-          Unlock {feature} with Recovery Plan
-        </h4>
-        <p className="text-sm text-purple-700 mb-3">
-          Track your emotional journey and understand how experiences affect you over time.
-        </p>
-        <Link
-          href="/subscription"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
-        >
-          Upgrade to Recovery
-          <ArrowRight className="h-3 w-3" />
-        </Link>
-      </div>
+const UpgradePrompt = ({ feature, helpText }: { feature: string; helpText?: string }) => (
+  <div className="py-2 px-3 space-y-1">
+    <div className="flex items-center gap-2 text-sm text-gray-500">
+      <Sparkles className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+      <span>{feature} — available on <Link href="/subscription" className="text-indigo-600 hover:underline">Recovery</Link> plan</span>
     </div>
+    {helpText && <p className="text-xs text-gray-400 pl-5 leading-relaxed">{helpText}</p>}
   </div>
 );
 
@@ -63,12 +43,12 @@ export default function EmotionalImpactPage() {
     nextStep,
     prevStep,
     markStepComplete,
-    saveDraftNow
+    saveDraftNow,
+    subscriptionTier,
+    isPaidUser,
   } = useJournalEntry();
   
   const [busy, setBusy] = useState(false);
-
-  const isPaidUser = () => subscriptionTier === 'recovery' || subscriptionTier === 'empowerment';
 
   const onContinue = async () => {
     setBusy(true);
@@ -113,7 +93,10 @@ export default function EmotionalImpactPage() {
               />
             </div>
           ) : (
-            <UpgradePrompt feature="Emotional Impact Tracking" />
+            <UpgradePrompt
+              feature="Emotional Impact Tracking"
+              helpText="Track how you felt before and after the incident. This helps you notice shifts in your wellbeing and spot patterns across entries."
+            />
           )}
         </MobileFormCard>
 

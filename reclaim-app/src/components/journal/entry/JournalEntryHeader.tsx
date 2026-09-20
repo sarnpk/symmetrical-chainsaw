@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { ArrowLeft, Edit, Trash2, MoreVertical, Download, X } from 'lucide-react'
 import type { JournalEntry } from '@/lib/supabase'
+import UpgradeModal from '@/components/UpgradeModal'
 
 interface JournalEntryHeaderProps {
   entry: JournalEntry
@@ -16,6 +17,8 @@ export default function JournalEntryHeader({ entry, onDelete }: JournalEntryHead
   const [redact, setRedact] = useState<boolean>(false)
   const [downloading, setDownloading] = useState(false)
   const [includeLinks, setIncludeLinks] = useState<boolean>(true)
+  const [upgradeOpen, setUpgradeOpen] = useState(false)
+  const [upgradeFeature, setUpgradeFeature] = useState('')
 
   const handleExport = async () => {
     try {
@@ -24,6 +27,11 @@ export default function JournalEntryHeader({ entry, onDelete }: JournalEntryHead
       const res = await fetch(url)
       if (!res.ok) {
         const text = await res.text()
+        if (res.status === 403 && text.includes('Recovery')) {
+          setUpgradeFeature('PDF export')
+          setUpgradeOpen(true)
+          return
+        }
         throw new Error(text || `Export failed (${res.status})`)
       }
       const blob = await res.blob()
@@ -175,6 +183,8 @@ export default function JournalEntryHeader({ entry, onDelete }: JournalEntryHead
           </div>
         </div>
       )}
+
+      <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} feature={upgradeFeature} />
     </div>
   )
 }

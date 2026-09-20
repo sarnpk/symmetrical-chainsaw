@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
 import { User } from '@supabase/supabase-js';
 import { Profile } from '@/lib/supabase';
-import { Sparkles, AlertCircle, HelpCircle, Maximize2, Lightbulb } from 'lucide-react';
+import { Sparkles, AlertCircle, HelpCircle, Maximize2, Lightbulb, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import VoiceTextInput from '@/components/VoiceTextInput';
 
@@ -113,6 +113,12 @@ export default function EmpathyAuditPage() {
     });
   };
 
+  const deleteSituation = async (id: string) => {
+    if (!confirm('Delete this situation audit?')) return;
+    await fetch(`/api/empathy-audit/situations?id=${id}`, { method: 'DELETE' });
+    setSituations(prev => prev.filter(s => s.id !== id));
+  };
+
   const handleSave = async () => {
     const entries = Object.entries(percentages).map(([target, percentage]) => ({
       empathy_target: target,
@@ -155,33 +161,33 @@ export default function EmpathyAuditPage() {
         </div>
         <p className="text-gray-600 mb-6">Where is your empathy going? Redirect it toward your children and yourself.</p>
 
-        <div className="flex gap-2 mb-6 border-b flex-wrap">
+        <div className="flex gap-2 mb-6 flex-wrap">
           <button
             onClick={() => setActiveTab('situations')}
-            className={`px-4 py-2 font-medium border-b-2 transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'situations'
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             Situation Audits
           </button>
           <button
             onClick={() => setActiveTab('distribution')}
-            className={`px-4 py-2 font-medium border-b-2 transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'distribution'
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             Distribution Analysis
           </button>
           <button
             onClick={() => setActiveTab('guilt')}
-            className={`px-4 py-2 font-medium border-b-2 transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'guilt'
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             Guilt Support
@@ -310,13 +316,22 @@ export default function EmpathyAuditPage() {
                     <div key={s.id} className="p-4 border rounded">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium capitalize">{s.situation_type.replace('_', ' ')}</span>
-                        <span className={`px-3 py-1 rounded text-sm font-bold ${
-                          s.empathy_score >= 2 ? 'bg-green-100 text-green-800' :
-                          s.empathy_score >= 0 ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
-                          Score: {s.empathy_score}/4
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className={`px-3 py-1 rounded text-sm font-bold ${
+                            s.empathy_score >= 2 ? 'bg-green-100 text-green-800' :
+                            s.empathy_score >= 0 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            Score: {s.empathy_score}/4
+                          </span>
+                          <button
+                            onClick={() => deleteSituation(s.id)}
+                            className="p-1 text-gray-400 hover:text-red-600 rounded"
+                            title="Delete"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
                       <p className="text-sm text-gray-700 mb-2">{s.situation_description}</p>
                       <div className="text-xs text-gray-500">

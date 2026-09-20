@@ -8,6 +8,13 @@ import StickyActionBar from "@/components/journal/mobile/StickyActionBar";
 import MobileFormCard from "@/components/journal/mobile/MobileFormCard";
 import { SparklesIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { Pencil, Lightbulb, Check } from "lucide-react";
+import {
+  isSpeechRecognitionSupported,
+  createSpeechRecognition,
+  ensureMicrophonePermission,
+  releaseMicrophonePermission,
+  micErrorMessage,
+} from "@/lib/voice-recognition";
 
 export default function WhatHappenedPage() {
   const router = useRouter();
@@ -35,12 +42,11 @@ export default function WhatHappenedPage() {
   const [editorText, setEditorText] = useState("");
   const [isDictating, setIsDictating] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [dictationError, setDictationError] = useState("");
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setSpeechSupported(!!((window as any).webkitSpeechRecognition || (window as any).SpeechRecognition));
-    }
+    setSpeechSupported(isSpeechRecognitionSupported());
   }, []);
 
   const isMobile = () => {
@@ -67,13 +73,27 @@ export default function WhatHappenedPage() {
       }
     } catch {}
     setIsDictating(false);
+    releaseMicrophonePermission();
   };
 
-  const startDictation = () => {
+  const startDictation = async () => {
     if (!speechSupported) return;
+    setDictationError("");
+    const permission = await ensureMicrophonePermission();
+    if (!permission.granted) {
+      setDictationError(permission.error || "Microphone permission is required.");
+      return;
+    }
     try {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      const rec = new SpeechRecognition();
+      let rec = recognitionRef.current;
+      if (!rec) {
+        rec = createSpeechRecognition();
+        recognitionRef.current = rec;
+      }
+      if (!rec) {
+        setDictationError("Speech recognition is not supported in this browser.");
+        return;
+      }
       rec.continuous = true;
       rec.interimResults = true;
       rec.lang = 'en-US';
@@ -90,7 +110,8 @@ export default function WhatHappenedPage() {
         }
       };
       rec.onerror = (e: any) => {
-        console.warn('Speech recognition error', e);
+        const msg = micErrorMessage(e);
+        if (msg) setDictationError(msg);
       };
       rec.onend = () => {
         // On some mobile browsers recognition may stop after a while; auto-restart if still dictating
@@ -98,11 +119,11 @@ export default function WhatHappenedPage() {
           try { rec.start(); } catch {}
         }
       };
-      recognitionRef.current = rec;
       rec.start();
       setIsDictating(true);
-    } catch (e) {
+    } catch (e: any) {
       console.warn('Failed to start dictation', e);
+      setDictationError(micErrorMessage(e));
     }
   };
 
@@ -162,7 +183,7 @@ export default function WhatHappenedPage() {
                 <button
                   type="button"
                   onClick={triggerAiAnalysis}
-                  disabled={!draft.aiAnalysisEnabled || draft.aiAnalysisStatus === 'analyzing' || draft.description.length < 20}
+                  disabled={draft.aiAnalysisStatus === 'analyzing' || draft.description.length < 20}
                   className="inline-flex items-center px-2 py-1 text-xs rounded-md border border-indigo-300 text-indigo-700 hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <SparklesIcon className="h-3 w-3 mr-1" />
@@ -237,18 +258,11 @@ export default function WhatHappenedPage() {
                 </button>
               </div>
               <p className="mt-2 text-xs text-gray-600">
-                Get AI suggestions for titles and behavior patterns based on your description.
+                Get AI suggestions for titles based on your description. Behavior patterns will be automatically flagged in the next section.
               </p>
-              
-              {!draft.aiAnalysisEnabled && (
-                <p className="mt-2 text-xs text-purple-700 bg-purple-50 border border-purple-200 rounded px-3 py-2">
-                  AI Assist is available on Recovery and Empowerment plans.
-                </p>
-              )}
 
               {/* AI Analysis Section */}
-              {draft.aiAnalysisEnabled && (
-                <div className="mt-4 space-y-4">
+              <div className="mt-4 space-y-4">
                   {/* Analyze Button */}
                   <div className="flex items-center gap-2">
                     <button
@@ -350,7 +364,6 @@ export default function WhatHappenedPage() {
                     </div>
                   )}
                 </div>
-              )}
             </div>
           </div>
         </MobileFormCard>
@@ -387,7 +400,7 @@ export default function WhatHappenedPage() {
               Cancel
             </button>
             <div className="text-sm text-gray-800 flex items-center gap-2">
-              <span className={`inline-block h-2 w-2 rounded-full ${isDictating ? 'bg-red-500 animate-pulse' : 'bg-gray-400'}`}></span>
+              <span className={`inline-block h-2 w-2 rounded-full ${isDictating ? 'bg-red-500 animate-pulse motion-reduce:animate-none' : 'bg-gray-400'}`}></span>
               {isDictating ? 'Dictating...' : (speechSupported ? 'Tap mic to dictate' : 'Dictation not supported')}
             </div>
             <button
@@ -416,9 +429,11 @@ export default function WhatHappenedPage() {
               <span className="inline-block h-3 w-3 rounded-full bg-white/80"></span>
               {isDictating ? 'Stop' : 'Start'} Mic
             </button>
-            <div className="text-xs text-gray-500">
-              Your words will be inserted into the What happened field.
-            </div>
+            {dictationError && (
+              <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 max-w-[60%]">
+                {dictationError}
+              </div>
+            )}
           </div>
         </div>
       )}

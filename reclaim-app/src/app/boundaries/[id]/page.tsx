@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
@@ -73,6 +73,14 @@ export default function BoundaryDetailPage() {
   const [upcomingReviews, setUpcomingReviews] = useState<any[]>([])
   const [scheduling, setScheduling] = useState(false)
   const formRef = useRef<HTMLFormElement | null>(null)
+
+  const [activeTab, setActiveTab] = useState<'edit' | 'schedule' | 'log' | 'reviews'>('edit')
+  const TABS: { id: 'edit' | 'schedule' | 'log' | 'reviews'; label: string }[] = [
+    { id: 'edit', label: 'Edit Boundary' },
+    { id: 'schedule', label: 'Schedule Review' },
+    { id: 'log', label: 'Log Interaction' },
+    { id: 'reviews', label: 'Reviews' },
+  ]
 
   useEffect(() => {
     const init = async () => {
@@ -180,6 +188,19 @@ export default function BoundaryDetailPage() {
       setUpcomingReviews(prev => [data as any, ...prev].sort((a,b)=> (new Date(a.scheduled_date).getTime()) - (new Date(b.scheduled_date).getTime())))
       setScheduledDate('')
       toast.success('Review scheduled')
+      // In-app confirmation notification
+      try {
+        await fetch('/api/notifications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'boundary',
+            title: 'Boundary Review Scheduled',
+            body: `Review scheduled for "${record.title}" on ${new Date(scheduledDate).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}`,
+            link: `/boundaries/${record.id}`,
+          }),
+        })
+      } catch {}
     } catch (err: any) {
       console.error(err)
       toast.error(err.message || 'Failed to schedule review')
@@ -337,11 +358,11 @@ export default function BoundaryDetailPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">30d Success Rate</div>
-              <div className="text-xl font-bold text-gray-900">{sr30 != null ? `${sr30.toFixed(0)}%` : ''}</div>
+              <div className="text-xl font-bold text-gray-900">{sr30 != null ? `${sr30.toFixed(0)}%` : '--'}</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">90d Success Rate</div>
-              <div className="text-xl font-bold text-gray-900">{sr90 != null ? `${sr90.toFixed(0)}%` : ''}</div>
+              <div className="text-xl font-bold text-gray-900">{sr90 != null ? `${sr90.toFixed(0)}%` : '--'}</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
               <div className="text-xs text-gray-500">Violations (recent)</div>
@@ -354,28 +375,52 @@ export default function BoundaryDetailPage() {
           </div>
         </div>
 
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <div className="flex-1">
-            <Link href="/boundaries" className="text-indigo-600 hover:underline block mb-1 sm:mb-0 sm:inline-block sm:mr-3">Back</Link>
-            <div className="sm:inline-flex sm:items-center">
-              <h1 className="text-2xl font-bold text-gray-900 flex items-center">Edit Boundary
-                <span className="ml-2 inline-flex items-center text-gray-400" title="Update the title, description, category, priority, and status. Status affects whether the boundary is considered active.">
-                  <Info className="h-4 w-4" aria-hidden />
-                </span>
-              </h1>
+        <div className="sm:flex sm:items-start sm:justify-between">
+          <div className="flex-1 min-w-0">
+            <Link href="/boundaries" className="text-indigo-600 hover:underline inline-flex items-center gap-1 text-sm">
+              Back
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-900 mt-1">{record.title}</h1>
+            {record.description ? (
+              <p className="text-sm text-gray-600 mt-1">{record.description}</p>
+            ) : null}
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700 capitalize">{record.category}</span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 capitalize">{record.priority} priority</span>
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${status === 'active' ? 'bg-green-100 text-green-700' : status === 'working-on' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
+                {status}
+              </span>
             </div>
-            <p className="sm:hidden text-xs text-gray-500 mt-1">Update the title, description, category, priority, and status. Status affects whether the boundary is considered active.</p>
           </div>
           <button
             onClick={onDelete}
             disabled={deleting}
-            className="hidden sm:inline-flex border border-red-300 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 disabled:opacity-50"
+            className="hidden sm:inline-flex border border-red-300 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 disabled:opacity-50 mt-2 sm:mt-0"
           >
             {deleting ? 'Deleting...' : 'Delete'}
           </button>
         </div>
 
-        <form ref={formRef} onSubmit={onSave} className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6 space-y-4">
+        {/* Tab navigation */}
+        <div className="flex flex-wrap gap-2">
+          {TABS.map(tab => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === tab.id
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="pb-28 sm:pb-0">
+        {activeTab === 'edit' && (<form ref={formRef} onSubmit={onSave} className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Title</label>
@@ -406,18 +451,16 @@ export default function BoundaryDetailPage() {
           </div>
           <div className="hidden sm:flex gap-3">
             <button type="submit" disabled={saving} className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50">
-              {saving ? 'Saving...' : 'Save Changes'}
+              {saving ? 'Saving...' : 'Save'}
             </button>
             <Link href="/boundaries" className="w-full sm:w-auto inline-flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">
               Cancel
             </Link>
-            <button type="button" onClick={onDelete} disabled={deleting} className="w-full sm:w-auto border border-red-300 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 disabled:opacity-50">
-              {deleting ? 'Deleting...' : 'Delete'}
-            </button>
           </div>
-        </form>
+        </form>)}
 
         {/* Sticky mobile action bar */}
+        {activeTab === 'edit' && (
         <div className="fixed bottom-0 left-0 right-0 sm:hidden bg-white/95 backdrop-blur border-t border-gray-200 px-4 py-3 pb-[env(safe-area-inset-bottom)] z-40 shadow-lg">
           <div className="flex items-center gap-3">
             <button
@@ -425,7 +468,7 @@ export default function BoundaryDetailPage() {
               disabled={saving}
               className="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50"
             >
-              {saving ? 'Saving&' : 'Save Changes'}
+              {saving ? 'Saving...' : 'Save'}
             </button>
             <Link
               href="/boundaries"
@@ -438,12 +481,14 @@ export default function BoundaryDetailPage() {
               disabled={deleting}
               className="px-4 py-3 rounded-lg border border-red-300 text-red-700 font-medium hover:bg-red-50 disabled:opacity-50"
             >
-              {deleting ? 'Deleting&' : 'Delete'}
+              {deleting ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </div>
+        )}
 
         {/* Schedule Next Review */}
+        {activeTab === 'schedule' && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 space-y-4">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">Schedule Next Review
             <span className="ml-2 inline-flex items-center text-gray-400" title="Pick a future date/time to review this boundary. Creates a pending review reminder.">
@@ -475,7 +520,7 @@ export default function BoundaryDetailPage() {
                 <div key={rv.id} className="flex items-center justify-between border border-gray-200 rounded-lg px-3 py-2">
                   <div className="text-sm text-gray-700">
                     <span className="font-medium">scheduled</span>
-                    {rv.scheduled_date ? <span className="ml-2">" {new Date(rv.scheduled_date).toLocaleString()}</span> : null}
+                    {rv.scheduled_date ? <span className="ml-2">{new Date(rv.scheduled_date).toLocaleString()}</span> : null}
                   </div>
                   <button onClick={()=>markScheduledCompleted(rv.id)} className="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Mark Completed</button>
                 </div>
@@ -483,8 +528,10 @@ export default function BoundaryDetailPage() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Log Interaction */}
+        {activeTab === 'log' && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 space-y-4">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">Log Interaction
             <span className="ml-2 inline-flex items-center text-gray-400" title="Record a success or violation with optional notes. These entries power your analytics.">
@@ -534,7 +581,7 @@ export default function BoundaryDetailPage() {
                   <div className="text-sm text-gray-700">
                     <span className="font-medium">{ix.interaction_type}</span>
                     {ix.severity ? <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{ix.severity}</span> : null}
-                    {ix.description ? <span className="ml-2">" {ix.description}</span> : null}
+                    {ix.description ? <span className="ml-2">{ix.description}</span> : null}
                   </div>
                   <div className="text-xs text-gray-500">{new Date(ix.created_at).toLocaleString()}</div>
                 </div>
@@ -542,8 +589,10 @@ export default function BoundaryDetailPage() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Complete Review */}
+        {activeTab === 'reviews' && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 space-y-4">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">Complete Review
             <span className="ml-2 inline-flex items-center text-gray-400" title="Reflect on effectiveness and note any changes needed. Saves a completed review entry.">
@@ -592,7 +641,7 @@ export default function BoundaryDetailPage() {
                 <div key={rv.id} className="flex items-center justify-between border border-gray-200 rounded-lg px-3 py-2">
                   <div className="text-sm text-gray-700">
                     <span className="font-medium">{rv.review_type}</span>
-                    {rv.effectiveness_rating ? <span className="ml-2">" effectiveness {rv.effectiveness_rating}/5</span> : null}
+                    {rv.effectiveness_rating ? <span className="ml-2">effectiveness {rv.effectiveness_rating}/5</span> : null}
                     {rv.needs_modification ? <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">needs modification</span> : null}
                   </div>
                   <div className="text-xs text-gray-500">{rv.completed_date ? new Date(rv.completed_date).toLocaleString() : new Date(rv.created_at).toLocaleString()}</div>
@@ -601,7 +650,9 @@ export default function BoundaryDetailPage() {
             </div>
           </div>
         </div>
+        )}
 
+        </div>
       </div>
     </DashboardLayout>
   )

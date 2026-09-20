@@ -8,9 +8,7 @@ import StickyActionBar from "@/components/journal/mobile/StickyActionBar";
 import MobileFormCard from "@/components/journal/mobile/MobileFormCard";
 import { CameraIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Camera } from "lucide-react";
-
-// Mock subscription tier - in real app, get from user context
-const subscriptionTier = 'foundation'; // 'foundation', 'recovery', 'empowerment'
+import UpgradeModal from "@/components/UpgradeModal";
 
 export default function PhotoEvidencePage() {
   const router = useRouter();
@@ -22,10 +20,13 @@ export default function PhotoEvidencePage() {
     nextStep,
     prevStep,
     markStepComplete,
-    saveDraftNow
+    saveDraftNow,
+    subscriptionTier,
+    isPaidUser,
   } = useJournalEntry();
   
   const [busy, setBusy] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   const isFoundationUser = () => subscriptionTier === 'foundation';
   const maxPhotos = isFoundationUser() ? 3 : null;
@@ -44,7 +45,7 @@ export default function PhotoEvidencePage() {
     }
 
     if (maxPhotos && draft.photoEvidence.length >= maxPhotos) {
-      alert(`Foundation users can upload up to ${maxPhotos} photos. Upgrade for unlimited uploads.`);
+      setUpgradeOpen(true);
       e.target.value = '';
       return;
     }
@@ -215,6 +216,12 @@ export default function PhotoEvidencePage() {
         secondaryLabel="Save Draft"
         onSecondary={saveDraftNow}
         busy={busy}
+      />
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onClose={() => setUpgradeOpen(false)}
+        feature={`Upload more than ${maxPhotos} photos`}
       />
     </div>
   );

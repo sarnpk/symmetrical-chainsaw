@@ -1,9 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
+import { sendEmail, notificationEmailHtml } from './email'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-export type NotificationType = 'milestone' | 'community' | 'journal' | 'safety' | 'system' | 'streak'
+export type NotificationType = 'milestone' | 'community' | 'journal' | 'safety' | 'system' | 'streak' | 'boundary'
 
 interface CreateNotificationParams {
   userId: string
@@ -11,18 +12,25 @@ interface CreateNotificationParams {
   title: string
   body: string
   link?: string
+  /**
+   * When provided, also send the notification as an email. Only safe to pass
+   * from server code (Resend key is server-side only).
+   */
+  emailTo?: string
 }
 
 /**
  * Create an in-app notification for a user.
  * Uses service role key to bypass RLS for server-side triggers.
+ * Optionally emails the user when `emailTo` is set.
  */
 export async function createNotification({
   userId,
   type,
   title,
   body,
-  link
+  link,
+  emailTo
 }: CreateNotificationParams) {
   // If service role key is not set, fall back to user-context client
   const supabase = supabaseServiceKey
@@ -44,6 +52,15 @@ export async function createNotification({
 
   if (error) {
     console.error('Failed to create notification:', error.message)
+    return
+  }
+
+  if (emailTo) {
+    await sendEmail(
+      emailTo,
+      title,
+      notificationEmailHtml({ title, body, link, cta: link ? 'View in Reclaim' : undefined })
+    )
   }
 }
 
@@ -146,6 +163,45 @@ export async function notifyGroupJoin(
     title: 'New member in your group',
     body: `${joinerName} joined "${roomName}"`,
     link: '/community',
+  })
+}
+
+/**
+ * Notify that a scheduled boundary review is now due.
+ */
+export async function notifyBoundaryReviewDue(
+  userId: string,
+  boundaryId: string,
+  boundaryTitle: string
+) {
+  await createNotification({
+    userId,
+    type: 'boundary',
+    title: 'Boundary Review Due',
+    body: `Time to review your boundary: "${boundaryTitle}"`,
+    link: `/boundaries/${boundaryId}`,
+  })
+}
+
+/**
+ * Confirmation notification when a boundary review is scheduled.
+ */
+export async function notifyBoundaryReviewScheduled(
+  userId: string,
+  boundaryId: string,
+  boundaryTitle: string,
+  scheduledDate: string
+) {
+  const when = new Date(scheduledDate).toLocaleString(undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  })
+  await createNotification({
+    userId,
+    type: 'boundary',
+    title: 'Boundary Review Scheduled',
+    body: `You scheduled a review for "${boundaryTitle}" on ${when}`,
+    link: `/boundaries/${boundaryId}`,
   })
 }
 

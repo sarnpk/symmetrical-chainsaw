@@ -2,6 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { X, Mic, MicOff } from 'lucide-react'
+import {
+  createSpeechRecognition,
+  ensureMicrophonePermission,
+  releaseMicrophonePermission,
+  micErrorMessage,
+} from '@/lib/voice-recognition'
 
 interface VoiceTextInputProps {
   isOpen: boolean
@@ -24,17 +30,17 @@ export default function VoiceTextInput({
 }: VoiceTextInputProps) {
   const [value, setValue] = useState(initialValue)
   const [isListening, setIsListening] = useState(false)
+  const [micError, setMicError] = useState('')
   const recognitionRef = useRef<any>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition
-      recognitionRef.current = new SpeechRecognition()
-      recognitionRef.current.continuous = true
-      recognitionRef.current.interimResults = true
+    const recognition = createSpeechRecognition()
+    if (recognition) {
+      recognition.continuous = true
+      recognition.interimResults = true
 
-      recognitionRef.current.onresult = (event: any) => {
+      recognition.onresult = (event: any) => {
         let transcript = ''
         for (let i = event.resultIndex; i < event.results.length; i++) {
           transcript += event.results[i][0].transcript
@@ -42,30 +48,55 @@ export default function VoiceTextInput({
         setValue(prev => prev + ' ' + transcript)
       }
 
-      recognitionRef.current.onerror = () => {
+      recognition.onerror = (event: any) => {
+        const msg = micErrorMessage(event)
+        if (msg) setMicError(msg)
         setIsListening(false)
+        releaseMicrophonePermission()
       }
 
-      recognitionRef.current.onend = () => {
+      recognition.onend = () => {
         setIsListening(false)
+        releaseMicrophonePermission()
       }
+
+      recognitionRef.current = recognition
     }
 
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop()
       }
+      releaseMicrophonePermission()
     }
   }, [])
 
-  const toggleListening = () => {
-    if (!recognitionRef.current) return
+  const toggleListening = async () => {
+    if (!recognitionRef.current) {
+      setMicError('Voice input is not supported in this browser. Try Chrome, Edge, or Safari.')
+      return
+    }
 
     if (isListening) {
       recognitionRef.current.stop()
       setIsListening(false)
-    } else {
+      releaseMicrophonePermission()
+      return
+    }
+
+    setMicError('')
+    // Request mic permission first so the browser prompt appears.
+    const permission = await ensureMicrophonePermission()
+    if (!permission.granted) {
+      setMicError(permission.error || 'Microphone permission is required for voice input.')
+      return
+    }
+
+    try {
       recognitionRef.current.start()
+      setIsListening(true)
+    } catch {
+      // start() throws if called while already running; safe to ignore.
       setIsListening(true)
     }
   }
@@ -103,6 +134,11 @@ export default function VoiceTextInput({
             placeholder={placeholder}
             className="w-full h-full min-h-[300px] p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none text-lg"
           />
+          {micError && (
+            <p className="mt-3 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">
+              {micError}
+            </p>
+          )}
         </div>
 
         <div className="p-4 border-t bg-gray-50 flex items-center justify-between gap-4">

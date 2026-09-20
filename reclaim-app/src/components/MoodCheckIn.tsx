@@ -340,29 +340,14 @@ export default function MoodCheckIn({ userId, subscriptionTier, maxEntries = 10,
           <CardDescription>Track your emotional wellbeing and recovery progress</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-purple-600 font-bold text-sm"><Sparkles className="h-4 w-4" /></span>
-                </div>
-              </div>
-              <div className="flex-1">
-                <h4 className="font-medium text-purple-900 mb-1">
-                  Unlock Daily Mood Tracking with Recovery Plan
-                </h4>
-                <p className="text-sm text-purple-700 mb-3">
-                  Track your emotional wellbeing, identify patterns, and monitor your recovery progress with daily mood check-ins.
-                </p>
-                <a
-                  href="/subscription"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
-                >
-                  Upgrade to Recovery
-                  <ArrowRight className="h-3 w-3" />
-                </a>
-              </div>
+          <div className="py-2 px-3 space-y-1">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Sparkles className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+              <span>Daily Mood Tracking — available on <a href="/subscription" className="text-indigo-600 hover:underline">Recovery</a> plan</span>
             </div>
+            <p className="text-xs text-gray-400 pl-5 leading-relaxed">
+              Check in with your emotions daily. Track patterns in your mood over weeks and months, notice what triggers difficult days, and share progress with your therapist.
+            </p>
           </div>
         </CardContent>
       </Card>

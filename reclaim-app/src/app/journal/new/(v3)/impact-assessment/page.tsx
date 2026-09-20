@@ -10,9 +10,6 @@ import MobileSlider from "@/components/journal/mobile/MobileSlider";
 import Link from "next/link";
 import { Sparkles, ArrowRight, BookOpen } from "lucide-react";
 
-// Mock subscription tier - in real app, get from user context
-const subscriptionTier = 'foundation'; // 'foundation', 'recovery', 'empowerment'
-
 const getMoodDescriptor = (val: number) => {
   if (val <= 2) return 'Very Low';
   if (val <= 4) return 'Low';
@@ -29,30 +26,13 @@ const getTriggerDescriptor = (val: number) => {
   return 'Severe';
 };
 
-const UpgradePrompt = ({ feature }: { feature: string }) => (
-  <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4">
-    <div className="flex items-start gap-3">
-      <div className="flex-shrink-0">
-        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-          <span className="flex items-center justify-center text-purple-600"><Sparkles className="h-4 w-4" /></span>
-        </div>
-      </div>
-      <div className="flex-1">
-        <h4 className="font-medium text-purple-900 mb-1">
-          Unlock {feature} with Recovery Plan
-        </h4>
-        <p className="text-sm text-purple-700 mb-3">
-          Track emotional impact and get enhanced documentation features starting at $9.99/month.
-        </p>
-        <Link
-          href="/subscription"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
-        >
-          Upgrade to Recovery
-          <ArrowRight className="h-3 w-3" />
-        </Link>
-      </div>
+const UpgradePrompt = ({ feature, helpText }: { feature: string; helpText?: string }) => (
+  <div className="py-2 px-3 space-y-1">
+    <div className="flex items-center gap-2 text-sm text-gray-500">
+      <Sparkles className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+      <span>{feature} — available on <Link href="/subscription" className="text-indigo-600 hover:underline">Recovery</Link> plan</span>
     </div>
+    {helpText && <p className="text-xs text-gray-400 pl-5 leading-relaxed">{helpText}</p>}
   </div>
 );
 
@@ -65,12 +45,12 @@ export default function ImpactAssessmentPage() {
     nextStep,
     prevStep,
     markStepComplete,
-    saveDraftNow
+    saveDraftNow,
+    subscriptionTier,
+    isPaidUser,
   } = useJournalEntry();
   
   const [busy, setBusy] = useState(false);
-
-  const isPaidUser = () => subscriptionTier === 'recovery' || subscriptionTier === 'empowerment';
 
   const onContinue = async () => {
     setBusy(true);
@@ -121,7 +101,10 @@ export default function ImpactAssessmentPage() {
               />
             </div>
           ) : (
-            <UpgradePrompt feature="Impact Assessment" />
+            <UpgradePrompt
+              feature="Impact Assessment"
+              helpText="Rate your mood (1–10) and trigger level (1–5). This helps you and your therapist track emotional patterns over time."
+            />
           )}
         </MobileFormCard>
 
