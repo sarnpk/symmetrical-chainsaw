@@ -795,19 +795,18 @@ export default function AICoachContent() {
   }, [messages, speakingMessageId])
 
   return (
-    <div className="flex flex-col bg-gray-50 overflow-hidden -m-4 sm:-m-6 lg:-m-8 lg:-mt-12 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3rem)]">
+    <div className="flex flex-col bg-gray-50 overflow-hidden -m-4 sm:-m-6 lg:-m-8 lg:-mt-12" style={{ height: '100dvh', maxHeight: '100dvh' }}>
       {/* SR-only live region for copy feedback */}
       <div className="sr-only" role="status" aria-live="polite">{copyStatus}</div>
 
       {/* Compact Toolbar */}
-      <div className="bg-gray-50 border-b border-gray-200 px-3 py-2 shrink-0">
-        <div className="flex items-center justify-between gap-2 overflow-x-auto">
-          {/* Thread selector - compact */}
-          <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
+      <div className="bg-gray-50 border-b border-gray-200 px-2 py-2 shrink-0">
+        <div className="flex items-center gap-2 overflow-x-auto">
+          <div className="flex items-center gap-1.5 min-w-0 flex-1 sm:flex-none">
             <select
               value={conversationId || ''}
               onChange={(e) => e.target.value ? handleSelectThread(e.target.value) : undefined}
-              className="text-xs border border-gray-300 rounded px-2 py-1 bg-white min-w-0 max-w-[120px] truncate"
+              className="text-xs border border-gray-300 rounded px-2 py-1 bg-white min-w-0 w-full sm:max-w-[120px] truncate"
             >
               <option value="" disabled>Thread</option>
               {threads.map(t => (
@@ -834,13 +833,11 @@ export default function AICoachContent() {
             )}
           </div>
 
-          {/* Response controls - compact */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Length selector */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             <select
               value={responseLength}
               onChange={(e) => setResponseLength(e.target.value as ResponseLength)}
-              className="text-xs border border-gray-300 rounded px-2 py-1 bg-white"
+              className="text-xs border border-gray-300 rounded px-1.5 py-1 bg-white hidden sm:block"
               title="Response length"
             >
               <option value="concise">Brief</option>
@@ -848,7 +845,6 @@ export default function AICoachContent() {
               <option value="detailed">Detailed</option>
             </select>
 
-            {/* Mode selector - mobile segmented */}
             <div className="flex rounded border border-gray-300 bg-white overflow-hidden">
               {([
                 { id: 'general', label: 'General', short: 'Gen' },
@@ -1099,7 +1095,7 @@ export default function AICoachContent() {
       {/* Input Area */}
       <div
         className="border-t border-gray-200 bg-white p-3 sm:p-6 shrink-0"
-        style={{ paddingBottom: keyboardOffset > 0 ? `${keyboardOffset + 12}px` : undefined }}
+        style={{ paddingBottom: `max(${keyboardOffset > 0 ? `${keyboardOffset + 12}px` : '12px'}, env(safe-area-inset-bottom, 12px))` }}
       >
         <div className="max-w-4xl mx-auto">
           <div className="flex items-end gap-2 max-w-full">

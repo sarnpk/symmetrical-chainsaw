@@ -88,9 +88,9 @@ export default function RoleReframingPage() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto p-4 sm:p-6">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-3xl font-bold">Role Reframing</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Role Reframing</h1>
           <Link href="/docs/ROLE_REFRAMING_USER_GUIDE.html" target="_blank">
             <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
               <HelpCircle className="h-5 w-5" />
@@ -100,32 +100,32 @@ export default function RoleReframingPage() {
         </div>
         <p className="text-gray-600 mb-8">You're not her spouse anymore. You're a project manager handling a difficult counterpart.</p>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="border rounded-lg p-6 bg-green-50">
-            <h2 className="text-xl font-bold mb-4 text-green-800 flex items-center gap-2"><CheckCircle className="h-5 w-5" />My Responsibilities</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8">
+          <div className="border rounded-lg p-4 sm:p-6 bg-green-50">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 text-green-800 flex items-center gap-2"><CheckCircle className="h-5 w-5" />My Responsibilities</h2>
             <ul className="space-y-2">
               {myResponsibilities.map(b => (
-                <li key={b.id} className="flex items-start justify-between p-3 bg-white rounded">
-                  <div>
-                    <div className="font-medium">{b.responsibility_area}</div>
-                    {b.notes && <div className="text-sm text-gray-600 mt-1">{b.notes}</div>}
+                <li key={b.id} className="flex items-start justify-between gap-2 p-3 bg-white rounded">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium break-words">{b.responsibility_area}</div>
+                    {b.notes && <div className="text-sm text-gray-600 mt-1 break-words">{b.notes}</div>}
                   </div>
-                  <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-800 ml-2"><X className="h-4 w-4" /></button>
+                  <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-800 flex-shrink-0 p-1"><X className="h-4 w-4" /></button>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="border rounded-lg p-6 bg-red-50">
-            <h2 className="text-xl font-bold mb-4 text-red-800 flex items-center gap-2"><X className="h-5 w-5" />NOT My Responsibilities</h2>
+          <div className="border rounded-lg p-4 sm:p-6 bg-red-50">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 text-red-800 flex items-center gap-2"><X className="h-5 w-5" />NOT My Responsibilities</h2>
             <ul className="space-y-2">
               {notMyResponsibilities.map(b => (
-                <li key={b.id} className="flex items-start justify-between p-3 bg-white rounded">
-                  <div>
-                    <div className="font-medium">{b.responsibility_area}</div>
-                    {b.notes && <div className="text-sm text-gray-600 mt-1">{b.notes}</div>}
+                <li key={b.id} className="flex items-start justify-between gap-2 p-3 bg-white rounded">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium break-words">{b.responsibility_area}</div>
+                    {b.notes && <div className="text-sm text-gray-600 mt-1 break-words">{b.notes}</div>}
                   </div>
-                  <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-800 ml-2"><X className="h-4 w-4" /></button>
+                  <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-800 flex-shrink-0 p-1"><X className="h-4 w-4" /></button>
                 </li>
               ))}
             </ul>
@@ -220,7 +220,7 @@ export default function RoleReframingPage() {
           </div>
         )}
 
-        <div className="border rounded-lg p-6 bg-white mb-6">
+        <div className="border rounded-lg p-4 sm:p-6 bg-white mb-6">
           <h3 className="text-lg font-semibold mb-4">Need Help Deciding?</h3>
           <p className="text-sm text-gray-600 mb-3">Describe a situation and let AI help you determine if it's your responsibility.</p>
           <textarea
@@ -247,14 +247,14 @@ export default function RoleReframingPage() {
               setLoadingAI(false);
             }}
             disabled={!analyzingSituation || loadingAI}
-            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50 flex items-center gap-2"
+            className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50 flex items-center justify-center gap-2"
           >
             <Sparkles className="h-4 w-4" />
             {loadingAI ? 'Analyzing...' : 'Get AI Guidance'}
           </button>
         </div>
 
-        <div className="border rounded-lg p-6 bg-white">
+        <div className="border rounded-lg p-4 sm:p-6 bg-white">
           <h3 className="text-lg font-semibold mb-4">Add Boundary</h3>
           
           <div className="mb-4">
@@ -264,7 +264,7 @@ export default function RoleReframingPage() {
                 <button
                   key={area}
                   onClick={() => handleAdd(area)}
-                  className="px-3 py-1 border rounded hover:bg-gray-50 text-sm"
+                  className="px-3 py-1 border rounded hover:bg-gray-50 text-sm break-words"
                 >
                   {area}
                 </button>

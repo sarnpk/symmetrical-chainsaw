@@ -95,9 +95,9 @@ export default function GreyRockTemplatesClient() {
 
   return (
     <DashboardLayout user={user} profile={profile}>
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto p-4 sm:p-6">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-3xl font-bold">Grey Rock Templates</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Grey Rock Templates</h1>
           <Link href="/docs/GREY_ROCK_USER_GUIDE.html" target="_blank">
             <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
               <HelpCircle className="h-5 w-5" />
@@ -148,7 +148,7 @@ export default function GreyRockTemplatesClient() {
 
         <div className="space-y-4">
           {filteredTemplates.map(template => (
-            <div key={template.id} className="bg-white border rounded-lg p-6">
+            <div key={template.id} className="bg-white border rounded-lg p-4 sm:p-6">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
@@ -162,42 +162,40 @@ export default function GreyRockTemplatesClient() {
               </div>
 
               <div className="bg-gray-50 border rounded-lg p-4 mb-3">
-                <div className="flex items-start justify-between gap-3">
-                  <p className="text-gray-900 font-medium flex-1">{template.template_text}</p>
-                  <button
-                    onClick={() => copyToClipboard(template.template_text, template.id)}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm whitespace-nowrap"
-                  >
-                    {copiedId === template.id ? (
-                      <>
-                        <Check className="h-4 w-4" />
-                        Copied!
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-4 w-4" />
-                        Copy
-                      </>
-                    )}
-                  </button>
-                </div>
+                <p className="text-gray-900 font-medium text-sm mb-3">{template.template_text}</p>
+                <button
+                  onClick={() => copyToClipboard(template.template_text, template.id)}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm"
+                >
+                  {copiedId === template.id ? (
+                    <>
+                      <Check className="h-4 w-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      Copy
+                    </>
+                  )}
+                </button>
               </div>
 
               {template.variations && template.variations.length > 0 && (
                 <div className="mb-3">
                   <p className="text-xs font-medium text-gray-600 mb-2">Variations:</p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="space-y-2">
                     {template.variations.map((variation, idx) => (
                       <button
                         key={idx}
                         onClick={() => copyToClipboard(variation, `${template.id}-${idx}`)}
-                        className="px-3 py-1.5 bg-white border rounded text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                        className="w-full text-left px-3 py-2 bg-white border rounded text-sm text-gray-700 hover:bg-gray-50 flex items-center justify-between gap-2"
                       >
-                        {variation}
+                        <span className="break-words">{variation}</span>
                         {copiedId === `${template.id}-${idx}` ? (
-                          <Check className="h-3 w-3 text-green-600" />
+                          <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
                         ) : (
-                          <Copy className="h-3 w-3 text-gray-400" />
+                          <Copy className="h-3 w-3 text-gray-400 flex-shrink-0" />
                         )}
                       </button>
                     ))}
