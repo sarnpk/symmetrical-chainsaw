@@ -15,7 +15,7 @@ interface CrisisContext {
 
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -69,34 +69,42 @@ export async function POST(request: NextRequest) {
     
     const structuredReframe = parseAIResponse(aiResponse)
 
-    // Save to database
-    const { data: reframe, error: dbError } = await supabase
-      .from('crisis_reframes')
-      .insert({
-        user_id: user.id,
-        crisis_type,
-        context_data: context,
-        ai_reframe: structuredReframe
-      })
-      .select()
-      .single()
+    // Save to database (skip if table doesn't exist yet)
+    let reframeId = null
+    let createdAt = new Date().toISOString()
+    try {
+      const { data: reframe, error: dbError } = await supabase
+        .from('crisis_reframes')
+        .insert({
+          user_id: user.id,
+          crisis_type,
+          context_data: context,
+          ai_reframe: structuredReframe
+        })
+        .select()
+        .single()
 
-    if (dbError) {
-      console.error('Database error:', dbError)
-      return NextResponse.json({ error: 'Failed to save reframe' }, { status: 500 })
+      if (dbError) {
+        console.error('Database error saving reframe:', dbError.message)
+      } else {
+        reframeId = reframe.id
+        createdAt = reframe.created_at
+      }
+    } catch (dbErr: any) {
+      console.error('DB insert failed:', dbErr?.message)
     }
 
     return NextResponse.json({
-      id: reframe.id,
+      id: reframeId,
       reframe: structuredReframe,
       usage_info: canUse.usage_info,
-      created_at: reframe.created_at
+      created_at: createdAt
     })
 
-  } catch (error) {
-    console.error('Crisis reframe generation error:', error)
+  } catch (error: any) {
+    console.error('Crisis reframe generation error:', error?.message || error)
     return NextResponse.json(
-      { error: 'Failed to generate reframe' },
+      { error: 'Failed to generate reframe', details: error?.message || 'Unknown error' },
       { status: 500 }
     )
   }

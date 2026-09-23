@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Text required' }, { status: 400 })
     }
 
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' })
+    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
 
     const prompt = `Analyze this relationship situation and identify which narcissist discard stage they're experiencing:
 

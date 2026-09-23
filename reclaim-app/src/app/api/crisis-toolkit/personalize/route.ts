@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const lastUsed = logs?.[0]?.created_at;
 
     // Generate personalized message
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' });
+    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' });
     
     const prompt = `You are a compassionate mental health support assistant. 
 

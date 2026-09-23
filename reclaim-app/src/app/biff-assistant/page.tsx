@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
 import { HelpCircle, Sparkles, AlertTriangle, Trash2, Maximize2, Crown, ChevronDown, ChevronUp, Lightbulb, BookOpen } from 'lucide-react';
@@ -27,6 +27,7 @@ export default function BIFFAssistant() {
   const [showInfo, setShowInfo] = useState(false);
   const [metrics, setMetrics] = useState<any>(null);
   const [messageTimestamp, setMessageTimestamp] = useState<Date | null>(null);
+  const draftRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
 
   const supabase = createClient();
@@ -126,6 +127,10 @@ export default function BIFFAssistant() {
     }
     setDraftResponse(text);
     setSelectedCategory(template.category);
+    setTimeout(() => {
+      draftRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      draftRef.current?.focus();
+    }, 100);
   };
 
   const saveCoparentName = (name: string) => {
@@ -218,7 +223,7 @@ export default function BIFFAssistant() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold mb-2">BIFF Communication Assistant</h1>
+              <h1 className="text-2xl font-bold mb-2">BIFF Assistant</h1>
               <p className="text-gray-600 text-sm">Brief / Informative / Friendly / Firm</p>
               <p className="text-indigo-600 text-xs font-medium mt-1">Radical Non-Engagement Tool</p>
             </div>
@@ -374,6 +379,7 @@ export default function BIFFAssistant() {
               </button>
             </div>
             <textarea
+              ref={draftRef}
               value={draftResponse}
               onChange={(e) => setDraftResponse(e.target.value)}
               className="w-full p-3 border rounded"

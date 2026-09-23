@@ -8,8 +8,8 @@ const supabase = createClient(
 )
 
 // Local constants and helpers to avoid cross-package imports
-const DEFAULT_FREE_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash'
-const DEFAULT_PAID_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash'
+const DEFAULT_FREE_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
+const DEFAULT_PAID_TIER_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
 
 // FNV-1a hash for simple caching keys
 function hashText(input: string): string {

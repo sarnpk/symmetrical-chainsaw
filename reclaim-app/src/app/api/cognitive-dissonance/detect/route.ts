@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use AI to detect conflicts
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' })
+    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
     const prompt = `Analyze these journal entries for cognitive dissonance - conflicting beliefs or contradictory statements about the same topic.
 
 Entries:

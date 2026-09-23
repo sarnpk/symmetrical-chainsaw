@@ -4,10 +4,11 @@ import { createServerClient } from '@supabase/ssr'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = cookies()
+    const { id } = await params
+    const cookieStore = await cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -33,7 +34,7 @@ export async function POST(
       const { data: current } = await supabase
         .from('crisis_reframes')
         .select('revisited_count')
-        .eq('id', params.id)
+        .eq('id', id)
         .eq('user_id', user.id)
         .single()
 
@@ -43,7 +44,7 @@ export async function POST(
           revisited_count: (current?.revisited_count || 0) + 1,
           last_revisited_at: new Date().toISOString()
         })
-        .eq('id', params.id)
+        .eq('id', id)
         .eq('user_id', user.id)
         .select()
         .single()
@@ -60,7 +61,7 @@ export async function POST(
       const { data, error } = await supabase
         .from('crisis_reframes')
         .update({ helpful_rating: updateData.rating })
-        .eq('id', params.id)
+        .eq('id', id)
         .eq('user_id', user.id)
         .select()
         .single()
@@ -81,7 +82,7 @@ export async function POST(
           survived_duration: updateData.survived_duration,
           prevented_contact: updateData.prevented_contact
         })
-        .eq('id', params.id)
+        .eq('id', id)
         .eq('user_id', user.id)
         .select()
         .single()
@@ -116,10 +117,11 @@ export async function POST(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = cookies()
+    const { id } = await params
+    const cookieStore = await cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 export async function checkAndRecordAIUsage(featureName: string, featureType?: string) {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -60,7 +60,7 @@ export async function checkAndRecordAIUsage(featureName: string, featureType?: s
 
 // Generic usage tracking function using database-driven limits
 export async function trackUsage(userId: string, featureName: string) {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

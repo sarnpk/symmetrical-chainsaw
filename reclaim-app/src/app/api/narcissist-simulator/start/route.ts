@@ -212,7 +212,7 @@ Requirements:
 Return ONLY the narcissist's message, no explanations or meta-commentary.`
     }
 
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' })
+    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
     const result = await model.generateContent(prompt)
     const initialMessage = result.response.text()
 

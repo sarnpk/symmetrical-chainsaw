@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
 import { HelpCircle, Sparkles, AlertTriangle, Trash2, Maximize2, Crown, ChevronDown, ChevronUp, Lightbulb, BookOpen } from 'lucide-react';
@@ -27,6 +27,7 @@ export default function BiffAssistantClient() {
   const [showInfo, setShowInfo] = useState(false);
   const [metrics, setMetrics] = useState<any>(null);
   const [messageTimestamp, setMessageTimestamp] = useState<Date | null>(null);
+  const draftRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
 
   const supabase = createClient();
@@ -126,6 +127,10 @@ export default function BiffAssistantClient() {
     }
     setDraftResponse(text);
     setSelectedCategory(template.category);
+    setTimeout(() => {
+      draftRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      draftRef.current?.focus();
+    }, 100);
   };
 
   const saveCoparentName = (name: string) => {
@@ -214,26 +219,24 @@ export default function BiffAssistantClient() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto p-4 space-y-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold mb-2">BIFF Communication Assistant</h1>
-              <p className="text-gray-600 text-sm">Brief / Informative / Friendly / Firm</p>
-              <p className="text-indigo-600 text-xs font-medium mt-1">Radical Non-Engagement Tool</p>
-            </div>
-            <Link href="/docs/BIFF_ASSISTANT_USER_GUIDE.html" target="_blank">
-              <button className="flex items-center gap-2 px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                <HelpCircle className="h-5 w-5" />
-                <span className="font-medium">Guide</span>
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <div className="flex items-start justify-between gap-2">
+            <h1 className="text-base sm:text-2xl font-bold leading-tight whitespace-nowrap">BIFF Assistant</h1>
+            <Link href="/docs/BIFF_ASSISTANT_USER_GUIDE.html" target="_blank" className="flex-shrink-0">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                <HelpCircle className="h-4 w-4" />
+                <span className="font-medium text-sm">Guide</span>
               </button>
             </Link>
           </div>
+          <p className="text-gray-600 text-xs sm:text-sm">Brief / Informative / Friendly / Firm</p>
+          <p className="text-indigo-600 text-xs font-medium mt-1">Radical Non-Engagement Tool</p>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-indigo-200 rounded-lg shadow p-4">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-indigo-200 rounded-lg shadow p-3 sm:p-4">
           <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowInfo(!showInfo)}>
-            <h2 className="font-semibold text-indigo-800 flex items-center gap-2"><Lightbulb className="h-5 w-5" />What is BIFF & Radical Non-Engagement?</h2>
+            <h2 className="font-semibold text-sm sm:text-base text-indigo-800 flex items-center gap-2"><Lightbulb className="h-4 w-4 sm:h-5 sm:w-5" />What is BIFF?</h2>
             {showInfo ? <ChevronUp className="h-5 w-5 text-indigo-600" /> : <ChevronDown className="h-5 w-5 text-indigo-600" />}
           </div>
           {showInfo && (
@@ -251,23 +254,23 @@ export default function BiffAssistantClient() {
         </div>
 
         {metrics && metrics.total_communications > 0 && (
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 rounded-lg shadow p-6">
-            <h2 className="font-semibold text-green-800 mb-4 flex items-center gap-2"><BookOpen className="h-5 w-5" />This Month's Success Metrics</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 rounded-lg shadow p-4 sm:p-6">
+            <h2 className="font-semibold text-green-800 mb-3 sm:mb-4 flex items-center gap-2 text-sm sm:text-base"><BookOpen className="h-4 w-4 sm:h-5 sm:w-5" />This Month's Metrics</h2>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">{metrics.success_rate}%</div>
+                <div className="text-2xl sm:text-3xl font-bold text-green-600">{metrics.success_rate}%</div>
                 <div className="text-xs text-green-700">Disengagement Rate</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">{metrics.jade_avoided}/{metrics.total_communications}</div>
+                <div className="text-2xl sm:text-3xl font-bold text-green-600">{metrics.jade_avoided}/{metrics.total_communications}</div>
                 <div className="text-xs text-green-700">JADE Avoided</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">{metrics.avg_response_time_hours}h</div>
+                <div className="text-2xl sm:text-3xl font-bold text-green-600">{metrics.avg_response_time_hours}h</div>
                 <div className="text-xs text-green-700">Avg Response Time</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">{metrics.high_biff_scores}/{metrics.total_communications}</div>
+                <div className="text-2xl sm:text-3xl font-bold text-green-600">{metrics.high_biff_scores}/{metrics.total_communications}</div>
                 <div className="text-xs text-green-700">High BIFF Scores</div>
               </div>
             </div>
@@ -275,8 +278,8 @@ export default function BiffAssistantClient() {
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="font-semibold mb-4">Quick Templates</h2>
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <h2 className="font-semibold mb-3 text-sm sm:text-base">Quick Templates</h2>
           <div className="grid grid-cols-2 gap-2">
             {templates.filter(t => !t.is_custom).map(t => (
               <button
@@ -290,7 +293,7 @@ export default function BiffAssistantClient() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6 space-y-4">
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Co-Parent Name (for templates)</label>
             <input
@@ -367,13 +370,15 @@ export default function BiffAssistantClient() {
               <label className="block text-sm font-medium">Your BIFF Response</label>
               <button
                 onClick={() => setShowVoiceInput(true)}
-                className="flex items-center gap-2 px-3 py-1 text-sm text-indigo-600 hover:bg-indigo-50 rounded"
+                className="flex items-center gap-1.5 px-2 py-1 text-xs sm:text-sm text-indigo-600 hover:bg-indigo-50 rounded"
               >
-                <Maximize2 className="h-4 w-4" />
-                Fullscreen + Voice
+                <Maximize2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Fullscreen + Voice</span>
+                <span className="sm:hidden">Voice</span>
               </button>
             </div>
             <textarea
+              ref={draftRef}
               value={draftResponse}
               onChange={(e) => setDraftResponse(e.target.value)}
               className="w-full p-3 border rounded"
@@ -396,18 +401,20 @@ export default function BiffAssistantClient() {
           />
 
           {draftResponse && (
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded">
-              <div>
-                <div className="text-sm font-medium">BIFF Score</div>
-                <div className={`text-2xl font-bold ${biffScore >= 7 ? 'text-green-600' : 'text-orange-600'}`}>
-                  {biffScore}/10
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 sm:p-4 bg-gray-50 rounded">
+              <div className="flex items-center gap-3">
+                <div>
+                  <div className="text-sm font-medium">BIFF Score</div>
+                  <div className={`text-xl sm:text-2xl font-bold ${biffScore >= 7 ? 'text-green-600' : 'text-orange-600'}`}>
+                    {biffScore}/10
+                  </div>
                 </div>
+                {jadeWarning && (
+                  <div className="text-sm text-orange-600 font-medium">
+                    <AlertTriangle className="h-4 w-4 inline text-orange-600" /> JADE detected
+                  </div>
+                )}
               </div>
-              {jadeWarning && (
-                <div className="text-sm text-orange-600 font-medium">
-                  <AlertTriangle className="h-4 w-4 inline text-orange-600" /> JADE detected - remove justifications
-                </div>
-              )}
             </div>
           )}
 
@@ -426,7 +433,7 @@ export default function BiffAssistantClient() {
             </p>
           )}
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={getAiAnalysis}
               disabled={analyzing || (!incomingMessage && !draftResponse)}
@@ -445,14 +452,14 @@ export default function BiffAssistantClient() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold">Recent Communications</h2>
-            <div className="flex gap-2">
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <h2 className="font-semibold text-sm sm:text-base">Recent Communications</h2>
+            <div className="flex flex-wrap gap-2">
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="px-3 py-1 border rounded text-sm"
+                className="px-3 py-1 border rounded text-sm min-w-0"
               >
                 <option value="all">All Categories</option>
                 <option value="pickup">Pickup</option>
@@ -465,7 +472,7 @@ export default function BiffAssistantClient() {
               <select
                 value={filterScore}
                 onChange={(e) => setFilterScore(e.target.value)}
-                className="px-3 py-1 border rounded text-sm"
+                className="px-3 py-1 border rounded text-sm min-w-0"
               >
                 <option value="all">All Scores</option>
                 <option value="high">High (7-10)</option>

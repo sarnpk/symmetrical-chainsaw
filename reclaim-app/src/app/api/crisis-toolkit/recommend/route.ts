@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       });
     });
 
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' });
+    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' });
     
     const prompt = `You are an expert trauma-informed mental health coach specializing in narcissistic abuse recovery.
 
